@@ -63,12 +63,12 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     subtitle: 'Panorama-Apartment · Haus Schönblick',
     smoobuIdEnvKey: 'SMOOBU_APARTMENT_ID_B5',
     smoobuIdFallback: '3025621',
-    maxGuests: 4,
+    maxGuests: 5, // 2 Schlafzimmer + Schlafcouch
     minStay: 2,
     cleaningFee: 65,
     priceFrom: 95,
     baseOccupancy: 2,
-    extraPersonFee: 15,
+    extraPersonFee: 29,
     heroImage: '/images/schoenblick/b5/hero.webp',
     breadcrumb: [
       { label: 'Haus Schönblick', href: '/schoenblick' },
@@ -83,12 +83,12 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     subtitle: 'Panorama-Apartment · Haus Schönblick',
     smoobuIdEnvKey: 'SMOOBU_APARTMENT_ID_B6',
     smoobuIdFallback: '2934141',
-    maxGuests: 4,
+    maxGuests: 4, // 2 Schlafzimmer, keine Schlafcouch
     minStay: 2,
     cleaningFee: 65,
     priceFrom: 95,
     baseOccupancy: 2,
-    extraPersonFee: 15,
+    extraPersonFee: 29,
     heroImage: '/images/schoenblick/b6/hero.webp',
     breadcrumb: [
       { label: 'Haus Schönblick', href: '/schoenblick' },
@@ -103,12 +103,12 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     subtitle: 'Panorama-Apartment · Haus Schönblick',
     smoobuIdEnvKey: 'SMOOBU_APARTMENT_ID_B8',
     smoobuIdFallback: '3025606',
-    maxGuests: 4,
+    maxGuests: 5, // 2 Schlafzimmer + Schlafcouch
     minStay: 2,
     cleaningFee: 65,
     priceFrom: 95,
     baseOccupancy: 2,
-    extraPersonFee: 15,
+    extraPersonFee: 29,
     heroImage: '/images/schoenblick/b8/hero.webp',
     breadcrumb: [
       { label: 'Haus Schönblick', href: '/schoenblick' },
@@ -123,12 +123,12 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     subtitle: 'Panorama-Apartment · Haus Schönblick',
     smoobuIdEnvKey: 'SMOOBU_APARTMENT_ID_A2',
     smoobuIdFallback: '2934161',
-    maxGuests: 4,
+    maxGuests: 5, // 2 Schlafzimmer + Schlafcouch
     minStay: 2,
     cleaningFee: 65,
     priceFrom: 95,
     baseOccupancy: 2,
-    extraPersonFee: 15,
+    extraPersonFee: 29,
     heroImage: '/images/schoenblick/a2/hero.webp',
     breadcrumb: [
       { label: 'Haus Schönblick', href: '/schoenblick' },
