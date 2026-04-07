@@ -6,29 +6,38 @@ export async function GET() {
   const endDate   = '2026-05-07'
   const apiKey    = process.env.PRICELABS_API_KEY ?? ''
 
-  const url = `https://api.pricelabs.co/v1/listing_prices?integration=smoobu&listing_ids=${listingId}&start_date=${startDate}&end_date=${endDate}`
-
-  try {
-    const res = await fetch(url, {
-      headers: {
-        'X-API-Key': apiKey,
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store',
-    })
-
-    const text = await res.text()
-    let json: unknown = null
-    try { json = JSON.parse(text) } catch { json = text.slice(0, 500) }
-
-    return NextResponse.json({
-      status: res.status,
-      url,
-      apiKeySet: apiKey.length > 0,
-      apiKeyPrefix: apiKey.slice(0, 8) + '…',
-      response: json,
-    })
-  } catch (err) {
-    return NextResponse.json({ error: String(err) })
+  const headers = {
+    'X-API-Key': apiKey,
+    'Content-Type': 'application/json',
   }
+
+  const urls = [
+    // v1 variants
+    `https://api.pricelabs.co/v1/listing_prices?integration=smoobu&listing_ids=${listingId}&start_date=${startDate}&end_date=${endDate}`,
+    `https://api.pricelabs.co/v1/pr_prices?listing_id=${listingId}&start_date=${startDate}&end_date=${endDate}`,
+    `https://api.pricelabs.co/v1/prices?listing_id=${listingId}&start_date=${startDate}&end_date=${endDate}`,
+    // v2 variants
+    `https://api.pricelabs.co/v2/listing_prices?integration=smoobu&listing_ids=${listingId}&start_date=${startDate}&end_date=${endDate}`,
+    `https://api.pricelabs.co/v2/pr_prices?listing_id=${listingId}&start_date=${startDate}&end_date=${endDate}`,
+    // without integration param
+    `https://api.pricelabs.co/v1/listing_prices?listing_ids=${listingId}&start_date=${startDate}&end_date=${endDate}`,
+    // root to see what's available
+    `https://api.pricelabs.co/v1/`,
+  ]
+
+  const results: Record<string, unknown> = {}
+
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { headers, cache: 'no-store' })
+      const text = await res.text()
+      let json: unknown = null
+      try { json = JSON.parse(text) } catch { json = text.slice(0, 200) }
+      results[url.replace('https://api.pricelabs.co', '')] = { status: res.status, body: json }
+    } catch (err) {
+      results[url.replace('https://api.pricelabs.co', '')] = { error: String(err) }
+    }
+  }
+
+  return NextResponse.json({ apiKeyPrefix: apiKey.slice(0, 8) + '…', results })
 }
