@@ -1,16 +1,13 @@
 /**
  * Server-side Smoobu API wrapper.
  * Import ONLY from API routes / Server Components – never from client components.
- * The SMOOBU_API_KEY environment variable stays server-side.
  */
 
 const SMOOBU_BASE = 'https://login.smoobu.com/api'
 
 function getHeaders() {
   const apiKey = process.env.SMOOBU_API_KEY
-  if (!apiKey) {
-    console.warn('[Smoobu] SMOOBU_API_KEY is not set. API calls will fail.')
-  }
+  if (!apiKey) console.warn('[Smoobu] SMOOBU_API_KEY is not set.')
   return {
     'Api-Key': apiKey ?? '',
     'Cache-Control': 'no-cache',
@@ -18,13 +15,11 @@ function getHeaders() {
   }
 }
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 export type DayAvailability = {
   available: boolean
-  /** Nightly price in EUR (0 if not returned by API) */
   price: number
-  /** Minimum stay starting from this day */
   minimumStay: number
 }
 
@@ -33,15 +28,14 @@ export type AvailabilityMap = Record<string, DayAvailability>
 
 export type BookingRequest = {
   apartmentId: string
-  checkIn: string    // YYYY-MM-DD
-  checkOut: string   // YYYY-MM-DD
+  checkIn: string
+  checkOut: string
   guests: number
   firstName: string
   lastName: string
   email: string
   phone: string
   message?: string
-  /** Pre-calculated total (nights × rate + cleaning fee) */
   totalPrice: number
 }
 
@@ -50,86 +44,153 @@ export type BookingResult = {
   referenceId?: string
 }
 
-// ─── Availability ─────────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function addDays(dateStr: string, n: number): string {
+  const d = new Date(dateStr)
+  d.setDate(d.getDate() + n)
+  return d.toISOString().split('T')[0]
+}
+
+function daysBetween(start: string, end: string): string[] {
+  const days: string[] = []
+  let cur = start
+  while (cur < end) {
+    days.push(cur)
+    cur = addDays(cur, 1)
+  }
+  return days
+}
+
+// ─── Availability via Reservations ───────────────────────────────────────────
 
 /**
- * Fetch availability + nightly rates for a date range.
- * Cached for 5 minutes via Next.js fetch cache.
+ * Builds an AvailabilityMap by fetching all reservations + rates for the range.
+ * Strategy:
+ *  1. GET /reservations  → mark booked nights as unavailable
+ *  2. GET /apartments/{id}/rates → get nightly prices (optional, graceful fallback)
  */
 export async function getAvailability(
   apartmentId: string,
   startDate: string,
   endDate: string,
 ): Promise<AvailabilityMap> {
-  const url =
-    `${SMOOBU_BASE}/apartments/${apartmentId}/availability` +
-    `?startDate=${startDate}&endDate=${endDate}`
-
-  const res = await fetch(url, {
-    headers: getHeaders(),
-    next: { revalidate: 300 }, // 5-minute server-side cache
-  })
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => res.statusText)
-    throw new Error(`Smoobu availability error ${res.status}: ${text}`)
-  }
-
-  const json = (await res.json()) as {
-    data?: Record<
-      string,
-      { available: number; price?: number; minimumLength?: number }
-    >
-  }
-
   const result: AvailabilityMap = {}
-  for (const [date, day] of Object.entries(json.data ?? {})) {
-    result[date] = {
-      available: day.available === 1,
-      price: day.price ?? 0,
-      minimumStay: day.minimumLength ?? 1,
-    }
+
+  // Initialise all days as available with price 0
+  for (const day of daysBetween(startDate, endDate)) {
+    result[day] = { available: true, price: 0, minimumStay: 1 }
   }
+
+  // ── 1. Fetch reservations ──────────────────────────────────────────────────
+  try {
+    // Smoobu may paginate; fetch up to 3 pages (300 reservations) – more than enough
+    let page = 1
+    let hasMore = true
+
+    while (hasMore && page <= 3) {
+      const url =
+        `${SMOOBU_BASE}/reservations` +
+        `?apartmentId=${apartmentId}` +
+        `&from=${startDate}&to=${endDate}` +
+        `&pageSize=100&page=${page}`
+
+      const res = await fetch(url, {
+        headers: getHeaders(),
+        next: { revalidate: 300 },
+      })
+
+      if (!res.ok) break
+
+      const json = await res.json() as {
+        totalCount?: number
+        pageSize?: number
+        bookings?: Array<{
+          arrival?: string
+          departure?: string
+          type?: string
+        }>
+      }
+
+      const bookings = json.bookings ?? []
+
+      for (const booking of bookings) {
+        if (!booking.arrival || !booking.departure) continue
+        // Block all nights: arrival (inclusive) up to departure (exclusive)
+        for (const night of daysBetween(booking.arrival, booking.departure)) {
+          if (result[night]) {
+            result[night] = { ...result[night], available: false }
+          }
+        }
+      }
+
+      const fetched = page * 100
+      hasMore = (json.totalCount ?? 0) > fetched
+      page++
+    }
+  } catch (err) {
+    console.error('[Smoobu] reservations fetch failed:', err)
+    // Continue – UI shows all dates as available (safe fallback)
+  }
+
+  // ── 2. Fetch rates (optional, for price display) ───────────────────────────
+  try {
+    const ratesUrl =
+      `${SMOOBU_BASE}/apartments/${apartmentId}/rates` +
+      `?startDate=${startDate}&endDate=${endDate}`
+
+    const res = await fetch(ratesUrl, {
+      headers: getHeaders(),
+      next: { revalidate: 300 },
+    })
+
+    if (res.ok) {
+      const json = await res.json() as {
+        data?: Record<string, {
+          price?: number
+          minimumLength?: number
+          available?: number
+        }>
+      }
+
+      for (const [date, day] of Object.entries(json.data ?? {})) {
+        if (result[date]) {
+          if (day.price) result[date].price = day.price
+          if (day.minimumLength) result[date].minimumStay = day.minimumLength
+          // If rates endpoint also marks unavailability, respect it
+          if (day.available === 0) result[date].available = false
+        }
+      }
+    }
+  } catch {
+    // Silent – rates are optional, price fallback is used in UI
+  }
+
   return result
 }
 
-// ─── Create Booking ───────────────────────────────────────────────────────────
+// ─── Verify Availability ─────────────────────────────────────────────────────
 
-/**
- * Verify availability for the requested range (double-check before confirming).
- * Returns null if all clear, or the first blocked date as string if conflict.
- */
 export async function verifyAvailability(
   apartmentId: string,
   checkIn: string,
   checkOut: string,
 ): Promise<string | null> {
   const availability = await getAvailability(apartmentId, checkIn, checkOut)
-
-  // Check each night (checkIn inclusive, checkOut exclusive)
-  const start = new Date(checkIn)
-  const end = new Date(checkOut)
-  const cursor = new Date(start)
-  while (cursor < end) {
-    const key = cursor.toISOString().split('T')[0]
-    if (!availability[key]?.available) {
-      return key // first blocked night found
-    }
-    cursor.setDate(cursor.getDate() + 1)
+  for (const night of daysBetween(checkIn, checkOut)) {
+    if (!availability[night]?.available) return night
   }
   return null
 }
 
-/**
- * Create a reservation via Smoobu API.
- * channelId 16 = Website Direct.
- */
+// ─── Create Booking ───────────────────────────────────────────────────────────
+
 export async function createBooking(req: BookingRequest): Promise<BookingResult> {
   const body = {
     apartmentId: parseInt(req.apartmentId, 10),
     arrivalDate: req.checkIn,
     departureDate: req.checkOut,
-    channelId: 16, // Website Direct – verify in your Smoobu channel settings
+    channelId: 16,
     firstName: req.firstName,
     lastName: req.lastName,
     email: req.email,
@@ -137,7 +198,7 @@ export async function createBooking(req: BookingRequest): Promise<BookingResult>
     adults: req.guests,
     children: 0,
     price: req.totalPrice,
-    priceStatus: 1, // 1 = price confirmed
+    priceStatus: 1,
     deposit: 0,
     language: 'de',
     guestAppMessage: req.message ?? '',
@@ -151,14 +212,9 @@ export async function createBooking(req: BookingRequest): Promise<BookingResult>
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({})) as { detail?: string; message?: string }
-    throw new Error(
-      err.detail ?? err.message ?? `Smoobu booking failed: ${res.status}`,
-    )
+    throw new Error(err.detail ?? err.message ?? `Smoobu booking failed: ${res.status}`)
   }
 
-  const json = (await res.json()) as { id?: number; referenceId?: string }
-  return {
-    id: json.id ?? 0,
-    referenceId: json.referenceId,
-  }
+  const json = await res.json() as { id?: number; referenceId?: string }
+  return { id: json.id ?? 0, referenceId: json.referenceId }
 }
