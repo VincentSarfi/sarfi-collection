@@ -52,7 +52,7 @@ interface PriceBreakdown {
 function calcPrice(
   checkIn: Date,
   checkOut: Date,
-  availabilityMap: AvailabilityMap,
+  priceMap: Record<string, number>,
   priceFrom: number,
   cleaningFee: number,
 ): PriceBreakdown {
@@ -66,8 +66,7 @@ function calcPrice(
 
   while (cursor < checkOut) {
     const key = toDateKey(cursor)
-    const dayData = availabilityMap[key]
-    const rate = dayData?.price && dayData.price > 0 ? dayData.price : priceFrom
+    const rate = priceMap[key] && priceMap[key] > 0 ? priceMap[key] : priceFrom
     nightlyTotal += rate
     daysWithPrice++
     cursor.setDate(cursor.getDate() + 1)
@@ -270,8 +269,14 @@ export default function BookingWidget({
 
   const priceBreakdown = useMemo<PriceBreakdown | null>(() => {
     if (!checkIn || !checkOut) return null
-    return calcPrice(checkIn, checkOut, availabilityMap, priceFrom, cleaningFee)
-  }, [checkIn, checkOut, availabilityMap, priceFrom, cleaningFee])
+    return calcPrice(checkIn, checkOut, priceMap, priceFrom, cleaningFee)
+  }, [checkIn, checkOut, priceMap, priceFrom, cleaningFee])
+
+  // Effective display price: PriceLabs recommended_base_price if available, else priceFrom
+  const effectivePrice = useMemo(() => {
+    const first = Object.values(plPriceMap)[0]
+    return first && first.price > 0 ? first.price : priceFrom
+  }, [plPriceMap, priceFrom])
 
   // ── Calendar handlers ──
   const handleDateClick = useCallback(
@@ -734,7 +739,7 @@ export default function BookingWidget({
             <div className="sticky top-24">
               <StickyPanel
                 propertyName={propertyName}
-                priceFrom={priceFrom}
+                priceFrom={effectivePrice}
                 checkIn={checkIn}
                 checkOut={checkOut}
                 guests={guests}
@@ -774,14 +779,14 @@ export default function BookingWidget({
             ) : checkIn ? (
               <>
                 <p className="font-body text-sm font-bold text-forest-900 leading-tight">
-                  Ab {priceFrom} € / Nacht
+                  Ab {effectivePrice} € / Nacht
                 </p>
                 <p className="font-body text-xs text-forest-500">Abreise wählen</p>
               </>
             ) : (
               <>
                 <p className="font-body text-sm font-bold text-forest-900 leading-tight">
-                  Ab {priceFrom} € / Nacht
+                  Ab {effectivePrice} € / Nacht
                 </p>
                 <p className="font-body text-xs text-forest-500">Datum wählen</p>
               </>
