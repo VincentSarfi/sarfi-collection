@@ -1,6 +1,14 @@
 /**
  * PriceLabs API wrapper – server-side only.
- * Fetches dynamic nightly prices per listing.
+ *
+ * PriceLabs does not expose per-night prices via their Customer API.
+ * They push nightly rates to Smoobu (and other channels) internally,
+ * but the only price data available via API is:
+ *   GET /v1/listings → recommended_base_price (updated daily)
+ *
+ * We use recommended_base_price to fill the calendar with an up-to-date
+ * nightly rate. It is the same for all nights in the range (no per-night
+ * breakdown), but it reflects PriceLabs' current daily recommendation.
  */
 
 const PRICELABS_BASE = 'https://api.pricelabs.co/v1'
@@ -13,26 +21,28 @@ function getHeaders() {
 }
 
 export type NightRate = {
-  date: string       // YYYY-MM-DD
-  price: number      // EUR
+  date: string    // YYYY-MM-DD
+  price: number   // EUR
   minStay: number
 }
 
+type PriceLabsListing = {
+  id: string
+  recommended_base_price: number | null
+  min: number | null
+  base: number | null
+}
+
 /**
- * Get nightly prices from PriceLabs for a Smoobu listing.
- * Returns a map of date → NightRate.
+ * Fetch the recommended_base_price for a listing from PriceLabs.
+ * Returns it as a flat date-map so the calendar can display it.
  */
 export async function getPricingMap(
   smoobuListingId: string,
   startDate: string,
   endDate: string,
 ): Promise<Record<string, NightRate>> {
-  const url =
-    `${PRICELABS_BASE}/listing_prices` +
-    `?integration=smoobu` +
-    `&listing_ids=${smoobuListingId}` +
-    `&start_date=${startDate}` +
-    `&end_date=${endDate}`
+  const url = `${PRICELABS_BASE}/listings/${smoobuListingId}`
 
   const res = await fetch(url, {
     headers: getHeaders(),
@@ -40,32 +50,32 @@ export async function getPricingMap(
   })
 
   if (!res.ok) {
-    const text = await res.text().catch(() => res.statusText)
-    throw new Error(`PriceLabs API ${res.status}: ${text}`)
+    throw new Error(`PriceLabs /listings/${smoobuListingId} → ${res.status}`)
   }
 
   const json = await res.json()
 
-  // PriceLabs can return either an array or an object keyed by listing_id
-  // Normalise both formats
+  // Response: { listings: [{ id, recommended_base_price, min, base, ... }] }
+  const listings: PriceLabsListing[] = json.listings ?? []
+  const listing = listings.find((l) => String(l.id) === String(smoobuListingId))
+
+  const price =
+    listing?.recommended_base_price ??
+    listing?.base ??
+    listing?.min ??
+    0
+
+  if (price <= 0) return {}
+
+  // Fill every date in the range with the recommended base price
   const map: Record<string, NightRate> = {}
+  const cursor = new Date(startDate)
+  const endD   = new Date(endDate)
 
-  const rows: Array<{ date?: string; price?: number; min_stay?: number }> =
-    Array.isArray(json)
-      ? json
-      : Array.isArray(json.data)
-        ? json.data
-        : Array.isArray(json[smoobuListingId])
-          ? json[smoobuListingId]
-          : Object.values(json).flat() as Array<{ date?: string; price?: number; min_stay?: number }>
-
-  for (const row of rows) {
-    if (!row.date) continue
-    map[row.date] = {
-      date: row.date,
-      price: row.price ?? 0,
-      minStay: row.min_stay ?? 1,
-    }
+  while (cursor < endD) {
+    const key = cursor.toISOString().split('T')[0]
+    map[key] = { date: key, price, minStay: 1 }
+    cursor.setDate(cursor.getDate() + 1)
   }
 
   return map
