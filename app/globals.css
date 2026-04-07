@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────
+   CSS Custom Properties
+   ───────────────────────────────────────── */
+:root {
+  /* Default (shared / homepage) */
+  --property-bg:     #f9f3e6;
+  --property-text:   #0b1a10;
+  --property-accent: #c9a84c;
+
+  /* Scroll behaviour */
+  scroll-behavior: smooth;
+}
+
+/* HAUS28 – darker, moodier */
+[data-property="haus28"] {
+  --property-bg:     #1e3d27;
+  --property-text:   #f5f0e8;
+  --property-accent: #c9a84c;
+}
+
+/* Schönblick – lighter, airier */
+[data-property="schoenblick"] {
+  --property-bg:     #f0f5f1;
+  --property-text:   #0b1a10;
+  --property-accent: #c9a84c;
+}
+
+/* ─────────────────────────────────────────
+   Base Reset & Typography
+   ───────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  }
+
+  body {
+    @apply bg-cream-50 text-forest-900 font-body antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  ::selection {
+    @apply bg-gold-300 text-forest-900;
+  }
+
+  /* Focus ring */
+  :focus-visible {
+    @apply outline-none ring-2 ring-gold-500 ring-offset-2;
+  }
+}
+
+/* ─────────────────────────────────────────
+   Utility Classes
+   ───────────────────────────────────────── */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Full-bleed hero */
+  .hero-full {
+    min-height: 100svh;
+    min-height: 100vh;
+  }
+
+  /* Skeleton shimmer */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      theme("colors.cream.200") 25%,
+      theme("colors.cream.100") 50%,
+      theme("colors.cream.200") 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+  }
+
+  /* Prose override for description areas */
+  .prose-property {
+    @apply text-forest-700 leading-relaxed;
+    font-size: clamp(1rem, 1.1vw, 1.125rem);
+  }
+
+  /* Gold underline link style */
+  .link-gold {
+    @apply relative inline-block after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-gold-500 after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left;
+  }
+
+  /* Section spacing */
+  .section-pad {
+    @apply py-16 md:py-24 lg:py-32;
+  }
+
+  .section-pad-sm {
+    @apply py-10 md:py-16;
+  }
+
+  /* Container */
+  .container-site {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/* ─────────────────────────────────────────
+   Swiper customization
+   ───────────────────────────────────────── */
+.swiper-pagination-bullet {
+  background: theme("colors.cream.200") !important;
+  opacity: 1 !important;
+  width: 6px !important;
+  height: 6px !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: theme("colors.gold.500") !important;
+  width: 24px !important;
+  border-radius: 3px !important;
+  transition: width 0.3s ease !important;
+}
+
+/* ─────────────────────────────────────────
+   Yet Another React Lightbox overrides
+   ───────────────────────────────────────── */
+.yarl__root {
+  --yarl__color_backdrop: rgba(0, 0, 0, 0.96) !important;
+}
+
+/* ─────────────────────────────────────────
+   Smooth page transitions
+   ───────────────────────────────────────── */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}

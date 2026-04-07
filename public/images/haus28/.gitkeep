@@ -1,0 +1,10 @@
+# TODO: Lege hier die echten Fotos von HAUS28 ab.
+# Benötigt werden:
+#   hero.webp         – Außenansicht (1920x1080+, WebP)
+#   thumbnail.webp    – Vorschaubild (800x600, WebP)
+#   gallery/01.webp   – Galeriebild 1
+#   gallery/02.webp   – Galeriebild 2
+#   ...               – Weitere Galeriebilder
+#
+# Nach dem Ablegen: Pfade in data/properties.ts anpassen
+# (images.hero, images.thumbnail, images.gallery[].src)
