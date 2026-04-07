@@ -13,6 +13,12 @@ out/
 # Claude Code
 .claude/
 
+# Fotos (lokale Arbeitsordner, nicht im Repo)
+FOTOS/
+
+# TypeScript build info
+tsconfig.tsbuildinfo
+
 # Misc
 .DS_Store
 *.pem
