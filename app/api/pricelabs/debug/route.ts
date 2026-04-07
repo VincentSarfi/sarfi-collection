@@ -1,53 +1,61 @@
 import { NextResponse } from 'next/server'
 
-async function tryFetch(label: string, url: string, headers: Record<string, string>) {
-  try {
-    const res = await fetch(url, { headers, cache: 'no-store' })
-    const text = await res.text()
-    let body: unknown = null
-    try { body = JSON.parse(text) } catch { body = text.slice(0, 300) }
-    return { label, status: res.status, body }
-  } catch (err) {
-    return { label, error: String(err) }
-  }
-}
-
 export async function GET() {
-  const plKey     = process.env.PRICELABS_API_KEY ?? ''
   const smoobuKey = process.env.SMOOBU_API_KEY ?? ''
-  const id        = '2610828'
+  const id        = 2610828
   const start     = '2026-04-07'
   const end       = '2026-05-07'
 
-  const sh = { 'Api-Key': smoobuKey, 'Content-Type': 'application/json' }
-  const ph = { 'X-API-Key': plKey, 'Content-Type': 'application/json' }
+  const sh = {
+    'Api-Key': smoobuKey,
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache',
+  }
+
+  async function postRates(label: string, body: unknown) {
+    try {
+      const res = await fetch('https://login.smoobu.com/api/rates', {
+        method: 'POST', headers: sh,
+        body: JSON.stringify(body), cache: 'no-store',
+      })
+      const text = await res.text()
+      let parsed: unknown = null
+      try { parsed = JSON.parse(text) } catch { parsed = text.slice(0, 300) }
+      return { label, status: res.status, body: parsed }
+    } catch (err) {
+      return { label, error: String(err) }
+    }
+  }
+
+  async function getRates(label: string, url: string) {
+    try {
+      const res = await fetch(url, { headers: sh, cache: 'no-store' })
+      const text = await res.text()
+      let parsed: unknown = null
+      try { parsed = JSON.parse(text) } catch { parsed = text.slice(0, 300) }
+      return { label, status: res.status, body: parsed }
+    } catch (err) {
+      return { label, error: String(err) }
+    }
+  }
 
   const tests = await Promise.all([
-    // ── Smoobu rate endpoints ─────────────────────────────────────────────
-    tryFetch('Smoobu: GET /apartments/{id}/rates', `https://login.smoobu.com/api/apartments/${id}/rates?startDate=${start}&endDate=${end}`, sh),
-    tryFetch('Smoobu: GET /apartments/{id}/rates (from/to)', `https://login.smoobu.com/api/apartments/${id}/rates?from=${start}&to=${end}`, sh),
-    tryFetch('Smoobu: GET /apartments/{id}/calendar', `https://login.smoobu.com/api/apartments/${id}/calendar?startDate=${start}&endDate=${end}`, sh),
-    tryFetch('Smoobu: GET /apartments/{id}/availability', `https://login.smoobu.com/api/apartments/${id}/availability?startDate=${start}&endDate=${end}`, sh),
-    tryFetch('Smoobu: GET /apartments/{id} (single listing)', `https://login.smoobu.com/api/apartments/${id}`, sh),
-    // ── PriceLabs POST listing_prices ─────────────────────────────────────
-    tryFetch('PriceLabs: POST /v1/listing_prices', 'https://api.pricelabs.co/v1/listing_prices', ph),
-  ])
+    // POST /api/rates with various body formats
+    postRates('POST /rates: apartment_ids array', { apartment_ids: [id], start_date: start, end_date: end }),
+    postRates('POST /rates: apartment_id singular', { apartment_id: id, start_date: start, end_date: end }),
+    postRates('POST /rates: ids array', { ids: [id], start_date: start, end_date: end }),
+    postRates('POST /rates: listing camelCase dates', { apartments: [id], startDate: start, endDate: end }),
+    postRates('POST /rates: minimal - just id + dates', { id, startDate: start, endDate: end }),
+    postRates('POST /rates: channelId added', { apartments: [{ id }], channelId: 16, startDate: start, endDate: end }),
+    postRates('POST /rates: string id', { apartments: [String(id)], startDate: start, endDate: end }),
 
-  // Also try Smoobu POST /rates with body
-  try {
-    const res = await fetch('https://login.smoobu.com/api/rates', {
-      method: 'POST',
-      headers: sh,
-      body: JSON.stringify({ apartments: [{ id: parseInt(id) }], startDate: start, endDate: end }),
-      cache: 'no-store',
-    })
-    const text = await res.text()
-    let body: unknown = null
-    try { body = JSON.parse(text) } catch { body = text.slice(0, 300) }
-    tests.push({ label: 'Smoobu: POST /rates (body)', status: res.status, body })
-  } catch (err) {
-    tests.push({ label: 'Smoobu: POST /rates', error: String(err) } as never)
-  }
+    // GET /api/rates with query params
+    getRates('GET /api/rates?apartmentId', `https://login.smoobu.com/api/rates?apartmentId=${id}&startDate=${start}&endDate=${end}`),
+    getRates('GET /api/rates?apartment_id', `https://login.smoobu.com/api/rates?apartment_id=${id}&start_date=${start}&end_date=${end}`),
+
+    // Smoobu settings endpoint - list all channels/rate plans
+    getRates('GET /api/channel-manager/rates', `https://login.smoobu.com/api/channel-manager/rates?apartmentId=${id}`),
+  ])
 
   return NextResponse.json({ tests })
 }
