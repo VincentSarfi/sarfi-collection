@@ -19,7 +19,7 @@ interface RatingsBarProps {
   totalReviews: number;
 }
 
-function PlatformBadge({ platform, label, displayRating, reviewCount, url, index }: PlatformRating & { index: number }) {
+function PlatformBadge({ platform, label, displayRating, reviewCount, url }: PlatformRating) {
   const content = (
     <div className="flex flex-col items-center gap-1.5 px-6 py-4 min-w-[130px] group">
       <span className="font-body text-xs text-cream-50/50 uppercase tracking-widest">{label}</span>
@@ -93,7 +93,7 @@ export default function RatingsBar({ platforms, totalReviews }: RatingsBarProps)
               transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
               className="shrink-0"
             >
-              <PlatformBadge {...p} index={i} />
+              <PlatformBadge {...p} />
             </motion.div>
           ))}
         </div>
