@@ -37,14 +37,27 @@ export default function UeberUnsPage() {
 
       {/* Content */}
       <div className="container-site py-16 max-w-4xl">
+        {/* Profilbild + Name */}
+        <div className="flex flex-col items-center mb-12">
+          <div className="relative w-36 h-36 rounded-full overflow-hidden border-4 border-white shadow-card-lg mb-4">
+            <Image
+              src="/images/team/profilbild.jpg"
+              alt="Vincent und Elena Sarfi"
+              fill
+              className="object-cover"
+            />
+          </div>
+          <h2 className="font-display text-2xl text-forest-900">Vincent &amp; Elena Sarfi</h2>
+          <p className="font-body text-sm text-forest-500 mt-1">Gastgeber &amp; Inhaber SARFI Collection</p>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
           {/* Story */}
           <div>
             <h2 className="font-display text-2xl text-forest-900 mb-4">Unsere Geschichte</h2>
             <div className="space-y-4 font-body text-base text-forest-600 leading-relaxed">
               <p>
-                {/* TODO: Echten Text über euch / eure Geschichte eintragen */}
-                Willkommen bei der SARFI Collection! Wir sind [TODO: Namen eintragen] und haben uns den Traum erfüllt, Menschen mit den schönsten Ecken des Bayerischen Waldes zu verbinden.
+                Willkommen bei der SARFI Collection! Wir sind Vincent und Elena Sarfi und haben uns den Traum erfüllt, Menschen mit den schönsten Ecken des Bayerischen Waldes zu verbinden.
               </p>
               <p>
                 Der Bayerische Wald ist unsere Heimat – und wir lieben ihn für seine Ruhe, seine Ursprünglichkeit und seine besondere Atmosphäre. Mit HAUS28 und Haus Schönblick haben wir zwei Orte geschaffen, an denen unsere Gäste das spüren können, was uns so begeistert.
