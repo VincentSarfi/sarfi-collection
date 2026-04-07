@@ -1,0 +1,72 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { stripe } from '@/lib/stripe'
+import { createBooking } from '@/lib/smoobu'
+
+/**
+ * Stripe webhook – backup handler.
+ * If the client fails to call /api/smoobu/booking after payment,
+ * this webhook creates the Smoobu booking automatically.
+ *
+ * Setup in Stripe Dashboard:
+ *   URL: https://www.sarfi-collection.de/api/stripe/webhook
+ *   Events: payment_intent.succeeded
+ *   → Copy the Webhook Signing Secret → add as STRIPE_WEBHOOK_SECRET in Vercel
+ */
+export async function POST(request: NextRequest) {
+  const body = await request.text()
+  const sig  = request.headers.get('stripe-signature') ?? ''
+  const secret = process.env.STRIPE_WEBHOOK_SECRET ?? ''
+
+  // Skip signature verification if secret is placeholder (dev/test)
+  if (!secret || secret === 'whsec_PLACEHOLDER') {
+    console.warn('[webhook] STRIPE_WEBHOOK_SECRET not set – skipping verification')
+    return NextResponse.json({ received: true })
+  }
+
+  let event
+  try {
+    event = stripe.webhooks.constructEvent(body, sig, secret)
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Webhook signature error'
+    console.error('[webhook] signature verification failed:', msg)
+    return NextResponse.json({ error: msg }, { status: 400 })
+  }
+
+  if (event.type === 'payment_intent.succeeded') {
+    const pi = event.data.object
+    const m  = pi.metadata
+
+    // Only create booking if not already created by client
+    if (m.smoobu_booking_id) {
+      console.log(`[webhook] Booking already exists for PI ${pi.id}`)
+      return NextResponse.json({ received: true })
+    }
+
+    try {
+      const result = await createBooking({
+        apartmentId: m.apartmentId,
+        checkIn:     m.checkIn,
+        checkOut:    m.checkOut,
+        guests:      parseInt(m.guests, 10),
+        firstName:   m.firstName,
+        lastName:    m.lastName,
+        email:       m.email,
+        phone:       m.phone,
+        message:     m.message,
+        totalPrice:  parseFloat(m.totalPrice),
+      })
+
+      // Tag the payment intent with the booking ID
+      await stripe.paymentIntents.update(pi.id, {
+        metadata: { ...m, smoobu_booking_id: String(result.id) },
+      })
+
+      console.log(`[webhook] Created Smoobu booking #${result.id} for PI ${pi.id}`)
+    } catch (err) {
+      console.error('[webhook] Smoobu booking creation failed:', err)
+      // Don't return 500 – Stripe would retry and we'd duplicate the booking
+    }
+  }
+
+  return NextResponse.json({ received: true })
+}

@@ -9,12 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^6.1.0",
+    "@stripe/stripe-js": "^9.1.0",
     "framer-motion": "^11.3.0",
     "next": "^16.2.2",
     "react": "^18",
     "react-dom": "^18",
     "react-intersection-observer": "^9.13.0",
     "react-use": "^17.5.0",
+    "stripe": "^22.0.0",
     "swiper": "^11.1.9",
     "yet-another-react-lightbox": "^3.21.4"
   },

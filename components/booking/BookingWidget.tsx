@@ -4,7 +4,9 @@ import { useState, useEffect, useCallback, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import BookingCalendar, { toDateKey, fmtShort, fmtLong, type SelectionStep } from "./BookingCalendar"
+import PaymentStep from "./PaymentStep"
 import type { AvailabilityMap } from "@/lib/smoobu"
+import type { NightRate } from "@/lib/pricelabs"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -20,7 +22,7 @@ export interface BookingWidgetProps {
   propertyHref: string
 }
 
-type Step = "dates" | "form" | "confirmed" | "error"
+type Step = "dates" | "form" | "payment" | "confirmed" | "error"
 
 interface FormData {
   firstName: string
@@ -197,29 +199,36 @@ export default function BookingWidget({
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [bookingId, setBookingId] = useState<number | null>(null)
 
-  // ── Fetch availability ──
+  // ── Stripe + PriceLabs state ──
+  const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(null)
+  const [depositAmount, setDepositAmount] = useState<number>(0)
+  const [plPriceMap, setPlPriceMap] = useState<Record<string, NightRate>>({})
+
+  // ── Fetch availability + PriceLabs prices in parallel ──
   useEffect(() => {
     async function load() {
       setLoadingAvailability(true)
-      try {
-        const today = new Date()
-        const endDate = new Date(today)
-        endDate.setFullYear(today.getFullYear() + 1)
-        const start = today.toISOString().split("T")[0]
-        const end = endDate.toISOString().split("T")[0]
+      const today = new Date()
+      const endDate = new Date(today)
+      endDate.setFullYear(today.getFullYear() + 1)
+      const start = today.toISOString().split("T")[0]
+      const end = endDate.toISOString().split("T")[0]
 
-        const res = await fetch(
-          `/api/smoobu/availability?propertyId=${smoobuId}&startDate=${start}&endDate=${end}`,
-        )
-        if (res.ok) {
-          const data: AvailabilityMap = await res.json()
-          setAvailabilityMap(data)
-        }
-      } catch {
-        // silent fail – UI degrades gracefully (no blocked dates shown)
-      } finally {
-        setLoadingAvailability(false)
-      }
+      await Promise.allSettled([
+        // Smoobu availability (blocked dates)
+        fetch(`/api/smoobu/availability?propertyId=${smoobuId}&startDate=${start}&endDate=${end}`)
+          .then(r => r.ok ? r.json() : {})
+          .then((data: AvailabilityMap) => setAvailabilityMap(data))
+          .catch(() => {}),
+
+        // PriceLabs dynamic prices
+        fetch(`/api/pricelabs/rates?listingId=${smoobuId}&startDate=${start}&endDate=${end}`)
+          .then(r => r.ok ? r.json() : {})
+          .then((data: Record<string, NightRate>) => setPlPriceMap(data))
+          .catch(() => {}),
+      ])
+
+      setLoadingAvailability(false)
     }
     load()
   }, [smoobuId])
@@ -233,21 +242,31 @@ export default function BookingWidget({
     return s
   }, [availabilityMap])
 
+  // PriceLabs prices take priority; fall back to Smoobu rates, then priceFrom
+  const priceMap = useMemo<Record<string, number>>(() => {
+    const m: Record<string, number> = {}
+    // First: Smoobu fallback prices
+    for (const [date, day] of Object.entries(availabilityMap)) {
+      if (day.price > 0) m[date] = day.price
+    }
+    // Override with PriceLabs dynamic prices (more accurate)
+    for (const [date, night] of Object.entries(plPriceMap)) {
+      if (night.price > 0) m[date] = night.price
+    }
+    return m
+  }, [availabilityMap, plPriceMap])
+
+  // Min-stay map: PriceLabs takes priority over Smoobu
   const minStayMap = useMemo<Record<string, number>>(() => {
     const m: Record<string, number> = {}
     for (const [date, day] of Object.entries(availabilityMap)) {
       if (day.minimumStay > 1) m[date] = day.minimumStay
     }
-    return m
-  }, [availabilityMap])
-
-  const priceMap = useMemo<Record<string, number>>(() => {
-    const m: Record<string, number> = {}
-    for (const [date, day] of Object.entries(availabilityMap)) {
-      if (day.price > 0) m[date] = day.price
+    for (const [date, night] of Object.entries(plPriceMap)) {
+      if (night.minStay > 1) m[date] = night.minStay
     }
     return m
-  }, [availabilityMap])
+  }, [availabilityMap, plPriceMap])
 
   const priceBreakdown = useMemo<PriceBreakdown | null>(() => {
     if (!checkIn || !checkOut) return null
@@ -293,6 +312,7 @@ export default function BookingWidget({
     }
   }
 
+  // Step 2 → Step 3: validate form, create Stripe PaymentIntent
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!checkIn || !checkOut || !priceBreakdown) return
@@ -305,6 +325,48 @@ export default function BookingWidget({
 
     setSubmitting(true)
     setErrorMsg(null)
+
+    try {
+      const res = await fetch("/api/stripe/payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          apartmentId: smoobuId,
+          propertyName,
+          checkIn: toDateKey(checkIn),
+          checkOut: toDateKey(checkOut),
+          guests,
+          firstName: form.firstName.trim(),
+          lastName: form.lastName.trim(),
+          email: form.email.trim().toLowerCase(),
+          phone: form.phone.trim(),
+          message: form.message.trim() || undefined,
+          totalPrice: priceBreakdown.total,
+        }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setErrorMsg(data.error ?? "Fehler beim Zahlungsvorgang. Bitte versuche es erneut.")
+        setStep("error")
+      } else {
+        setStripeClientSecret(data.clientSecret)
+        setDepositAmount(data.depositAmount)
+        setStep("payment")
+        window.scrollTo({ top: 0, behavior: "smooth" })
+      }
+    } catch {
+      setErrorMsg("Verbindungsfehler. Bitte überprüfe deine Internetverbindung.")
+      setStep("error")
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  // Step 3 → Step 4: payment succeeded → create Smoobu booking
+  const handlePaymentSuccess = async (paymentIntentId: string) => {
+    if (!checkIn || !checkOut || !priceBreakdown) return
 
     try {
       const res = await fetch("/api/smoobu/booking", {
@@ -321,26 +383,22 @@ export default function BookingWidget({
           phone: form.phone.trim(),
           message: form.message.trim() || undefined,
           totalPrice: priceBreakdown.total,
+          paymentIntentId,
         }),
       })
-
       const data = await res.json()
-
-      if (!res.ok) {
-        setErrorMsg(data.error ?? "Buchung fehlgeschlagen. Bitte versuche es erneut.")
-        setStep("error")
-      } else {
-        setBookingId(data.id)
-        setStep("confirmed")
-        // Scroll to top of widget
-        window.scrollTo({ top: 0, behavior: "smooth" })
-      }
+      if (res.ok) setBookingId(data.id)
     } catch {
-      setErrorMsg("Verbindungsfehler. Bitte überprüfe deine Internetverbindung und versuche es erneut.")
-      setStep("error")
-    } finally {
-      setSubmitting(false)
+      // Non-fatal: webhook will create the booking as backup
     }
+
+    setStep("confirmed")
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
+  const handlePaymentError = (msg: string) => {
+    setErrorMsg(msg)
+    setStep("error")
   }
 
   // ── Render helpers ──
@@ -628,7 +686,7 @@ export default function BookingWidget({
                       zu. Deine Daten werden ausschließlich zur Buchungsabwicklung verwendet.
                     </p>
 
-                    {/* Submit */}
+                    {/* Submit → goes to payment step */}
                     <button
                       type="submit"
                       disabled={submitting}
@@ -637,11 +695,11 @@ export default function BookingWidget({
                       {submitting ? (
                         <>
                           <span className="w-5 h-5 border-2 border-cream-50/40 border-t-cream-50 rounded-full animate-spin" />
-                          Buchung wird übermittelt…
+                          Wird vorbereitet…
                         </>
                       ) : (
                         <>
-                          Jetzt verbindlich buchen
+                          Weiter zur Zahlung
                           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
                             <path d="M3.75 9h10.5M9.75 4.5L14.25 9l-4.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
@@ -650,6 +708,22 @@ export default function BookingWidget({
                     </button>
                   </form>
                 </motion.div>
+              )}
+
+              {/* ── PAYMENT STEP ── */}
+              {step === "payment" && stripeClientSecret && priceBreakdown && (
+                <PaymentStep
+                  clientSecret={stripeClientSecret}
+                  depositAmount={depositAmount}
+                  totalAmount={priceBreakdown.total}
+                  checkIn={checkIn}
+                  checkOut={checkOut}
+                  propertyName={propertyName}
+                  guests={guests}
+                  onSuccess={handlePaymentSuccess}
+                  onError={handlePaymentError}
+                  onBack={() => setStep("form")}
+                />
               )}
 
             </AnimatePresence>
