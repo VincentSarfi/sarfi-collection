@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconMapPin } from "@/components/ui/Icons";
@@ -26,9 +27,10 @@ export default function LocationMap({
   nearbyAttractions = defaultAttractions,
 }: LocationMapProps) {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [mapConsented, setMapConsented] = useState(false);
 
-  // Google Maps embed URL – sanitized
   const mapsEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&output=embed&z=13`;
+  const mapsDirectUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 
   return (
     <section
@@ -63,18 +65,60 @@ export default function LocationMap({
             transition={{ duration: 0.6, delay: 0.1 }}
             className="lg:col-span-2"
           >
-            <div className="relative rounded-2xl overflow-hidden shadow-card-lg aspect-[4/3]">
-              <iframe
-                src={mapsEmbedUrl}
-                width="100%"
-                height="100%"
-                style={{ border: 0, position: "absolute", inset: 0 }}
-                loading="lazy"
-                allowFullScreen
-                referrerPolicy="no-referrer-when-downgrade"
-                title={`Karte: ${address}`}
-                aria-label={`Google Maps Karte für ${address}`}
-              />
+            <div className="relative rounded-2xl overflow-hidden shadow-card-lg aspect-[4/3] bg-cream-200">
+              {mapConsented ? (
+                <iframe
+                  src={mapsEmbedUrl}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0, position: "absolute", inset: 0 }}
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title={`Karte: ${address}`}
+                  aria-label={`Google Maps Karte für ${address}`}
+                />
+              ) : (
+                // Einwilligungsschranke – DSGVO-konform
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-8 text-center bg-cream-200">
+                  <div className="w-14 h-14 rounded-full bg-forest-100 flex items-center justify-center">
+                    <IconMapPin size={28} className="text-forest-600" />
+                  </div>
+                  <div>
+                    <p className="font-display text-lg text-forest-900 mb-1">
+                      Google Maps anzeigen
+                    </p>
+                    <p className="font-body text-xs text-forest-500 leading-relaxed max-w-xs">
+                      Durch das Laden der Karte werden Daten (u.&nbsp;a. Ihre IP-Adresse)
+                      an Google LLC in den USA übertragen. Weitere Informationen in
+                      unserer{" "}
+                      <a
+                        href="/datenschutz"
+                        className="underline underline-offset-2 hover:text-forest-800"
+                      >
+                        Datenschutzerklärung
+                      </a>
+                      .
+                    </p>
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <button
+                      onClick={() => setMapConsented(true)}
+                      className="px-5 py-2.5 rounded-full bg-forest-700 text-cream-50 font-body text-sm font-medium hover:bg-forest-800 transition-colors"
+                    >
+                      Karte laden
+                    </button>
+                    <a
+                      href={mapsDirectUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-5 py-2.5 rounded-full border border-forest-300 text-forest-600 font-body text-sm hover:border-forest-500 transition-colors"
+                    >
+                      Bei Google Maps öffnen ↗
+                    </a>
+                  </div>
+                </div>
+              )}
             </div>
           </motion.div>
 
@@ -111,7 +155,7 @@ export default function LocationMap({
               </ul>
             </div>
 
-            {/* Coordinates hint for GPS */}
+            {/* GPS */}
             <div className="p-3 rounded-xl bg-cream-200 border border-cream-300">
               <p className="font-body text-xs text-forest-500 mb-1">GPS-Koordinaten</p>
               <p className="font-body text-xs text-forest-700 font-medium">
