@@ -1,42 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// Temporary debug endpoint – remove after fixing availability
 // GET /api/smoobu/debug?propertyId=2610828
 export async function GET(request: NextRequest) {
   const propertyId = request.nextUrl.searchParams.get('propertyId') ?? '2610828'
-  const apiKey = process.env.SMOOBU_API_KEY ?? 'NOT SET'
 
   const today = new Date().toISOString().split('T')[0]
-  const endDate = new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0]
+  const endDate = new Date(Date.now() + 90 * 86400000).toISOString().split('T')[0]
 
-  const url = `https://login.smoobu.com/api/apartments/${propertyId}/availability?startDate=${today}&endDate=${endDate}`
-
-  let rawResponse: unknown = null
-  let statusCode = 0
-  let errorMsg = null
-
-  try {
-    const res = await fetch(url, {
-      headers: {
-        'Api-Key': process.env.SMOOBU_API_KEY ?? '',
-        'Cache-Control': 'no-cache',
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store',
-    })
-    statusCode = res.status
-    rawResponse = await res.json()
-  } catch (err) {
-    errorMsg = err instanceof Error ? err.message : String(err)
+  const headers = {
+    'Api-Key': process.env.SMOOBU_API_KEY ?? '',
+    'Cache-Control': 'no-cache',
+    'Content-Type': 'application/json',
   }
 
-  return NextResponse.json({
-    apiKeySet: apiKey !== 'NOT SET',
-    apiKeyLength: apiKey.length,
-    propertyId,
-    url,
-    statusCode,
-    rawResponse,
-    error: errorMsg,
-  })
+  // Test both potential endpoints
+  const endpoints = [
+    `https://login.smoobu.com/api/reservations?apartmentId=${propertyId}&from=${today}&to=${endDate}&pageSize=100`,
+    `https://login.smoobu.com/api/apartments/${propertyId}/rates?startDate=${today}&endDate=${endDate}`,
+    `https://login.smoobu.com/api/apartments/${propertyId}`,
+  ]
+
+  const results: Record<string, unknown> = {}
+
+  for (const url of endpoints) {
+    try {
+      const res = await fetch(url, { headers, cache: 'no-store' })
+      const text = await res.text()
+      let json: unknown = null
+      try { json = JSON.parse(text) } catch { json = text.slice(0, 200) }
+      results[url] = { status: res.status, data: json }
+    } catch (err) {
+      results[url] = { error: err instanceof Error ? err.message : String(err) }
+    }
+  }
+
+  return NextResponse.json(results, { headers: { 'Content-Type': 'application/json' } })
 }
