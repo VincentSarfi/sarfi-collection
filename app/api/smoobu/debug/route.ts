@@ -13,32 +13,30 @@ export async function GET(request: NextRequest) {
     'Content-Type': 'application/json',
   }
 
-  const endpoints = [
-    // Availability variants
-    `https://login.smoobu.com/api/apartments/${propertyId}/availability?startDate=${start}&endDate=${end}`,
-    `https://login.smoobu.com/api/apartments/${propertyId}/availability?from=${start}&to=${end}`,
-    // Rate plan variants
-    `https://login.smoobu.com/api/apartments/${propertyId}/rates`,
-    `https://login.smoobu.com/api/apartments/${propertyId}/rateplans`,
-    `https://login.smoobu.com/api/rates?apartmentId=${propertyId}&startDate=${start}&endDate=${end}`,
-    `https://login.smoobu.com/api/rates?apartments[]=${propertyId}&startDate=${start}&endDate=${end}`,
-    // Price per night from apartment settings
-    `https://login.smoobu.com/api/apartments/${propertyId}/pricePerNight?startDate=${start}&endDate=${end}`,
-    // Channel rates
-    `https://login.smoobu.com/api/apartments/${propertyId}/channel_rates?startDate=${start}&endDate=${end}`,
+  // The /api/rates endpoint exists (returns 422 not 404) – test correct param structures
+  const rateEndpoints = [
+    `rates?apartments[0][id]=${propertyId}&startDate=${start}&endDate=${end}`,
+    `rates?apartments[0]=${propertyId}&startDate=${start}&endDate=${end}`,
+    `rates?apartment=${propertyId}&startDate=${start}&endDate=${end}`,
+    `rates?apartmentIds[]=${propertyId}&startDate=${start}&endDate=${end}`,
+    `rates?id=${propertyId}&startDate=${start}&endDate=${end}`,
+    `rates?apartments[]=${propertyId}&from=${start}&to=${end}`,
+    `rates?apartmentId=${propertyId}&from=${start}&to=${end}`,
+    `rates?apartments[0][id]=${propertyId}&from=${start}&to=${end}`,
   ]
 
   const results: Record<string, unknown> = {}
 
-  for (const url of endpoints) {
+  for (const path of rateEndpoints) {
     try {
+      const url = `https://login.smoobu.com/api/${path}`
       const res = await fetch(url, { headers, cache: 'no-store' })
       const text = await res.text()
       let json: unknown = null
-      try { json = JSON.parse(text) } catch { json = text.slice(0, 300) }
-      results[url.replace('https://login.smoobu.com/api/', '')] = { status: res.status, data: json }
+      try { json = JSON.parse(text) } catch { json = text.slice(0, 200) }
+      results[path] = { status: res.status, data: json }
     } catch (err) {
-      results[url.replace('https://login.smoobu.com/api/', '')] = { error: err instanceof Error ? err.message : String(err) }
+      results[path] = { error: err instanceof Error ? err.message : String(err) }
     }
   }
 
