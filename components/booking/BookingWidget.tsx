@@ -18,6 +18,8 @@ export interface BookingWidgetProps {
   minStay: number
   cleaningFee: number
   priceFrom: number
+  baseOccupancy: number
+  extraPersonFee: number
   breadcrumb: Array<{ label: string; href: string }>
   propertyHref: string
 }
@@ -42,9 +44,11 @@ interface FormErrors {
 interface PriceBreakdown {
   nights: number
   nightlyTotal: number
+  extraPersonTotal: number
   cleaningFee: number
   total: number
   avgNightly: number
+  extraGuests: number
 }
 
 // ─── Price Calculator ─────────────────────────────────────────────────────────
@@ -55,6 +59,9 @@ function calcPrice(
   priceMap: Record<string, number>,
   priceFrom: number,
   cleaningFee: number,
+  guests: number,
+  baseOccupancy: number,
+  extraPersonFee: number,
 ): PriceBreakdown {
   const nights = Math.round(
     (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24),
@@ -74,12 +81,17 @@ function calcPrice(
 
   if (daysWithPrice === 0) nightlyTotal = priceFrom * nights
 
+  const extraGuests = Math.max(0, guests - baseOccupancy)
+  const extraPersonTotal = extraGuests * extraPersonFee * nights
+
   return {
     nights,
     nightlyTotal: Math.round(nightlyTotal),
+    extraPersonTotal,
     cleaningFee,
-    total: Math.round(nightlyTotal + cleaningFee),
+    total: Math.round(nightlyTotal + extraPersonTotal + cleaningFee),
     avgNightly: Math.round(nightlyTotal / nights),
+    extraGuests,
   }
 }
 
@@ -172,6 +184,8 @@ export default function BookingWidget({
   minStay,
   cleaningFee,
   priceFrom,
+  baseOccupancy,
+  extraPersonFee,
   breadcrumb,
   propertyHref,
 }: BookingWidgetProps) {
@@ -269,8 +283,8 @@ export default function BookingWidget({
 
   const priceBreakdown = useMemo<PriceBreakdown | null>(() => {
     if (!checkIn || !checkOut) return null
-    return calcPrice(checkIn, checkOut, priceMap, priceFrom, cleaningFee)
-  }, [checkIn, checkOut, priceMap, priceFrom, cleaningFee])
+    return calcPrice(checkIn, checkOut, priceMap, priceFrom, cleaningFee, guests, baseOccupancy, extraPersonFee)
+  }, [checkIn, checkOut, priceMap, priceFrom, cleaningFee, guests, baseOccupancy, extraPersonFee])
 
   // Effective display price: PriceLabs recommended_base_price if available, else priceFrom
   const effectivePrice = useMemo(() => {
@@ -1030,6 +1044,14 @@ function StickyPanel({
                   </span>
                   <span>{priceBreakdown.nightlyTotal.toLocaleString("de-DE")} €</span>
                 </div>
+                {priceBreakdown.extraPersonTotal > 0 && (
+                  <div className="flex justify-between font-body text-sm text-forest-600">
+                    <span>
+                      Personenaufschlag ({priceBreakdown.extraGuests} {priceBreakdown.extraGuests === 1 ? "Person" : "Personen"} × {extraPersonFee} € × {priceBreakdown.nights} {priceBreakdown.nights === 1 ? "Nacht" : "Nächte"})
+                    </span>
+                    <span>{priceBreakdown.extraPersonTotal.toLocaleString("de-DE")} €</span>
+                  </div>
+                )}
                 <div className="flex justify-between font-body text-sm text-forest-600">
                   <span>Reinigungsgebühr</span>
                   <span>{priceBreakdown.cleaningFee.toLocaleString("de-DE")} €</span>

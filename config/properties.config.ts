@@ -25,6 +25,10 @@ export type PropertyBookingConfig = {
   cleaningFee: number
   /** Displayed "from" price per night (fallback if API unavailable) */
   priceFrom: number
+  /** Base occupancy included in the nightly rate */
+  baseOccupancy: number
+  /** Extra charge per person per night above baseOccupancy (0 = no surcharge) */
+  extraPersonFee: number
   /** Hero image path */
   heroImage: string
   /** Breadcrumb trail leading to this booking page */
@@ -46,6 +50,8 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     minStay: 2,
     cleaningFee: 120,
     priceFrom: 199,
+    baseOccupancy: 4,
+    extraPersonFee: 29,
     heroImage: '/images/haus28/hero.webp',
     breadcrumb: [{ label: 'HAUS28', href: '/haus28' }],
     propertyHref: '/haus28',
@@ -61,6 +67,8 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     minStay: 2,
     cleaningFee: 65,
     priceFrom: 95,
+    baseOccupancy: 2,
+    extraPersonFee: 15,
     heroImage: '/images/schoenblick/b5/hero.webp',
     breadcrumb: [
       { label: 'Haus Schönblick', href: '/schoenblick' },
@@ -79,6 +87,8 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     minStay: 2,
     cleaningFee: 65,
     priceFrom: 95,
+    baseOccupancy: 2,
+    extraPersonFee: 15,
     heroImage: '/images/schoenblick/b6/hero.webp',
     breadcrumb: [
       { label: 'Haus Schönblick', href: '/schoenblick' },
@@ -97,6 +107,8 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     minStay: 2,
     cleaningFee: 65,
     priceFrom: 95,
+    baseOccupancy: 2,
+    extraPersonFee: 15,
     heroImage: '/images/schoenblick/b8/hero.webp',
     breadcrumb: [
       { label: 'Haus Schönblick', href: '/schoenblick' },
@@ -115,6 +127,8 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     minStay: 2,
     cleaningFee: 65,
     priceFrom: 95,
+    baseOccupancy: 2,
+    extraPersonFee: 15,
     heroImage: '/images/schoenblick/a2/hero.webp',
     breadcrumb: [
       { label: 'Haus Schönblick', href: '/schoenblick' },

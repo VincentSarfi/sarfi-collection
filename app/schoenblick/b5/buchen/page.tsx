@@ -66,6 +66,8 @@ export default function B5BuchenPage() {
         minStay={config.minStay}
         cleaningFee={config.cleaningFee}
         priceFrom={config.priceFrom}
+        baseOccupancy={config.baseOccupancy}
+        extraPersonFee={config.extraPersonFee}
         breadcrumb={config.breadcrumb}
         propertyHref={config.propertyHref}
       />
