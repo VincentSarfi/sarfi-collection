@@ -103,12 +103,12 @@ export async function getAvailability(
       if (!res.ok) break
 
       const json = await res.json() as {
-        totalCount?: number
-        pageSize?: number
+        total_items?: number  // Smoobu uses snake_case
+        page_size?: number
         bookings?: Array<{
           arrival?: string
           departure?: string
-          type?: string
+          type?: string        // "reservation" | "cancellation" | "modification of booking"
         }>
       }
 
@@ -116,6 +116,8 @@ export async function getAvailability(
 
       for (const booking of bookings) {
         if (!booking.arrival || !booking.departure) continue
+        // Skip cancellations – those dates are free again
+        if (booking.type === 'cancellation') continue
         // Block all nights: arrival (inclusive) up to departure (exclusive)
         for (const night of daysBetween(booking.arrival, booking.departure)) {
           if (result[night]) {
@@ -124,8 +126,8 @@ export async function getAvailability(
         }
       }
 
-      const fetched = page * 100
-      hasMore = (json.totalCount ?? 0) > fetched
+      const fetched = page * (json.page_size ?? 100)
+      hasMore = (json.total_items ?? 0) > fetched
       page++
     }
   } catch (err) {
