@@ -884,24 +884,27 @@ export default function BookingWidget({
             ) : null}
 
             {/* Guest counter (compact) */}
-            <div className="flex items-center gap-1 bg-cream-100 rounded-lg px-2 py-1.5">
-              <button
-                type="button"
-                onClick={() => setGuests((g) => Math.max(1, g - 1))}
-                className="w-6 h-6 flex items-center justify-center text-forest-600 hover:text-forest-900"
-                aria-label="Weniger Gäste"
-              >
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
-              </button>
-              <span className="font-body text-sm font-medium text-forest-800 w-4 text-center">{guests}</span>
-              <button
-                type="button"
-                onClick={() => setGuests((g) => Math.min(maxGuests, g + 1))}
-                className="w-6 h-6 flex items-center justify-center text-forest-600 hover:text-forest-900"
-                aria-label="Mehr Gäste"
-              >
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
-              </button>
+            <div className="flex flex-col items-center gap-0.5">
+              <span className="font-body text-[10px] text-forest-400 leading-none">Gäste</span>
+              <div className="flex items-center gap-1 bg-cream-100 rounded-lg px-2 py-1.5">
+                <button
+                  type="button"
+                  onClick={() => setGuests((g) => Math.max(1, g - 1))}
+                  className="w-6 h-6 flex items-center justify-center text-forest-600 hover:text-forest-900"
+                  aria-label="Weniger Gäste"
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                </button>
+                <span className="font-body text-sm font-medium text-forest-800 w-4 text-center">{guests}</span>
+                <button
+                  type="button"
+                  onClick={() => setGuests((g) => Math.min(maxGuests, g + 1))}
+                  className="w-6 h-6 flex items-center justify-center text-forest-600 hover:text-forest-900"
+                  aria-label="Mehr Gäste"
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
