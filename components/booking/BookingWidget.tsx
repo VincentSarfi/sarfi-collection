@@ -762,6 +762,7 @@ export default function BookingWidget({
                 setShowGuestDropdown={setShowGuestDropdown}
                 setGuests={setGuests}
                 priceBreakdown={priceBreakdown}
+                extraPersonFee={extraPersonFee}
                 step={step}
                 onContinue={() => setStep("form")}
                 onReset={handleReset}
@@ -865,6 +866,7 @@ interface StickyPanelProps {
   setShowGuestDropdown: (v: boolean) => void
   setGuests: (n: number) => void
   priceBreakdown: PriceBreakdown | null
+  extraPersonFee: number
   step: Step
   onContinue: () => void
   onReset: () => void
@@ -881,6 +883,7 @@ function StickyPanel({
   setShowGuestDropdown,
   setGuests,
   priceBreakdown,
+  extraPersonFee,
   step,
   onContinue,
   onReset,
