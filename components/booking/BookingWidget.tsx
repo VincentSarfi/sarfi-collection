@@ -587,21 +587,69 @@ export default function BookingWidget({
                     priceMap={priceMap}
                   />
 
-                  {/* Mobile: CTA below calendar */}
-                  {checkIn && checkOut && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-6 lg:hidden"
-                    >
+                  {/* Mobile controls below calendar */}
+                  <div className="mt-6 lg:hidden space-y-3">
+
+                    {/* Guest counter – only inline when fixed bar is hidden (multi-widget page) */}
+                    {hideMobileBar && (
+                      <div className="flex items-center justify-between bg-cream-100 rounded-2xl px-4 py-3">
+                        <span className="font-body text-sm text-forest-700">Gäste</span>
+                        <div className="flex items-center gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setGuests((g) => Math.max(1, g - 1))}
+                            className="w-8 h-8 flex items-center justify-center rounded-full border border-forest-300 text-forest-700 hover:bg-forest-100 transition-colors"
+                            aria-label="Weniger Gäste"
+                          >
+                            <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                          </button>
+                          <span className="font-body text-base font-semibold text-forest-900 w-5 text-center">{guests}</span>
+                          <button
+                            type="button"
+                            onClick={() => setGuests((g) => Math.min(maxGuests, g + 1))}
+                            className="w-8 h-8 flex items-center justify-center rounded-full border border-forest-300 text-forest-700 hover:bg-forest-100 transition-colors"
+                            aria-label="Mehr Gäste"
+                          >
+                            <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Price breakdown – visible once dates are selected */}
+                    {checkIn && checkOut && priceBreakdown && (
+                      <div className="bg-white rounded-2xl border border-cream-200 px-4 py-3 space-y-1.5">
+                        <div className="flex justify-between font-body text-sm text-forest-700">
+                          <span>{priceBreakdown.avgNightly} € × {priceBreakdown.nights} Nächte</span>
+                          <span>{priceBreakdown.nightlyTotal} €</span>
+                        </div>
+                        {priceBreakdown.extraGuests > 0 && (
+                          <div className="flex justify-between font-body text-sm text-gold-700">
+                            <span>+{priceBreakdown.extraGuests} Pers. × {extraPersonFee} € × {priceBreakdown.nights} Nächte</span>
+                            <span>+{priceBreakdown.extraPersonTotal} €</span>
+                          </div>
+                        )}
+                        <div className="flex justify-between font-body text-sm text-forest-700">
+                          <span>Reinigung</span>
+                          <span>{priceBreakdown.cleaningFee} €</span>
+                        </div>
+                        <div className="flex justify-between font-body text-sm font-bold text-forest-900 pt-1.5 border-t border-cream-200">
+                          <span>Gesamt</span>
+                          <span>{priceBreakdown.total.toLocaleString("de-DE")} €</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* CTA */}
+                    {checkIn && checkOut && (
                       <button
                         onClick={() => setStep("form")}
                         className="w-full py-4 rounded-2xl bg-forest-800 text-cream-50 font-body font-semibold text-base hover:bg-forest-700 transition-colors shadow-lg"
                       >
                         Weiter zur Buchung →
                       </button>
-                    </motion.div>
-                  )}
+                    )}
+                  </div>
 
                   <TrustBadges />
                 </motion.div>
