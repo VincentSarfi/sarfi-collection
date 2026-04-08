@@ -10,18 +10,22 @@ import PropertyDescription from "@/components/property/PropertyDescription";
 import AmenitiesGrid from "@/components/property/AmenitiesGrid";
 import LocationMap from "@/components/property/LocationMap";
 import PropertyReviews from "@/components/property/PropertyReviews";
-import SmoobuBookingWidget from "@/components/property/SmoobuBookingWidget";
+import BookingWidget from "@/components/booking/BookingWidget";
 import FaqAccordion from "@/components/property/FaqAccordion";
 import RelatedProperties from "@/components/property/RelatedProperties";
 import { schoenblick } from "@/data/properties";
 import { schoenblickReviews } from "@/data/reviews";
 import type { ApartmentData } from "@/data/properties";
+import { type PropertyBookingConfig, resolveSmoobuId } from "@/config/properties.config";
 
 interface ApartmentPageProps {
   apartment: ApartmentData;
+  config: PropertyBookingConfig;
 }
 
-export default function ApartmentPage({ apartment }: ApartmentPageProps) {
+export default function ApartmentPage({ apartment, config }: ApartmentPageProps) {
+  const smoobuId = resolveSmoobuId(config);
+
   // Related = other apartments in Schönblick
   const related = Object.values(schoenblick.apartments ?? {})
     .filter((apt) => apt.id !== apartment.id)
@@ -30,7 +34,7 @@ export default function ApartmentPage({ apartment }: ApartmentPageProps) {
       name: apt.name,
       subtitle: apt.subtitle,
       href: `/schoenblick/${apt.id}`,
-      bookHref: `/schoenblick/buchen`,
+      bookHref: `/schoenblick/${apt.id}/buchen`,
       imageSrc: apt.images.hero,
       imageAlt: apt.name,
       priceFrom: apt.priceFrom,
@@ -53,7 +57,7 @@ export default function ApartmentPage({ apartment }: ApartmentPageProps) {
         airbnbRating={apartment.airbnbRating}
         airbnbReviewCount={apartment.airbnbReviewCount}
         heroImage={apartment.images.hero}
-        bookHref={`/schoenblick/buchen`}
+        bookHref={`#buchen`}
         galleryCount={apartment.images.gallery.length}
         breadcrumb={[{ label: "Haus Schönblick", href: "/schoenblick" }]}
       />
@@ -101,10 +105,21 @@ export default function ApartmentPage({ apartment }: ApartmentPageProps) {
       />
 
       {/* 8. Buchung */}
-      <SmoobuBookingWidget
-        propertyId={apartment.smoobuPropertyId}
-        propertyName={apartment.name}
-      />
+      <div id="buchen">
+        <BookingWidget
+          smoobuId={smoobuId}
+          propertyName={config.name}
+          propertySlug={config.id}
+          maxGuests={config.maxGuests}
+          minStay={config.minStay}
+          cleaningFee={config.cleaningFee}
+          priceFrom={config.priceFrom}
+          baseOccupancy={config.baseOccupancy}
+          extraPersonFee={config.extraPersonFee}
+          breadcrumb={config.breadcrumb}
+          propertyHref={config.propertyHref}
+        />
+      </div>
 
       {/* 9. FAQ */}
       <FaqAccordion faqs={apartment.faqs} />

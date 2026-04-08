@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import ApartmentPage from "@/components/property/ApartmentPage";
 import { schoenblick } from "@/data/properties";
+import { PROPERTY_CONFIGS } from "@/config/properties.config";
 
 const apt = schoenblick.apartments!.b6;
+const config = PROPERTY_CONFIGS.b6;
 
 export const metadata: Metadata = {
   title: `${apt.name} – Haus Schönblick, Schöfweg`,
@@ -44,7 +46,7 @@ export default function B6Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ApartmentPage apartment={apt} />
+      <ApartmentPage apartment={apt} config={config} />
     </>
   );
 }

@@ -9,7 +9,8 @@ import PropertyDescription from "@/components/property/PropertyDescription";
 import AmenitiesGrid from "@/components/property/AmenitiesGrid";
 import LocationMap from "@/components/property/LocationMap";
 import PropertyReviews from "@/components/property/PropertyReviews";
-import SmoobuBookingWidget from "@/components/property/SmoobuBookingWidget";
+import BookingWidget from "@/components/booking/BookingWidget";
+import { PROPERTY_CONFIGS, resolveSmoobuId } from "@/config/properties.config";
 import FaqAccordion from "@/components/property/FaqAccordion";
 import RelatedProperties from "@/components/property/RelatedProperties";
 import { schoenblick } from "@/data/properties";
@@ -117,6 +118,8 @@ const totalReviews =
   (haus28.googleReviewCount ?? 0);
 
 export default function Haus28Page() {
+  const config = PROPERTY_CONFIGS.haus28;
+  const smoobuId = resolveSmoobuId(config);
   const relatedSchoenblick = Object.values(schoenblick.apartments ?? {}).slice(0, 3).map((apt) => ({
     name: apt.name,
     subtitle: apt.subtitle,
@@ -145,7 +148,7 @@ export default function Haus28Page() {
         airbnbRating={haus28.airbnbRating}
         airbnbReviewCount={haus28.airbnbReviewCount}
         heroImage={haus28.images.hero}
-        bookHref="/haus28/buchen"
+        bookHref="#buchen"
         galleryCount={haus28.images.gallery.length}
         breadcrumb={[]}
       />
@@ -196,11 +199,21 @@ export default function Haus28Page() {
       />
 
       {/* 8. Buchung */}
-      <SmoobuBookingWidget
-        propertyId={haus28.smoobuPropertyId}
-        propertyName={haus28.name}
-        fallbackUrl={haus28.smoobuEmbedUrl}
-      />
+      <div id="buchen">
+        <BookingWidget
+          smoobuId={smoobuId}
+          propertyName={config.name}
+          propertySlug={config.id}
+          maxGuests={config.maxGuests}
+          minStay={config.minStay}
+          cleaningFee={config.cleaningFee}
+          priceFrom={config.priceFrom}
+          baseOccupancy={config.baseOccupancy}
+          extraPersonFee={config.extraPersonFee}
+          breadcrumb={config.breadcrumb}
+          propertyHref={config.propertyHref}
+        />
+      </div>
 
       {/* 9. FAQ */}
       <FaqAccordion faqs={haus28.faqs} />

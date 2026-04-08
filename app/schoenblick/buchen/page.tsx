@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { schoenblick } from "@/data/properties";
-import SmoobuBookingWidget from "@/components/property/SmoobuBookingWidget";
-import { IconArrowRight, IconStar } from "@/components/ui/Icons";
 import Link from "next/link";
+import { schoenblick } from "@/data/properties";
+import BookingWidget from "@/components/booking/BookingWidget";
+import { PROPERTY_CONFIGS, resolveSmoobuId } from "@/config/properties.config";
+import { IconArrowRight, IconStar } from "@/components/ui/Icons";
 
 export const metadata: Metadata = {
   title: "Haus Schönblick buchen – Apartments im Bayerischen Wald",
@@ -53,9 +54,9 @@ export default function SchoenblickBuchenPage() {
         <h2 className="font-display text-xl text-forest-900 mb-4">Wähle dein Apartment:</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
           {apartments.map((apt) => (
-            <Link
+            <a
               key={apt.id}
-              href={`/schoenblick/${apt.id}`}
+              href={`#${apt.id}`}
               className="p-3 rounded-xl border border-forest-200 bg-white hover:border-gold-400 hover:bg-gold-300/5 transition-all text-center group"
             >
               <p className="font-body text-sm font-medium text-forest-800 group-hover:text-gold-700">
@@ -64,7 +65,7 @@ export default function SchoenblickBuchenPage() {
               <p className="font-body text-xs text-forest-400">
                 ab {apt.priceFrom}€ / Nacht
               </p>
-            </Link>
+            </a>
           ))}
         </div>
         <p className="font-body text-sm text-forest-500">
@@ -76,17 +77,28 @@ export default function SchoenblickBuchenPage() {
       </div>
 
       {/* Booking widgets for all apartments */}
-      {apartments.map((apt) => (
-        <div key={apt.id} id={apt.id}>
-          <div className="container-site">
-            <h3 className="font-display text-xl text-forest-800 pt-4">{apt.name}</h3>
+      {apartments.map((apt) => {
+        const config = PROPERTY_CONFIGS[apt.id];
+        if (!config) return null;
+        const smoobuId = resolveSmoobuId(config);
+        return (
+          <div key={apt.id} id={apt.id} className="scroll-mt-20">
+            <BookingWidget
+              smoobuId={smoobuId}
+              propertyName={config.name}
+              propertySlug={config.id}
+              maxGuests={config.maxGuests}
+              minStay={config.minStay}
+              cleaningFee={config.cleaningFee}
+              priceFrom={config.priceFrom}
+              baseOccupancy={config.baseOccupancy}
+              extraPersonFee={config.extraPersonFee}
+              breadcrumb={config.breadcrumb}
+              propertyHref={config.propertyHref}
+            />
           </div>
-          <SmoobuBookingWidget
-            propertyId={apt.smoobuPropertyId}
-            propertyName={apt.name}
-          />
-        </div>
-      ))}
+        );
+      })}
 
       {/* Trust */}
       <div className="container-site pb-12">
