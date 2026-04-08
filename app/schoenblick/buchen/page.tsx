@@ -123,6 +123,7 @@ export default function SchoenblickBuchenPage() {
               extraPersonFee={config.extraPersonFee}
               breadcrumb={config.breadcrumb}
               propertyHref={config.propertyHref}
+              hideMobileBar
             />
           </div>
         );

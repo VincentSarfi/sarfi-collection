@@ -22,6 +22,8 @@ export interface BookingWidgetProps {
   extraPersonFee: number
   breadcrumb: Array<{ label: string; href: string }>
   propertyHref: string
+  /** Hide the fixed mobile bottom bar (e.g. when multiple widgets are on one page) */
+  hideMobileBar?: boolean
 }
 
 type Step = "dates" | "form" | "payment" | "confirmed" | "error"
@@ -188,6 +190,7 @@ export default function BookingWidget({
   extraPersonFee,
   breadcrumb,
   propertyHref,
+  hideMobileBar = false,
 }: BookingWidgetProps) {
   // ── State ──
   const [step, setStep] = useState<Step>("dates")
@@ -775,80 +778,86 @@ export default function BookingWidget({
       </div>
 
       {/* ══ MOBILE FIXED BOTTOM BAR ══════════════════════════════════════════ */}
-      <div className="fixed bottom-0 left-0 right-0 lg:hidden bg-white border-t border-cream-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-30">
-        <div className="flex items-center gap-3 px-4 py-3">
-          {/* Price / date info */}
-          <div className="flex-1 min-w-0">
-            {priceBreakdown ? (
-              <>
-                <p className="font-body text-sm font-bold text-forest-900 leading-tight">
-                  {priceBreakdown.total.toLocaleString("de-DE")} €{" "}
-                  <span className="font-normal text-forest-500">gesamt</span>
-                </p>
-                <p className="font-body text-xs text-forest-500 truncate">
-                  {checkIn && checkOut
-                    ? `${fmtShort(checkIn)} – ${fmtShort(checkOut)}`
-                    : ""}
-                </p>
-              </>
-            ) : checkIn ? (
-              <>
-                <p className="font-body text-sm font-bold text-forest-900 leading-tight">
-                  Ab {effectivePrice} € / Nacht
-                </p>
-                <p className="font-body text-xs text-forest-500">Abreise wählen</p>
-              </>
-            ) : (
-              <>
-                <p className="font-body text-sm font-bold text-forest-900 leading-tight">
-                  Ab {effectivePrice} € / Nacht
-                </p>
-                <p className="font-body text-xs text-forest-500">Datum wählen</p>
-              </>
-            )}
-          </div>
+      {!hideMobileBar && (
+        <div className="fixed bottom-0 left-0 right-0 lg:hidden bg-white border-t border-cream-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-30">
+          <div className="flex items-center gap-3 px-4 py-3">
+            {/* Price / date info */}
+            <div className="flex-1 min-w-0">
+              {priceBreakdown ? (
+                <>
+                  <p className="font-body text-sm font-bold text-forest-900 leading-tight">
+                    {priceBreakdown.total.toLocaleString("de-DE")} €{" "}
+                    <span className="font-normal text-forest-500">gesamt</span>
+                  </p>
+                  <p className="font-body text-xs text-forest-500 truncate">
+                    {fmtShort(checkIn!)} – {fmtShort(checkOut!)}{" · "}
+                    {priceBreakdown.nights} Nächte
+                    {priceBreakdown.extraGuests > 0 && (
+                      <span className="text-gold-600">
+                        {" · "}+{priceBreakdown.extraGuests} Pers.
+                      </span>
+                    )}
+                  </p>
+                </>
+              ) : checkIn ? (
+                <>
+                  <p className="font-body text-sm font-bold text-forest-900 leading-tight">
+                    Ab {effectivePrice} € / Nacht
+                  </p>
+                  <p className="font-body text-xs text-forest-500">Abreise wählen</p>
+                </>
+              ) : (
+                <>
+                  <p className="font-body text-sm font-bold text-forest-900 leading-tight">
+                    Ab {effectivePrice} € / Nacht
+                  </p>
+                  <p className="font-body text-xs text-forest-500">Datum wählen</p>
+                </>
+              )}
+            </div>
 
-          {/* CTA */}
-          {step === "dates" ? (
-            <button
-              onClick={() => checkIn && checkOut && setStep("form")}
-              disabled={!checkIn || !checkOut}
-              className="flex-shrink-0 px-5 py-3 rounded-xl bg-forest-800 text-cream-50 font-body font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-forest-700 transition-colors"
-            >
-              {checkIn && checkOut ? "Weiter →" : "Datum wählen"}
-            </button>
-          ) : step === "form" ? (
-            <button
-              onClick={() => document.querySelector<HTMLButtonElement>('button[type="submit"]')?.click()}
-              disabled={submitting}
-              className="flex-shrink-0 px-5 py-3 rounded-xl bg-forest-800 text-cream-50 font-body font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-forest-700 transition-colors"
-            >
-              {submitting ? "…" : "Buchen"}
-            </button>
-          ) : null}
+            {/* CTA */}
+            {step === "dates" ? (
+              <button
+                onClick={() => checkIn && checkOut && setStep("form")}
+                disabled={!checkIn || !checkOut}
+                className="flex-shrink-0 px-5 py-3 rounded-xl bg-forest-800 text-cream-50 font-body font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-forest-700 transition-colors"
+              >
+                {checkIn && checkOut ? "Weiter →" : "Datum wählen"}
+              </button>
+            ) : step === "form" ? (
+              <button
+                onClick={() => document.querySelector<HTMLButtonElement>('button[type="submit"]')?.click()}
+                disabled={submitting}
+                className="flex-shrink-0 px-5 py-3 rounded-xl bg-forest-800 text-cream-50 font-body font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-forest-700 transition-colors"
+              >
+                {submitting ? "…" : "Buchen"}
+              </button>
+            ) : null}
 
-          {/* Guest counter (compact) */}
-          <div className="flex items-center gap-1 bg-cream-100 rounded-lg px-2 py-1.5">
-            <button
-              type="button"
-              onClick={() => setGuests((g) => Math.max(1, g - 1))}
-              className="w-6 h-6 flex items-center justify-center text-forest-600 hover:text-forest-900"
-              aria-label="Weniger Gäste"
-            >
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
-            </button>
-            <span className="font-body text-sm font-medium text-forest-800 w-4 text-center">{guests}</span>
-            <button
-              type="button"
-              onClick={() => setGuests((g) => Math.min(maxGuests, g + 1))}
-              className="w-6 h-6 flex items-center justify-center text-forest-600 hover:text-forest-900"
-              aria-label="Mehr Gäste"
-            >
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
-            </button>
+            {/* Guest counter (compact) */}
+            <div className="flex items-center gap-1 bg-cream-100 rounded-lg px-2 py-1.5">
+              <button
+                type="button"
+                onClick={() => setGuests((g) => Math.max(1, g - 1))}
+                className="w-6 h-6 flex items-center justify-center text-forest-600 hover:text-forest-900"
+                aria-label="Weniger Gäste"
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+              </button>
+              <span className="font-body text-sm font-medium text-forest-800 w-4 text-center">{guests}</span>
+              <button
+                type="button"
+                onClick={() => setGuests((g) => Math.min(maxGuests, g + 1))}
+                className="w-6 h-6 flex items-center justify-center text-forest-600 hover:text-forest-900"
+                aria-label="Mehr Gäste"
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
