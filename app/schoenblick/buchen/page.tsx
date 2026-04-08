@@ -77,12 +77,40 @@ export default function SchoenblickBuchenPage() {
       </div>
 
       {/* Booking widgets for all apartments */}
-      {apartments.map((apt) => {
+      {apartments.map((apt, idx) => {
         const config = PROPERTY_CONFIGS[apt.id];
         if (!config) return null;
         const smoobuId = resolveSmoobuId(config);
         return (
           <div key={apt.id} id={apt.id} className="scroll-mt-20">
+            {/* Divider between apartments */}
+            {idx > 0 && (
+              <div className="border-t-4 border-forest-900/10 mx-auto" />
+            )}
+
+            {/* Apartment header */}
+            <div className="bg-forest-900">
+              <div className="container-site py-5 flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p className="font-body text-xs text-cream-50/40 mb-0.5 uppercase tracking-wider">
+                    Haus Schönblick · Apartment {apt.id.toUpperCase()}
+                  </p>
+                  <h2 className="font-display text-xl text-cream-50">
+                    {apt.name} <span className="text-gold-300">buchen</span>
+                  </h2>
+                  <p className="font-body text-sm text-cream-50/60 mt-0.5">
+                    {config.subtitle} · bis {config.maxGuests} Personen · ab {config.priceFrom}€ / Nacht
+                  </p>
+                </div>
+                <Link
+                  href={config.propertyHref}
+                  className="font-body text-xs text-cream-50/50 hover:text-cream-50/80 transition-colors underline underline-offset-2"
+                >
+                  Apartment ansehen →
+                </Link>
+              </div>
+            </div>
+
             <BookingWidget
               smoobuId={smoobuId}
               propertyName={config.name}
