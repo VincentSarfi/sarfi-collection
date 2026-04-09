@@ -17,10 +17,10 @@ export async function POST(request: NextRequest) {
   const sig  = request.headers.get('stripe-signature') ?? ''
   const secret = process.env.STRIPE_WEBHOOK_SECRET ?? ''
 
-  // Skip signature verification if secret is placeholder (dev/test)
+  // Refuse to process if webhook secret is not configured
   if (!secret || secret === 'whsec_PLACEHOLDER') {
-    console.warn('[webhook] STRIPE_WEBHOOK_SECRET not set – skipping verification')
-    return NextResponse.json({ received: true })
+    console.error('[webhook] STRIPE_WEBHOOK_SECRET not configured – rejecting request')
+    return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 })
   }
 
   let event

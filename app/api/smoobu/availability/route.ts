@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAvailability } from '@/lib/smoobu'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 /**
  * GET /api/smoobu/availability
@@ -9,6 +10,13 @@ import { getAvailability } from '@/lib/smoobu'
  *   endDate     – YYYY-MM-DD (defaults to today + 365 days)
  */
 export async function GET(request: NextRequest) {
+  // Rate limit: max 60 requests per IP per minute (calendar loads multiple months)
+  const ip = getClientIp(request)
+  const rl = rateLimit(`availability:${ip}`, 60, 60 * 1000)
+  if (!rl.allowed) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+  }
+
   const { searchParams } = request.nextUrl
 
   const propertyId = searchParams.get('propertyId')

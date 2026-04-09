@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createBooking, verifyAvailability } from '@/lib/smoobu'
 import type { BookingRequest } from '@/lib/smoobu'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 // ─── Validation helpers ───────────────────────────────────────────────────────
 
@@ -20,6 +21,16 @@ function isValidEmail(s: string) {
  * Returns: { id, referenceId } on success, { error } on failure
  */
 export async function POST(request: NextRequest) {
+  // Rate limit: max 10 booking attempts per IP per 10 minutes
+  const ip = getClientIp(request)
+  const rl = rateLimit(`smoobu-booking:${ip}`, 10, 10 * 60 * 1000)
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: 'Zu viele Anfragen. Bitte warte kurz und versuche es erneut.' },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } },
+    )
+  }
+
   let body: Partial<BookingRequest>
   try {
     body = await request.json()

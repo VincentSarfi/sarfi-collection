@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe, DEPOSIT_FRACTION, toCents } from '@/lib/stripe'
 import { verifyAvailability } from '@/lib/smoobu'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 export interface CreatePaymentIntentRequest {
   apartmentId: string
@@ -24,6 +25,16 @@ export interface CreatePaymentIntentResponse {
 }
 
 export async function POST(request: NextRequest) {
+  // Rate limit: max 10 payment intent creations per IP per 10 minutes
+  const ip = getClientIp(request)
+  const rl = rateLimit(`payment-intent:${ip}`, 10, 10 * 60 * 1000)
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: 'Zu viele Anfragen. Bitte warte kurz und versuche es erneut.' },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } },
+    )
+  }
+
   let body: Partial<CreatePaymentIntentRequest>
   try {
     body = await request.json()
