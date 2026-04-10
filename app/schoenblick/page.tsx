@@ -58,10 +58,10 @@ export default function SchoenblickPage() {
       subtitle: "Modernes A-Frame im Wald",
       href: "/haus28",
       bookHref: "/haus28/buchen",
-      imageSrc: "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=800&q=80",
+      imageSrc: "/images/haus28/hero.webp",
       imageAlt: "HAUS28 A-Frame",
-      priceFrom: 149,
-      rating: 4.9,
+      priceFrom: 199,
+      rating: 5.0,
       tag: "A-Frame",
     },
   ];

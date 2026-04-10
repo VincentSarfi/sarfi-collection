@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { IconInstagram, IconMail, IconMapPin } from "@/components/ui/Icons";
+import SarfiLogo from "@/components/ui/SarfiLogo";
 
 const footerLinks = {
   unterkuenfte: [
@@ -33,12 +34,10 @@ export default function Footer() {
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="group inline-block mb-4" aria-label="SARFI Collection">
-              <div className="font-display text-2xl font-semibold text-cream-50 group-hover:text-gold-300 transition-colors">
-                SARFI
-              </div>
-              <div className="font-body text-[10px] tracking-[0.2em] uppercase text-cream-50/40 group-hover:text-gold-300/60 transition-colors">
-                Collection
-              </div>
+              <SarfiLogo
+                variant="light"
+                className="w-56 opacity-80 group-hover:opacity-100 transition-opacity"
+              />
             </Link>
             <p className="font-body text-sm leading-relaxed text-cream-50/60 max-w-xs">
               Exklusive Ferienunterkünfte im Bayerischen Wald. Natur, Design und Komfort – direkt gebucht.

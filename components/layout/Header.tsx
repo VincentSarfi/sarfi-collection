@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { IconMenu, IconX, IconChevronDown } from "@/components/ui/Icons";
+import SarfiLogo from "@/components/ui/SarfiLogo";
 
 const navLinks = [
   { label: "HAUS28", href: "/haus28" },
@@ -72,15 +73,22 @@ export default function Header() {
         {/* Logo */}
         <Link
           href="/"
-          className="flex flex-col leading-none group"
+          className="flex items-center gap-2.5 group"
           aria-label="SARFI Collection – Startseite"
         >
-          <span className="font-display text-xl md:text-2xl font-semibold tracking-wide text-cream-50 group-hover:text-gold-300 transition-colors">
-            SARFI
-          </span>
-          <span className="font-body text-[10px] tracking-[0.2em] uppercase text-cream-50/60 group-hover:text-gold-300/80 transition-colors">
-            Collection
-          </span>
+          <SarfiLogo
+            markOnly
+            variant="light"
+            className="h-9 w-auto transition-opacity group-hover:opacity-75"
+          />
+          <div className="flex flex-col leading-none">
+            <span className="font-display text-xl md:text-2xl font-semibold tracking-wide text-cream-50 group-hover:text-gold-300 transition-colors">
+              SARFI
+            </span>
+            <span className="font-body text-[10px] tracking-[0.2em] uppercase text-cream-50/60 group-hover:text-gold-300/80 transition-colors">
+              Collection
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Nav */}

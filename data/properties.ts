@@ -350,8 +350,8 @@ export const schoenblick: PropertyData = {
         "Apartment B6 besticht durch seinen atemberaubenden Panoramablick und die lichtdurchfluteten Räume. Die moderne Einrichtung verbindet Komfort mit bayerischem Charme. Genießt den Morgen auf dem Balkon bei frischer Waldluft und Weitblick über den Schöfweger Wald.",
       amenities: schoenblickAmenities,
       images: {
-        hero: "/images/schoenblick/b6/hero.webp",
-        thumbnail: "/images/schoenblick/b6/hero-thumb.webp",
+        hero: "/images/schoenblick/b6/gallery/img_9762.webp",
+        thumbnail: "/images/schoenblick/b6/gallery/m_img_9762.webp",
         gallery: [
           { src: "/images/schoenblick/b6/gallery/img_9750.webp", alt: "Apartment B6 – Wohnbereich" },
           { src: "/images/schoenblick/b6/gallery/img_9751.webp", alt: "Apartment B6 – Wohnzimmer" },
