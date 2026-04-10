@@ -34,7 +34,7 @@ export default function SarfiLogo({
   const botId = `sb${uid}`;
 
   // markOnly: ViewBox zeigt nur den Buchstabenbereich (ohne Rand oben/unten)
-  const viewBox = markOnly ? `${vbX} 38 ${vbW} 237` : `${vbX} 0 ${vbW} 290`;
+  const viewBox = markOnly ? `${vbX} 38 ${vbW} 252` : `${vbX} 0 ${vbW} 290`;
 
   return (
     <svg
