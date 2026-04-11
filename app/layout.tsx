@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import CookieBanner from "@/components/layout/CookieBanner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 // ─── Fonts ──────────────────────────────────────────────────────────────────
 const cormorant = Cormorant_Garamond({
@@ -98,6 +99,7 @@ export default function RootLayout({
         <Footer />
         <CookieBanner />
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
