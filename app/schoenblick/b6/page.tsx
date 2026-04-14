@@ -42,8 +42,8 @@ const jsonLd = {
     maxValue: apt.maxGuests,
     unitCode: "C62",
   },
-  checkinTime: "T15:00",
-  checkoutTime: "T11:00",
+  checkinTime: "T16:00",
+  checkoutTime: "T10:00",
   priceRange: `ab ${apt.priceFrom}€ / Nacht`,
   sameAs: [apt.airbnbUrl],
   aggregateRating: {
@@ -51,7 +51,6 @@ const jsonLd = {
     ratingValue: apt.airbnbRating,
     reviewCount: apt.airbnbReviewCount,
     bestRating: "5",
-    worstRating: "1",
   },
 };
 
