@@ -48,6 +48,9 @@ const jsonLd = {
   },
   checkinTime: "T16:00",
   checkoutTime: "T10:00",
+  sameAs: [
+    "https://maps.app.goo.gl/y3CiwE29n7m17LJs9",
+  ],
   priceRange: `ab ${schoenblick.priceFrom}€ / Nacht`,
   aggregateRating: {
     "@type": "AggregateRating",

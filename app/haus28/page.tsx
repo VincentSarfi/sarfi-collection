@@ -67,7 +67,10 @@ const jsonLd = {
   checkoutTime: "T10:00",
   petsAllowed: false,
   priceRange: `ab ${haus28.priceFrom}€ / Nacht`,
-  sameAs: [haus28.airbnbUrl],
+  sameAs: [
+    haus28.airbnbUrl,
+    "https://maps.app.goo.gl/uXtDYxT6oLuCGWm58",
+  ],
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: "5.0",
