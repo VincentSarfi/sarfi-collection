@@ -55,6 +55,23 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      // haus28.com → /haus28
+      {
+        source: "/(.*)",
+        destination: "https://www.sarfi-collection.de/haus28",
+        permanent: true,
+        has: [{ type: "host", value: "haus28.com" }],
+      },
+      {
+        source: "/(.*)",
+        destination: "https://www.sarfi-collection.de/haus28",
+        permanent: true,
+        has: [{ type: "host", value: "www.haus28.com" }],
+      },
+    ];
+  },
   async headers() {
     return [
       {
