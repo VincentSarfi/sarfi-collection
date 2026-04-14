@@ -62,7 +62,7 @@ export default function Footer() {
             {/* Social */}
             <div className="mt-6 flex gap-3">
               <a
-                href="https://www.instagram.com/sarfi.collection"
+                href="https://www.instagram.com/haus28imwald/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center w-9 h-9 rounded-full border border-cream-50/20 text-cream-50/60 hover:text-gold-300 hover:border-gold-300/40 transition-all"
