@@ -33,8 +33,8 @@ const jsonLd = {
   },
   geo: {
     "@type": "GeoCoordinates",
-    latitude: 48.9072,
-    longitude: 13.2124,
+    latitude: 48.8280385187145,
+    longitude: 13.202348503081259,
   },
   numberOfBedrooms: apt.bedrooms,
   occupancy: {

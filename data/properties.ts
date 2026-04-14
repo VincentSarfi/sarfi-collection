@@ -84,8 +84,8 @@ export const haus28: PropertyData = {
   subtitle: "Modernes A-Frame im Bayerischen Wald",
   address: "Büchelstein 28, 94541 Grattersdorf",
   coordinates: {
-    lat: 48.8136,
-    lng: 13.1450,
+    lat: 48.8055608808348,
+    lng: 13.18477563495356,
   },
   maxGuests: 8,
   bedrooms: 4,
@@ -248,8 +248,8 @@ export const schoenblick: PropertyData = {
   subtitle: "Panorama-Apartments im Herzen des Bayerischen Waldes",
   address: "Hochwaldstraße 18/20, 94572 Schöfweg",
   coordinates: {
-    lat: 48.9072,
-    lng: 13.2124,
+    lat: 48.8280385187145,
+    lng: 13.202348503081259,
   },
   priceFrom: 59,
   airbnbRating: 4.97,
