@@ -31,11 +31,27 @@ const jsonLd = {
     postalCode: "94572",
     addressCountry: "DE",
   },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 48.9072,
+    longitude: 13.2124,
+  },
+  numberOfBedrooms: apt.bedrooms,
+  occupancy: {
+    "@type": "QuantitativeValue",
+    maxValue: apt.maxGuests,
+    unitCode: "C62",
+  },
+  checkinTime: "T15:00",
+  checkoutTime: "T11:00",
+  priceRange: `ab ${apt.priceFrom}€ / Nacht`,
+  sameAs: [apt.airbnbUrl],
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: apt.airbnbRating,
     reviewCount: apt.airbnbReviewCount,
     bestRating: "5",
+    worstRating: "1",
   },
 };
 

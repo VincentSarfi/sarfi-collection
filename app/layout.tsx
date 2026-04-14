@@ -81,7 +81,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: "TODO_GOOGLE_SEARCH_CONSOLE_TOKEN", // TODO: eintragen
+    google: "eXWn8iad1B56rLWFv_qoKxcZgacLS2k4KR",
   },
 };
 

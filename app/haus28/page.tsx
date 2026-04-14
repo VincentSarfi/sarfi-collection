@@ -51,6 +51,8 @@ const jsonLd = {
     longitude: haus28.coordinates.lng,
   },
   numberOfRooms: haus28.bedrooms,
+  numberOfBedrooms: haus28.bedrooms,
+  numberOfBathroomsTotal: haus28.bathrooms,
   floorSize: {
     "@type": "QuantitativeValue",
     value: haus28.sqm,
@@ -61,7 +63,11 @@ const jsonLd = {
     maxValue: haus28.maxGuests,
     unitCode: "C62",
   },
+  checkinTime: "T15:00",
+  checkoutTime: "T11:00",
+  petsAllowed: false,
   priceRange: `ab ${haus28.priceFrom}€ / Nacht`,
+  sameAs: [haus28.airbnbUrl],
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: "5.0",

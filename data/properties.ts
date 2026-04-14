@@ -95,7 +95,7 @@ export const haus28: PropertyData = {
   superhost: true,
   airbnbUrl: "https://www.airbnb.de/rooms/1375439439358638425",
   airbnbRating: 5.0,
-  airbnbReviewCount: 16,
+  airbnbReviewCount: 17,
   bookingRating: 10,
   bookingReviewCount: 10,
   fewoRating: 5.0,

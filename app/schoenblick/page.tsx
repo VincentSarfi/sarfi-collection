@@ -41,11 +41,20 @@ const jsonLd = {
     postalCode: "94572",
     addressCountry: "DE",
   },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: schoenblick.coordinates.lat,
+    longitude: schoenblick.coordinates.lng,
+  },
+  checkinTime: "T15:00",
+  checkoutTime: "T11:00",
+  priceRange: `ab ${schoenblick.priceFrom}€ / Nacht`,
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: schoenblick.airbnbRating,
     reviewCount: schoenblick.airbnbReviewCount,
     bestRating: "5",
+    worstRating: "1",
   },
 };
 
