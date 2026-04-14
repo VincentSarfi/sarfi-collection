@@ -70,6 +70,32 @@ const nextConfig: NextConfig = {
         permanent: true,
         has: [{ type: "host", value: "www.haus28.com" }],
       },
+      // buechelstein.com → /haus28
+      {
+        source: "/(.*)",
+        destination: "https://www.sarfi-collection.de/haus28",
+        permanent: true,
+        has: [{ type: "host", value: "buechelstein.com" }],
+      },
+      {
+        source: "/(.*)",
+        destination: "https://www.sarfi-collection.de/haus28",
+        permanent: true,
+        has: [{ type: "host", value: "www.buechelstein.com" }],
+      },
+      // ferienhaus-schoenblick.de → /schoenblick
+      {
+        source: "/(.*)",
+        destination: "https://www.sarfi-collection.de/schoenblick",
+        permanent: true,
+        has: [{ type: "host", value: "ferienhaus-schoenblick.de" }],
+      },
+      {
+        source: "/(.*)",
+        destination: "https://www.sarfi-collection.de/schoenblick",
+        permanent: true,
+        has: [{ type: "host", value: "www.ferienhaus-schoenblick.de" }],
+      },
     ];
   },
   async headers() {
