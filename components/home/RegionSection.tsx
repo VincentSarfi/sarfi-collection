@@ -77,10 +77,9 @@ export default function RegionSection() {
             className="relative"
           >
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-card-lg">
-              {/* TODO: Replace with actual Bayerischer Wald region photo */}
               <Image
-                src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=85"
-                alt="Bayerischer Wald – Panoramablick über die Hügel"
+                src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=1200&q=85"
+                alt="Bayerischer Wald – Bewaldete Hügel im Morgennebel"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
