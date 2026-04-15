@@ -78,8 +78,8 @@ export default function RegionSection() {
           >
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-card-lg">
               <Image
-                src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=1200&q=85"
-                alt="Bayerischer Wald – Bewaldete Hügel im Morgennebel"
+                src="/images/shared/region-bayerischer-wald.jpg"
+                alt="Bayerischer Wald – Sonnenaufgang über dem Nebelmeer"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
