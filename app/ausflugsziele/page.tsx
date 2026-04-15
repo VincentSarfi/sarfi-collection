@@ -251,25 +251,19 @@ const hikeWaypoints = [
   },
   {
     step: 3,
-    name: "Rastbuche",
-    detail: "Die markante alte Buche bietet Schatten und eine tolle Aussicht auf den bewaldeten Hang. Ideal für eine erste kurze Pause.",
-    icon: "🌳",
-  },
-  {
-    step: 4,
     name: "Kleiner Büchelstein",
     detail: "Der erste Gipfelpunkt der Tour. Schöner Ausblick ins Tal und in die bewaldeten Hügel des Bayerischen Waldes.",
     icon: "⛰️",
   },
   {
-    step: 5,
+    step: 4,
     name: "Großer Büchelstein (831 m)",
     detail: "Der Hauptgipfel und Höhepunkt der Tour. Auf 831 m Höhe erwartet dich bei klarem Wetter ein herrliches Panorama über den Bayerischen Wald – manchmal bis zu den Alpen.",
     icon: "🏔️",
     highlight: true,
   },
   {
-    step: 6,
+    step: 5,
     name: "Rückweg zu HAUS28",
     detail: "Der Abstieg führt auf einem anderen Pfad zurück zum Ausgangspunkt – die Schleife macht die Tour abwechslungsreich ohne Streckenwiederholung.",
     icon: "🏠",
