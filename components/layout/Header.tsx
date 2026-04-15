@@ -20,6 +20,7 @@ const navLinks = [
       { label: "Apartment A2", href: "/schoenblick/a2" },
     ],
   },
+  { label: "Ausflugsziele", href: "/ausflugsziele" },
   { label: "Über uns", href: "/ueber-uns" },
   { label: "Kontakt", href: "/kontakt" },
 ];
