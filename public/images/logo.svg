@@ -1,0 +1,47 @@
+<svg viewBox="-30 0 460 290" xmlns="http://www.w3.org/2000/svg" aria-label="SARFI Collection" role="img">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&amp;family=DM+Sans:wght@300&amp;display=swap');
+    </style>
+    <clipPath id="top" clipPathUnits="userSpaceOnUse">
+      <rect x="-30" y="0" width="460" height="162"/>
+    </clipPath>
+    <clipPath id="bot" clipPathUnits="userSpaceOnUse">
+      <rect x="-30" y="195" width="460" height="95"/>
+    </clipPath>
+  </defs>
+
+  <!-- S obere Hälfte -->
+  <text clip-path="url(#top)" x="0" y="272"
+    font-family="'Cormorant Garamond', Georgia, serif"
+    font-weight="400" font-size="320"
+    textLength="200" lengthAdjust="spacingAndGlyphs"
+    fill="#F5F0E8">S</text>
+
+  <!-- C obere Hälfte -->
+  <text clip-path="url(#top)" x="175" y="272"
+    font-family="'Cormorant Garamond', Georgia, serif"
+    font-weight="400" font-size="320"
+    textLength="200" lengthAdjust="spacingAndGlyphs"
+    fill="#F5F0E8">C</text>
+
+  <!-- SARFI COLLECTION -->
+  <text x="200" y="188" text-anchor="middle"
+    font-family="'DM Sans', system-ui, sans-serif"
+    font-weight="300" font-size="30" letter-spacing="11"
+    fill="#F5F0E8">SARFI COLLECTION</text>
+
+  <!-- S untere Hälfte -->
+  <text clip-path="url(#bot)" x="0" y="272"
+    font-family="'Cormorant Garamond', Georgia, serif"
+    font-weight="400" font-size="320"
+    textLength="200" lengthAdjust="spacingAndGlyphs"
+    fill="#F5F0E8">S</text>
+
+  <!-- C untere Hälfte -->
+  <text clip-path="url(#bot)" x="175" y="272"
+    font-family="'Cormorant Garamond', Georgia, serif"
+    font-weight="400" font-size="320"
+    textLength="200" lengthAdjust="spacingAndGlyphs"
+    fill="#F5F0E8">C</text>
+</svg>
