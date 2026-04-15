@@ -53,7 +53,7 @@ const jsonLd = {
       item: {
         "@type": "TouristAttraction",
         name: "Büchelstein Wanderroute ab HAUS28",
-        description: "Rundwanderung vom HAUS28 über die Waldkapelle, Rastbuche, Kleiner Büchelstein zum Großen Büchelstein (831 m) und zurück.",
+        description: "Rundwanderung vom HAUS28 über die Wallfahrtskapelle Rastbuche (18. Jh.) bei Grattersdorf, Kleiner Büchelstein zum Großen Büchelstein (831 m) und zurück – mit Blicken ins Donautal.",
       },
     },
     {
@@ -245,8 +245,8 @@ const hikeWaypoints = [
   },
   {
     step: 2,
-    name: "Waldkapelle",
-    detail: "Nach etwa 10–15 Minuten erreichst du die idyllische kleine Waldkapelle – ein ruhiger Rastpunkt mitten im Wald.",
+    name: "Wallfahrtskapelle Rastbuche",
+    detail: "Die malerische Wallfahrtskapelle Rastbuche bei Grattersdorf stammt aus dem 18. Jahrhundert und liegt idyllisch nahe dem Büchelstein. Sie ist ein bekanntes Ziel auf regionalen Wanderwegen – darunter die \"Rastbuchen-Runde\" (Nr. 52) – und bietet bei klarer Sicht beeindruckende Ausblicke ins Donautal.",
     icon: "⛪",
   },
   {
@@ -335,11 +335,11 @@ export default function AusflugszielePage() {
           <div className="flex items-center gap-1 py-3 w-max min-w-full">
             {[
               { href: "#pullman-city", label: "🤠 Pullman City" },
-              { href: "#buechelstein-wanderung", label: "🥾 Büchelstein-Tour" },
               { href: "#baumwipfelpfad", label: "🌲 Baumwipfelpfad" },
               { href: "#nationalpark", label: "🦌 Nationalpark" },
               { href: "#skigebiet-sonnenwald", label: "⛷️ Skigebiet" },
               { href: "#indoor-golf", label: "⛳ Indoor Golf" },
+              { href: "#buechelstein-wanderung", label: "🥾 Büchelstein-Tour" },
             ].map((item) => (
               <a
                 key={item.href}
@@ -349,84 +349,6 @@ export default function AusflugszielePage() {
                 {item.label}
               </a>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Büchelstein Wanderroute (Feature Section) ─────────────────── */}
-      <section
-        id="buechelstein-wanderung"
-        className="section-pad bg-forest-900 text-cream-50 overflow-hidden"
-        aria-labelledby="hike-heading"
-      >
-        <div className="container-site">
-          <div className="max-w-3xl mx-auto">
-            {/* Label */}
-            <p className="font-body text-sm tracking-[0.15em] uppercase text-gold-400 mb-3">
-              🥾 Direkt ab HAUS28
-            </p>
-            <h2
-              id="hike-heading"
-              className="font-display text-display-md text-cream-50 mb-4"
-            >
-              Büchelstein-Rundwanderung
-            </h2>
-            <p className="font-body text-base text-cream-50/70 leading-relaxed mb-3">
-              Die schönste Wanderung ab HAUS28 führt direkt vom Haus auf den Großen Büchelstein (831 m) – vorbei an einer kleinen Waldkapelle, der markanten Rastbuche und dem Kleinen Büchelstein. Die Rundtour ist gut markiert, für geübte Familien geeignet und belohnt mit einem herrlichen Panoramablick über den Bayerischen Wald.
-            </p>
-
-            {/* Stats row */}
-            <div className="flex flex-wrap gap-6 mb-10 font-body text-sm">
-              {[
-                { label: "Startpunkt", value: "HAUS28, Büchelstein 28" },
-                { label: "Gipfel", value: "831 m (Großer Büchelstein)" },
-                { label: "Charakter", value: "Rundweg, gut markiert" },
-                { label: "Schwierigkeit", value: "Mittel – Familien geeignet" },
-              ].map((s) => (
-                <div key={s.label}>
-                  <p className="text-cream-50/40 text-xs mb-0.5">{s.label}</p>
-                  <p className="text-cream-50 font-medium">{s.value}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Waypoints */}
-            <div className="relative">
-              {/* Vertical line */}
-              <div className="absolute left-5 top-5 bottom-5 w-px bg-gold-500/30 hidden sm:block" aria-hidden="true" />
-
-              <div className="flex flex-col gap-0">
-                {hikeWaypoints.map((wp, i) => (
-                  <div key={wp.step} className="flex gap-4 sm:gap-5">
-                    {/* Icon circle */}
-                    <div className={`relative z-10 flex-none w-10 h-10 rounded-full flex items-center justify-center text-base ${wp.highlight ? "bg-gold-500 shadow-[0_0_0_4px_rgba(202,163,93,0.3)]" : "bg-forest-800 border border-forest-700"}`}>
-                      <span aria-hidden="true">{wp.icon}</span>
-                    </div>
-                    {/* Content */}
-                    <div className={`pb-6 ${i === hikeWaypoints.length - 1 ? "pb-0" : ""}`}>
-                      <p className={`font-body font-semibold text-sm mb-0.5 ${wp.highlight ? "text-gold-300" : "text-cream-50"}`}>
-                        {wp.name}
-                      </p>
-                      <p className="font-body text-sm text-cream-50/60 leading-snug">{wp.detail}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* CTA */}
-            <div className="mt-10 p-5 rounded-2xl bg-cream-50/5 border border-cream-50/10">
-              <p className="font-body text-sm text-cream-50/70 mb-3">
-                <strong className="text-cream-50">Wanderkarte & GPS:</strong> Die Tour ist auf Komoot und AllTrails unter dem Suchbegriff „Büchelstein Grattersdorf" verfügbar. Alternativ einfach dem Wanderweg-Beschilderung ab HAUS28 folgen.
-              </p>
-              <Link
-                href="/haus28"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gold-500 text-forest-900 text-sm font-body font-medium rounded-full hover:bg-gold-400 transition-colors"
-              >
-                HAUS28 – direkt am Büchelstein buchen
-                <IconArrowRight size={14} />
-              </Link>
-            </div>
           </div>
         </div>
       </section>
@@ -594,6 +516,79 @@ export default function AusflugszielePage() {
                 </ul>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Büchelstein Wanderroute ──────────────────────────────────── */}
+      <section
+        id="buechelstein-wanderung"
+        className="section-pad bg-forest-900 text-cream-50 overflow-hidden scroll-mt-16"
+        aria-labelledby="hike-heading"
+      >
+        <div className="container-site">
+          <div className="max-w-3xl mx-auto">
+            <p className="font-body text-sm tracking-[0.15em] uppercase text-gold-400 mb-3">
+              🥾 Direkt ab HAUS28
+            </p>
+            <h2
+              id="hike-heading"
+              className="font-display text-display-md text-cream-50 mb-4"
+            >
+              Büchelstein-Rundwanderung
+            </h2>
+            <p className="font-body text-base text-cream-50/70 leading-relaxed mb-3">
+              Die schönste Wanderung ab HAUS28 führt direkt vom Haus auf den Großen Büchelstein (831 m) – vorbei an der historischen Wallfahrtskapelle Rastbuche, dem Kleinen Büchelstein und durch dichten Bayerwald-Forst. Die Rundtour ist gut markiert, für geübte Familien geeignet und belohnt mit einem herrlichen Panoramablick über den Bayerischen Wald bis ins Donautal.
+            </p>
+
+            {/* Stats row */}
+            <div className="flex flex-wrap gap-6 mb-10 font-body text-sm">
+              {[
+                { label: "Startpunkt", value: "HAUS28, Büchelstein 28" },
+                { label: "Gipfel", value: "831 m (Großer Büchelstein)" },
+                { label: "Charakter", value: "Rundweg, gut markiert" },
+                { label: "Schwierigkeit", value: "Mittel – Familien geeignet" },
+              ].map((s) => (
+                <div key={s.label}>
+                  <p className="text-cream-50/40 text-xs mb-0.5">{s.label}</p>
+                  <p className="text-cream-50 font-medium">{s.value}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Waypoints */}
+            <div className="relative">
+              <div className="absolute left-5 top-5 bottom-5 w-px bg-gold-500/30 hidden sm:block" aria-hidden="true" />
+              <div className="flex flex-col gap-0">
+                {hikeWaypoints.map((wp, i) => (
+                  <div key={wp.step} className="flex gap-4 sm:gap-5">
+                    <div className={`relative z-10 flex-none w-10 h-10 rounded-full flex items-center justify-center text-base ${wp.highlight ? "bg-gold-500 shadow-[0_0_0_4px_rgba(202,163,93,0.3)]" : "bg-forest-800 border border-forest-700"}`}>
+                      <span aria-hidden="true">{wp.icon}</span>
+                    </div>
+                    <div className={`pb-6 ${i === hikeWaypoints.length - 1 ? "pb-0" : ""}`}>
+                      <p className={`font-body font-semibold text-sm mb-0.5 ${wp.highlight ? "text-gold-300" : "text-cream-50"}`}>
+                        {wp.name}
+                      </p>
+                      <p className="font-body text-sm text-cream-50/60 leading-snug">{wp.detail}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Info box */}
+            <div className="mt-10 p-5 rounded-2xl bg-cream-50/5 border border-cream-50/10">
+              <p className="font-body text-sm text-cream-50/70 mb-3">
+                <strong className="text-cream-50">Wanderkarte & GPS:</strong> Die Tour ist auf Komoot und AllTrails unter dem Suchbegriff „Büchelstein Grattersdorf" verfügbar. Alternativ einfach der Wanderweg-Beschilderung ab HAUS28 folgen – oder die Rastbuchen-Runde (Nr. 52) nutzen.
+              </p>
+              <Link
+                href="/haus28"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gold-500 text-forest-900 text-sm font-body font-medium rounded-full hover:bg-gold-400 transition-colors"
+              >
+                HAUS28 – direkt am Büchelstein buchen
+                <IconArrowRight size={14} />
+              </Link>
+            </div>
           </div>
         </div>
       </section>

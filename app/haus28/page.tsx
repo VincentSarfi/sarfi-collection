@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { haus28 } from "@/data/properties";
 import { haus28Reviews } from "@/data/reviews";
 import PropertyHero from "@/components/property/PropertyHero";
@@ -14,6 +15,7 @@ import { PROPERTY_CONFIGS, resolveSmoobuId } from "@/config/properties.config";
 import FaqAccordion from "@/components/property/FaqAccordion";
 import RelatedProperties from "@/components/property/RelatedProperties";
 import { schoenblick } from "@/data/properties";
+import { IconArrowRight } from "@/components/ui/Icons";
 
 export const metadata: Metadata = {
   title: "HAUS28 – A-Frame Ferienhaus am Büchelstein | Grattersdorf, Bayerischer Wald",
@@ -201,6 +203,32 @@ export default function Haus28Page() {
           { name: "Arber (Skigebiet)", distance: "~50 min" },
         ]}
       />
+
+      {/* 6b. Ausflugsziele-Teaser */}
+      <section className="bg-cream-100 border-y border-cream-200">
+        <div className="container-site py-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <p className="font-body text-xs tracking-[0.12em] uppercase text-gold-600 mb-1">
+                Direkt ab HAUS28
+              </p>
+              <h2 className="font-display text-xl text-forest-900 mb-1">
+                Wanderung zum Büchelstein & weitere Ausflüge
+              </h2>
+              <p className="font-body text-sm text-forest-600 max-w-lg">
+                Die Büchelstein-Rundwanderung startet direkt vor der Haustür – über die historische Wallfahrtskapelle Rastbuche (18. Jh.) auf 831 m Höhe. Alle Ausflugstipps für die Region auf einen Blick.
+              </p>
+            </div>
+            <Link
+              href="/ausflugsziele#buechelstein-wanderung"
+              className="flex-none inline-flex items-center gap-2 px-5 py-2.5 bg-forest-900 text-cream-50 text-sm font-body font-medium rounded-full hover:bg-forest-800 transition-colors whitespace-nowrap"
+            >
+              Alle Ausflugsziele
+              <IconArrowRight size={14} />
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* 7. Bewertungen */}
       <PropertyReviews
