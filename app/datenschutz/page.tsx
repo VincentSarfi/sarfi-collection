@@ -74,6 +74,24 @@ export default function DatenschutzPage() {
             </p>
           </section>
 
+          {/* 3b */}
+          <section>
+            <h2 className="font-display text-xl text-forest-900 mb-3">3a. Webanalyse</h2>
+
+            <h3 className="font-semibold text-forest-800 mb-2">Vercel Web Analytics</h3>
+            <p className="mb-3">
+              Wir nutzen Vercel Web Analytics, einen datenschutzfreundlichen Analysedienst der Vercel Inc. Dieser Dienst erhebt anonymisierte Nutzungsdaten (Seitenaufrufe, Verweildauer, Gerätekategorie, Land) ohne den Einsatz von Cookies und ohne die Speicherung personenbezogener Daten. Es werden keine individuellen Nutzerprofile erstellt.
+            </p>
+            <p className="mb-3">
+              Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der anonymen Auswertung des Nutzerverhaltens zur Optimierung unseres Webangebots).
+            </p>
+
+            <h3 className="font-semibold text-forest-800 mb-2">Vercel Speed Insights</h3>
+            <p>
+              Wir nutzen Vercel Speed Insights zur Messung der Ladegeschwindigkeit unserer Website. Dabei werden anonymisierte Performance-Metriken (Core Web Vitals) erhoben, ohne Cookies zu setzen oder personenbezogene Daten zu speichern. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO.
+            </p>
+          </section>
+
           {/* 4 */}
           <section>
             <h2 className="font-display text-xl text-forest-900 mb-3">4. Cookies</h2>

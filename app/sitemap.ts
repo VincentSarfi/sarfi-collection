@@ -83,12 +83,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
-      url: `${BASE_URL}/haus28/buchen`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.7,
-    },
-    {
       url: `${BASE_URL}/ueber-uns`,
       lastModified: new Date(),
       changeFrequency: "monthly",

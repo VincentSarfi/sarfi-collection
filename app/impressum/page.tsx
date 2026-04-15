@@ -39,12 +39,31 @@ export default function ImpressumPage() {
 
           <section>
             <h2 className="font-display text-xl text-forest-900 mb-3">
-              Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV
+              Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
             </h2>
             <p>
               Vincent Sarfi<br />
               Büchelstein 2<br />
               94541 Grattersdorf
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-display text-xl text-forest-900 mb-3">
+              EU-Streitschlichtung
+            </h2>
+            <p className="text-sm leading-relaxed">
+              Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{" "}
+              <a
+                href="https://ec.europa.eu/consumers/odr/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gold-600 underline underline-offset-2"
+              >
+                https://ec.europa.eu/consumers/odr/
+              </a>
+              <br /><br />
+              Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
             </p>
           </section>
 
