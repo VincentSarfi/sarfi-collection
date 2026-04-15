@@ -9,7 +9,7 @@ import CtaSection from "@/components/home/CtaSection";
 export const metadata: Metadata = {
   title: "SARFI Collection – Exklusive Ferienunterkünfte im Bayerischen Wald",
   description:
-    "HAUS28, das moderne A-Frame im Wald, und Haus Schönblick mit atemberaubendem Panoramablick – zwei einzigartige Ferienunterkünfte im Bayerischen Wald. Direkt buchen & sparen.",
+    "HAUS28 – modernes A-Frame am Büchelstein bei Grattersdorf. Haus Schönblick – Panorama-Apartments in Schöfweg. Zwei einzigartige Ferienunterkünfte im Bayerischen Wald. Direkt buchen & sparen.",
   openGraph: {
     title: "SARFI Collection – Dein Rückzugsort im Bayerischen Wald",
     description:

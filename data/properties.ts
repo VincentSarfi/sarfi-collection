@@ -81,7 +81,7 @@ export type PropertyData = {
 export const haus28: PropertyData = {
   id: "haus28",
   name: "HAUS28",
-  subtitle: "Modernes A-Frame im Bayerischen Wald",
+  subtitle: "Modernes A-Frame am Büchelstein, Grattersdorf",
   address: "Büchelstein 28, 94541 Grattersdorf",
   coordinates: {
     lat: 48.8055608808348,
@@ -105,9 +105,9 @@ export const haus28: PropertyData = {
   smoobuPropertyId: "2610828",
   smoobuEmbedUrl: "https://login.smoobu.com/de/booking-tool/iframe/2610828",
   shortDescription:
-    "Architektonisch einzigartiges A-Frame Ferienhaus für bis zu 8 Personen – ein echter Rückzugsort im Herzen des Bayerischen Waldes.",
+    "Einzigartiges A-Frame Ferienhaus am Büchelstein bei Grattersdorf – ein architektonischer Rückzugsort für bis zu 8 Personen im Bayerischen Wald.",
   description:
-    "Inmitten des ruhigen Bayerischen Waldes erwartet dich HAUS28 – ein modernes A-Frame Ferienhaus mit 157 m² Wohnfläche, das Architektur und Natur zu einer einzigartigen Atmosphäre verbindet. Die markante Dreiecksform, das hochwertige Holz-Interior und das raumhohe Panoramafenster lassen die Grenze zwischen drinnen und draußen verschwimmen. Vier Schlafzimmer und zwei Bäder bieten Platz für bis zu 8 Personen. Morgens erwachst du im Wald, abends sitzt du an der Feuerschale oder auf der großzügigen Terrasse. Perfekt für Familien, Freundesgruppen oder alle, die wirklich abschalten wollen.",
+    "Am Büchelstein bei Grattersdorf erwartet dich HAUS28 – ein modernes A-Frame Ferienhaus mit 157 m² Wohnfläche, das Architektur und Natur zu einer einzigartigen Atmosphäre verbindet. Die markante Dreiecksform, das hochwertige Holz-Interior und das raumhohe Panoramafenster lassen die Grenze zwischen drinnen und draußen verschwimmen. Vier Schlafzimmer und zwei Bäder bieten Platz für bis zu 8 Personen. Morgens erwachst du im Wald, abends sitzt du an der Feuerschale oder auf der großzügigen Terrasse. Perfekt für Familien, Freundesgruppen oder alle, die wirklich abschalten wollen.",
   amenities: [
     { icon: "wifi", label: "WLAN" },
     { icon: "kitchen", label: "Voll ausgestattete Küche" },
@@ -156,13 +156,18 @@ export const haus28: PropertyData = {
   },
   faqs: [
     {
+      question: "Wo genau liegt HAUS28 am Büchelstein?",
+      answer:
+        "HAUS28 liegt an der Adresse Büchelstein 28 bei Grattersdorf im Bayerischen Wald. Direkt am Fuße des Büchelsteins (831 m), umgeben von Wald und Natur. Der Büchelstein-Gipfel mit Panoramablick ist in wenigen Minuten zu Fuß erreichbar.",
+    },
+    {
       question: "Wie läuft der Check-in ab?",
       answer:
-        "HAUS28 bietet Self-Check-in mit Schlüsselbox. Du erhältst den Code ca. 24 Stunden vor deiner Ankunft per Nachricht. Check-in ab 15:00 Uhr.",
+        "HAUS28 am Büchelstein bietet Self-Check-in mit Schlüsselbox. Du erhältst den Code ca. 24 Stunden vor deiner Ankunft per Nachricht. Check-in ab 16:00 Uhr.",
     },
     {
       question: "Wann ist der Check-out?",
-      answer: "Check-out ist bis 11:00 Uhr. Ein späterer Check-out ist auf Anfrage und bei Verfügbarkeit möglich.",
+      answer: "Check-out ist bis 10:00 Uhr. Ein späterer Check-out ist auf Anfrage und bei Verfügbarkeit möglich.",
     },
     {
       question: "Wie viele Personen passen ins HAUS28?",
@@ -179,9 +184,9 @@ export const haus28: PropertyData = {
       answer: "Ja, schnelles WLAN ist kostenfrei inklusive.",
     },
     {
-      question: "Wie weit ist es zum nächsten Ort?",
+      question: "Wie weit ist es vom Büchelstein zum nächsten Ort?",
       answer:
-        "Grattersdorf liegt direkt nebenan, Deggendorf (Einkaufen, Restaurants) ca. 20 Minuten entfernt. Wanderwege starten direkt vor der Haustür.",
+        "Vom HAUS28 am Büchelstein ist Grattersdorf in wenigen Minuten erreichbar, Deggendorf (Einkaufen, Restaurants) ca. 20 Minuten entfernt. Wanderwege zum Büchelstein-Gipfel und durch den Bayerischen Wald starten direkt vor der Haustür.",
     },
     {
       question: "Gibt es eine Mindeststay-Regelung?",

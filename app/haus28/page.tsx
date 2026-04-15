@@ -16,14 +16,14 @@ import RelatedProperties from "@/components/property/RelatedProperties";
 import { schoenblick } from "@/data/properties";
 
 export const metadata: Metadata = {
-  title: "HAUS28 – Modernes A-Frame Ferienhaus im Bayerischen Wald",
+  title: "HAUS28 – A-Frame Ferienhaus am Büchelstein | Grattersdorf, Bayerischer Wald",
   description:
-    "HAUS28 in Grattersdorf: 157 m² A-Frame Ferienhaus im Bayerischen Wald – 48 Bewertungen, überall 5★. Architektonisch besonders, hochwertig ausgestattet. Ab 199€ / Nacht. Jetzt direkt buchen!",
+    "HAUS28 am Büchelstein in Grattersdorf: 157 m² A-Frame Ferienhaus im Bayerischen Wald – 17× 5★ auf Airbnb. Bis zu 8 Personen, hochwertig ausgestattet, mitten im Wald. Ab 199€ / Nacht. Jetzt direkt buchen!",
   openGraph: {
-    title: "HAUS28 – Modernes A-Frame im Bayerischen Wald",
+    title: "HAUS28 – A-Frame Ferienhaus am Büchelstein, Grattersdorf",
     description:
-      "Architektonisch einzigartiges A-Frame Ferienhaus. Natur pur, Instagram-worthy, hochwertig. Jetzt direkt buchen.",
-    images: [{ url: haus28.images.hero, alt: "HAUS28 – A-Frame Ferienhaus" }],
+      "Einzigartiges A-Frame Ferienhaus am Büchelstein im Bayerischen Wald. Natur pur, hochwertig, bis zu 8 Personen. Direkt buchen & sparen.",
+    images: [{ url: haus28.images.hero, alt: "HAUS28 – A-Frame Ferienhaus am Büchelstein, Grattersdorf" }],
   },
   alternates: {
     canonical: "https://www.sarfi-collection.de/haus28",
@@ -70,6 +70,8 @@ const jsonLd = {
   sameAs: [
     haus28.airbnbUrl,
     "https://maps.app.goo.gl/uXtDYxT6oLuCGWm58",
+    "https://www.buechelstein.com",
+    "https://www.haus28.com",
   ],
   aggregateRating: {
     "@type": "AggregateRating",
