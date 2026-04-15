@@ -29,7 +29,12 @@ export default function LocationMap({
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [mapConsented, setMapConsented] = useState(false);
 
-  const mapsEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&output=embed&z=13`;
+  // OpenStreetMap embed – zuverlässig ohne API-Key
+  const bbox = 0.02; // ~2 km Sichtbereich
+  const mapsEmbedUrl =
+    `https://www.openstreetmap.org/export/embed.html` +
+    `?bbox=${coordinates.lng - bbox},${coordinates.lat - bbox},${coordinates.lng + bbox},${coordinates.lat + bbox}` +
+    `&layer=mapnik&marker=${coordinates.lat},${coordinates.lng}`;
   const mapsDirectUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 
   return (

@@ -43,7 +43,7 @@ const securityHeaders = [
       // Connect: own API + Stripe + Smoobu + PriceLabs + Vercel Analytics/Speed Insights
       "connect-src 'self' https://api.stripe.com https://login.smoobu.com https://api.pricelabs.co https://va.vercel-scripts.com https://vitals.vercel-insights.com",
       // Stripe payment UI runs in iframes
-      "frame-src https://js.stripe.com https://hooks.stripe.com https://pay.google.com",
+      "frame-src https://js.stripe.com https://hooks.stripe.com https://pay.google.com https://www.openstreetmap.org",
       // No object/embed elements allowed
       "object-src 'none'",
       // Base tag restricted to own origin
