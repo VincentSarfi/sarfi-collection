@@ -16,10 +16,9 @@ export default function UeberUnsPage() {
       {/* Hero */}
       <div className="relative h-64 md:h-80 bg-forest-900 flex items-end">
         <div className="absolute inset-0">
-          {/* TODO: Replace with actual gastgeber/team photo */}
           <Image
-            src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80"
-            alt="Bayerischer Wald – unsere Heimat"
+            src="/images/shared/panorama-drohne.jpg"
+            alt="Panorama-Drohnenaufnahme Bayerischer Wald"
             fill
             className="object-cover opacity-40"
             priority
