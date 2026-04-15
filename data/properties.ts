@@ -192,6 +192,16 @@ export const haus28: PropertyData = {
       question: "Gibt es eine Mindeststay-Regelung?",
       answer: "Der Mindestaufenthalt beträgt 2 Nächte. In der Hauptsaison ggf. mehr – Details beim Buchungsvorgang.",
     },
+    {
+      question: "Wie weit ist es zur Pullman City?",
+      answer:
+        "Die Westernstadt Pullman City in Eging am See ist vom HAUS28 am Büchelstein in ca. 20 Minuten mit dem Auto erreichbar. Ein perfekter Tagesausflug für Familien mit Kindern!",
+    },
+    {
+      question: "Welche Ausflugsziele gibt es im Bayerischen Wald?",
+      answer:
+        "In der Nähe vom HAUS28 findest du zahlreiche Highlights: Pullman City (~20 min), Nationalpark Bayerischer Wald (~25 km), Baumwipfelpfad Neuschönau (~30 min), Thermalbad Regen (~35 min), Großer Arber Skigebiet (~50 min) und natürlich den Büchelstein-Gipfel direkt vor der Haustür.",
+    },
   ],
 };
 
@@ -220,7 +230,7 @@ const schoenblickFaqs = [
   },
   {
     question: "Wann ist der Check-out?",
-    answer: "Check-out bis 11:00 Uhr. Später-Check-out auf Anfrage.",
+    answer: "Check-out bis 10:00 Uhr. Später-Check-out auf Anfrage.",
   },
   {
     question: "Können mehrere Apartments gleichzeitig gebucht werden?",
@@ -244,6 +254,16 @@ const schoenblickFaqs = [
   {
     question: "Gibt es WLAN?",
     answer: "Ja, schnelles WLAN ist kostenfrei in allen Apartments inklusive.",
+  },
+  {
+    question: "Wie weit ist es zur Pullman City?",
+    answer:
+      "Die Westernstadt Pullman City ist vom Haus Schönblick in Schöfweg in nur ca. 15 Minuten mit dem Auto erreichbar – ein idealer Tagesausflug für die ganze Familie.",
+  },
+  {
+    question: "Welche Ausflugsziele gibt es in der Nähe?",
+    answer:
+      "Rund um Schöfweg im Bayerischen Wald erwartet dich viel: Pullman City (~15 min), Baumwipfelpfad Neuschönau (~25 min), Nationalpark Bayerischer Wald (~20 km), Grafenau (~15 min), Thermalbad Regen (~30 min) und das Skigebiet am Großen Arber (~45 min).",
   },
 ];
 

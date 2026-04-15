@@ -191,11 +191,12 @@ export default function Haus28Page() {
       <LocationMap
         address={haus28.address}
         coordinates={haus28.coordinates}
-        description="Grattersdorf liegt idyllisch am Rand des Bayerischen Waldes. Von hier aus bist du in Minuten mitten in der Natur – Wanderwege starten direkt vor der Haustür. Die nächste Stadt Deggendorf ist in ca. 20 Minuten erreichbar."
+        description="HAUS28 liegt am Büchelstein bei Grattersdorf, idyllisch am Rand des Bayerischen Waldes. Wanderwege zum Büchelstein-Gipfel starten direkt vor der Haustür. Die Westernstadt Pullman City ist in nur 20 Minuten erreichbar – perfekt für Familien. Deggendorf mit Einkaufsmöglichkeiten und Restaurants liegt ebenfalls ca. 20 Minuten entfernt."
         nearbyAttractions={[
+          { name: "Büchelstein-Gipfel (Wanderung)", distance: "~15 min zu Fuß" },
+          { name: "Pullman City (Westernstadt)", distance: "~20 min" },
           { name: "Nationalpark Bayerischer Wald", distance: "~25 km" },
           { name: "Deggendorf Zentrum", distance: "~20 min" },
-          { name: "Dreisessel (Wanderziel)", distance: "~40 min" },
           { name: "Thermalbad Regen", distance: "~35 min" },
           { name: "Arber (Skigebiet)", distance: "~50 min" },
         ]}

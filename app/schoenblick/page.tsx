@@ -210,11 +210,13 @@ export default function SchoenblickPage() {
       <LocationMap
         address={schoenblick.address}
         coordinates={schoenblick.coordinates}
-        description="Schöfweg liegt im Herzen des Bayerischen Waldes. Wanderwege beginnen direkt vor der Haustür. Die Region bietet Natur pur, klare Luft und echte Erholung zu jeder Jahreszeit."
+        description="Haus Schönblick liegt im Ortsteil Langfurth bei Schöfweg, mitten im Bayerischen Wald. Wanderwege beginnen direkt vor der Haustür. Die beliebte Westernstadt Pullman City ist nur 15 Minuten entfernt – ideal für Familien mit Kindern. Die Region bietet Natur pur, klare Luft und echte Erholung zu jeder Jahreszeit."
         nearbyAttractions={[
           { name: "Wanderweg ab Haustür", distance: "0 m" },
+          { name: "Pullman City (Westernstadt)", distance: "~15 min" },
           { name: "Grafenau Zentrum", distance: "~15 min" },
           { name: "Nationalpark Bayerischer Wald", distance: "~20 km" },
+          { name: "Baumwipfelpfad Neuschönau", distance: "~25 min" },
           { name: "Thermalbad Regen", distance: "~30 min" },
           { name: "Skigebiet Arber", distance: "~45 min" },
         ]}
