@@ -88,7 +88,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
         coordinates={schoenblick.coordinates}
         description="Schöfweg liegt mitten im Herzen des Bayerischen Waldes. Wanderwege starten direkt vor dem Haus. Einkaufsmöglichkeiten sind in wenigen Minuten erreichbar."
         nearbyAttractions={[
-          { name: "Wanderweg Schöfweg–Silberberg", distance: "Direkt ab Haustür" },
+          { name: "Wanderweg zum Brotjacklriegel", distance: "Direkt ab Haustür" },
           { name: "Grafenau Zentrum", distance: "~15 min" },
           { name: "Nationalpark Bayerischer Wald", distance: "~20 km" },
           { name: "Thermalbad Regen", distance: "~30 min" },
