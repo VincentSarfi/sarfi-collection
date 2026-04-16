@@ -63,7 +63,7 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     subtitle: 'Panorama-Apartment · Haus Schönblick',
     smoobuIdEnvKey: 'SMOOBU_APARTMENT_ID_B5',
     smoobuIdFallback: '3025621',
-    maxGuests: 5, // 2 Schlafzimmer + Schlafcouch
+    maxGuests: 4,
     minStay: 2,
     cleaningFee: 65,
     priceFrom: 95,
@@ -103,7 +103,7 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     subtitle: 'Panorama-Apartment · Haus Schönblick',
     smoobuIdEnvKey: 'SMOOBU_APARTMENT_ID_B8',
     smoobuIdFallback: '3025606',
-    maxGuests: 5, // 2 Schlafzimmer + Schlafcouch
+    maxGuests: 4,
     minStay: 2,
     cleaningFee: 65,
     priceFrom: 95,
@@ -123,7 +123,7 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     subtitle: 'Panorama-Apartment · Haus Schönblick',
     smoobuIdEnvKey: 'SMOOBU_APARTMENT_ID_A2',
     smoobuIdFallback: '2934161',
-    maxGuests: 5, // 2 Schlafzimmer + Schlafcouch
+    maxGuests: 4,
     minStay: 2,
     cleaningFee: 65,
     priceFrom: 95,
