@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconExpand } from "@/components/ui/Icons";
@@ -122,9 +123,11 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
         index={lightboxIndex}
         close={() => setLightboxIndex(-1)}
         slides={slides}
+        plugins={[Zoom]}
         controller={{ closeOnBackdropClick: true }}
         styles={{ container: { backgroundColor: "rgba(0,0,0,0.96)" } }}
         carousel={{ finite: false }}
+        zoom={{ maxZoomPixelRatio: 3, scrollToZoom: true }}
       />
     </section>
   );
