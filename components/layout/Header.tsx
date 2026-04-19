@@ -180,8 +180,9 @@ export default function Header() {
           </Button>
 
           <button
-            onClick={() => setMenuOpen(!menuOpen)}
+            onPointerDown={(e) => { e.preventDefault(); setMenuOpen((prev) => !prev); }}
             className="md:hidden flex items-center justify-center w-10 h-10 rounded-full text-cream-50 hover:bg-cream-50/10 transition-colors"
+            style={{ touchAction: "manipulation", WebkitTapHighlightColor: "transparent" }}
             aria-label={menuOpen ? "Menü schließen" : "Menü öffnen"}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
