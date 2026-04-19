@@ -14,6 +14,7 @@ const navLinks = [
     label: "Haus Schönblick",
     href: "/schoenblick",
     children: [
+      { label: "Apartment B7 – Neu ✦", href: "/schoenblick/b7" },
       { label: "Apartment B5", href: "/schoenblick/b5" },
       { label: "Apartment B6", href: "/schoenblick/b6" },
       { label: "Apartment B8", href: "/schoenblick/b8" },
