@@ -109,7 +109,7 @@ export default function SchoenblickPage() {
         <div className="container-site">
           <div className="mb-10">
             <p className="font-body text-sm tracking-[0.15em] uppercase text-gold-600 mb-2">
-              4 Ferienwohnungen
+              5 Ferienwohnungen
             </p>
             <h2
               id="apartments-heading"
@@ -130,7 +130,6 @@ export default function SchoenblickPage() {
               >
                 {/* Image */}
                 <div className="relative aspect-[3/2] overflow-hidden">
-                  {/* TODO: Replace with actual apartment photo */}
                   <Image
                     src={apt.images.hero}
                     alt={apt.name}
@@ -139,13 +138,23 @@ export default function SchoenblickPage() {
                     sizes="(max-width: 640px) 100vw, 50vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-forest-900/60 to-transparent" />
+                  {/* NEU-Badge */}
+                  {apt.isNew && (
+                    <div className="absolute top-4 left-4 px-2.5 py-1 bg-gold-500 rounded-full">
+                      <span className="font-body text-xs font-bold text-forest-900 tracking-widest uppercase">
+                        Neu
+                      </span>
+                    </div>
+                  )}
                   {/* Rating badge */}
-                  <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-1 bg-forest-900/70 backdrop-blur-sm rounded-full">
-                    <IconStar size={11} className="text-gold-300 fill-gold-300" filled />
-                    <span className="font-body text-xs font-semibold text-cream-50">
-                      {apt.airbnbRating}
-                    </span>
-                  </div>
+                  {apt.airbnbRating > 0 && (
+                    <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-1 bg-forest-900/70 backdrop-blur-sm rounded-full">
+                      <IconStar size={11} className="text-gold-300 fill-gold-300" filled />
+                      <span className="font-body text-xs font-semibold text-cream-50">
+                        {apt.airbnbRating}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Info */}

@@ -38,6 +38,7 @@ export type ApartmentData = {
     thumbnail: string;
   };
   faqs: { question: string; answer: string }[];
+  isNew?: boolean;
 };
 
 export type PropertyData = {
@@ -446,6 +447,56 @@ export const schoenblick: PropertyData = {
           { src: "/images/schoenblick/b8/gallery/haus_schoenblick_251228_172.webp", alt: "Apartment B8 – Umgebung Schöfweg" },
           { src: "/images/schoenblick/b8/gallery/haus_schoenblick_251228_175.webp", alt: "Apartment B8 – Natur Detail" },
           { src: "/images/schoenblick/b8/gallery/haus_schoenblick_251228_183.webp", alt: "Apartment B8 – Waldspaziergang" },
+        ],
+      },
+      faqs: schoenblickFaqs,
+    },
+    b7: {
+      id: "b7",
+      name: "Apartment B7",
+      subtitle: "Das schönste Apartment – Fischgrätparkett, Bergblick & Balkon",
+      airbnbUrl: "",
+      airbnbRating: 0,
+      airbnbReviewCount: 0,
+      smoobuPropertyId: "3276892",
+      maxGuests: 4,
+      bedrooms: 2,
+      bathrooms: 1,
+      sqm: 55,
+      priceFrom: 100,
+      isNew: true,
+      shortDescription:
+        "Das premium Apartment im Haus Schönblick – neu renoviert mit modernem Fischgrätparkett, Naturstein-Waschbecken, Balkon und traumhaftem Blick auf den Bayerischen Wald.",
+      description:
+        "Apartment B7 ist das neueste und schönste Apartment im Haus Schönblick – und das sieht man auf den ersten Blick. Durchgängiger moderner Fischgrätparkett, eine durchdachte Raumaufteilung und hochwertige Details machen B7 zu einem echten Wohlfühlort.\n\nIm ersten Schlafzimmer wartet ein großzügiges Kingsize-Bett vor einer eleganten dunkelblauen Akzentwand mit Messinglampe – ruhig, stilvoll, unvergesslich. Das zweite Schlafzimmer bietet ein ausziehbares Einzelbett, das sich bei Bedarf in zwei separate 90-cm-Betten verwandeln lässt – ideal für Kinder oder flexibel reisende Gäste.\n\nDas Badezimmer überzeugt mit einem einzigartigen Naturstein-Waschbecken auf einer Massivholzplatte, einem beleuchteten Spiegel, Holzdecke und moderner Dusche. Die vollausgestattete Küche unter der Dachschräge hat Charme: Bosch-Herd, Induktionskochfeld, Spüle und ein Vintage-Tassenregal an der Wand.\n\nIm Wohnzimmer lädt eine helle Sofacouch vor einer weiß verputzten Backsteinwand zum Entspannen ein – mit direktem Zugang zum Balkon und freiem Blick auf den Bayerischen Wald. Hier kommt echte Urlaubsstimmung auf.\n\nSchlafzimmer 1: Kingsize-Bett (180×200 cm) · Schlafzimmer 2: Ausziehbares Einzelbett (2× 90×200 cm bei Bedarf) · Balkon mit Waldblick · Smart TV · Vollausgestattete Küche · Naturstein-Waschbecken",
+      amenities: [
+        ...schoenblickAmenities,
+        { icon: "balcony", label: "Balkon mit Bergblick" },
+        { icon: "nature", label: "Blick auf den Bayerischen Wald" },
+      ],
+      images: {
+        hero: "/images/schoenblick/b7/hero.jpg",
+        thumbnail: "/images/schoenblick/b7/hero-thumb.jpg",
+        gallery: [
+          { src: "/images/schoenblick/b7/gallery/img_3084.jpg", alt: "Apartment B7 – Wohnzimmer mit Balkon & Bergblick" },
+          { src: "/images/schoenblick/b7/gallery/img_3089.jpg", alt: "Apartment B7 – Sofabereich mit Backsteinwand" },
+          { src: "/images/schoenblick/b7/gallery/img_3074.jpg", alt: "Apartment B7 – Wohnzimmer & Essbereich" },
+          { src: "/images/schoenblick/b7/gallery/img_3059.jpg", alt: "Apartment B7 – Schlafzimmer 1 mit Kingsize-Bett" },
+          { src: "/images/schoenblick/b7/gallery/img_3061.jpg", alt: "Apartment B7 – Schlafzimmer 1 Frontansicht" },
+          { src: "/images/schoenblick/b7/gallery/img_3062.jpg", alt: "Apartment B7 – Schlafzimmer 1 Messinglampe Detail" },
+          { src: "/images/schoenblick/b7/gallery/img_3068.jpg", alt: "Apartment B7 – Schlafzimmer 2 mit Tagesbett" },
+          { src: "/images/schoenblick/b7/gallery/img_3070.jpg", alt: "Apartment B7 – Schlafzimmer 2 Gesamtansicht" },
+          { src: "/images/schoenblick/b7/gallery/img_3066.jpg", alt: "Apartment B7 – Schlafzimmer 2 mit Waldblick" },
+          { src: "/images/schoenblick/b7/gallery/img_3067.jpg", alt: "Apartment B7 – Schlafzimmer 2 Detail" },
+          { src: "/images/schoenblick/b7/gallery/img_3054.jpg", alt: "Apartment B7 – Badezimmer Gesamtansicht" },
+          { src: "/images/schoenblick/b7/gallery/img_3055.jpg", alt: "Apartment B7 – Naturstein-Waschbecken" },
+          { src: "/images/schoenblick/b7/gallery/img_3057.jpg", alt: "Apartment B7 – Dusche & WC" },
+          { src: "/images/schoenblick/b7/gallery/img_3076.jpg", alt: "Apartment B7 – Küche mit Herd & Ofen" },
+          { src: "/images/schoenblick/b7/gallery/img_3075.jpg", alt: "Apartment B7 – Küche mit Tassenregal" },
+          { src: "/images/schoenblick/b7/gallery/img_3078.jpg", alt: "Apartment B7 – Küchenüberblick" },
+          { src: "/images/schoenblick/b7/gallery/img_3073.jpg", alt: "Apartment B7 – Blick auf den Bayerischen Wald" },
+          { src: "/images/schoenblick/b7/gallery/img_3091.jpg", alt: "Apartment B7 – Eingangsbereich" },
+          { src: "/images/schoenblick/b7/gallery/img_3092.jpg", alt: "Apartment B7 – Flur mit Zimmerzugang" },
         ],
       },
       faqs: schoenblickFaqs,
