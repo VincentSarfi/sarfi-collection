@@ -102,14 +102,38 @@ function calcPrice(
 
 function validateForm(data: FormData): FormErrors {
   const errors: FormErrors = {}
-  if (!data.firstName.trim()) errors.firstName = "Vorname erforderlich"
-  if (!data.lastName.trim()) errors.lastName = "Nachname erforderlich"
+
+  // Name: min 2 Zeichen, nur Buchstaben (inkl. Umlaute, Bindestriche)
+  if (!data.firstName.trim()) {
+    errors.firstName = "Vorname erforderlich"
+  } else if (data.firstName.trim().length < 2) {
+    errors.firstName = "Vorname zu kurz"
+  } else if (!/^[a-zA-ZÄÖÜäöüß\s\-']+$/.test(data.firstName.trim())) {
+    errors.firstName = "Bitte nur Buchstaben eingeben"
+  }
+
+  if (!data.lastName.trim()) {
+    errors.lastName = "Nachname erforderlich"
+  } else if (data.lastName.trim().length < 2) {
+    errors.lastName = "Nachname zu kurz"
+  } else if (!/^[a-zA-ZÄÖÜäöüß\s\-']+$/.test(data.lastName.trim())) {
+    errors.lastName = "Bitte nur Buchstaben eingeben"
+  }
+
+  // E-Mail: gültiges Format, TLD min 2 Zeichen
   if (!data.email.trim()) {
     errors.email = "E-Mail erforderlich"
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email.trim())) {
     errors.email = "Ungültige E-Mail-Adresse"
   }
-  if (!data.phone.trim()) errors.phone = "Telefonnummer erforderlich"
+
+  // Telefon: muss mind. 6 Ziffern enthalten, kein reiner Text
+  if (!data.phone.trim()) {
+    errors.phone = "Telefonnummer erforderlich"
+  } else if ((data.phone.replace(/\D/g, "").length < 6)) {
+    errors.phone = "Bitte eine gültige Telefonnummer eingeben"
+  }
+
   return errors
 }
 
