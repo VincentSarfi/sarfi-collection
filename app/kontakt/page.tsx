@@ -70,14 +70,34 @@ function FaqItem({ faq, index }: { faq: { q: string; a: string }; index: number 
 export default function KontaktPage() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    // TODO: Implement form submission (e.g. via Resend, Formspree, or your own API)
-    await new Promise((r) => setTimeout(r, 1000)); // Simulate network
-    setLoading(false);
-    setSent(true);
+    setError(null);
+
+    const form = e.currentTarget;
+    const data = {
+      name:    (form.elements.namedItem('name')    as HTMLInputElement).value,
+      email:   (form.elements.namedItem('email')   as HTMLInputElement).value,
+      subject: (form.elements.namedItem('subject') as HTMLSelectElement).value,
+      message: (form.elements.namedItem('message') as HTMLTextAreaElement).value,
+    };
+
+    try {
+      const res = await fetch('/api/contact', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error('Fehler beim Senden');
+      setSent(true);
+    } catch {
+      setError('Deine Nachricht konnte leider nicht gesendet werden. Bitte schreib uns direkt an hallo@sarfi-collection.de.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -121,6 +141,7 @@ export default function KontaktPage() {
                     </label>
                     <input
                       id="name"
+                      name="name"
                       type="text"
                       required
                       autoComplete="name"
@@ -134,6 +155,7 @@ export default function KontaktPage() {
                     </label>
                     <input
                       id="email"
+                      name="email"
                       type="email"
                       required
                       autoComplete="email"
@@ -149,6 +171,7 @@ export default function KontaktPage() {
                   </label>
                   <select
                     id="subject"
+                    name="subject"
                     className="w-full px-4 py-3 rounded-xl border border-cream-300 bg-white font-body text-sm text-forest-800 focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-transparent transition"
                   >
                     <option value="">Bitte auswählen…</option>
@@ -165,6 +188,7 @@ export default function KontaktPage() {
                   </label>
                   <textarea
                     id="message"
+                    name="message"
                     required
                     rows={5}
                     className="w-full px-4 py-3 rounded-xl border border-cream-300 bg-white font-body text-sm text-forest-800 placeholder:text-forest-300 focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-transparent transition resize-none"
@@ -196,6 +220,12 @@ export default function KontaktPage() {
                 >
                   {loading ? "Wird gesendet…" : "Nachricht senden"}
                 </button>
+
+                {error && (
+                  <p className="font-body text-xs text-red-600 text-center leading-relaxed">
+                    {error}
+                  </p>
+                )}
               </form>
             )}
           </div>
