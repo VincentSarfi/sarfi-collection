@@ -108,7 +108,7 @@ export default function StornierungPage() {
           <ul className="space-y-2 font-body text-sm text-forest-600 leading-relaxed list-none">
             {[
               "Erstattungen werden auf das ursprüngliche Zahlungsmittel zurückgebucht, in der Regel innerhalb von 5–10 Werktagen.",
-              "Bei einer 50 %-Erstattung wird der bereits gezahlte Betrag anteilig zurückgegeben – unabhängig davon, ob eine Anzahlung oder der Gesamtbetrag beglichen wurde.",
+              "Die Stornogebühr bemisst sich immer am Gesamtpreis der Buchung. Wer z. B. nur die 50 % Anzahlung geleistet hat und in das 50 %-Stornofenster fällt, erhält nichts zurück – muss aber auch nichts nachzahlen. Wer den Gesamtbetrag bezahlt hat, bekommt in diesem Fall 50 % zurückerstattet.",
               "Im Fall von nachweislich höherer Gewalt (z. B. Naturkatastrophe, behördlich angeordnete Reisebeschränkung) behalten wir uns eine kulante Einzelfallregelung vor.",
               "Umbuchungen auf einen anderen Zeitraum sind nach Absprache mit dem Gastgeber möglich und gelten nicht als Stornierung.",
             ].map((text) => (
