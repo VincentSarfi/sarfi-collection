@@ -9,6 +9,7 @@ const footerLinks = {
     { label: "Haus Schönblick", href: "/schoenblick" },
     { label: "Apartment B5", href: "/schoenblick/b5" },
     { label: "Apartment B6", href: "/schoenblick/b6" },
+    { label: "Apartment B7", href: "/schoenblick/b7" },
     { label: "Apartment B8", href: "/schoenblick/b8" },
     { label: "Apartment A2", href: "/schoenblick/a2" },
   ],
