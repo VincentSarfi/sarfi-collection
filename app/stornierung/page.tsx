@@ -29,10 +29,10 @@ export default function StornierungPage() {
           Bitte lies die für deine Unterkunft geltenden Bedingungen sorgfältig
           durch. Eine Stornierung muss schriftlich per E-Mail an{" "}
           <a
-            href="mailto:28imwald@gmail.com"
+            href="mailto:hallo@sarfi-collection.de"
             className="underline hover:text-forest-900 transition-colors"
           >
-            28imwald@gmail.com
+            hallo@sarfi-collection.de
           </a>{" "}
           erfolgen. Maßgeblich ist das Datum des Eingangs der Stornierungsmitteilung.
         </p>

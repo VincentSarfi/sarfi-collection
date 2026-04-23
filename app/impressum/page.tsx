@@ -33,7 +33,7 @@ export default function ImpressumPage() {
             <h2 className="font-display text-xl text-forest-900 mb-3">Kontakt</h2>
             <p>
               Telefon: +49 176 56850146<br />
-              E-Mail: 28imwald@gmail.com
+              E-Mail: hallo@sarfi-collection.de
             </p>
           </section>
 

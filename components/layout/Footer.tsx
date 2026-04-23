@@ -48,12 +48,12 @@ export default function Footer() {
             {/* Contact snippets */}
             <div className="mt-6 flex flex-col gap-2">
               <a
-                href="mailto:28imwald@gmail.com"
+                href="mailto:hallo@sarfi-collection.de"
                 className="flex items-center gap-2 text-sm text-cream-50/60 hover:text-gold-300 transition-colors font-body"
                 aria-label="E-Mail schreiben"
               >
                 <IconMail size={15} />
-                28imwald@gmail.com
+                hallo@sarfi-collection.de
               </a>
               <div className="flex items-start gap-2 text-sm text-cream-50/60 font-body">
                 <IconMapPin size={15} className="mt-0.5 shrink-0" />

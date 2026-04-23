@@ -27,7 +27,7 @@ export default function DatenschutzPage() {
               94541 Grattersdorf<br />
               Deutschland<br /><br />
               Telefon: +49 176 56850146<br />
-              E-Mail: 28imwald@gmail.com<br />
+              E-Mail: hallo@sarfi-collection.de<br />
               Website: www.sarfi-collection.de
             </p>
           </section>

@@ -206,7 +206,7 @@ export default function KontaktPage() {
               <h2 className="font-display text-2xl text-forest-900 mb-5">Kontaktdaten</h2>
               <div className="space-y-4">
                 <a
-                  href="mailto:28imwald@gmail.com"
+                  href="mailto:hallo@sarfi-collection.de"
                   className="flex items-center gap-3 p-4 rounded-xl bg-white border border-cream-200 shadow-card hover:border-gold-300 transition-colors group"
                 >
                   <div className="w-10 h-10 rounded-full bg-forest-900 flex items-center justify-center shrink-0">
@@ -215,7 +215,7 @@ export default function KontaktPage() {
                   <div>
                     <p className="font-body text-xs text-forest-400 mb-0.5">E-Mail</p>
                     <p className="font-body text-sm font-medium text-forest-800 group-hover:text-gold-700 transition-colors">
-                      28imwald@gmail.com
+                      hallo@sarfi-collection.de
                     </p>
                   </div>
                 </a>
