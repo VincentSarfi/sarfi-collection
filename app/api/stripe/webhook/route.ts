@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe'
+import { stripe, toCents } from '@/lib/stripe'
 import { createBooking } from '@/lib/smoobu'
 import { sendBookingNotification, sendGuestConfirmationEmail } from '@/lib/notify'
 
@@ -64,6 +64,36 @@ export async function POST(request: NextRequest) {
 
       console.log(`[webhook] Created Smoobu booking #${result.id} for PI ${pi.id}`)
 
+      // Stripe Payment Link für Restbetrag erstellen (nur bei 50%-Anzahlung)
+      let remainingPaymentUrl: string | undefined
+      const totalPrice    = parseFloat(m.totalPrice)
+      const depositAmount = parseFloat(m.depositAmount)
+      const remaining     = Math.round(totalPrice - depositAmount)
+      if (m.paymentOption !== "100" && remaining > 0) {
+        try {
+          const price = await stripe.prices.create({
+            currency: 'eur',
+            unit_amount: toCents(remaining),
+            product_data: {
+              name: `Restbetrag – ${m.propertyName} · ${m.checkIn} bis ${m.checkOut}`,
+            },
+          })
+          const paymentLink = await stripe.paymentLinks.create({
+            line_items: [{ price: price.id, quantity: 1 }],
+            metadata: {
+              type: 'restbetrag',
+              propertyName: m.propertyName,
+              smoobu_booking_id: String(result.id),
+              original_payment_intent: pi.id,
+            },
+          })
+          remainingPaymentUrl = paymentLink.url
+          console.log(`[webhook] Restbetrag-Link erstellt: ${remainingPaymentUrl}`)
+        } catch (linkErr) {
+          console.error('[webhook] Fehler beim Erstellen des Restbetrag-Links:', linkErr)
+        }
+      }
+
       // Benachrichtigung nach erfolgreicher Zahlung + Buchungserstellung
       const nights = Math.round(
         (new Date(m.checkOut).getTime() - new Date(m.checkIn).getTime()) / (1000 * 60 * 60 * 24)
@@ -88,18 +118,19 @@ export async function POST(request: NextRequest) {
 
       // Bestätigungsmail an den Gast
       sendGuestConfirmationEmail({
-        propertyName:    m.propertyName,
-        checkIn:         m.checkIn,
-        checkOut:        m.checkOut,
+        propertyName:       m.propertyName,
+        checkIn:            m.checkIn,
+        checkOut:           m.checkOut,
         nights,
-        guests:          parseInt(m.guests, 10),
-        totalPrice:      parseFloat(m.totalPrice),
-        depositAmount:   parseFloat(m.depositAmount),
-        paymentOption:   (m.paymentOption as "50" | "100") ?? "50",
-        firstName:       m.firstName,
-        lastName:        m.lastName,
-        email:           m.email,
-        smoobuBookingId: result.id,
+        guests:             parseInt(m.guests, 10),
+        totalPrice:         parseFloat(m.totalPrice),
+        depositAmount:      parseFloat(m.depositAmount),
+        paymentOption:      (m.paymentOption as "50" | "100") ?? "50",
+        firstName:          m.firstName,
+        lastName:           m.lastName,
+        email:              m.email,
+        smoobuBookingId:    result.id,
+        remainingPaymentUrl,
       }).catch(err => console.error('[notify] Gastbestätigung Fehler:', err))
 
     } catch (err) {
