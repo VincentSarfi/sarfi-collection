@@ -64,7 +64,9 @@ export async function POST(request: NextRequest) {
       console.log(`[webhook] Created Smoobu booking #${result.id} for PI ${pi.id}`)
     } catch (err) {
       console.error('[webhook] Smoobu booking creation failed:', err)
-      // Don't return 500 – Stripe would retry and we'd duplicate the booking
+      // Return 500 so Stripe retries (up to ~18h). Duplicate protection:
+      // on retry, smoobu_booking_id check above skips if already created.
+      return NextResponse.json({ error: 'Booking creation failed – will retry' }, { status: 500 })
     }
   }
 

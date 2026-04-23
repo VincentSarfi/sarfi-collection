@@ -17,12 +17,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/haus28/buchen`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.8,
-    },
-    {
       url: `${BASE_URL}/schoenblick`,
       lastModified: new Date(),
       changeFrequency: "weekly",
@@ -41,6 +35,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: `${BASE_URL}/schoenblick/b7`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
       url: `${BASE_URL}/schoenblick/b8`,
       lastModified: new Date(),
       changeFrequency: "weekly",
@@ -51,36 +51,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/schoenblick/buchen`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.7,
-    },
-    {
-      url: `${BASE_URL}/schoenblick/b5/buchen`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.7,
-    },
-    {
-      url: `${BASE_URL}/schoenblick/b6/buchen`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.7,
-    },
-    {
-      url: `${BASE_URL}/schoenblick/b8/buchen`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.7,
-    },
-    {
-      url: `${BASE_URL}/schoenblick/a2/buchen`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.7,
     },
     {
       url: `${BASE_URL}/ausflugsziele`,

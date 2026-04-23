@@ -10,6 +10,7 @@ export default function robots(): MetadataRoute.Robots {
         "/schoenblick/buchen",
         "/schoenblick/b5/buchen",
         "/schoenblick/b6/buchen",
+        "/schoenblick/b7/buchen",
         "/schoenblick/b8/buchen",
         "/schoenblick/a2/buchen",
       ],

@@ -410,8 +410,8 @@ export default function BookingWidget({
       })
       const data = await res.json()
       if (res.ok) setBookingId(data.id)
-    } catch {
-      // Non-fatal: webhook will create the booking as backup
+    } catch (err) {
+      console.error('[booking] Client-side Smoobu booking failed (webhook will retry):', err)
     }
 
     setStep("confirmed")
@@ -463,6 +463,11 @@ export default function BookingWidget({
             <strong>{propertyName}</strong> wurde übermittelt. Du erhältst in Kürze eine
             Bestätigung per E-Mail an <strong>{form.email}</strong>.
           </p>
+          {!bookingId && (
+            <p className="font-body text-xs text-forest-400 mb-4 bg-cream-100 rounded-xl px-4 py-3">
+              Deine Buchung wird gerade verarbeitet. Falls du innerhalb von 10 Minuten keine E-Mail erhältst, melde dich bitte direkt bei uns.
+            </p>
+          )}
 
           {/* Summary card */}
           <div className="bg-cream-50 rounded-2xl border border-cream-200 p-5 text-left mb-6">
