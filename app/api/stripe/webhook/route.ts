@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createBooking } from '@/lib/smoobu'
-import { sendBookingNotification } from '@/lib/notify'
+import { sendBookingNotification, sendGuestConfirmationEmail } from '@/lib/notify'
 
 /**
  * Stripe webhook – backup handler.
@@ -85,6 +85,22 @@ export async function POST(request: NextRequest) {
         message:       m.message,
         paymentIntentId: pi.id,
       }).catch(err => console.error('[notify] Fehler:', err))
+
+      // Bestätigungsmail an den Gast
+      sendGuestConfirmationEmail({
+        propertyName:    m.propertyName,
+        checkIn:         m.checkIn,
+        checkOut:        m.checkOut,
+        nights,
+        guests:          parseInt(m.guests, 10),
+        totalPrice:      parseFloat(m.totalPrice),
+        depositAmount:   parseFloat(m.depositAmount),
+        paymentOption:   (m.paymentOption as "50" | "100") ?? "50",
+        firstName:       m.firstName,
+        lastName:        m.lastName,
+        email:           m.email,
+        smoobuBookingId: result.id,
+      }).catch(err => console.error('[notify] Gastbestätigung Fehler:', err))
 
     } catch (err) {
       console.error('[webhook] Smoobu booking creation failed:', err)

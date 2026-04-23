@@ -2,6 +2,21 @@ import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
+export interface GuestConfirmationData {
+  propertyName: string
+  checkIn: string
+  checkOut: string
+  nights: number
+  guests: number
+  totalPrice: number
+  depositAmount: number
+  paymentOption?: "50" | "100"
+  firstName: string
+  lastName: string
+  email: string
+  smoobuBookingId?: string | number
+}
+
 export interface BookingNotificationData {
   // Unterkunft
   propertyName: string
@@ -363,5 +378,174 @@ Stripe PI: ${data.paymentIntentId}
     }
   } catch (err) {
     console.error('[notify] Unerwarteter Fehler:', err)
+  }
+}
+
+export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey || apiKey === 'PLACEHOLDER') return
+
+  const isFullPay = data.paymentOption === "100"
+  const remaining = data.totalPrice - data.depositAmount
+
+  const html = `
+<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f5f0e8;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+
+        <!-- Header -->
+        <tr>
+          <td style="background:#1a2e1a;padding:32px 32px 28px;">
+            <p style="margin:0 0 6px;color:#c9a84c;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600;">✅ Buchung bestätigt</p>
+            <h1 style="margin:0;color:#f5f0e8;font-size:24px;font-weight:700;">Vielen Dank, ${data.firstName}!</h1>
+            <p style="margin:8px 0 0;color:#f5f0e8;opacity:0.7;font-size:14px;">Deine Buchung für <strong>${data.propertyName}</strong> ist eingegangen.</p>
+          </td>
+        </tr>
+
+        <!-- Intro -->
+        <tr>
+          <td style="padding:24px 32px 0;">
+            <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:14px 16px;">
+              <p style="margin:0;font-size:13px;color:#166534;">
+                Deine Zahlung wurde erfolgreich verarbeitet. Wir freuen uns auf deinen Aufenthalt!
+                ${!isFullPay ? ' Den Restbetrag bitten wir dich 14 Tage vor Anreise zu begleichen.' : ''}
+              </p>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Buchungsdetails -->
+        <tr>
+          <td style="padding:24px 32px 0;">
+            <p style="margin:0 0 14px;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.12em;font-weight:600;">Deine Buchungsdetails</p>
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="50%" style="padding:0 8px 12px 0;">
+                  <div style="background:#f5f0e8;border-radius:8px;padding:14px;">
+                    <p style="margin:0 0 4px;font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.1em;">Anreise</p>
+                    <p style="margin:0;font-size:17px;font-weight:700;color:#1a2e1a;">${formatDate(data.checkIn)}</p>
+                    <p style="margin:4px 0 0;font-size:12px;color:#888;">ab 15:00 Uhr</p>
+                  </div>
+                </td>
+                <td width="50%" style="padding:0 0 12px 8px;">
+                  <div style="background:#f5f0e8;border-radius:8px;padding:14px;">
+                    <p style="margin:0 0 4px;font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.1em;">Abreise</p>
+                    <p style="margin:0;font-size:17px;font-weight:700;color:#1a2e1a;">${formatDate(data.checkOut)}</p>
+                    <p style="margin:4px 0 0;font-size:12px;color:#888;">bis 10:00 Uhr</p>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td width="50%" style="padding:0 8px 0 0;">
+                  <div style="background:#f5f0e8;border-radius:8px;padding:14px;">
+                    <p style="margin:0 0 4px;font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.1em;">Nächte</p>
+                    <p style="margin:0;font-size:17px;font-weight:700;color:#1a2e1a;">${data.nights}</p>
+                  </div>
+                </td>
+                <td width="50%" style="padding:0 0 0 8px;">
+                  <div style="background:#f5f0e8;border-radius:8px;padding:14px;">
+                    <p style="margin:0 0 4px;font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.1em;">Gäste</p>
+                    <p style="margin:0;font-size:17px;font-weight:700;color:#1a2e1a;">${data.guests}</p>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Preisübersicht -->
+        <tr>
+          <td style="padding:20px 32px 0;">
+            <p style="margin:0 0 12px;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.12em;font-weight:600;">Zahlungsübersicht</p>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8e2d6;border-radius:8px;overflow:hidden;">
+              <tr style="background:#f5f0e8;">
+                <td style="padding:10px 16px;font-size:13px;color:#555;">Gesamtpreis</td>
+                <td align="right" style="padding:10px 16px;font-size:13px;color:#1a2e1a;font-weight:600;">${data.totalPrice.toLocaleString('de-DE')} €</td>
+              </tr>
+              <tr style="background:#f0fdf4;">
+                <td style="padding:10px 16px;font-size:13px;color:#166534;border-top:1px solid #e8e2d6;">
+                  ${isFullPay ? '✅ Vollzahlung beglichen' : '✅ Anzahlung (50%) beglichen'}
+                </td>
+                <td align="right" style="padding:10px 16px;font-size:13px;color:#166534;font-weight:700;border-top:1px solid #e8e2d6;">
+                  ${data.depositAmount.toLocaleString('de-DE')} €
+                </td>
+              </tr>
+              ${!isFullPay ? `
+              <tr>
+                <td style="padding:10px 16px;font-size:13px;color:#555;border-top:1px solid #e8e2d6;">
+                  Restbetrag (fällig 14 Tage vor Anreise)
+                </td>
+                <td align="right" style="padding:10px 16px;font-size:13px;color:#1a2e1a;font-weight:600;border-top:1px solid #e8e2d6;">
+                  ${remaining.toLocaleString('de-DE')} €
+                </td>
+              </tr>` : ''}
+            </table>
+          </td>
+        </tr>
+
+        ${data.smoobuBookingId ? `
+        <!-- Buchungs-ID -->
+        <tr>
+          <td style="padding:12px 32px 0;">
+            <p style="margin:0;font-size:12px;color:#aaa;">Buchungs-Nr.: <strong style="color:#888;">#${data.smoobuBookingId}</strong></p>
+          </td>
+        </tr>` : ''}
+
+        <!-- Kontakt -->
+        <tr>
+          <td style="padding:24px 32px 0;">
+            <p style="margin:0 0 12px;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.12em;font-weight:600;">Dein Gastgeber</p>
+            <div style="border:1px solid #e8e2d6;border-radius:8px;padding:16px;">
+              <p style="margin:0 0 4px;font-size:14px;font-weight:600;color:#1a2e1a;">SARFI Collection</p>
+              <p style="margin:0 0 8px;font-size:13px;color:#555;">Bayerischer Wald, Deutschland</p>
+              <p style="margin:0 0 4px;font-size:13px;color:#555;">
+                📧 <a href="mailto:hallo@sarfi-collection.de" style="color:#1a2e1a;">hallo@sarfi-collection.de</a>
+              </p>
+              <p style="margin:0;font-size:13px;color:#555;">
+                📞 <a href="tel:+4917656850146" style="color:#1a2e1a;">+49 176 56850146</a>
+              </p>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Stornierung -->
+        <tr>
+          <td style="padding:16px 32px 0;">
+            <p style="margin:0;font-size:12px;color:#888;">
+              Die Stornierungsbedingungen findest du unter
+              <a href="https://www.sarfi-collection.de/stornierung" style="color:#1a2e1a;">sarfi-collection.de/stornierung</a>.
+            </p>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td style="background:#1a2e1a;padding:20px 32px;margin-top:28px;">
+            <p style="margin:0;font-size:12px;color:#f5f0e8;opacity:0.6;text-align:center;">
+              SARFI Collection · <a href="https://www.sarfi-collection.de" style="color:#c9a84c;">sarfi-collection.de</a>
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`
+
+  try {
+    await resend.emails.send({
+      from: 'SARFI Collection <buchung@sarfi-collection.de>',
+      to:   [data.email],
+      subject: `✅ Buchungsbestätigung: ${data.propertyName} · ${formatDate(data.checkIn)}–${formatDate(data.checkOut)}`,
+      html,
+    })
+    console.log(`[notify] Gastbestätigung gesendet an ${data.email}`)
+  } catch (err) {
+    console.error('[notify] Gastbestätigung Fehler:', err)
   }
 }
