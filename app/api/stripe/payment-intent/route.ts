@@ -15,7 +15,8 @@ export interface CreatePaymentIntentRequest {
   email: string
   phone: string
   message?: string
-  totalPrice: number  // full price in EUR
+  totalPrice: number       // full price in EUR
+  paymentOption?: "50" | "100"  // default: "50"
 }
 
 export interface CreatePaymentIntentResponse {
@@ -44,7 +45,8 @@ export async function POST(request: NextRequest) {
   }
 
   const { apartmentId, propertyName, checkIn, checkOut, guests,
-          firstName, lastName, email, phone, message, totalPrice } = body
+          firstName, lastName, email, phone, message, totalPrice,
+          paymentOption = "50" } = body
 
   if (!apartmentId || !checkIn || !checkOut || !firstName || !lastName ||
       !email || !phone || !guests || !totalPrice) {
@@ -64,14 +66,15 @@ export async function POST(request: NextRequest) {
     // Continue if check fails – booking API will catch it
   }
 
-  const depositEur = Math.round(totalPrice * DEPOSIT_FRACTION)
+  const fraction   = paymentOption === "100" ? 1 : DEPOSIT_FRACTION
+  const depositEur = Math.round(totalPrice * fraction)
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: toCents(depositEur),
       currency: 'eur',
       receipt_email: email,
-      description: `50% Anzahlung – ${propertyName} · ${checkIn} bis ${checkOut}`,
+      description: `${paymentOption === "100" ? "100% Vollzahlung" : "50% Anzahlung"} – ${propertyName} · ${checkIn} bis ${checkOut}`,
       metadata: {
         // Store all booking data so webhook can create the Smoobu booking
         apartmentId,
@@ -86,6 +89,7 @@ export async function POST(request: NextRequest) {
         message: message ?? '',
         totalPrice: String(totalPrice),
         depositAmount: String(depositEur),
+        paymentOption: paymentOption ?? "50",
       },
     })
 
@@ -102,6 +106,7 @@ export async function POST(request: NextRequest) {
       guests,
       totalPrice,
       depositAmount:   depositEur,
+      paymentOption:   paymentOption ?? "50",
       firstName,
       lastName,
       email,

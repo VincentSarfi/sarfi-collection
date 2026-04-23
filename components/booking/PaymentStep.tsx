@@ -54,6 +54,7 @@ const STRIPE_APPEARANCE = {
 interface CheckoutFormProps {
   depositAmount: number
   totalAmount: number
+  paymentOption: "50" | "100"
   onSuccess: (paymentIntentId: string) => void
   onError: (msg: string) => void
   onBack: () => void
@@ -62,6 +63,7 @@ interface CheckoutFormProps {
 function CheckoutForm({
   depositAmount,
   totalAmount,
+  paymentOption,
   onSuccess,
   onError,
   onBack,
@@ -101,18 +103,29 @@ function CheckoutForm({
     }
   }
 
+  const isFullPay = paymentOption === "100"
   const remaining = totalAmount - depositAmount
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {/* Deposit explanation */}
+      {/* Deposit / full-pay explanation */}
       <div className="rounded-xl bg-forest-50 border border-forest-100 p-4">
         <p className="font-body text-sm text-forest-700 leading-relaxed">
-          Du zahlst jetzt die{" "}
-          <strong className="text-forest-900">50% Anzahlung ({depositAmount.toLocaleString("de-DE")} €)</strong>.
-          Den Restbetrag von{" "}
-          <strong className="text-forest-900">{remaining.toLocaleString("de-DE")} €</strong>{" "}
-          begleichst du vor Ort oder nach Absprache mit dem Gastgeber.
+          {isFullPay ? (
+            <>
+              Du zahlst jetzt den{" "}
+              <strong className="text-forest-900">vollen Betrag ({depositAmount.toLocaleString("de-DE")} €)</strong>.
+              {" "}Nach der Zahlung ist die Buchung vollständig beglichen – keine weiteren Zahlungen nötig.
+            </>
+          ) : (
+            <>
+              Du zahlst jetzt die{" "}
+              <strong className="text-forest-900">50% Anzahlung ({depositAmount.toLocaleString("de-DE")} €)</strong>.
+              Den Restbetrag von{" "}
+              <strong className="text-forest-900">{remaining.toLocaleString("de-DE")} €</strong>{" "}
+              begleichst du 14 Tage vor Anreise oder nach Absprache mit dem Gastgeber.
+            </>
+          )}
         </p>
       </div>
 
@@ -149,7 +162,7 @@ function CheckoutForm({
                 <rect x="1.5" y="4.5" width="15" height="10.5" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
                 <path d="M1.5 7.5h15" stroke="currentColor" strokeWidth="1.5" />
               </svg>
-              {depositAmount.toLocaleString("de-DE")} € jetzt anzahlen
+              {depositAmount.toLocaleString("de-DE")} € {isFullPay ? "jetzt bezahlen" : "jetzt anzahlen"}
             </>
           )}
         </button>
@@ -185,6 +198,7 @@ interface PaymentStepProps {
   checkOut: Date | null
   propertyName: string
   guests: number
+  paymentOption: "50" | "100"
   onSuccess: (paymentIntentId: string) => void
   onError: (msg: string) => void
   onBack: () => void
@@ -198,10 +212,12 @@ export default function PaymentStep({
   checkOut,
   propertyName,
   guests,
+  paymentOption,
   onSuccess,
   onError,
   onBack,
 }: PaymentStepProps) {
+  const isFullPay = paymentOption === "100"
   return (
     <motion.div
       initial={{ opacity: 0, x: 16 }}
@@ -212,7 +228,7 @@ export default function PaymentStep({
       {/* Booking summary */}
       <div className="mb-6">
         <h2 className="font-display text-2xl text-forest-900 mb-4">
-          Anzahlung
+          {isFullPay ? "Vollzahlung" : "Anzahlung"}
         </h2>
         <div className="rounded-xl border border-cream-200 bg-cream-50 p-4 space-y-2">
           <div className="flex justify-between font-body text-sm">
@@ -241,7 +257,7 @@ export default function PaymentStep({
               <span>{totalAmount.toLocaleString("de-DE")} €</span>
             </div>
             <div className="flex justify-between font-body text-sm font-bold text-forest-900">
-              <span>Anzahlung heute (50%)</span>
+              <span>{isFullPay ? "Vollzahlung heute (100%)" : "Anzahlung heute (50%)"}</span>
               <span className="text-forest-800">{depositAmount.toLocaleString("de-DE")} €</span>
             </div>
           </div>
@@ -260,6 +276,7 @@ export default function PaymentStep({
         <CheckoutForm
           depositAmount={depositAmount}
           totalAmount={totalAmount}
+          paymentOption={paymentOption}
           onSuccess={onSuccess}
           onError={onError}
           onBack={onBack}

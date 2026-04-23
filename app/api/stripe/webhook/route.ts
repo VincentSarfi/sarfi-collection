@@ -77,6 +77,7 @@ export async function POST(request: NextRequest) {
         guests:        parseInt(m.guests, 10),
         totalPrice:    parseFloat(m.totalPrice),
         depositAmount: parseFloat(m.depositAmount),
+        paymentOption: (m.paymentOption as "50" | "100") ?? "50",
         firstName:     m.firstName,
         lastName:      m.lastName,
         email:         m.email,

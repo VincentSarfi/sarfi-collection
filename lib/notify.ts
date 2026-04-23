@@ -14,6 +14,7 @@ export interface BookingNotificationData {
   // Preise
   totalPrice: number
   depositAmount: number
+  paymentOption?: "50" | "100"
   // Gast
   firstName: string
   lastName: string
@@ -37,10 +38,11 @@ export async function sendCheckoutStartedNotification(data: BookingNotificationD
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey || apiKey === 'PLACEHOLDER') return
 
-  const nights = data.nights
-  const deposit = data.depositAmount
-  const total   = data.totalPrice
+  const nights    = data.nights
+  const deposit   = data.depositAmount
+  const total     = data.totalPrice
   const remaining = total - deposit
+  const isFullPay = data.paymentOption === "100"
 
   const html = `
 <!DOCTYPE html>
@@ -116,13 +118,13 @@ export async function sendCheckoutStartedNotification(data: BookingNotificationD
                 <td align="right" style="padding:4px 0;font-size:14px;color:#1a2e1a;font-weight:600;">${total.toLocaleString('de-DE')} €</td>
               </tr>
               <tr>
-                <td style="padding:4px 0;font-size:14px;color:#555;">Anzahlung 50%</td>
+                <td style="padding:4px 0;font-size:14px;color:#555;">${isFullPay ? '100% Vollzahlung' : '50% Anzahlung'}</td>
                 <td align="right" style="padding:4px 0;font-size:14px;color:#92400e;font-weight:700;">${deposit.toLocaleString('de-DE')} € (noch ausstehend)</td>
               </tr>
-              <tr>
+              ${!isFullPay ? `<tr>
                 <td style="padding:4px 0;font-size:14px;color:#555;">Restbetrag</td>
                 <td align="right" style="padding:4px 0;font-size:14px;color:#1a2e1a;">${remaining.toLocaleString('de-DE')} €</td>
-              </tr>
+              </tr>` : ''}
             </table>
           </td>
         </tr>
@@ -187,10 +189,11 @@ export async function sendBookingNotification(data: BookingNotificationData) {
     return
   }
 
-  const nights = data.nights
-  const deposit = data.depositAmount   // already in €
-  const total   = data.totalPrice      // already in €
+  const nights    = data.nights
+  const deposit   = data.depositAmount
+  const total     = data.totalPrice
   const remaining = total - deposit
+  const isFullPay = data.paymentOption === "100"
 
   const html = `
 <!DOCTYPE html>
@@ -258,13 +261,13 @@ export async function sendBookingNotification(data: BookingNotificationData) {
                 <td align="right" style="padding:4px 0;font-size:14px;color:#1a2e1a;font-weight:600;">${total.toLocaleString('de-DE')} €</td>
               </tr>
               <tr>
-                <td style="padding:4px 0;font-size:14px;color:#555;">Anzahlung 50% <span style="color:#2d7a2d;font-size:12px;">(wird jetzt bezahlt)</span></td>
+                <td style="padding:4px 0;font-size:14px;color:#555;">${isFullPay ? '100% Vollzahlung' : '50% Anzahlung'} <span style="color:#2d7a2d;font-size:12px;">✓ bezahlt</span></td>
                 <td align="right" style="padding:4px 0;font-size:14px;color:#2d7a2d;font-weight:700;">${deposit.toLocaleString('de-DE')} €</td>
               </tr>
-              <tr>
+              ${!isFullPay ? `<tr>
                 <td style="padding:4px 0;font-size:14px;color:#555;">Restbetrag (fällig 14 Tage vor Anreise)</td>
                 <td align="right" style="padding:4px 0;font-size:14px;color:#1a2e1a;font-weight:600;">${remaining.toLocaleString('de-DE')} €</td>
-              </tr>
+              </tr>` : ''}
             </table>
           </td>
         </tr>
@@ -332,8 +335,8 @@ Gäste:      ${data.guests}
 
 PREISE
 Gesamt:     ${total.toLocaleString('de-DE')} €
-Anzahlung:  ${deposit.toLocaleString('de-DE')} € (wird jetzt bezahlt)
-Restbetrag: ${remaining.toLocaleString('de-DE')} € (14 Tage vor Anreise)
+Zahlung:    ${isFullPay ? '100% Vollzahlung' : '50% Anzahlung'} – ${deposit.toLocaleString('de-DE')} € ✓ bezahlt
+${!isFullPay ? `Restbetrag: ${remaining.toLocaleString('de-DE')} € (14 Tage vor Anreise)` : 'Vollständig bezahlt – kein Restbetrag'}
 
 GAST
 Name:       ${data.firstName} ${data.lastName}

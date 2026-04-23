@@ -27,6 +27,7 @@ export interface BookingWidgetProps {
 }
 
 type Step = "dates" | "form" | "payment" | "confirmed" | "error"
+type PaymentOption = "50" | "100"
 
 interface FormData {
   firstName: string
@@ -221,6 +222,7 @@ export default function BookingWidget({
   const [submitting, setSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [bookingId, setBookingId] = useState<number | null>(null)
+  const [paymentOption, setPaymentOption] = useState<PaymentOption>("50")
 
   // ── Stripe + PriceLabs state ──
   const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(null)
@@ -371,6 +373,7 @@ export default function BookingWidget({
           phone: form.phone.trim(),
           message: form.message.trim() || undefined,
           totalPrice: priceBreakdown.total,
+          paymentOption,
         }),
       })
 
@@ -759,6 +762,56 @@ export default function BookingWidget({
                       />
                     </div>
 
+                    {/* Zahlungsoption */}
+                    {priceBreakdown && (
+                      <div>
+                        <p className="font-body text-xs font-medium text-forest-700 uppercase tracking-wider mb-2">
+                          Zahlungsoption
+                        </p>
+                        <div className="grid grid-cols-1 gap-2">
+                          {([
+                            {
+                              value: "50" as PaymentOption,
+                              label: "50% Anzahlung",
+                              sub: `${Math.round(priceBreakdown.total * 0.5).toLocaleString("de-DE")} € jetzt · Rest 14 Tage vor Anreise`,
+                            },
+                            {
+                              value: "100" as PaymentOption,
+                              label: "100% Vollzahlung",
+                              sub: `${priceBreakdown.total.toLocaleString("de-DE")} € jetzt · Keine weiteren Zahlungen`,
+                            },
+                          ] as const).map((opt) => (
+                            <button
+                              key={opt.value}
+                              type="button"
+                              onClick={() => setPaymentOption(opt.value)}
+                              className={[
+                                "flex items-start gap-3 w-full rounded-xl border px-4 py-3 text-left transition-colors",
+                                paymentOption === opt.value
+                                  ? "border-forest-700 bg-forest-50"
+                                  : "border-cream-300 hover:border-forest-300",
+                              ].join(" ")}
+                            >
+                              <span className={[
+                                "mt-0.5 w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center",
+                                paymentOption === opt.value
+                                  ? "border-forest-700"
+                                  : "border-cream-400",
+                              ].join(" ")}>
+                                {paymentOption === opt.value && (
+                                  <span className="w-2 h-2 rounded-full bg-forest-700" />
+                                )}
+                              </span>
+                              <div>
+                                <p className="font-body text-sm font-semibold text-forest-900">{opt.label}</p>
+                                <p className="font-body text-xs text-forest-500 mt-0.5">{opt.sub}</p>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     {/* DSGVO note */}
                     <p className="text-xs font-body text-forest-400 leading-relaxed">
                       Mit deiner Buchung stimmst du unseren{" "}
@@ -802,6 +855,7 @@ export default function BookingWidget({
                   checkOut={checkOut}
                   propertyName={propertyName}
                   guests={guests}
+                  paymentOption={paymentOption}
                   onSuccess={handlePaymentSuccess}
                   onError={handlePaymentError}
                   onBack={() => setStep("form")}
