@@ -176,9 +176,9 @@ export const haus28: PropertyData = {
         "HAUS28 bietet Platz für bis zu 8 Personen in 4 Schlafzimmern. Perfekt für Familien oder Freundesgruppen.",
     },
     {
-      question: "Wie ist die Stornierungsbedingung?",
+      question: "Wie sind die Stornierungsbedingungen?",
       answer:
-        "Es gilt die moderate Stornierungsrichtlinie: Kostenlose Stornierung bis 5 Tage vor Anreise. Details beim Buchungsvorgang.",
+        "Bis 30 Tage vor Anreise: 100 % Erstattung. Von 14 bis 30 Tage vor Anreise: 50 % Erstattung. Weniger als 14 Tage vor Anreise: keine Erstattung. Details unter sarfi-collection.de/stornierung.",
     },
     {
       question: "Gibt es WLAN?",
@@ -265,6 +265,11 @@ const schoenblickFaqs = [
     question: "Welche Ausflugsziele gibt es in der Nähe?",
     answer:
       "Rund um Schöfweg im Bayerischen Wald erwartet dich viel: Pullman City (~15 min), Baumwipfelpfad Neuschönau (~25 min), Nationalpark Bayerischer Wald (~20 km), Grafenau (~15 min), Thermalbad Regen (~30 min) und das Skigebiet am Großen Arber (~45 min).",
+  },
+  {
+    question: "Wie sind die Stornierungsbedingungen?",
+    answer:
+      "Bis 14 Tage vor Anreise: 100 % Erstattung. Von 7 bis 14 Tage vor Anreise: 50 % Erstattung. Weniger als 7 Tage vor Anreise: keine Erstattung. Details unter sarfi-collection.de/stornierung.",
   },
 ];
 

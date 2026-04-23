@@ -818,6 +818,10 @@ export default function BookingWidget({
                       <Link href="/datenschutz" className="underline hover:text-forest-700">
                         Datenschutzhinweisen
                       </Link>{" "}
+                      und den{" "}
+                      <Link href="/stornierung" className="underline hover:text-forest-700">
+                        Stornierungsbedingungen
+                      </Link>{" "}
                       zu. Deine Daten werden ausschließlich zur Buchungsabwicklung verwendet.
                     </p>
 

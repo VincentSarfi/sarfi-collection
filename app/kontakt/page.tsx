@@ -20,7 +20,7 @@ const faqs = [
   },
   {
     q: "Was passiert bei Stornierung?",
-    a: "Die Stornierungsbedingungen sind je nach Buchungsart unterschiedlich. Details findest du beim Buchungsvorgang.",
+    a: "HAUS28: kostenlos bis 30 Tage vor Anreise, 50 % bis 14 Tage, danach keine Erstattung. Schönblick-Apartments: kostenlos bis 14 Tage vor Anreise, 50 % bis 7 Tage, danach keine Erstattung. Alle Details auf sarfi-collection.de/stornierung.",
   },
   {
     q: "Gibt es Rabatte für längere Aufenthalte?",
