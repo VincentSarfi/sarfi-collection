@@ -10,13 +10,32 @@ const SUBJECT_LABELS: Record<string, string> = {
   other:       'Sonstiges',
 }
 
+async function verifyTurnstile(token: string): Promise<boolean> {
+  const secret = process.env.TURNSTILE_SECRET_KEY
+  if (!secret) return false
+
+  const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ secret, response: token }),
+  })
+  const data = await res.json()
+  return data.success === true
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, subject, message } = body
+    const { name, email, subject, message, turnstileToken } = body
 
     if (!name?.trim() || !email?.trim() || !message?.trim()) {
       return NextResponse.json({ error: 'Pflichtfelder fehlen' }, { status: 400 })
+    }
+
+    // CAPTCHA-Verifikation
+    const valid = await verifyTurnstile(turnstileToken ?? '')
+    if (!valid) {
+      return NextResponse.json({ error: 'CAPTCHA-Verifikation fehlgeschlagen. Bitte versuche es erneut.' }, { status: 400 })
     }
 
     const subjectLabel = SUBJECT_LABELS[subject] ?? 'Kontaktanfrage'

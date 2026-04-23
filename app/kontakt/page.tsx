@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { IconMail, IconMapPin, IconChevronDown } from "@/components/ui/Icons";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 const faqs = [
   {
@@ -71,6 +72,7 @@ export default function KontaktPage() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const turnstileToken = useRef<string>("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -79,10 +81,11 @@ export default function KontaktPage() {
 
     const form = e.currentTarget;
     const data = {
-      name:    (form.elements.namedItem('name')    as HTMLInputElement).value,
-      email:   (form.elements.namedItem('email')   as HTMLInputElement).value,
-      subject: (form.elements.namedItem('subject') as HTMLSelectElement).value,
-      message: (form.elements.namedItem('message') as HTMLTextAreaElement).value,
+      name:           (form.elements.namedItem('name')    as HTMLInputElement).value,
+      email:          (form.elements.namedItem('email')   as HTMLInputElement).value,
+      subject:        (form.elements.namedItem('subject') as HTMLSelectElement).value,
+      message:        (form.elements.namedItem('message') as HTMLTextAreaElement).value,
+      turnstileToken: turnstileToken.current,
     };
 
     try {
@@ -91,10 +94,11 @@ export default function KontaktPage() {
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(data),
       });
-      if (!res.ok) throw new Error('Fehler beim Senden');
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? 'Fehler beim Senden');
       setSent(true);
-    } catch {
-      setError('Deine Nachricht konnte leider nicht gesendet werden. Bitte schreib uns direkt an hallo@sarfi-collection.de.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Deine Nachricht konnte leider nicht gesendet werden. Bitte schreib uns direkt an hallo@sarfi-collection.de.');
     } finally {
       setLoading(false);
     }
@@ -212,6 +216,12 @@ export default function KontaktPage() {
                     gelesen und stimme der Verarbeitung meiner Daten zu. *
                   </label>
                 </div>
+
+                <Turnstile
+                  siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                  onSuccess={(token) => { turnstileToken.current = token; }}
+                  options={{ theme: "light", language: "de" }}
+                />
 
                 <button
                   type="submit"
