@@ -400,21 +400,14 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   <!-- ── Logo Header ── -->
   <tr>
     <td align="center" style="background:#1a2e1a;padding:36px 32px 28px;">
-      <table cellpadding="0" cellspacing="0">
-        <tr>
-          <td align="center">
-            <!-- SC Monogram -->
-            <div style="font-family:Georgia,'Times New Roman',serif;font-size:56px;font-weight:400;color:#f5f0e8;letter-spacing:-4px;line-height:1;display:block;">SC</div>
-            <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:9px;font-weight:300;color:#c9a84c;letter-spacing:7px;text-transform:uppercase;margin-top:8px;display:block;">SARFI COLLECTION</div>
-          </td>
-        </tr>
-      </table>
+      <!-- Echtes Logo als Bild (SVG mit transparentem Hintergrund, cremefarbene Schrift) -->
+      <img src="https://www.sarfi-collection.de/images/logo.svg" width="160" height="100" alt="SARFI Collection" style="display:block;margin:0 auto;" />
       <!-- Divider -->
       <div style="width:40px;height:1px;background:#c9a84c;margin:20px auto 18px;"></div>
       <!-- Status -->
-      <p style="margin:0 0 6px;color:#c9a84c;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600;">✅ Buchung bestätigt</p>
-      <h1 style="margin:0;color:#f5f0e8;font-size:26px;font-weight:700;font-family:Georgia,'Times New Roman',serif;">Vielen Dank, ${data.firstName}!</h1>
-      <p style="margin:8px 0 0;color:#f5f0e8;opacity:0.65;font-size:14px;">Deine Buchung für <strong style="opacity:1;">${data.propertyName}</strong> ist bestätigt.</p>
+      <p style="margin:0 0 6px;color:#c9a84c;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600;font-family:'Helvetica Neue',Arial,sans-serif;">✅ Buchung bestätigt</p>
+      <h1 style="margin:0;color:#f5f0e8;font-size:26px;font-weight:700;font-family:'Helvetica Neue',Arial,sans-serif;">Vielen Dank, ${data.firstName}!</h1>
+      <p style="margin:8px 0 0;color:#f5f0e8;opacity:0.65;font-size:14px;font-family:'Helvetica Neue',Arial,sans-serif;">Deine Buchung für <strong style="opacity:1;">${data.propertyName}</strong> ist bestätigt.</p>
     </td>
   </tr>
 
@@ -438,14 +431,14 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
           <td width="50%" style="padding:0 6px 10px 0;">
             <div style="background:#f5f0e8;border-radius:10px;padding:14px 16px;">
               <p style="margin:0 0 3px;font-size:10px;color:#999;text-transform:uppercase;letter-spacing:0.1em;">Anreise</p>
-              <p style="margin:0;font-size:18px;font-weight:700;color:#1a2e1a;font-family:Georgia,serif;">${formatDate(data.checkIn)}</p>
+              <p style="margin:0;font-size:18px;font-weight:700;color:#1a2e1a;font-family:'Helvetica Neue',Arial,sans-serif;">${formatDate(data.checkIn)}</p>
               <p style="margin:4px 0 0;font-size:11px;color:#999;">ab 15:00 Uhr</p>
             </div>
           </td>
           <td width="50%" style="padding:0 0 10px 6px;">
             <div style="background:#f5f0e8;border-radius:10px;padding:14px 16px;">
               <p style="margin:0 0 3px;font-size:10px;color:#999;text-transform:uppercase;letter-spacing:0.1em;">Abreise</p>
-              <p style="margin:0;font-size:18px;font-weight:700;color:#1a2e1a;font-family:Georgia,serif;">${formatDate(data.checkOut)}</p>
+              <p style="margin:0;font-size:18px;font-weight:700;color:#1a2e1a;font-family:'Helvetica Neue',Arial,sans-serif;">${formatDate(data.checkOut)}</p>
               <p style="margin:4px 0 0;font-size:11px;color:#999;">bis 10:00 Uhr</p>
             </div>
           </td>
@@ -454,13 +447,13 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
           <td width="50%" style="padding:0 6px 0 0;">
             <div style="background:#f5f0e8;border-radius:10px;padding:14px 16px;">
               <p style="margin:0 0 3px;font-size:10px;color:#999;text-transform:uppercase;letter-spacing:0.1em;">Nächte</p>
-              <p style="margin:0;font-size:18px;font-weight:700;color:#1a2e1a;font-family:Georgia,serif;">${data.nights}</p>
+              <p style="margin:0;font-size:18px;font-weight:700;color:#1a2e1a;font-family:'Helvetica Neue',Arial,sans-serif;">${data.nights}</p>
             </div>
           </td>
           <td width="50%" style="padding:0 0 0 6px;">
             <div style="background:#f5f0e8;border-radius:10px;padding:14px 16px;">
               <p style="margin:0 0 3px;font-size:10px;color:#999;text-transform:uppercase;letter-spacing:0.1em;">Gäste</p>
-              <p style="margin:0;font-size:18px;font-weight:700;color:#1a2e1a;font-family:Georgia,serif;">${data.guests}</p>
+              <p style="margin:0;font-size:18px;font-weight:700;color:#1a2e1a;font-family:'Helvetica Neue',Arial,sans-serif;">${data.guests}</p>
             </div>
           </td>
         </tr>
@@ -500,7 +493,7 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
     <td style="padding:24px 32px 0;">
       <div style="background:#1a2e1a;border-radius:12px;padding:22px 24px;text-align:center;">
         <p style="margin:0 0 4px;font-size:11px;color:#c9a84c;text-transform:uppercase;letter-spacing:0.12em;font-weight:600;">Restbetrag</p>
-        <p style="margin:0 0 16px;font-size:28px;font-weight:700;color:#f5f0e8;font-family:Georgia,serif;">${remaining.toLocaleString('de-DE')} €</p>
+        <p style="margin:0 0 16px;font-size:28px;font-weight:700;color:#f5f0e8;font-family:'Helvetica Neue',Arial,sans-serif;">${remaining.toLocaleString('de-DE')} €</p>
         <p style="margin:0 0 18px;font-size:13px;color:#f5f0e8;opacity:0.65;">Bitte 14 Tage vor deiner Anreise am ${formatDate(data.checkIn)} begleichen.</p>
         <a href="${data.remainingPaymentUrl}" style="display:inline-block;background:#c9a84c;color:#1a2e1a;font-size:14px;font-weight:700;text-decoration:none;padding:14px 32px;border-radius:100px;letter-spacing:0.02em;">
           Jetzt Restbetrag bezahlen →
@@ -514,7 +507,7 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
     <td style="padding:24px 32px 0;">
       <p style="margin:0 0 12px;font-size:10px;color:#999;text-transform:uppercase;letter-spacing:0.14em;font-weight:600;">Dein Gastgeber</p>
       <div style="border:1px solid #e8e2d6;border-radius:10px;padding:18px;">
-        <p style="margin:0 0 3px;font-size:15px;font-weight:700;color:#1a2e1a;font-family:Georgia,serif;">SARFI Collection</p>
+        <p style="margin:0 0 3px;font-size:15px;font-weight:700;color:#1a2e1a;font-family:'Helvetica Neue',Arial,sans-serif;">SARFI Collection</p>
         <p style="margin:0 0 12px;font-size:13px;color:#888;">Bayerischer Wald, Deutschland</p>
         <p style="margin:0 0 6px;font-size:13px;color:#555;">📧 <a href="mailto:hallo@sarfi-collection.de" style="color:#1a2e1a;text-decoration:none;border-bottom:1px solid #e8e2d6;">hallo@sarfi-collection.de</a></p>
         <p style="margin:0;font-size:13px;color:#555;">📞 <a href="tel:+4917656850146" style="color:#1a2e1a;text-decoration:none;border-bottom:1px solid #e8e2d6;">+49 176 56850146</a></p>
@@ -534,7 +527,7 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   <!-- ── Footer ── -->
   <tr>
     <td align="center" style="background:#1a2e1a;padding:22px 32px;">
-      <p style="margin:0 0 4px;font-family:Georgia,'Times New Roman',serif;font-size:16px;color:#f5f0e8;letter-spacing:1px;">SARFI COLLECTION</p>
+      <p style="margin:0 0 4px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:16px;color:#f5f0e8;letter-spacing:1px;">SARFI COLLECTION</p>
       <p style="margin:0;font-size:11px;color:#c9a84c;letter-spacing:0.05em;">
         <a href="https://www.sarfi-collection.de" style="color:#c9a84c;text-decoration:none;">sarfi-collection.de</a>
       </p>
