@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useMemo } from "react"
+import { useState, useEffect, useCallback, useMemo, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import BookingCalendar, { toDateKey, fmtShort, fmtLong, type SelectionStep } from "./BookingCalendar"
@@ -192,6 +192,13 @@ export default function BookingWidget({
   propertyHref,
   hideMobileBar = false,
 }: BookingWidgetProps) {
+  // ── Ref zum Scrollen zum Widget-Anfang (nicht Seitenanfang) ──
+  const widgetRef = useRef<HTMLDivElement>(null)
+
+  const scrollToWidget = useCallback(() => {
+    widgetRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }, [])
+
   // ── State ──
   const [step, setStep] = useState<Step>("dates")
   const [checkIn, setCheckIn] = useState<Date | null>(null)
@@ -376,7 +383,7 @@ export default function BookingWidget({
         setStripeClientSecret(data.clientSecret)
         setDepositAmount(data.depositAmount)
         setStep("payment")
-        window.scrollTo({ top: 0, behavior: "smooth" })
+        scrollToWidget()
       }
     } catch {
       setErrorMsg("Verbindungsfehler. Bitte überprüfe deine Internetverbindung.")
@@ -415,7 +422,7 @@ export default function BookingWidget({
     }
 
     setStep("confirmed")
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    scrollToWidget()
   }
 
   const handlePaymentError = (msg: string) => {
@@ -554,7 +561,7 @@ export default function BookingWidget({
   // MAIN BOOKING UI
   // ══════════════════════════════════════════════════════════════════════════
   return (
-    <div className="min-h-screen bg-cream-50 pb-28 lg:pb-0">
+    <div ref={widgetRef} className="min-h-screen bg-cream-50 pb-28 lg:pb-0">
       {/* ── Two-column layout ── */}
       <div className="container-site py-8 lg:py-10">
         <div className="lg:grid lg:grid-cols-12 lg:gap-10 xl:gap-14 items-start">
