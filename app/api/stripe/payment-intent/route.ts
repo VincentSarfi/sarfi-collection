@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe, DEPOSIT_FRACTION, toCents } from '@/lib/stripe'
 import { verifyAvailability } from '@/lib/smoobu'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
-import { sendBookingNotification } from '@/lib/notify'
 
 export interface CreatePaymentIntentRequest {
   apartmentId: string
@@ -88,27 +87,6 @@ export async function POST(request: NextRequest) {
         depositAmount: String(depositEur),
       },
     })
-
-    // Benachrichtigung senden (non-blocking – Fehler blockieren nicht den Checkout)
-    const nights = Math.round(
-      (new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24)
-    )
-    sendBookingNotification({
-      propertyName: propertyName ?? '',
-      apartmentId,
-      checkIn,
-      checkOut,
-      nights,
-      guests,
-      totalPrice,
-      depositAmount: depositEur,
-      firstName,
-      lastName,
-      email,
-      phone,
-      message,
-      paymentIntentId: paymentIntent.id,
-    }).catch(err => console.error('[notify] Fehler:', err))
 
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret ?? '',

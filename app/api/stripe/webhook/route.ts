@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createBooking } from '@/lib/smoobu'
+import { sendBookingNotification } from '@/lib/notify'
 
 /**
  * Stripe webhook – backup handler.
@@ -62,6 +63,28 @@ export async function POST(request: NextRequest) {
       })
 
       console.log(`[webhook] Created Smoobu booking #${result.id} for PI ${pi.id}`)
+
+      // Benachrichtigung nach erfolgreicher Zahlung + Buchungserstellung
+      const nights = Math.round(
+        (new Date(m.checkOut).getTime() - new Date(m.checkIn).getTime()) / (1000 * 60 * 60 * 24)
+      )
+      sendBookingNotification({
+        propertyName:  m.propertyName,
+        apartmentId:   m.apartmentId,
+        checkIn:       m.checkIn,
+        checkOut:      m.checkOut,
+        nights,
+        guests:        parseInt(m.guests, 10),
+        totalPrice:    parseFloat(m.totalPrice),
+        depositAmount: parseFloat(m.depositAmount),
+        firstName:     m.firstName,
+        lastName:      m.lastName,
+        email:         m.email,
+        phone:         m.phone,
+        message:       m.message,
+        paymentIntentId: pi.id,
+      }).catch(err => console.error('[notify] Fehler:', err))
+
     } catch (err) {
       console.error('[webhook] Smoobu booking creation failed:', err)
       // Return 500 so Stripe retries (up to ~18h). Duplicate protection:
