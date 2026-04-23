@@ -400,7 +400,7 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   <!-- ── Header ── -->
   <tr>
     <td align="center" style="background:#1a2e1a;padding:52px 48px 40px;">
-      <img src="https://www.sarfi-collection.de/images/logo.svg" width="240" alt="SARFI Collection" style="display:block;margin:0 auto;" />
+      <img src="https://www.sarfi-collection.de/images/logo-email.png" width="240" alt="SARFI Collection" style="display:block;margin:0 auto;" />
       <div style="width:28px;height:1px;background:#c9a84c;margin:28px auto 24px;"></div>
       <p style="margin:0 0 10px;color:#c9a84c;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;">Buchung bestätigt</p>
       <h1 style="margin:0;color:#f5f0e8;font-size:30px;font-weight:300;letter-spacing:0.01em;">Vielen Dank, ${data.firstName}!</h1>
@@ -511,8 +511,8 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   <tr>
     <td style="padding:32px 48px 0;">
       <p style="margin:0 0 18px;font-size:9px;color:#c9a84c;text-transform:uppercase;letter-spacing:0.22em;font-weight:600;">Dein Gastgeber</p>
-      <p style="margin:0 0 4px;font-size:14px;font-weight:600;color:#1a2e1a;">SARFI Collection</p>
-      <p style="margin:0 0 14px;font-size:12px;color:#aaa;">Bayerischer Wald, Deutschland</p>
+      <p style="margin:0 0 2px;font-size:15px;font-weight:600;color:#1a2e1a;">Vincent und Elena Sarfi</p>
+      <p style="margin:0 0 14px;font-size:12px;color:#aaa;">SARFI Collection · Bayerischer Wald, Deutschland</p>
       <p style="margin:0 0 6px;font-size:13px;color:#4a5568;"><a href="mailto:hallo@sarfi-collection.de" style="color:#1a2e1a;text-decoration:none;">hallo@sarfi-collection.de</a></p>
       <p style="margin:0;font-size:13px;color:#4a5568;"><a href="tel:+4917656850146" style="color:#1a2e1a;text-decoration:none;">+49 176 56850146</a></p>
     </td>
