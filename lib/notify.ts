@@ -399,8 +399,8 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
 
   <!-- ── Header ── -->
   <tr>
-    <td align="center" style="background:#1a2e1a;padding:52px 48px 40px;">
-      <img src="https://www.sarfi-collection.de/images/logo-email.png" width="240" alt="SARFI Collection" style="display:block;margin:0 auto;" />
+    <td align="center" style="background:#0c1a10;padding:52px 48px 40px;">
+      <img src="https://www.sarfi-collection.de/images/logo-email.png" width="240" alt="SARFI Collection" style="display:block;margin:0 auto;border-radius:3px;" />
       <div style="width:28px;height:1px;background:#c9a84c;margin:28px auto 24px;"></div>
       <p style="margin:0 0 10px;color:#c9a84c;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;">Buchung bestätigt</p>
       <h1 style="margin:0;color:#f5f0e8;font-size:30px;font-weight:300;letter-spacing:0.01em;">Vielen Dank, ${data.firstName}!</h1>
