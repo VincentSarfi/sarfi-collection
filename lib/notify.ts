@@ -16,6 +16,16 @@ export interface GuestConfirmationData {
   email: string
   smoobuBookingId?: string | number
   remainingPaymentUrl?: string
+  heroImageUrl?: string
+}
+
+/** Leitet vom Unterkunftsnamen zur Hero-Bild-URL */
+function getHeroImageUrl(propertyName: string): string {
+  const lower = propertyName.toLowerCase()
+  if (lower.includes('haus28') || lower.includes('haus 28')) {
+    return 'https://www.sarfi-collection.de/images/haus28/hero.webp'
+  }
+  return 'https://www.sarfi-collection.de/images/schoenblick/aussen/hero.webp'
 }
 
 export interface BookingNotificationData {
@@ -388,6 +398,7 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
 
   const isFullPay = data.paymentOption === "100"
   const remaining = Math.round(data.totalPrice - data.depositAmount)
+  const heroUrl = data.heroImageUrl ?? getHeroImageUrl(data.propertyName)
 
   const html = `<!DOCTYPE html>
 <html lang="de">
@@ -405,6 +416,13 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
       <p style="margin:0 0 10px;color:#c9a84c;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;">Buchung bestätigt</p>
       <h1 style="margin:0;color:#f5f0e8;font-size:30px;font-weight:300;letter-spacing:0.01em;">Vielen Dank, ${data.firstName}!</h1>
       <p style="margin:12px 0 0;color:rgba(245,240,232,0.55);font-size:13px;letter-spacing:0.02em;">${data.propertyName} &nbsp;·&nbsp; ${formatDate(data.checkIn)} – ${formatDate(data.checkOut)}</p>
+    </td>
+  </tr>
+
+  <!-- ── Hero-Bild ── -->
+  <tr>
+    <td style="padding:0;line-height:0;">
+      <img src="${heroUrl}" width="580" alt="${data.propertyName}" style="display:block;width:100%;max-width:580px;height:auto;max-height:320px;object-fit:cover;" />
     </td>
   </tr>
 
