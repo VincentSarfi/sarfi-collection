@@ -137,6 +137,7 @@ function CheckoutForm({
         <PaymentElement
           options={{
             layout: "accordion",
+            paymentMethodOrder: ["apple_pay", "google_pay", "card"],
             wallets: { applePay: "auto", googlePay: "auto" },
           }}
         />
