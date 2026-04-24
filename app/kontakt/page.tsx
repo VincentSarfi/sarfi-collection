@@ -74,20 +74,35 @@ export default function KontaktPage() {
   const turnstileToken = useRef<string>("");
 
   useEffect(() => {
-    // Callback für Turnstile registrieren
-    (window as any).onTurnstileSuccess = (token: string) => {
-      turnstileToken.current = token;
+    const SITE_KEY = "0x4AAAAAADCAIuxW7h0ePfOM";
+    const CONTAINER_ID = "turnstile-container";
+
+    const renderWidget = () => {
+      const el = document.getElementById(CONTAINER_ID);
+      if (!el || el.childElementCount > 0) return; // already rendered
+      (window as any).turnstile?.render(`#${CONTAINER_ID}`, {
+        sitekey: SITE_KEY,
+        theme: "light",
+        language: "de",
+        callback: (token: string) => { turnstileToken.current = token; },
+      });
     };
 
-    const script = document.createElement("script");
-    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-    script.async = true;
-    script.defer = true;
-    document.head.appendChild(script);
+    if ((window as any).turnstile) {
+      // Script already loaded (e.g. back-navigation)
+      renderWidget();
+    } else {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async = true;
+      script.defer = true;
+      script.onload = renderWidget;
+      document.head.appendChild(script);
+    }
 
     return () => {
-      if (document.head.contains(script)) document.head.removeChild(script);
-      delete (window as any).onTurnstileSuccess;
+      // Reset token on unmount so stale tokens aren't reused
+      turnstileToken.current = "";
     };
   }, []);
 
@@ -234,13 +249,7 @@ export default function KontaktPage() {
                   </label>
                 </div>
 
-                <div
-                  className="cf-turnstile"
-                  data-sitekey="0x4AAAAAADCAIuxW7h0ePfOM"
-                  data-callback="onTurnstileSuccess"
-                  data-theme="light"
-                  data-language="de"
-                />
+                <div id="turnstile-container" />
 
                 <button
                   type="submit"
