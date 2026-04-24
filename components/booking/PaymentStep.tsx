@@ -136,7 +136,7 @@ function CheckoutForm({
         </p>
         <PaymentElement
           options={{
-            layout: "tabs",
+            layout: "accordion",
             wallets: { applePay: "auto", googlePay: "auto" },
           }}
         />
@@ -227,7 +227,7 @@ export default function PaymentStep({
     >
       {/* Booking summary */}
       <div className="mb-6">
-        <h2 className="font-display text-2xl text-forest-900 mb-4">
+        <h2 className="font-body text-xl font-semibold text-forest-900 mb-4">
           {isFullPay ? "Vollzahlung" : "Anzahlung"}
         </h2>
         <div className="rounded-xl border border-cream-200 bg-cream-50 p-4 space-y-2">
