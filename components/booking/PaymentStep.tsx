@@ -25,7 +25,7 @@ const STRIPE_APPEARANCE = {
     colorBackground: "#ffffff",
     colorText: "#0b1a10",
     colorDanger: "#ef4444",
-    fontFamily: "var(--font-dm-sans), system-ui, sans-serif",
+    fontFamily: '"DM Sans", system-ui, sans-serif',
     borderRadius: "12px",
     spacingUnit: "4px",
   },
@@ -271,6 +271,12 @@ export default function PaymentStep({
           clientSecret,
           appearance: STRIPE_APPEARANCE,
           locale: "de",
+          fonts: [
+            {
+              cssSrc:
+                "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap",
+            },
+          ],
         }}
       >
         <CheckoutForm

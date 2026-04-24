@@ -588,7 +588,7 @@ export default function BookingWidget({
   // MAIN BOOKING UI
   // ══════════════════════════════════════════════════════════════════════════
   return (
-    <div ref={widgetRef} className="min-h-screen bg-cream-50 pb-28 lg:pb-0">
+    <div ref={widgetRef} className="min-h-screen bg-cream-50 pb-28 lg:pb-0 overflow-x-hidden">
       {/* ── Two-column layout ── */}
       <div className="container-site py-8 lg:py-10">
         <div className="lg:grid lg:grid-cols-12 lg:gap-10 xl:gap-14 items-start">

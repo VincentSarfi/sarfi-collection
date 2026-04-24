@@ -73,6 +73,7 @@ export async function POST(request: NextRequest) {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: toCents(depositEur),
       currency: 'eur',
+      payment_method_types: ['card'],
       receipt_email: email,
       description: `${paymentOption === "100" ? "100% Vollzahlung" : "50% Anzahlung"} – ${propertyName} · ${checkIn} bis ${checkOut}`,
       metadata: {
