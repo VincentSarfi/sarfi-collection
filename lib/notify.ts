@@ -198,7 +198,7 @@ export async function sendCheckoutStartedNotification(data: BookingNotificationD
   try {
     await resend.emails.send({
       from: 'Buchungssystem <buchung@sarfi-collection.de>',
-      to:   ['28imwald@gmail.com'],
+      to:   ['hallo@sarfi-collection.de'],
       subject: `⏳ Checkout gestartet (noch nicht bezahlt): ${data.propertyName} · ${formatDate(data.checkIn)}–${formatDate(data.checkOut)} · ${data.firstName} ${data.lastName}`,
       html,
     })
@@ -376,7 +376,7 @@ Stripe PI: ${data.paymentIntentId}
   try {
     const { error } = await resend.emails.send({
       from: 'Buchungssystem <buchung@sarfi-collection.de>',
-      to:   ['28imwald@gmail.com'],
+      to:   ['hallo@sarfi-collection.de'],
       subject: `🏠 Neue Buchung: ${data.propertyName} · ${formatDate(data.checkIn)}–${formatDate(data.checkOut)} · ${data.firstName} ${data.lastName}`,
       html,
       text: textContent,
