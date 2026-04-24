@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { IconMail, IconMapPin, IconChevronDown } from "@/components/ui/Icons";
-import { Turnstile } from "@marsidev/react-turnstile";
 
 const faqs = [
   {
@@ -73,6 +72,30 @@ export default function KontaktPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const turnstileToken = useRef<string>("");
+  const turnstileRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+
+    script.onload = () => {
+      if (turnstileRef.current && (window as any).turnstile) {
+        (window as any).turnstile.render(turnstileRef.current, {
+          sitekey: "0x4AAAAAADCAIuxW7h0ePfOM",
+          callback: (token: string) => { turnstileToken.current = token; },
+          theme: "light",
+          language: "de",
+        });
+      }
+    };
+
+    return () => {
+      if (document.head.contains(script)) document.head.removeChild(script);
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -217,11 +240,7 @@ export default function KontaktPage() {
                   </label>
                 </div>
 
-                <Turnstile
-                  siteKey="0x4AAAAAADCAIuxW7h0ePfOM"
-                  onSuccess={(token) => { turnstileToken.current = token; }}
-                  options={{ theme: "light", language: "de" }}
-                />
+                <div ref={turnstileRef} />
 
                 <button
                   type="submit"
