@@ -218,7 +218,7 @@ export default function KontaktPage() {
                 </div>
 
                 <Turnstile
-                  siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                  siteKey="0x4AAAAAADCAIuxW7h0ePfOM"
                   onSuccess={(token) => { turnstileToken.current = token; }}
                   options={{ theme: "light", language: "de" }}
                 />
