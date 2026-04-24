@@ -72,28 +72,22 @@ export default function KontaktPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const turnstileToken = useRef<string>("");
-  const turnstileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Callback für Turnstile registrieren
+    (window as any).onTurnstileSuccess = (token: string) => {
+      turnstileToken.current = token;
+    };
+
     const script = document.createElement("script");
     script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
     script.async = true;
     script.defer = true;
     document.head.appendChild(script);
 
-    script.onload = () => {
-      if (turnstileRef.current && (window as any).turnstile) {
-        (window as any).turnstile.render(turnstileRef.current, {
-          sitekey: "0x4AAAAAADCAIuxW7h0ePfOM",
-          callback: (token: string) => { turnstileToken.current = token; },
-          theme: "light",
-          language: "de",
-        });
-      }
-    };
-
     return () => {
       if (document.head.contains(script)) document.head.removeChild(script);
+      delete (window as any).onTurnstileSuccess;
     };
   }, []);
 
@@ -240,7 +234,13 @@ export default function KontaktPage() {
                   </label>
                 </div>
 
-                <div ref={turnstileRef} />
+                <div
+                  className="cf-turnstile"
+                  data-sitekey="0x4AAAAAADCAIuxW7h0ePfOM"
+                  data-callback="onTurnstileSuccess"
+                  data-theme="light"
+                  data-language="de"
+                />
 
                 <button
                   type="submit"
