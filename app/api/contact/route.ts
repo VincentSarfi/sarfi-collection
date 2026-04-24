@@ -26,7 +26,7 @@ async function verifyTurnstile(token: string): Promise<boolean> {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, subject, message, turnstileToken } = body
+    const { name, email, phone, subject, message, turnstileToken } = body
 
     if (!name?.trim() || !email?.trim() || !message?.trim()) {
       return NextResponse.json({ error: 'Pflichtfelder fehlen' }, { status: 400 })
@@ -68,6 +68,12 @@ export async function POST(request: NextRequest) {
                   <a href="mailto:${email}" style="color:#1a2e1a;">${email}</a>
                 </td>
               </tr>
+              ${phone?.trim() ? `<tr>
+                <td style="padding:6px 0;font-size:13px;color:#888;">Telefon</td>
+                <td style="padding:6px 0;font-size:14px;">
+                  <a href="tel:${phone.trim()}" style="color:#1a2e1a;">${phone.trim()}</a>
+                </td>
+              </tr>` : ''}
               <tr>
                 <td style="padding:6px 0;font-size:13px;color:#888;">Betreff</td>
                 <td style="padding:6px 0;font-size:14px;color:#1a2e1a;">${subjectLabel}</td>

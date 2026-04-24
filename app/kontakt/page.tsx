@@ -115,6 +115,7 @@ export default function KontaktPage() {
     const data = {
       name:           (form.elements.namedItem('name')    as HTMLInputElement).value,
       email:          (form.elements.namedItem('email')   as HTMLInputElement).value,
+      phone:          (form.elements.namedItem('phone')   as HTMLInputElement).value,
       subject:        (form.elements.namedItem('subject') as HTMLSelectElement).value,
       message:        (form.elements.namedItem('message') as HTMLTextAreaElement).value,
       turnstileToken: turnstileToken.current,
@@ -199,6 +200,20 @@ export default function KontaktPage() {
                       placeholder="max@beispiel.de"
                     />
                   </div>
+                </div>
+
+                <div>
+                  <label className="font-body text-sm font-medium text-forest-700 mb-1.5 block" htmlFor="phone">
+                    Telefon
+                  </label>
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    autoComplete="tel"
+                    className="w-full px-4 py-3 rounded-xl border border-cream-300 bg-white font-body text-sm text-forest-800 placeholder:text-forest-300 focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-transparent transition"
+                    placeholder="+49 123 456789"
+                  />
                 </div>
 
                 <div>
