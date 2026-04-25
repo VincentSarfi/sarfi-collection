@@ -62,7 +62,10 @@ function formatPrice(cents: number): string {
 
 export async function sendCheckoutStartedNotification(data: BookingNotificationData) {
   const apiKey = process.env.RESEND_API_KEY
-  if (!apiKey || apiKey === 'PLACEHOLDER') return
+  if (!apiKey || apiKey === 'PLACEHOLDER') {
+    console.warn('[notify] RESEND_API_KEY nicht gesetzt – Checkout-Benachrichtigung übersprungen')
+    return
+  }
 
   const nights    = data.nights
   const deposit   = data.depositAmount
