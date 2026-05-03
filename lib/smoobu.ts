@@ -192,7 +192,7 @@ export async function createBooking(req: BookingRequest): Promise<BookingResult>
     apartmentId: parseInt(req.apartmentId, 10),
     arrivalDate: req.checkIn,
     departureDate: req.checkOut,
-    channelId: 16,
+    channelId: 4393833, // "Direct booking" channel for this Smoobu account
     firstName: req.firstName,
     lastName: req.lastName,
     email: req.email,
@@ -204,6 +204,8 @@ export async function createBooking(req: BookingRequest): Promise<BookingResult>
     deposit: 0,
     language: 'de',
     guestAppMessage: req.message ?? '',
+    country: 'DE',
+    address: { street: 'k.A.', zip: '00000', city: 'Deutschland', country: 'DE' },
   }
 
   const res = await fetch(`${SMOOBU_BASE}/reservations`, {
