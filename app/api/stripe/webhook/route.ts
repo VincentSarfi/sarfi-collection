@@ -129,6 +129,7 @@ export async function POST(request: NextRequest) {
         firstName:          m.firstName,
         lastName:           m.lastName,
         email:              m.email,
+        phone:              m.phone,
         smoobuBookingId:    result.id,
         remainingPaymentUrl,
       }).catch(err => console.error('[notify] Gastbestätigung Fehler:', err))
