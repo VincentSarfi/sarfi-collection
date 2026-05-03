@@ -94,11 +94,11 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Hinweis-Mail: Checkout gestartet, noch nicht bezahlt
+    // Hinweis-Mail: Checkout gestartet, noch nicht bezahlt (fire-and-forget – darf PI-Response nicht blockieren)
     const nights = Math.round(
       (new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24)
     )
-    await sendCheckoutStartedNotification({
+    sendCheckoutStartedNotification({
       propertyName:    propertyName ?? '',
       apartmentId,
       checkIn,
@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
       phone,
       message,
       paymentIntentId: paymentIntent.id,
-    })
+    }).catch(err => console.error('[payment-intent] Checkout-Mail Fehler:', err))
 
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret ?? '',

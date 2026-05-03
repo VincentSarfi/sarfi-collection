@@ -420,34 +420,8 @@ export default function BookingWidget({
     }
   }
 
-  // Step 3 → Step 4: payment succeeded → create Smoobu booking
-  const handlePaymentSuccess = async (paymentIntentId: string) => {
-    if (!checkIn || !checkOut || !priceBreakdown) return
-
-    try {
-      const res = await fetch("/api/smoobu/booking", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          apartmentId: smoobuId,
-          checkIn: toDateKey(checkIn),
-          checkOut: toDateKey(checkOut),
-          guests,
-          firstName: form.firstName.trim(),
-          lastName: form.lastName.trim(),
-          email: form.email.trim().toLowerCase(),
-          phone: form.phone.trim(),
-          message: form.message.trim() || undefined,
-          totalPrice: priceBreakdown.total,
-          paymentIntentId,
-        }),
-      })
-      const data = await res.json()
-      if (res.ok) setBookingId(data.id)
-    } catch (err) {
-      console.error('[booking] Client-side Smoobu booking failed (webhook will retry):', err)
-    }
-
+  // Step 3 → Step 4: payment succeeded → webhook handles Smoobu booking + emails
+  const handlePaymentSuccess = (_paymentIntentId: string) => {
     setStep("confirmed")
     scrollToWidget()
   }
