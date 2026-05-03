@@ -98,41 +98,41 @@ export async function POST(request: NextRequest) {
       const nights = Math.round(
         (new Date(m.checkOut).getTime() - new Date(m.checkIn).getTime()) / (1000 * 60 * 60 * 24)
       )
-      sendBookingNotification({
-        propertyName:  m.propertyName,
-        apartmentId:   m.apartmentId,
-        checkIn:       m.checkIn,
-        checkOut:      m.checkOut,
-        nights,
-        guests:        parseInt(m.guests, 10),
-        totalPrice:    parseFloat(m.totalPrice),
-        depositAmount: parseFloat(m.depositAmount),
-        paymentOption: (m.paymentOption as "50" | "100") ?? "50",
-        firstName:     m.firstName,
-        lastName:      m.lastName,
-        email:         m.email,
-        phone:         m.phone,
-        message:       m.message,
-        paymentIntentId: pi.id,
-      }).catch(err => console.error('[notify] Fehler:', err))
-
-      // Bestätigungsmail an den Gast
-      sendGuestConfirmationEmail({
-        propertyName:       m.propertyName,
-        checkIn:            m.checkIn,
-        checkOut:           m.checkOut,
-        nights,
-        guests:             parseInt(m.guests, 10),
-        totalPrice:         parseFloat(m.totalPrice),
-        depositAmount:      parseFloat(m.depositAmount),
-        paymentOption:      (m.paymentOption as "50" | "100") ?? "50",
-        firstName:          m.firstName,
-        lastName:           m.lastName,
-        email:              m.email,
-        phone:              m.phone,
-        smoobuBookingId:    result.id,
-        remainingPaymentUrl,
-      }).catch(err => console.error('[notify] Gastbestätigung Fehler:', err))
+      await Promise.allSettled([
+        sendBookingNotification({
+          propertyName:  m.propertyName,
+          apartmentId:   m.apartmentId,
+          checkIn:       m.checkIn,
+          checkOut:      m.checkOut,
+          nights,
+          guests:        parseInt(m.guests, 10),
+          totalPrice:    parseFloat(m.totalPrice),
+          depositAmount: parseFloat(m.depositAmount),
+          paymentOption: (m.paymentOption as "50" | "100") ?? "50",
+          firstName:     m.firstName,
+          lastName:      m.lastName,
+          email:         m.email,
+          phone:         m.phone,
+          message:       m.message,
+          paymentIntentId: pi.id,
+        }),
+        sendGuestConfirmationEmail({
+          propertyName:       m.propertyName,
+          checkIn:            m.checkIn,
+          checkOut:           m.checkOut,
+          nights,
+          guests:             parseInt(m.guests, 10),
+          totalPrice:         parseFloat(m.totalPrice),
+          depositAmount:      parseFloat(m.depositAmount),
+          paymentOption:      (m.paymentOption as "50" | "100") ?? "50",
+          firstName:          m.firstName,
+          lastName:           m.lastName,
+          email:              m.email,
+          phone:              m.phone,
+          smoobuBookingId:    result.id,
+          remainingPaymentUrl,
+        }),
+      ])
 
     } catch (err) {
       console.error('[webhook] Smoobu booking creation failed:', err)

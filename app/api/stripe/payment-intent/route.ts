@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
     const nights = Math.round(
       (new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24)
     )
-    sendCheckoutStartedNotification({
+    await sendCheckoutStartedNotification({
       propertyName:    propertyName ?? '',
       apartmentId,
       checkIn,
