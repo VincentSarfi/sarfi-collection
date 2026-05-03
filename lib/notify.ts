@@ -640,7 +640,7 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
 
   <!-- Footer -->
   <tr>
-    <td align="center" style="background:#1a2e1a;padding:28px 48px;margin-top:32px;">
+    <td align="center" style="background:#0c1a10;padding:28px 48px;margin-top:32px;">
       <img src="https://www.sarfi-collection.de/images/logo-email.png" width="140" alt="SARFI Collection" style="display:block;margin:0 auto 14px;border-radius:2px;opacity:0.9;" />
       <p style="margin:0 0 4px;font-size:10px;color:rgba(245,240,232,0.5);letter-spacing:0.1em;">SARFI Collection &nbsp;·&nbsp; Bayerischer Wald</p>
       <a href="https://www.sarfi-collection.de" style="font-size:11px;color:#c9a84c;text-decoration:none;">sarfi-collection.de</a>
