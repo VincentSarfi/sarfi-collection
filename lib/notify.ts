@@ -633,9 +633,8 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   <tr>
     <td style="padding:24px 48px 0;">
       <p style="margin:0 0 14px;font-size:16px;font-weight:700;color:#1a2e1a;">Brauchst du Hilfe?</p>
-      <p style="margin:0 0 8px;font-size:13px;color:#4a5568;">Melde dich jederzeit direkt bei uns:</p>
-      <p style="margin:0 0 4px;font-size:13px;color:#4a5568;">&#128222;&nbsp; <a href="tel:+4917656850146" style="color:#1a2e1a;text-decoration:none;font-weight:600;">+49 176 56850146</a></p>
-      <p style="margin:0;font-size:13px;color:#4a5568;">&#9993;&nbsp; <a href="mailto:hallo@sarfi-collection.de" style="color:#1a2e1a;text-decoration:none;font-weight:600;">hallo@sarfi-collection.de</a></p>
+      <p style="margin:0 0 16px;font-size:13px;color:#4a5568;">Schreib uns direkt auf WhatsApp:</p>
+      <a href="https://wa.me/4917656850146" style="display:inline-block;padding:10px 20px;border:1px solid #1a2e1a;border-radius:4px;font-size:13px;font-weight:600;color:#1a2e1a;text-decoration:none;">&#128172;&nbsp; WhatsApp schreiben</a>
     </td>
   </tr>
 
