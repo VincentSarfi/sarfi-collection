@@ -96,6 +96,12 @@ const nextConfig: NextConfig = {
         permanent: true,
         has: [{ type: "host", value: "www.ferienhaus-schoenblick.de" }],
       },
+      // /stornierung → /agb#stornierung (301)
+      {
+        source: "/stornierung",
+        destination: "/agb#stornierung",
+        permanent: true,
+      },
     ];
   },
   async headers() {
