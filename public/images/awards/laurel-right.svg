@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 150">
+  <defs>
+    <linearGradient id="rg" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#FDE878"/>
+      <stop offset="42%" stop-color="#D4A010"/>
+      <stop offset="100%" stop-color="#7A5600"/>
+    </linearGradient>
+    <radialGradient id="rh" cx="62%" cy="30%" r="55%">
+      <stop offset="0%" stop-color="#FFF8D0" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#FDE878" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Stem -->
+  <path d="M22,143 C30,114 44,80 57,14" stroke="#9A7000" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Leaf 1 – bottom, largest -->
+  <ellipse cx="28" cy="124" rx="15" ry="21" fill="url(#rg)" transform="rotate(8,28,124)"/>
+  <ellipse cx="28" cy="124" rx="14" ry="20" fill="url(#rh)" transform="rotate(8,28,124)"/>
+  <!-- Leaf 2 -->
+  <ellipse cx="40" cy="100" rx="15" ry="21" fill="url(#rg)" transform="rotate(14,40,100)"/>
+  <ellipse cx="40" cy="100" rx="14" ry="20" fill="url(#rh)" transform="rotate(14,40,100)"/>
+  <!-- Leaf 3 -->
+  <ellipse cx="50" cy="77"  rx="14" ry="20" fill="url(#rg)" transform="rotate(20,50,77)"/>
+  <ellipse cx="50" cy="77"  rx="13" ry="19" fill="url(#rh)" transform="rotate(20,50,77)"/>
+  <!-- Leaf 4 -->
+  <ellipse cx="55" cy="55"  rx="13" ry="19" fill="url(#rg)" transform="rotate(24,55,55)"/>
+  <ellipse cx="55" cy="55"  rx="12" ry="18" fill="url(#rh)" transform="rotate(24,55,55)"/>
+  <!-- Leaf 5 – top, smallest -->
+  <ellipse cx="57" cy="34"  rx="12" ry="17" fill="url(#rg)" transform="rotate(28,57,34)"/>
+  <ellipse cx="57" cy="34"  rx="11" ry="16" fill="url(#rh)" transform="rotate(28,57,34)"/>
+</svg>
