@@ -192,9 +192,11 @@ export default function Haus28Page() {
             <div className="flex flex-col items-center gap-2 text-center px-10 pb-8 sm:pb-0">
               {/* Lorbeer-Kranz mit Bewertung */}
               <div className="flex items-center gap-1 mb-1">
-                <Image src="/images/awards/laurel-left.png" alt="" width={56} height={84} className="h-20 w-auto object-contain" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/awards/laurel-left.svg" alt="" width={56} height={84} className="h-20 w-auto object-contain" />
                 <span className="font-body font-black text-5xl text-cream-50 mx-2 tracking-tight">5,0</span>
-                <Image src="/images/awards/laurel-right.png" alt="" width={56} height={84} className="h-20 w-auto object-contain" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/awards/laurel-right.svg" alt="" width={56} height={84} className="h-20 w-auto object-contain" />
               </div>
               <p className="font-body text-xs uppercase tracking-widest text-cream-50/40">Airbnb</p>
               <p className="font-display text-2xl text-cream-50">Gäste-Favorit</p>
