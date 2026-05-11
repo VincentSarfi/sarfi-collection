@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { haus28 } from "@/data/properties";
 import { haus28Reviews } from "@/data/reviews";
 import PropertyHero from "@/components/property/PropertyHero";
@@ -15,12 +16,12 @@ import { PROPERTY_CONFIGS, resolveSmoobuId } from "@/config/properties.config";
 import FaqAccordion from "@/components/property/FaqAccordion";
 import RelatedProperties from "@/components/property/RelatedProperties";
 import { schoenblick } from "@/data/properties";
-import { IconArrowRight } from "@/components/ui/Icons";
+import { IconArrowRight, IconStar } from "@/components/ui/Icons";
 
 export const metadata: Metadata = {
   title: "HAUS28 – A-Frame Ferienhaus am Büchelstein | Grattersdorf, Bayerischer Wald",
   description:
-    "HAUS28 am Büchelstein in Grattersdorf: 157 m² A-Frame Ferienhaus im Bayerischen Wald – 17× 5★ auf Airbnb. Bis zu 8 Personen, hochwertig ausgestattet, mitten im Wald. Ab 199€ / Nacht. Jetzt direkt buchen!",
+    "HAUS28 am Büchelstein in Grattersdorf: 157 m² A-Frame Ferienhaus im Bayerischen Wald – 18× 5★ auf Airbnb. Bis zu 8 Personen, hochwertig ausgestattet, mitten im Wald. Ab 199€ / Nacht. Jetzt direkt buchen!",
   openGraph: {
     title: "HAUS28 – A-Frame Ferienhaus am Büchelstein, Grattersdorf",
     description:
@@ -104,7 +105,7 @@ const haus28Ratings = [
     rating: haus28.bookingRating ?? 10,
     maxRating: 10,
     reviewCount: haus28.bookingReviewCount ?? 0,
-    displayRating: "10",
+    displayRating: "9,9",
   },
   {
     platform: "fewo" as const,
@@ -164,6 +165,7 @@ export default function Haus28Page() {
         bookHref="#buchen"
         galleryCount={haus28.images.gallery.length}
         breadcrumb={[]}
+        guestFavorite={haus28.guestFavorite}
       />
 
       {/* 2. Quick Facts */}
@@ -179,6 +181,41 @@ export default function Haus28Page() {
 
       {/* 2b. Multi-Plattform Bewertungsleiste */}
       <RatingsBar platforms={haus28Ratings} totalReviews={totalReviews} />
+
+      {/* 2c. Awards */}
+      <div className="bg-forest-900">
+        <div className="container-site py-12">
+          <p className="font-body text-xs uppercase tracking-widest text-gold-300 text-center mb-10">Auszeichnungen</p>
+          <div className="flex flex-col sm:flex-row items-center justify-center divide-y sm:divide-y-0 sm:divide-x divide-cream-50/10">
+
+            {/* Airbnb Gäste-Favorit */}
+            <div className="flex flex-col items-center gap-2 text-center px-10 pb-8 sm:pb-0">
+              <span className="text-4xl mb-1">🏅</span>
+              <p className="font-body text-xs uppercase tracking-widest text-cream-50/40">Airbnb</p>
+              <p className="font-display text-2xl text-cream-50">Gäste-Favorit</p>
+              <div className="flex gap-0.5 text-gold-300 my-1">
+                {[1,2,3,4,5].map(i => <IconStar key={i} size={13} filled />)}
+              </div>
+              <p className="font-body text-sm text-cream-50/60">5,0 · 18 Bewertungen</p>
+              <p className="font-body text-xs text-cream-50/40 max-w-[180px] mt-1">Oberste 5 % der Inserate auf Airbnb</p>
+            </div>
+
+            {/* Booking.com Traveller Review Award */}
+            <div className="flex flex-col items-center gap-2 text-center px-10 pt-8 sm:pt-0">
+              <Image
+                src="/images/awards/booking-award-2026.png"
+                alt="Booking.com Traveller Review Award 2026"
+                width={150}
+                height={150}
+                className="h-32 w-auto object-contain"
+              />
+              <p className="font-body text-sm text-cream-50/60">9,9/10 · 11 Bewertungen</p>
+              <p className="font-body text-xs text-cream-50/40 max-w-[180px]">Traveller Review Awards 2026</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
 
       {/* 3. Bildergalerie */}
       <ImageGallery images={haus28.images.gallery} propertyName={haus28.name} />

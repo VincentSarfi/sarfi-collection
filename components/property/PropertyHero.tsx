@@ -19,6 +19,7 @@ interface PropertyHeroProps {
   galleryCount?: number;
   onGalleryOpen?: () => void;
   breadcrumb?: { label: string; href: string }[];
+  guestFavorite?: boolean;
 }
 
 export default function PropertyHero({
@@ -33,6 +34,7 @@ export default function PropertyHero({
   galleryCount,
   onGalleryOpen,
   breadcrumb,
+  guestFavorite,
 }: PropertyHeroProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
@@ -96,13 +98,18 @@ export default function PropertyHero({
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
           {/* Rating */}
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex flex-wrap items-center gap-2 mb-4">
             <div className="flex gap-0.5 text-gold-300">
               {[1,2,3,4,5].map(i => <IconStar key={i} size={14} filled />)}
             </div>
             <span className="font-body text-sm text-cream-50/80">
               {airbnbRating} · {airbnbReviewCount} Bewertungen auf Airbnb
             </span>
+            {guestFavorite && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gold-300/20 border border-gold-300/40 font-body text-xs text-gold-300">
+                🏅 Gäste-Favorit
+              </span>
+            )}
           </div>
 
           {/* Title */}

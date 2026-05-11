@@ -82,7 +82,7 @@ export default function ReviewsSection() {
               {[1,2,3,4,5].map(i => <IconStar key={i} size={14} filled />)}
             </div>
             <span className="font-body text-sm font-semibold text-forest-800">4.95</span>
-            <span className="font-body text-sm text-forest-600">· {reviews.length}+ Bewertungen auf Airbnb</span>
+            <span className="font-body text-sm text-forest-600">· {reviews.length}+ verifizierte Gästebewertungen</span>
           </div>
         </motion.div>
 

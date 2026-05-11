@@ -73,6 +73,7 @@ export type PropertyData = {
   sqm?: number;
   airbnbUrl?: string;
   superhost?: boolean;
+  guestFavorite?: boolean;
   apartments?: Record<string, ApartmentData>;
 };
 
@@ -94,13 +95,14 @@ export const haus28: PropertyData = {
   sqm: 157,
   priceFrom: 199,
   superhost: true,
+  guestFavorite: true,
   airbnbUrl: "https://www.airbnb.de/rooms/1375439439358638425",
   airbnbRating: 5.0,
-  airbnbReviewCount: 17,
-  bookingRating: 10,
-  bookingReviewCount: 10,
+  airbnbReviewCount: 18,
+  bookingRating: 9.9,
+  bookingReviewCount: 11,
   fewoRating: 5.0,
-  fewoReviewCount: 13,
+  fewoReviewCount: 14,
   googleRating: 5.0,
   googleReviewCount: 9,
   smoobuPropertyId: "2610828",
