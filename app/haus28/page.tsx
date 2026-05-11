@@ -190,7 +190,24 @@ export default function Haus28Page() {
 
             {/* Airbnb Gäste-Favorit */}
             <div className="flex flex-col items-center gap-2 text-center px-10 pb-8 sm:pb-0">
-              <span className="text-4xl mb-1">🏅</span>
+              {/* Lorbeer-Kranz mit Bewertung */}
+              <div className="flex items-center gap-1 mb-1">
+                <Image
+                  src="/images/awards/laurel-left.png"
+                  alt=""
+                  width={48}
+                  height={72}
+                  className="h-14 w-auto object-contain"
+                />
+                <span className="font-display text-4xl text-cream-50 mx-1">5,0</span>
+                <Image
+                  src="/images/awards/laurel-right.png"
+                  alt=""
+                  width={48}
+                  height={72}
+                  className="h-14 w-auto object-contain"
+                />
+              </div>
               <p className="font-body text-xs uppercase tracking-widest text-cream-50/40">Airbnb</p>
               <p className="font-display text-2xl text-cream-50">Gäste-Favorit</p>
               <div className="flex gap-0.5 text-gold-300 my-1">
