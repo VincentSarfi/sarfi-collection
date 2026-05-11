@@ -199,7 +199,7 @@ export default function Haus28Page() {
                   height={72}
                   className="h-14 w-auto object-contain"
                 />
-                <span className="font-display text-4xl text-cream-50 mx-1">5,0</span>
+                <span className="font-body font-black text-5xl text-cream-50 mx-1 tracking-tight">5,0</span>
                 <Image
                   src="/images/awards/laurel-right.png"
                   alt=""
