@@ -1,22 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import Image from "next/image";
 import { haus28 } from "@/data/properties";
-import { haus28Reviews } from "@/data/reviews";
-import PropertyHero from "@/components/property/PropertyHero";
-import QuickFacts from "@/components/property/QuickFacts";
-import RatingsBar from "@/components/property/RatingsBar";
-import ImageGallery from "@/components/property/ImageGallery";
-import PropertyDescription from "@/components/property/PropertyDescription";
-import AmenitiesGrid from "@/components/property/AmenitiesGrid";
-import LocationMap from "@/components/property/LocationMap";
-import PropertyReviews from "@/components/property/PropertyReviews";
-import BookingWidget from "@/components/booking/BookingWidget";
-import { PROPERTY_CONFIGS, resolveSmoobuId } from "@/config/properties.config";
-import FaqAccordion from "@/components/property/FaqAccordion";
-import RelatedProperties from "@/components/property/RelatedProperties";
-import { schoenblick } from "@/data/properties";
-import { IconArrowRight, IconStar } from "@/components/ui/Icons";
+import Haus28ClientPage from "@/components/property/Haus28ClientPage";
 
 export const metadata: Metadata = {
   title: "HAUS28 – A-Frame Ferienhaus am Büchelstein | Grattersdorf, Bayerischer Wald",
@@ -33,7 +17,6 @@ export const metadata: Metadata = {
   },
 };
 
-// JSON-LD Structured Data
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "VacationRental",
@@ -89,225 +72,14 @@ const jsonLd = {
   },
 };
 
-const haus28Ratings = [
-  {
-    platform: "airbnb" as const,
-    label: "Airbnb",
-    rating: haus28.airbnbRating,
-    maxRating: 5,
-    reviewCount: haus28.airbnbReviewCount,
-    displayRating: "5,0",
-    url: haus28.airbnbUrl,
-  },
-  {
-    platform: "booking" as const,
-    label: "Booking.com",
-    rating: haus28.bookingRating ?? 10,
-    maxRating: 10,
-    reviewCount: haus28.bookingReviewCount ?? 0,
-    displayRating: "9,9",
-  },
-  {
-    platform: "fewo" as const,
-    label: "FeWo-direkt",
-    rating: haus28.fewoRating ?? 5,
-    maxRating: 5,
-    reviewCount: haus28.fewoReviewCount ?? 0,
-    displayRating: "5,0",
-  },
-  {
-    platform: "google" as const,
-    label: "Google",
-    rating: haus28.googleRating ?? 5,
-    maxRating: 5,
-    reviewCount: haus28.googleReviewCount ?? 0,
-    displayRating: "5,0",
-  },
-];
-
-const totalReviews =
-  haus28.airbnbReviewCount +
-  (haus28.bookingReviewCount ?? 0) +
-  (haus28.fewoReviewCount ?? 0) +
-  (haus28.googleReviewCount ?? 0);
-
 export default function Haus28Page() {
-  const config = PROPERTY_CONFIGS.haus28;
-  const smoobuId = resolveSmoobuId(config);
-  const relatedSchoenblick = Object.values(schoenblick.apartments ?? {}).slice(0, 3).map((apt) => ({
-    name: apt.name,
-    subtitle: apt.subtitle,
-    href: `/schoenblick/${apt.id}`,
-    bookHref: `/schoenblick/buchen`,
-    imageSrc: apt.images.hero,
-    imageAlt: apt.name,
-    priceFrom: apt.priceFrom,
-    rating: apt.airbnbRating,
-    tag: "Haus Schönblick",
-  }));
-
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-
-      {/* 1. Hero */}
-      <PropertyHero
-        name={haus28.name}
-        subtitle={haus28.subtitle}
-        address={haus28.address}
-        priceFrom={haus28.priceFrom}
-        airbnbRating={haus28.airbnbRating}
-        airbnbReviewCount={haus28.airbnbReviewCount}
-        heroImage={haus28.images.hero}
-        bookHref="#buchen"
-        galleryCount={haus28.images.gallery.length}
-        breadcrumb={[]}
-        guestFavorite={haus28.guestFavorite}
-      />
-
-      {/* 2. Quick Facts */}
-      <QuickFacts
-        maxGuests={haus28.maxGuests}
-        bedrooms={haus28.bedrooms}
-        bathrooms={haus28.bathrooms}
-        sqm={haus28.sqm}
-        airbnbRating={haus28.airbnbRating}
-        airbnbReviewCount={haus28.airbnbReviewCount}
-        address={haus28.address}
-      />
-
-      {/* 2b. Multi-Plattform Bewertungsleiste */}
-      <RatingsBar platforms={haus28Ratings} totalReviews={totalReviews} />
-
-      {/* 2c. Awards */}
-      <div className="bg-forest-900">
-        <div className="container-site py-12">
-          <p className="font-body text-xs uppercase tracking-widest text-gold-300 text-center mb-10">Auszeichnungen</p>
-          <div className="flex flex-col sm:flex-row items-center justify-center divide-y sm:divide-y-0 sm:divide-x divide-cream-50/10">
-
-            {/* Airbnb Gäste-Favorit */}
-            <div className="flex flex-col items-center gap-2 text-center px-10 pb-8 sm:pb-0">
-              {/* Lorbeer-Kranz mit Bewertung */}
-              <div className="flex items-center gap-0 mb-1">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/awards/laurel-left.svg" alt="" width={56} height={84} className="h-24 w-auto object-contain -mr-4" />
-                <span className="font-display text-7xl text-cream-50 tracking-tight -mt-8">5,0</span>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/awards/laurel-right.svg" alt="" width={56} height={84} className="h-24 w-auto object-contain -ml-4" />
-              </div>
-              <p className="font-body text-xs uppercase tracking-widest text-cream-50/40">Airbnb</p>
-              <p className="font-display text-2xl text-cream-50">Gäste-Favorit</p>
-              <div className="flex gap-0.5 text-gold-300 my-1">
-                {[1,2,3,4,5].map(i => <IconStar key={i} size={13} filled />)}
-              </div>
-              <p className="font-body text-sm text-cream-50/60">5,0 · 18 Bewertungen</p>
-              <p className="font-body text-xs text-cream-50/40 max-w-[180px] mt-1">Oberste 5 % der Inserate auf Airbnb</p>
-            </div>
-
-            {/* Booking.com Traveller Review Award */}
-            <div className="flex flex-col items-center gap-2 text-center px-10 pt-8 sm:pt-0">
-              <Image
-                src="/images/awards/booking-award-2026.png"
-                alt="Booking.com Traveller Review Award 2026"
-                width={150}
-                height={150}
-                className="h-32 w-auto object-contain"
-              />
-              <p className="font-body text-sm text-cream-50/60">9,9/10 · 11 Bewertungen</p>
-              <p className="font-body text-xs text-cream-50/40 max-w-[180px]">Traveller Review Awards 2026</p>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      {/* 3. Bildergalerie */}
-      <ImageGallery images={haus28.images.gallery} propertyName={haus28.name} />
-
-      {/* 4. Beschreibung */}
-      <PropertyDescription description={haus28.description} propertyName={haus28.name} />
-
-      {/* 5. Ausstattung */}
-      <AmenitiesGrid amenities={haus28.amenities} />
-
-      {/* 6. Lage */}
-      <LocationMap
-        address={haus28.address}
-        coordinates={haus28.coordinates}
-        description="HAUS28 liegt am Büchelstein bei Grattersdorf, idyllisch am Rand des Bayerischen Waldes. Wanderwege zum Büchelstein-Gipfel starten direkt vor der Haustür. Die Westernstadt Pullman City ist in nur 20 Minuten erreichbar – perfekt für Familien. Deggendorf mit Einkaufsmöglichkeiten und Restaurants liegt ebenfalls ca. 20 Minuten entfernt."
-        nearbyAttractions={[
-          { name: "Büchelstein-Gipfel (Wanderung)", distance: "~15 min zu Fuß" },
-          { name: "Pullman City (Westernstadt)", distance: "~20 min" },
-          { name: "Nationalpark Bayerischer Wald", distance: "~25 km" },
-          { name: "Deggendorf Zentrum", distance: "~20 min" },
-          { name: "Thermalbad Regen", distance: "~35 min" },
-          { name: "Arber (Skigebiet)", distance: "~50 min" },
-        ]}
-      />
-
-      {/* 6b. Ausflugsziele-Teaser */}
-      <section className="bg-cream-100 border-y border-cream-200">
-        <div className="container-site py-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <p className="font-body text-xs tracking-[0.12em] uppercase text-gold-600 mb-1">
-                Direkt ab HAUS28
-              </p>
-              <h2 className="font-display text-xl text-forest-900 mb-1">
-                Wanderung zum Büchelstein & weitere Ausflüge
-              </h2>
-              <p className="font-body text-sm text-forest-600 max-w-lg">
-                Die Büchelstein-Rundwanderung startet direkt vor der Haustür – über die historische Wallfahrtskapelle Rastbuche (18. Jh.) auf 831 m Höhe. Alle Ausflugstipps für die Region auf einen Blick.
-              </p>
-            </div>
-            <Link
-              href="/ausflugsziele#buechelstein-wanderung"
-              className="flex-none inline-flex items-center gap-2 px-5 py-2.5 bg-forest-900 text-cream-50 text-sm font-body font-medium rounded-full hover:bg-forest-800 transition-colors whitespace-nowrap"
-            >
-              Alle Ausflugsziele
-              <IconArrowRight size={14} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. Bewertungen */}
-      <PropertyReviews
-        reviews={haus28Reviews}
-        averageRating={haus28.airbnbRating}
-        totalCount={haus28.airbnbReviewCount}
-        airbnbUrl={haus28.airbnbUrl}
-      />
-
-      {/* 8. Buchung */}
-      <div id="buchen">
-        <BookingWidget
-          smoobuId={smoobuId}
-          propertyName={config.name}
-          propertySlug={config.id}
-          maxGuests={config.maxGuests}
-          minStay={config.minStay}
-          cleaningFee={config.cleaningFee}
-          priceFrom={config.priceFrom}
-          baseOccupancy={config.baseOccupancy}
-          extraPersonFee={config.extraPersonFee}
-          breadcrumb={config.breadcrumb}
-          propertyHref={config.propertyHref}
-        />
-      </div>
-
-      {/* 9. FAQ */}
-      <FaqAccordion faqs={haus28.faqs} />
-
-      {/* 10. Cross-Selling */}
-      <RelatedProperties
-        currentId="haus28"
-        title="Auch interessant: Haus Schönblick"
-        properties={relatedSchoenblick}
-      />
+      <Haus28ClientPage />
     </>
   );
 }
