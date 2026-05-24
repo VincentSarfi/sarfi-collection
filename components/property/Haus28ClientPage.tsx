@@ -30,10 +30,9 @@ import {
 const config = PROPERTY_CONFIGS.haus28
 
 const bedrooms = [
-  { name: "Schlafzimmer 1", bed: "1 Queensize-Doppelbett", img: "/images/haus28/gallery/haus_28_250523_380.webp" },
-  { name: "Schlafzimmer 2", bed: "1 Kingsize-Doppelbett", img: "/images/haus28/gallery/haus_28_250523_604.webp" },
-  { name: "Schlafzimmer 3", bed: "2 Einzelbetten", img: "/images/haus28/gallery/haus_28_250523_625.webp" },
-  { name: "Schlafzimmer 4", bed: "1 Doppelbett", img: "/images/haus28/gallery/haus_28_250523_647.webp" },
+  { name: "Galerie-Schlafzimmer", bed: "Schlafbereich im Galeriegeschoss", img: "/images/haus28/gallery/haus_28_250523_380.webp" },
+  { name: "Schlafzimmer 1", bed: "1 Queensize-Doppelbett", img: "/images/haus28/gallery/haus_28_250523_604.webp" },
+  { name: "Schlafzimmer 2", bed: "1 Kingsize-Doppelbett", img: "/images/haus28/gallery/haus_28_250523_647.webp" },
 ]
 
 const totalReviews =
