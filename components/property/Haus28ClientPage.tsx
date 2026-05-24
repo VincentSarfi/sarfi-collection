@@ -182,7 +182,7 @@ export default function Haus28ClientPage() {
           <div className="grid grid-cols-1 md:grid-cols-[1fr_300px] lg:grid-cols-[1fr_340px] gap-8 items-start">
 
             {/* ── LEFT COLUMN ─────────────────────────────────────────── */}
-            <div>
+            <div className="min-w-0">
 
               {/* Title + stats + inline ratings */}
               <div className="pb-6 border-b border-cream-200">

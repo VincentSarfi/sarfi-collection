@@ -226,7 +226,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
           <div className="grid grid-cols-1 md:grid-cols-[1fr_300px] lg:grid-cols-[1fr_340px] gap-8 items-start">
 
             {/* ── LEFT COLUMN ─────────────────────────────────────────── */}
-            <div>
+            <div className="min-w-0">
 
               {/* Key Facts */}
               <div className="pb-7 border-b border-cream-200">
