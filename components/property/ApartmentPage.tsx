@@ -79,8 +79,40 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
     <>
       <article className="pt-16 md:pt-20 bg-cream-50">
 
-        {/* ── 1. COMPACT HEADER ─────────────────────────────────────── */}
-        <div className="container-site pt-6 pb-4">
+        {/* ── 1. MOBILE CAROUSEL ────────────────────────────────────── */}
+        <div className="md:hidden relative mb-4">
+          <div
+            ref={mobileCarouselRef}
+            onScroll={handleMobileScroll}
+            className="flex overflow-x-auto snap-x snap-mandatory"
+            style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
+          >
+            {apartment.images.gallery.map((img, i) => (
+              <button
+                key={i}
+                onClick={() => setLightboxIndex(i)}
+                className="snap-start shrink-0 w-full relative"
+                style={{ aspectRatio: "4/3" }}
+                aria-label="Foto vergrößern"
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  priority={i === 0}
+                  className="object-cover"
+                  sizes="100vw"
+                />
+              </button>
+            ))}
+          </div>
+          <div className="absolute bottom-4 right-4 px-2.5 py-1 bg-black/60 rounded-full font-body text-xs text-white pointer-events-none">
+            {mobilePhotoIndex + 1} / {apartment.images.gallery.length}
+          </div>
+        </div>
+
+        {/* ── 2. COMPACT HEADER ─────────────────────────────────────── */}
+        <div className="container-site pt-4 md:pt-6 pb-4">
           {/* Title row */}
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
@@ -136,42 +168,8 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
           </div>
         </div>
 
-        {/* ── 2. PHOTOS ─────────────────────────────────────────────── */}
-
-        {/* Mobile: swipeable full-width carousel */}
-        <div className="md:hidden relative mb-6">
-          <div
-            ref={mobileCarouselRef}
-            onScroll={handleMobileScroll}
-            className="flex overflow-x-auto snap-x snap-mandatory"
-            style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
-          >
-            {apartment.images.gallery.map((img, i) => (
-              <button
-                key={i}
-                onClick={() => setLightboxIndex(i)}
-                className="snap-start shrink-0 w-full relative"
-                style={{ aspectRatio: "4/3" }}
-                aria-label="Foto vergrößern"
-              >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  priority={i === 0}
-                  className="object-cover"
-                  sizes="100vw"
-                />
-              </button>
-            ))}
-          </div>
-          <div className="absolute bottom-4 right-4 px-2.5 py-1 bg-black/60 rounded-full font-body text-xs text-white pointer-events-none">
-            {mobilePhotoIndex + 1} / {apartment.images.gallery.length}
-          </div>
-        </div>
-
-        {/* Desktop: 5-photo grid */}
-        <div className="hidden md:block container-site mb-8">
+        {/* ── 3. DESKTOP PHOTO GRID ─────────────────────────────────── */}
+        <div className="hidden md:block container-site pt-4 mb-8">
           <div className="grid grid-cols-4 gap-2 rounded-2xl overflow-hidden relative">
             {mainImg && (
               <button
@@ -194,7 +192,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
               <button
                 key={i}
                 onClick={() => setLightboxIndex(i + 1)}
-                className="relative aspect-square group cursor-zoom-in overflow-hidden"
+                className="relative aspect-[4/3] group cursor-zoom-in overflow-hidden"
                 aria-label="Foto vergrößern"
               >
                 <Image
@@ -225,7 +223,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
 
         {/* ── 3. TWO-COLUMN CONTENT ─────────────────────────────────── */}
         <div className="container-site pb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_400px] gap-12 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_300px] lg:grid-cols-[1fr_340px] gap-8 items-start">
 
             {/* ── LEFT COLUMN ─────────────────────────────────────────── */}
             <div>
@@ -381,7 +379,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
             </div>
 
             {/* ── RIGHT SIDEBAR ─────────────────────────────────────────── */}
-            <div className="hidden lg:block lg:sticky lg:top-28">
+            <div className="hidden md:block md:sticky md:top-24 lg:top-28">
               <BookingWidget
                 smoobuId={smoobuId}
                 propertyName={config.name}
@@ -422,7 +420,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
         />
 
         {/* Mobile sticky bottom bar – Airbnb style */}
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-cream-200 px-4 py-3 flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-cream-200 px-4 py-3 flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
           <div>
             <p className="font-body text-sm font-medium text-forest-900 leading-tight">
               Zeitraum wählen, um Preise anzuzeigen
@@ -450,7 +448,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 280 }}
-              className="lg:hidden fixed inset-0 z-50 bg-cream-50 overflow-y-auto"
+              className="md:hidden fixed inset-0 z-50 bg-cream-50 overflow-y-auto"
             >
               {/* Sheet header */}
               <div className="sticky top-0 z-10 bg-white border-b border-cream-200 px-4 py-3 flex items-center justify-between">
