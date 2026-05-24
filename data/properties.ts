@@ -548,7 +548,7 @@ export const schoenblick: PropertyData = {
         hero: "/images/schoenblick/a2/hero.webp",
         thumbnail: "/images/schoenblick/a2/hero-thumb.webp",
         gallery: [
-          { src: "/images/schoenblick/a2/gallery/img_9817.webp", alt: "Apartment A2 – Wohnzimmer mit Panoramablick" },
+          { src: "/images/schoenblick/a2/gallery/img_9807.webp", alt: "Apartment A2 – Küchendetail" },
           { src: "/images/schoenblick/a2/gallery/img_9820.webp", alt: "Apartment A2 – Außenbereich & Umgebung" },
           { src: "/images/schoenblick/a2/gallery/img_9815.webp", alt: "Apartment A2 – Schlafzimmer mit Stockbett & Wandschrank" },
           { src: "/images/schoenblick/a2/gallery/img_9810.webp", alt: "Apartment A2 – Schlafzimmer mit Einzelbetten" },
@@ -561,7 +561,7 @@ export const schoenblick: PropertyData = {
           { src: "/images/schoenblick/a2/gallery/img_9799.webp", alt: "Apartment A2 – Eingangsbereich" },
           { src: "/images/schoenblick/a2/gallery/img_9805.webp", alt: "Apartment A2 – Küche" },
           { src: "/images/schoenblick/a2/gallery/img_9806.webp", alt: "Apartment A2 – Küchenbereich" },
-          { src: "/images/schoenblick/a2/gallery/img_9807.webp", alt: "Apartment A2 – Küchendetail" },
+          { src: "/images/schoenblick/a2/gallery/img_9817.webp", alt: "Apartment A2 – Wohnzimmer mit Panoramablick" },
           { src: "/images/schoenblick/a2/gallery/img_9816.webp", alt: "Apartment A2 – Balkon Aussicht" },
           { src: "/images/schoenblick/a2/gallery/img_9819.webp", alt: "Apartment A2 – Gartenblick" },
           { src: "/images/schoenblick/a2/gallery/img_9824.webp", alt: "Apartment A2 – Umgebung" },
