@@ -77,7 +77,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
 
   return (
     <>
-      <article className="pt-20 bg-cream-50">
+      <article className="pt-16 md:pt-20 bg-cream-50">
 
         {/* ── 1. COMPACT HEADER ─────────────────────────────────────── */}
         <div className="container-site pt-6 pb-4">

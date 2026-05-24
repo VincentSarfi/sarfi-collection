@@ -87,7 +87,7 @@ export default function Haus28ClientPage() {
 
   return (
     <>
-      <article className="pt-20 bg-cream-50">
+      <article className="pt-16 md:pt-20 bg-cream-50">
 
         {/* ── 1. PHOTOS ─────────────────────────────────────────────── */}
 
