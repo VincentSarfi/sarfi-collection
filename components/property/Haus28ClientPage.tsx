@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
@@ -48,6 +48,14 @@ export default function Haus28ClientPage() {
   const [descExpanded, setDescExpanded] = useState(false)
   const [amenitiesExpanded, setAmenitiesExpanded] = useState(false)
   const [showMobileBooking, setShowMobileBooking] = useState(false)
+  const [mobilePhotoIndex, setMobilePhotoIndex] = useState(0)
+  const mobileCarouselRef = useRef<HTMLDivElement>(null)
+
+  const handleMobileScroll = () => {
+    if (!mobileCarouselRef.current) return
+    const { scrollLeft, clientWidth } = mobileCarouselRef.current
+    setMobilePhotoIndex(Math.round(scrollLeft / clientWidth))
+  }
 
   const slides = haus28.images.gallery.map((img) => ({ src: img.src, alt: img.alt }))
   const mainImg = haus28.images.gallery[0]
@@ -81,13 +89,48 @@ export default function Haus28ClientPage() {
     <>
       <article className="pt-20 bg-cream-50">
 
-        {/* ── 1. IMAGE GRID ─────────────────────────────────────────── */}
-        <div className="container-site pt-6 mb-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 rounded-2xl overflow-hidden relative">
+        {/* ── 1. PHOTOS ─────────────────────────────────────────────── */}
+
+        {/* Mobile: swipeable full-width carousel */}
+        <div className="md:hidden relative mb-6 pt-6">
+          <div
+            ref={mobileCarouselRef}
+            onScroll={handleMobileScroll}
+            className="flex overflow-x-auto snap-x snap-mandatory"
+            style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
+          >
+            {haus28.images.gallery.map((img, i) => (
+              <button
+                key={i}
+                onClick={() => setLightboxIndex(i)}
+                className="snap-start shrink-0 w-full relative"
+                style={{ aspectRatio: "4/3" }}
+                aria-label="Foto vergrößern"
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  priority={i === 0}
+                  className="object-cover"
+                  sizes="100vw"
+                />
+              </button>
+            ))}
+          </div>
+          {/* Photo counter */}
+          <div className="absolute bottom-4 right-4 px-2.5 py-1 bg-black/60 rounded-full font-body text-xs text-white pointer-events-none">
+            {mobilePhotoIndex + 1} / {haus28.images.gallery.length}
+          </div>
+        </div>
+
+        {/* Desktop: 5-photo grid */}
+        <div className="hidden md:block container-site pt-6 mb-8">
+          <div className="grid grid-cols-4 gap-2 rounded-2xl overflow-hidden relative">
             {mainImg && (
               <button
                 onClick={() => setLightboxIndex(0)}
-                className="col-span-2 row-span-2 relative aspect-[4/3] md:aspect-auto group cursor-zoom-in"
+                className="col-span-2 row-span-2 relative aspect-[4/3] group cursor-zoom-in"
                 aria-label="Foto vergrößern"
               >
                 <Image
@@ -96,12 +139,11 @@ export default function Haus28ClientPage() {
                   fill
                   priority
                   className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="50vw"
                 />
                 <div className="absolute inset-0 bg-forest-900/0 group-hover:bg-forest-900/10 transition-colors" />
               </button>
             )}
-
             {secondaryImgs.map((img, i) => (
               <button
                 key={i}
@@ -114,7 +156,7 @@ export default function Haus28ClientPage() {
                   alt={img.alt}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width: 768px) 50vw, 25vw"
+                  sizes="25vw"
                 />
                 <div className="absolute inset-0 bg-forest-900/0 group-hover:bg-forest-900/10 transition-colors" />
                 {i === secondaryImgs.length - 1 && remaining > 0 && (
@@ -125,7 +167,6 @@ export default function Haus28ClientPage() {
                 )}
               </button>
             ))}
-
             <button
               onClick={() => setLightboxIndex(0)}
               className="absolute bottom-4 right-4 flex items-center gap-1.5 px-3 py-2 bg-white border border-forest-200 rounded-lg font-body text-xs font-medium text-forest-800 hover:bg-cream-100 transition-colors shadow-sm"

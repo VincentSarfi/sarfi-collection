@@ -479,6 +479,29 @@ export const reviews: Review[] = [
     text: "Alles war perfekt.",
     avatarInitials: "A",
   },
+  // ─── B7 Reviews (Airbnb) ─────────────────────────────────────────────────
+  {
+    id: "sb-b7-1",
+    propertyId: "schoenblick",
+    apartmentId: "b7",
+    author: "Sarah",
+    location: "Airbnb",
+    date: "Mai 2025",
+    rating: 5,
+    text: "Wir haben uns sehr wohlgefühlt, wir kommen gerne wieder 😊",
+    avatarInitials: "S",
+  },
+  {
+    id: "sb-b7-2",
+    propertyId: "schoenblick",
+    apartmentId: "b7",
+    author: "Emin",
+    location: "Airbnb",
+    date: "Mai 2025",
+    rating: 5,
+    text: "super",
+    avatarInitials: "E",
+  },
 ];
 
 export const haus28Reviews = reviews.filter((r) => r.propertyId === "haus28");
