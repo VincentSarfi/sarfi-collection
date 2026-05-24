@@ -33,7 +33,7 @@ const bedrooms = [
   { name: "Schlafzimmer 1", bed: "1 Queensize-Doppelbett", img: "/images/haus28/gallery/haus_28_250523_604.webp" },
   { name: "Schlafzimmer 2", bed: "1 Kingsize-Doppelbett", img: "/images/haus28/gallery/haus_28_250523_647.webp" },
   { name: "Schlafzimmer 3", bed: "Schlafbereich OG mit Waldblick", img: "/images/haus28/gallery/haus_28_250523_380.webp" },
-  { name: "Galerie-Schlafzimmer", bed: "Doppelbett unter dem A-Frame-Dach", img: "/images/haus28/gallery/haus_28_250523_391.webp" },
+  { name: "Schlafzimmer 4", bed: "Doppelbett unter dem A-Frame-Dach", img: "/images/haus28/gallery/haus_28_250523_413.webp" },
 ]
 
 const totalReviews =
