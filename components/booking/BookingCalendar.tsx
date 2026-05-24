@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useCallback } from "react"
+import { useState, useMemo, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
 // ─── Date utilities (no external library needed) ──────────────────────────────
@@ -339,6 +339,21 @@ export default function BookingCalendar({
     [selectionStep, checkIn, onDateClick, onReset],
   )
 
+  // Touch swipe to navigate months
+  const touchStartX = useRef<number | null>(null)
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+  }, [])
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (touchStartX.current === null) return
+    const delta = touchStartX.current - e.changedTouches[0].clientX
+    if (Math.abs(delta) > 50) {
+      if (delta > 0) handleNext()
+      else handlePrev()
+    }
+    touchStartX.current = null
+  }, [handleNext, handlePrev])
+
   const slideVariants = {
     enter: (dir: number) => ({ x: dir * 40, opacity: 0 }),
     center: { x: 0, opacity: 1 },
@@ -395,6 +410,8 @@ export default function BookingCalendar({
           exit="exit"
           transition={{ duration: 0.2, ease: "easeInOut" }}
           className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
           <MonthView
             year={viewYear}

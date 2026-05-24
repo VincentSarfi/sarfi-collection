@@ -147,7 +147,7 @@ function TrustBadges() {
       {[
         { emoji: "🔒", title: "Sichere Buchung", text: "SSL-verschlüsselt" },
         { emoji: "💬", title: "Persönliche Betreuung", text: "Direkt vom Gastgeber" },
-        { emoji: "💰", title: "Keine Gebühren", text: "Günstiger als Portale" },
+        { emoji: "💰", title: "Bis zu 20 % günstiger", text: "Als auf Buchungsportalen" },
       ].map((b) => (
         <div
           key={b.title}
@@ -696,7 +696,11 @@ export default function BookingWidget({
         </AnimatePresence>
 
         {/* ── Compact sidebar card ── */}
-        <div ref={widgetRef} className="rounded-2xl border border-cream-200 shadow-[0_6px_32px_rgba(0,0,0,0.10)] bg-white overflow-hidden">
+        <div
+          ref={widgetRef}
+          className="rounded-2xl border border-cream-200 shadow-[0_6px_32px_rgba(0,0,0,0.10)] bg-white overflow-x-hidden overflow-y-auto"
+          style={{ maxHeight: "calc(100vh - 9rem)" }}
+        >
 
         {/* Price header */}
         <div className="px-5 pt-5 pb-4 border-b border-cream-100">
@@ -787,11 +791,27 @@ export default function BookingWidget({
           </div>
         </div>
 
+        {/* CTA */}
+        {step === "dates" && (
+          <div className="px-5 pb-3">
+            <button
+              onClick={() => {
+                if (!checkIn || !checkOut) setShowCalendarOverlay(true)
+                else setStep("form")
+              }}
+              className="w-full py-3.5 rounded-xl bg-gold-500 text-forest-900 font-body font-semibold text-base hover:bg-gold-400 transition-colors shadow-sm"
+            >
+              {checkIn && checkOut ? "Jetzt buchen" : "Verfügbarkeit prüfen"}
+            </button>
+            <p className="text-center font-body text-xs text-forest-400 mt-2.5">Du wirst noch nicht belastet</p>
+          </div>
+        )}
+
         {/* Price breakdown */}
         <AnimatePresence>
           {priceBreakdown && step === "dates" && (
             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
-              className="overflow-hidden px-5">
+              className="overflow-hidden px-5 pb-2">
               <div className="border-t border-cream-100 py-3 space-y-1.5">
                 <div className="flex justify-between font-body text-sm text-forest-600">
                   <span className="underline underline-offset-2 decoration-forest-300">{priceBreakdown.avgNightly} € × {priceBreakdown.nights} Nächte</span>
@@ -815,22 +835,6 @@ export default function BookingWidget({
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* CTA */}
-        {step === "dates" && (
-          <div className="px-5 pb-5">
-            <button
-              onClick={() => {
-                if (!checkIn || !checkOut) setShowCalendarOverlay(true)
-                else setStep("form")
-              }}
-              className="w-full py-3.5 rounded-xl bg-gold-500 text-forest-900 font-body font-semibold text-base hover:bg-gold-400 transition-colors shadow-sm"
-            >
-              {checkIn && checkOut ? "Jetzt buchen" : "Verfügbarkeit prüfen"}
-            </button>
-            <p className="text-center font-body text-xs text-forest-400 mt-2.5">Du wirst noch nicht belastet</p>
-          </div>
-        )}
 
         {/* Form step */}
         <AnimatePresence>
@@ -915,7 +919,7 @@ export default function BookingWidget({
           <div className="px-5 pb-5 pt-1 border-t border-cream-100 space-y-2">
             {[
               { emoji: "🔒", title: "Sichere Zahlung", text: "SSL-verschlüsselt" },
-              { emoji: "💰", title: "Günstiger als Airbnb", text: "Keine Plattformgebühren" },
+              { emoji: "💰", title: "Bis zu 20 % günstiger", text: "Als auf Buchungsportalen" },
             ].map((b) => (
               <div key={b.title} className="flex items-center gap-2.5">
                 <span className="text-base">{b.emoji}</span>
