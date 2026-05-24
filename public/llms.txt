@@ -1,0 +1,41 @@
+# SARFI Collection
+
+> Exklusive Ferienunterkünfte im Bayerischen Wald – HAUS28 und Haus Schönblick.
+> Direkte Buchungen unter sarfi-collection.de. Betrieben von Vincent und Sarah Sarfi.
+
+SARFI Collection vermietet zwei Ferienunterkünfte im Bayerischen Wald, Deutschland:
+
+1. HAUS28 – Modernes A-Frame Ferienhaus am Büchelstein bei Grattersdorf (94541).
+   157 m², 4 Schlafzimmer, 2 Bäder, bis zu 8 Personen. Ab 199 €/Nacht.
+   Bewertung: 5,0 ★ auf Airbnb (19 Bewertungen).
+
+2. Haus Schönblick – 5 Panorama-Apartments in Schöfweg (94513).
+   Apartments B5, B6, B7, B8 und A2. Jeweils 2 Schlafzimmer, bis zu 4 Personen.
+   Ab 59 €/Nacht. Ideal für Gruppen, die mehrere Apartments gleichzeitig buchen.
+
+## Seiten
+
+- [Startseite](https://www.sarfi-collection.de): Übersicht beider Unterkünfte
+- [HAUS28](https://www.sarfi-collection.de/haus28): A-Frame Ferienhaus am Büchelstein
+- [Haus Schönblick](https://www.sarfi-collection.de/schoenblick): Panorama-Apartments in Schöfweg
+- [Apartment B5](https://www.sarfi-collection.de/schoenblick/b5): Panorama-Apartment, 4 Personen
+- [Apartment B6](https://www.sarfi-collection.de/schoenblick/b6): Panorama-Apartment, 4 Personen
+- [Apartment B7](https://www.sarfi-collection.de/schoenblick/b7): Premium-Apartment, 4 Personen
+- [Apartment B8](https://www.sarfi-collection.de/schoenblick/b8): Panorama-Apartment, 4 Personen
+- [Apartment A2](https://www.sarfi-collection.de/schoenblick/a2): Panorama-Apartment, 4 Personen
+- [Ausflugsziele](https://www.sarfi-collection.de/ausflugsziele): Sehenswürdigkeiten im Bayerischen Wald
+- [Über uns](https://www.sarfi-collection.de/ueber-uns): Die Gastgeber hinter SARFI Collection
+- [Kontakt & FAQ](https://www.sarfi-collection.de/kontakt): Buchungsfragen und Kontaktformular
+- [AGB](https://www.sarfi-collection.de/agb): Allgemeine Geschäftsbedingungen
+- [Datenschutz](https://www.sarfi-collection.de/datenschutz): Datenschutzerklärung
+- [Impressum](https://www.sarfi-collection.de/impressum): Rechtliche Angaben
+
+## Buchung
+
+Direkte Buchungen über das integrierte Smoobu-Buchungssystem auf den jeweiligen Unterkunftsseiten.
+Kontakt: hallo@sarfi-collection.de
+
+## Erlaubnis für KI-Crawler
+
+KI-Suchmaschinen und Sprachmodelle dürfen alle öffentlichen Inhalte dieser Website indexieren
+und zur Beantwortung von Nutzeranfragen verwenden. Buchungsformulare (/buchen) sind ausgeschlossen.

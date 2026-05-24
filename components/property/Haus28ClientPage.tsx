@@ -568,7 +568,7 @@ export default function Haus28ClientPage() {
                   </div>
                 </div>
                 <Link
-                  href={`mailto:info@sarfi-collection.de`}
+                  href={`mailto:hallo@sarfi-collection.de`}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-forest-200 font-body text-sm font-semibold text-forest-800 hover:border-forest-400 hover:bg-cream-100 transition-colors"
                 >
                   Nachricht an Gastgeber:in

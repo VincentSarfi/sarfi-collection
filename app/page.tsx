@@ -15,6 +15,17 @@ export const metadata: Metadata = {
     description:
       "Zwei exklusive Ferienunterkünfte mitten im Bayerischen Wald. Direkt buchen und bis zu 15% sparen.",
     url: "https://www.sarfi-collection.de",
+    images: [
+      {
+        url: "/images/shared/panorama-drohne.jpg",
+        alt: "SARFI Collection – Ferienunterkünfte im Bayerischen Wald",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  alternates: {
+    canonical: "https://www.sarfi-collection.de",
   },
 };
 

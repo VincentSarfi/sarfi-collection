@@ -81,6 +81,23 @@ export const metadata: Metadata = {
   },
 };
 
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "SARFI Collection",
+  url: "https://www.sarfi-collection.de",
+  logo: "https://www.sarfi-collection.de/images/logo.svg",
+  email: "hallo@sarfi-collection.de",
+  address: {
+    "@type": "PostalAddress",
+    addressRegion: "Bayern",
+    addressCountry: "DE",
+  },
+  sameAs: [
+    "https://www.airbnb.de/users/show/582496095",
+  ],
+};
+
 // ─── Root Layout ────────────────────────────────────────────────────────────
 export default function RootLayout({
   children,
@@ -90,6 +107,10 @@ export default function RootLayout({
   return (
     <html lang="de" className={`${cormorant.variable} ${dmSans.variable}`}>
       <body className="flex min-h-screen flex-col bg-cream-50">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
