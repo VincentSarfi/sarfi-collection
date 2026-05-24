@@ -24,6 +24,8 @@ export interface BookingWidgetProps {
   propertyHref: string
   /** Hide the fixed mobile bottom bar (e.g. when multiple widgets are on one page) */
   hideMobileBar?: boolean
+  /** Render as a sticky sidebar card (calendar opens inline, no page scroll) */
+  sidebarMode?: boolean
 }
 
 type Step = "dates" | "form" | "payment" | "confirmed" | "error"
@@ -216,6 +218,7 @@ export default function BookingWidget({
   breadcrumb,
   propertyHref,
   hideMobileBar = false,
+  sidebarMode = false,
 }: BookingWidgetProps) {
   // ── Ref zum Scrollen zum Widget-Anfang (nicht Seitenanfang) ──
   const widgetRef = useRef<HTMLDivElement>(null)
@@ -231,6 +234,7 @@ export default function BookingWidget({
   const [selectionStep, setSelectionStep] = useState<SelectionStep>("checkin")
   const [guests, setGuests] = useState(2)
   const [showGuestDropdown, setShowGuestDropdown] = useState(false)
+  const [showCalendarOverlay, setShowCalendarOverlay] = useState(false)
 
   const [availabilityMap, setAvailabilityMap] = useState<AvailabilityMap>({})
   const [loadingAvailability, setLoadingAvailability] = useState(true)
@@ -337,17 +341,17 @@ export default function BookingWidget({
         setSelectionStep("checkout")
       } else {
         if (date <= checkIn!) {
-          // Clicked before or on checkIn → restart
           setCheckIn(date)
           setCheckOut(null)
           setSelectionStep("checkout")
         } else {
           setCheckOut(date)
-          setSelectionStep("checkin") // selection complete
+          setSelectionStep("checkin")
+          if (sidebarMode) setShowCalendarOverlay(false)
         }
       }
     },
-    [selectionStep, checkIn],
+    [selectionStep, checkIn, sidebarMode],
   )
 
   const handleReset = useCallback(() => {
@@ -443,6 +447,37 @@ export default function BookingWidget({
   // CONFIRMED SCREEN
   // ══════════════════════════════════════════════════════════════════════════
   if (step === "confirmed") {
+    if (sidebarMode) {
+      return (
+        <div ref={widgetRef} className="rounded-2xl border border-cream-200 shadow-card-lg bg-white p-6 text-center">
+          <div className="w-14 h-14 rounded-full bg-forest-100 flex items-center justify-center mx-auto mb-4">
+            <svg className="w-7 h-7 text-forest-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 className="font-display text-xl text-forest-900 mb-1">Buchung eingegangen!</h3>
+          <p className="font-body text-sm text-forest-500 mb-4">
+            Vielen Dank, <strong>{form.firstName}</strong>! Bestätigung kommt per E-Mail.
+          </p>
+          <div className="bg-cream-50 rounded-xl border border-cream-200 p-4 text-left space-y-1.5 mb-4">
+            <div className="flex justify-between font-body text-sm">
+              <span className="text-forest-400">Anreise</span>
+              <span className="font-medium text-forest-900">{checkIn ? fmtLong(checkIn) : "–"}</span>
+            </div>
+            <div className="flex justify-between font-body text-sm">
+              <span className="text-forest-400">Abreise</span>
+              <span className="font-medium text-forest-900">{checkOut ? fmtLong(checkOut) : "–"}</span>
+            </div>
+            {priceBreakdown && (
+              <div className="flex justify-between font-body text-sm border-t border-cream-200 pt-1.5">
+                <span className="font-semibold text-forest-800">Gesamt</span>
+                <span className="font-bold text-forest-900">{priceBreakdown.total.toLocaleString("de-DE")} €</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )
+    }
     return (
       <div className="min-h-[60vh] flex items-center justify-center px-4 py-16">
         <motion.div
@@ -529,6 +564,20 @@ export default function BookingWidget({
   // ERROR SCREEN
   // ══════════════════════════════════════════════════════════════════════════
   if (step === "error") {
+    if (sidebarMode) {
+      return (
+        <div ref={widgetRef} className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center">
+          <p className="font-body text-sm font-semibold text-red-700 mb-2">Fehler bei der Buchung</p>
+          <p className="font-body text-xs text-red-600 mb-4">{errorMsg}</p>
+          <button
+            onClick={() => { setStep("form"); setErrorMsg(null) }}
+            className="px-4 py-2 rounded-xl bg-forest-800 text-cream-50 font-body text-sm hover:bg-forest-700 transition-colors"
+          >
+            Erneut versuchen
+          </button>
+        </div>
+      )
+    }
     return (
       <div className="min-h-[40vh] flex items-center justify-center px-4 py-16">
         <div className="max-w-md w-full text-center">
@@ -555,6 +604,331 @@ export default function BookingWidget({
           </div>
         </div>
       </div>
+    )
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // SIDEBAR MODE (compact card + floating calendar overlay)
+  // ══════════════════════════════════════════════════════════════════════════
+  if (sidebarMode) {
+    return (
+      <>
+        {/* ── Floating calendar overlay ── */}
+        <AnimatePresence>
+          {showCalendarOverlay && (
+            <motion.div
+              key="cal-overlay-bg"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 bg-forest-900/40 flex justify-end items-start pt-20 pr-6"
+              onClick={() => setShowCalendarOverlay(false)}
+            >
+              <motion.div
+                key="cal-overlay-panel"
+                initial={{ opacity: 0, y: -10, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.97 }}
+                transition={{ duration: 0.18 }}
+                className="bg-white rounded-2xl shadow-2xl overflow-hidden w-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Date input row */}
+                <div className="p-5 border-b border-cream-100">
+                  <h3 className="font-display text-lg text-forest-900 mb-4">Zeitraum wählen</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className={["rounded-xl border-2 p-3 transition-colors", selectionStep === "checkin" ? "border-forest-700 bg-forest-50" : "border-cream-200"].join(" ")}>
+                      <p className="font-body text-[10px] font-bold text-forest-400 uppercase tracking-wider">Check-in</p>
+                      <p className={`font-body text-sm font-medium mt-0.5 ${checkIn ? "text-forest-900" : "text-forest-400"}`}>
+                        {checkIn ? fmtShort(checkIn) : "TT.MM.JJJJ"}
+                      </p>
+                    </div>
+                    <div className={["rounded-xl border-2 p-3 transition-colors", selectionStep === "checkout" && checkIn ? "border-forest-700 bg-forest-50" : "border-cream-200"].join(" ")}>
+                      <p className="font-body text-[10px] font-bold text-forest-400 uppercase tracking-wider">Check-out</p>
+                      <p className={`font-body text-sm font-medium mt-0.5 ${checkOut ? "text-forest-900" : "text-forest-400"}`}>
+                        {checkOut ? fmtShort(checkOut) : "Datum hinzufügen"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Calendar */}
+                <div className="p-5">
+                  {loadingAvailability && (
+                    <div className="flex items-center gap-2 mb-3 text-xs font-body text-forest-400">
+                      <span className="w-3 h-3 border-2 border-forest-300 border-t-forest-700 rounded-full animate-spin" />
+                      Verfügbarkeiten laden…
+                    </div>
+                  )}
+                  <BookingCalendar
+                    blockedDates={blockedDates}
+                    minStayMap={minStayMap}
+                    defaultMinStay={minStay}
+                    checkIn={checkIn}
+                    checkOut={checkOut}
+                    selectionStep={selectionStep}
+                    onDateClick={handleDateClick}
+                    onReset={handleReset}
+                    priceMap={priceMap}
+                  />
+                </div>
+
+                {/* Overlay footer */}
+                <div className="px-5 pb-5 pt-3 border-t border-cream-100 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => { handleReset(); }}
+                    className="font-body text-sm text-forest-500 underline hover:text-forest-900 transition-colors"
+                  >
+                    Zeitraum zurücksetzen
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowCalendarOverlay(false)}
+                    className="px-5 py-2.5 rounded-xl bg-forest-900 text-cream-50 font-body text-sm font-semibold hover:bg-forest-700 transition-colors"
+                  >
+                    Schließen
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ── Compact sidebar card ── */}
+        <div ref={widgetRef} className="rounded-2xl border border-cream-200 shadow-[0_6px_32px_rgba(0,0,0,0.10)] bg-white overflow-hidden">
+
+        {/* Price header */}
+        <div className="px-5 pt-5 pb-4 border-b border-cream-100">
+          <div className="flex items-baseline justify-between">
+            <div>
+              {priceBreakdown ? (
+                <>
+                  <span className="font-body text-sm text-forest-500">Gesamtpreis </span>
+                  <span className="font-display text-2xl text-forest-900">{priceBreakdown.total.toLocaleString("de-DE")} €</span>
+                </>
+              ) : (
+                <>
+                  <span className="font-body text-sm text-forest-500">ab </span>
+                  <span className="font-display text-2xl text-forest-900">{effectivePrice} €</span>
+                  <span className="font-body text-sm text-forest-400 ml-1">/ Nacht</span>
+                </>
+              )}
+            </div>
+            {checkIn && checkOut && (
+              <button onClick={handleReset} className="font-body text-xs text-forest-400 underline hover:text-forest-700 transition-colors">
+                Zurücksetzen
+              </button>
+            )}
+          </div>
+          <p className="font-body text-xs text-forest-400 mt-1">Du wirst noch nicht belastet</p>
+        </div>
+
+        {/* Date inputs – click opens overlay */}
+        <div className="px-5 pt-4 pb-3">
+          <div
+            className="rounded-xl border-2 border-cream-200 hover:border-forest-400 cursor-pointer transition-colors overflow-hidden mb-2"
+            onClick={() => { if (step === "dates") { handleReset(); setShowCalendarOverlay(true); } }}
+          >
+            <div className="grid grid-cols-2 divide-x-2 divide-cream-200">
+              <div className="p-3">
+                <p className="font-body text-[10px] font-bold uppercase tracking-wider text-forest-700">Anreise</p>
+                <p className={`font-body text-sm mt-0.5 ${checkIn ? "text-forest-900 font-medium" : "text-forest-400"}`}>
+                  {checkIn ? fmtShort(checkIn) : "Datum wählen"}
+                </p>
+              </div>
+              <div className="p-3">
+                <p className="font-body text-[10px] font-bold uppercase tracking-wider text-forest-700">Abreise</p>
+                <p className={`font-body text-sm mt-0.5 ${checkOut ? "text-forest-900 font-medium" : "text-forest-400"}`}>
+                  {checkOut ? fmtShort(checkOut) : "–"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Guest selector */}
+          <div className="relative">
+            <button type="button" onClick={() => setShowGuestDropdown(!showGuestDropdown)}
+              className="w-full rounded-xl border-2 border-cream-200 hover:border-forest-300 px-3 py-2.5 flex items-center justify-between transition-colors">
+              <div className="text-left">
+                <p className="font-body text-[10px] text-forest-400 uppercase tracking-wider mb-0.5">Gäste</p>
+                <p className="font-body text-sm text-forest-900 font-medium">{guests} {guests === 1 ? "Gast" : "Gäste"}</p>
+              </div>
+              <svg className={`w-4 h-4 text-forest-500 transition-transform ${showGuestDropdown ? "rotate-180" : ""}`} fill="none" viewBox="0 0 16 16">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <AnimatePresence>
+              {showGuestDropdown && (
+                <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+                  className="absolute top-full left-0 right-0 mt-1 bg-white rounded-xl border border-cream-200 shadow-card-lg p-4 z-20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-body text-sm font-medium text-forest-800">Gäste</p>
+                      <p className="font-body text-xs text-forest-400">max. {maxGuests} Personen</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <button type="button" onClick={() => setGuests(Math.max(1, guests - 1))} disabled={guests <= 1}
+                        className="w-8 h-8 rounded-full border border-cream-300 flex items-center justify-center text-forest-600 hover:border-forest-500 disabled:opacity-30 transition-colors">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                      </button>
+                      <span className="font-body text-base font-semibold text-forest-900 w-4 text-center">{guests}</span>
+                      <button type="button" onClick={() => setGuests(Math.min(maxGuests, guests + 1))} disabled={guests >= maxGuests}
+                        className="w-8 h-8 rounded-full border border-cream-300 flex items-center justify-center text-forest-600 hover:border-forest-500 disabled:opacity-30 transition-colors">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 3v8M3 7h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                      </button>
+                    </div>
+                  </div>
+                  <button type="button" onClick={() => setShowGuestDropdown(false)}
+                    className="mt-3 text-xs font-body text-forest-500 underline hover:text-forest-800 w-full text-right">Schließen</button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Price breakdown */}
+        <AnimatePresence>
+          {priceBreakdown && step === "dates" && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden px-5">
+              <div className="border-t border-cream-100 py-3 space-y-1.5">
+                <div className="flex justify-between font-body text-sm text-forest-600">
+                  <span className="underline underline-offset-2 decoration-forest-300">{priceBreakdown.avgNightly} € × {priceBreakdown.nights} Nächte</span>
+                  <span>{priceBreakdown.nightlyTotal} €</span>
+                </div>
+                {priceBreakdown.extraPersonTotal > 0 && (
+                  <div className="flex justify-between font-body text-sm text-forest-600">
+                    <span>Personenaufschlag</span>
+                    <span>+{priceBreakdown.extraPersonTotal} €</span>
+                  </div>
+                )}
+                <div className="flex justify-between font-body text-sm text-forest-600">
+                  <span className="underline underline-offset-2 decoration-forest-300">Reinigungsgebühr</span>
+                  <span>{priceBreakdown.cleaningFee} €</span>
+                </div>
+                <div className="flex justify-between font-body text-sm font-bold text-forest-900 border-t border-cream-200 pt-1.5">
+                  <span>Gesamt</span>
+                  <span>{priceBreakdown.total.toLocaleString("de-DE")} €</span>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* CTA */}
+        {step === "dates" && (
+          <div className="px-5 pb-5">
+            <button
+              onClick={() => {
+                if (!checkIn || !checkOut) setShowCalendarOverlay(true)
+                else setStep("form")
+              }}
+              className="w-full py-3.5 rounded-xl bg-gold-500 text-forest-900 font-body font-semibold text-base hover:bg-gold-400 transition-colors shadow-sm"
+            >
+              {checkIn && checkOut ? "Jetzt buchen" : "Verfügbarkeit prüfen"}
+            </button>
+            <p className="text-center font-body text-xs text-forest-400 mt-2.5">Du wirst noch nicht belastet</p>
+          </div>
+        )}
+
+        {/* Form step */}
+        <AnimatePresence>
+          {step === "form" && (
+            <motion.div key="sidebar-form" initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 8 }}
+              className="border-t border-cream-100">
+              <div className="px-5 py-4">
+                <button type="button" onClick={() => setStep("dates")}
+                  className="mb-4 flex items-center gap-1.5 text-sm font-body text-forest-500 hover:text-forest-900 transition-colors">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  Zurück
+                </button>
+                <form onSubmit={handleSubmit} noValidate className="space-y-3">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Input label="Vorname" name="firstName" type="text" value={form.firstName} onChange={handleFormChange} error={formErrors.firstName} required autoComplete="given-name" placeholder="Max" />
+                    <Input label="Nachname" name="lastName" type="text" value={form.lastName} onChange={handleFormChange} error={formErrors.lastName} required autoComplete="family-name" placeholder="Mustermann" />
+                  </div>
+                  <Input label="E-Mail" name="email" type="email" value={form.email} onChange={handleFormChange} error={formErrors.email} required autoComplete="email" placeholder="max@beispiel.de" />
+                  <Input label="Telefon" name="phone" type="tel" value={form.phone} onChange={handleFormChange} error={formErrors.phone} required autoComplete="tel" placeholder="+49 123 456789" />
+                  <div>
+                    <label className="block font-body text-xs font-medium text-forest-700 mb-1">Nachricht <span className="text-forest-400 font-normal">(optional)</span></label>
+                    <textarea name="message" value={form.message} onChange={handleFormChange} rows={2} placeholder="Besondere Wünsche…" className="w-full rounded-xl border border-cream-300 px-3.5 py-2.5 font-body text-sm text-forest-900 bg-white placeholder:text-forest-300 focus:outline-none focus:ring-2 focus:ring-forest-500 resize-none" />
+                  </div>
+                  {priceBreakdown && (
+                    <div>
+                      <p className="font-body text-xs font-medium text-forest-700 uppercase tracking-wider mb-2">Zahlung</p>
+                      <div className="space-y-2">
+                        {([
+                          { value: "50" as PaymentOption, label: "50% Anzahlung", sub: `${Math.round(priceBreakdown.total * 0.5).toLocaleString("de-DE")} € jetzt` },
+                          { value: "100" as PaymentOption, label: "100% Vollzahlung", sub: `${priceBreakdown.total.toLocaleString("de-DE")} € jetzt` },
+                        ] as const).map((opt) => (
+                          <button key={opt.value} type="button" onClick={() => setPaymentOption(opt.value)}
+                            className={["flex items-center gap-3 w-full rounded-xl border px-3 py-2.5 text-left transition-colors", paymentOption === opt.value ? "border-forest-700 bg-forest-50" : "border-cream-300"].join(" ")}>
+                            <span className={["w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center", paymentOption === opt.value ? "border-forest-700" : "border-cream-400"].join(" ")}>
+                              {paymentOption === opt.value && <span className="w-2 h-2 rounded-full bg-forest-700" />}
+                            </span>
+                            <div>
+                              <p className="font-body text-sm font-semibold text-forest-900">{opt.label}</p>
+                              <p className="font-body text-xs text-forest-500">{opt.sub}</p>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <p className="text-xs font-body text-forest-400 leading-relaxed">
+                    Mit deiner Buchung stimmst du unseren{" "}
+                    <Link href="/datenschutz" className="underline">Datenschutzhinweisen</Link>{" "}und{" "}
+                    <Link href="/stornierung" className="underline">Stornierungsbedingungen</Link> zu.
+                  </p>
+                  <button type="submit" disabled={submitting}
+                    className="w-full py-3.5 rounded-xl bg-forest-800 text-cream-50 font-body font-semibold text-sm hover:bg-forest-700 disabled:opacity-60 transition-colors shadow-md flex items-center justify-center gap-2">
+                    {submitting ? <><span className="w-4 h-4 border-2 border-cream-50/40 border-t-cream-50 rounded-full animate-spin" />Wird vorbereitet…</> : "Weiter zur Zahlung →"}
+                  </button>
+                </form>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Payment step */}
+        {step === "payment" && stripeClientSecret && priceBreakdown && (
+          <div className="border-t border-cream-100 px-5 py-4">
+            <PaymentStep
+              clientSecret={stripeClientSecret}
+              depositAmount={depositAmount}
+              totalAmount={priceBreakdown.total}
+              checkIn={checkIn}
+              checkOut={checkOut}
+              propertyName={propertyName}
+              guests={guests}
+              paymentOption={paymentOption}
+              onSuccess={handlePaymentSuccess}
+              onError={handlePaymentError}
+              onBack={() => setStep("form")}
+            />
+          </div>
+        )}
+
+        {/* Trust badges */}
+        {step === "dates" && (
+          <div className="px-5 pb-5 pt-1 border-t border-cream-100 space-y-2">
+            {[
+              { emoji: "🔒", title: "Sichere Zahlung", text: "SSL-verschlüsselt" },
+              { emoji: "💰", title: "Günstiger als Airbnb", text: "Keine Plattformgebühren" },
+            ].map((b) => (
+              <div key={b.title} className="flex items-center gap-2.5">
+                <span className="text-base">{b.emoji}</span>
+                <div>
+                  <span className="font-body text-xs font-semibold text-forest-800">{b.title} · </span>
+                  <span className="font-body text-xs text-forest-400">{b.text}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        </div>
+      </>
     )
   }
 
