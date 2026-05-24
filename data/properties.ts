@@ -135,11 +135,11 @@ export const haus28: PropertyData = {
     hero: "/images/haus28/hero.webp",
     thumbnail: "/images/haus28/hero-thumb.webp",
     gallery: [
-      { src: "/images/haus28/gallery/haus_28_250523_147.webp", alt: "HAUS28 – A-Frame im Grünen, Sommeransicht" },
+      { src: "/images/haus28/gallery/haus_28_250523_160.webp", alt: "HAUS28 – A-Frame Frontansicht im Abendlicht" },
       { src: "/images/haus28/gallery/haus_28_250523_455.webp", alt: "HAUS28 – Wohnbereich mit Panoramafenster zum Wald" },
       { src: "/images/haus28/gallery/haus_28_250523_556.webp", alt: "HAUS28 – Offene Wohn- und Küchenfläche" },
       { src: "/images/haus28/gallery/haus_28_250523_165.webp", alt: "HAUS28 – Außenansicht durch den Wald" },
-      { src: "/images/haus28/gallery/haus_28_250523_160.webp", alt: "HAUS28 – A-Frame Frontansicht im Abendlicht" },
+      { src: "/images/haus28/gallery/haus_28_250523_147.webp", alt: "HAUS28 – A-Frame im Grünen, Sommeransicht" },
       { src: "/images/haus28/gallery/haus_28_250523_380.webp", alt: "HAUS28 – Schlafbereich OG mit Dreiecksfenster" },
       { src: "/images/haus28/gallery/haus_28_250523_413.webp", alt: "HAUS28 – Essbereich" },
       { src: "/images/haus28/gallery/haus_28_250523_604.webp", alt: "HAUS28 – Schlafzimmer EG" },
