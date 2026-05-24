@@ -468,7 +468,7 @@ export const schoenblick: PropertyData = {
       faqs: schoenblickFaqs,
       bedroomImages: [
         { name: "Schlafzimmer 1", bed: "1 Kingsize-Doppelbett", img: "/images/schoenblick/b8/gallery/haus_schoenblick_251228_083.webp" },
-        { name: "Schlafzimmer 2", bed: "Stockbett (2 Einzelbetten)", img: "/images/schoenblick/b8/gallery/haus_schoenblick_251228_049.webp" },
+        { name: "Schlafzimmer 2", bed: "Stockbett (2 Einzelbetten)", img: "/images/schoenblick/b8/gallery/haus_schoenblick_251228_134.webp" },
       ],
     },
     b7: {
