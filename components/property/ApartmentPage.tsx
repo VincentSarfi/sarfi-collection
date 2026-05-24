@@ -218,8 +218,8 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
 
               {/* Host Info */}
               <div className="py-7 border-b border-cream-200 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-forest-900 flex items-center justify-center shrink-0">
-                  <span className="font-display text-sm text-gold-300 leading-none">V&E</span>
+                <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 border-cream-200">
+                  <Image src="/images/team/profilbild.jpg" alt="Vincent & Elena" width={48} height={48} className="object-cover w-full h-full" />
                 </div>
                 <div>
                   <p className="font-body text-base font-semibold text-forest-900">
