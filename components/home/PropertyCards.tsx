@@ -34,6 +34,9 @@ function PropertyCard({
   priceFrom,
   airbnbRating,
   airbnbReviewCount,
+  bookingReviewCount,
+  fewoReviewCount,
+  googleReviewCount,
   maxGuests,
   images,
   href,
@@ -42,6 +45,11 @@ function PropertyCard({
   gradient,
   index,
 }: (typeof properties)[number] & { index: number }) {
+  const totalReviews =
+    (airbnbReviewCount ?? 0) +
+    (bookingReviewCount ?? 0) +
+    (fewoReviewCount ?? 0) +
+    (googleReviewCount ?? 0);
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.15 });
 
   return (
@@ -77,7 +85,7 @@ function PropertyCard({
             {airbnbRating}
           </span>
           <span className="font-body text-xs text-cream-50/60">
-            ({airbnbReviewCount})
+            ({totalReviews})
           </span>
         </div>
 
