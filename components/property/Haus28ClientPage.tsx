@@ -92,7 +92,7 @@ export default function Haus28ClientPage() {
         {/* ── 1. PHOTOS ─────────────────────────────────────────────── */}
 
         {/* Mobile: swipeable full-width carousel */}
-        <div className="md:hidden relative mb-6 pt-6">
+        <div className="md:hidden relative mb-6">
           <div
             ref={mobileCarouselRef}
             onScroll={handleMobileScroll}
