@@ -21,7 +21,7 @@ import { schoenblick } from "@/data/properties"
 import { schoenblickReviews } from "@/data/reviews"
 import type { ApartmentData } from "@/data/properties"
 import { type PropertyBookingConfig, resolveSmoobuId } from "@/config/properties.config"
-import { IconStar, IconUsers, IconBed, IconBath, IconHome, IconMapPin, IconArrowRight, IconExpand, AmenityIcon } from "@/components/ui/Icons"
+import { IconStar, IconMapPin, IconArrowRight, IconExpand, AmenityIcon } from "@/components/ui/Icons"
 
 interface ApartmentPageProps {
   apartment: ApartmentData
@@ -112,42 +112,22 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
         </div>
 
         {/* ── 2. COMPACT HEADER ─────────────────────────────────────── */}
-        <div className="container-site pt-4 md:pt-6 pb-4">
-          {/* Title row */}
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                {apartment.isNew && (
-                  <span className="px-2 py-0.5 bg-gold-500 rounded-full font-body text-xs font-bold text-forest-900 uppercase tracking-widest">
-                    Neu
-                  </span>
-                )}
-              </div>
-              <h1 className="font-display text-display-md text-forest-900 leading-tight">
-                {apartment.name}
-              </h1>
-              <p className="font-body text-base text-forest-500 mt-1">{apartment.subtitle}</p>
-            </div>
-
-            {/* Share / Save – decorative */}
-            <div className="flex items-center gap-2 mt-1 shrink-0">
-              <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-body text-sm text-forest-600 hover:bg-cream-200 transition-colors underline">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185z" />
-                </svg>
-                Teilen
-              </button>
-              <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-body text-sm text-forest-600 hover:bg-cream-200 transition-colors underline">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                </svg>
-                Merken
-              </button>
-            </div>
-          </div>
-
-          {/* Rating + Address row */}
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-3 font-body text-sm text-forest-600">
+        <div className="container-site pt-4 md:pt-6 pb-6">
+          {apartment.isNew && (
+            <span className="inline-block mb-2 px-2 py-0.5 bg-gold-500 rounded-full font-body text-xs font-bold text-forest-900 uppercase tracking-widest">
+              Neu
+            </span>
+          )}
+          <h1 className="font-display text-display-md text-forest-900 leading-tight mb-1">
+            {apartment.name}
+          </h1>
+          <p className="font-body text-base text-forest-600 mb-1">
+            Apartment · {apartment.sqm} m² · {schoenblick.address}
+          </p>
+          <p className="font-body text-sm text-forest-500 mb-3">
+            {apartment.maxGuests} Gäste · {apartment.bedrooms} Schlafzimmer · {apartment.bedrooms} Betten · {apartment.bathrooms} Badezimmer
+          </p>
+          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 font-body text-sm text-forest-700">
             {apartment.airbnbRating > 0 && (
               <>
                 <span className="flex items-center gap-1 font-semibold text-forest-900">
@@ -228,31 +208,8 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
             {/* ── LEFT COLUMN ─────────────────────────────────────────── */}
             <div className="min-w-0">
 
-              {/* Key Facts */}
-              <div className="pb-7 border-b border-cream-200">
-                <h2 className="font-display text-xl text-forest-900 mb-4">
-                  Apartment · {apartment.sqm} m² · bis {apartment.maxGuests} Gäste
-                </h2>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  {[
-                    { icon: <IconUsers size={22} />, value: `${apartment.maxGuests}`, label: "Gäste" },
-                    { icon: <IconBed size={22} />, value: `${apartment.bedrooms}`, label: "Schlafzimmer" },
-                    { icon: <IconBath size={22} />, value: `${apartment.bathrooms}`, label: "Badezimmer" },
-                    { icon: <IconHome size={22} />, value: `${apartment.sqm} m²`, label: "Wohnfläche" },
-                  ].map((fact) => (
-                    <div key={fact.label} className="flex items-center gap-3">
-                      <span className="text-forest-400 shrink-0">{fact.icon}</span>
-                      <div>
-                        <p className="font-body text-sm font-semibold text-forest-900">{fact.value}</p>
-                        <p className="font-body text-xs text-forest-400">{fact.label}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
               {/* Host Info */}
-              <div className="py-7 border-b border-cream-200 flex items-center gap-4">
+              <div className="pb-6 border-b border-cream-200 flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 border-cream-200">
                   <Image src="/images/team/profilbild.jpg" alt="Vincent & Elena" width={48} height={48} className="object-cover w-full h-full" />
                 </div>
@@ -260,7 +217,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
                   <p className="font-body text-base font-semibold text-forest-900">
                     Gastgeber: Vincent &amp; Elena
                   </p>
-                  <div className="flex items-center gap-2 mt-0.5 font-body text-sm text-forest-500">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5 font-body text-sm text-forest-500">
                     <span className="flex items-center gap-1">
                       <svg className="w-3.5 h-3.5 text-gold-500" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5z" />
@@ -268,9 +225,9 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
                       Superhost
                     </span>
                     <span>·</span>
-                    <span>Check-in: ab 16:00 Uhr</span>
+                    <span>Check-in ab 16:00</span>
                     <span>·</span>
-                    <span>Check-out: bis 10:00 Uhr</span>
+                    <span>Check-out bis 10:00</span>
                   </div>
                 </div>
               </div>
@@ -333,6 +290,32 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
                   </button>
                 )}
               </div>
+
+              {/* Bedrooms */}
+              {apartment.bedroomImages && apartment.bedroomImages.length > 0 && (
+                <div className="py-7 border-b border-cream-200">
+                  <h2 className="font-display text-xl text-forest-900 mb-5">Wo du schlafen wirst</h2>
+                  <div className="grid grid-cols-2 gap-4">
+                    {apartment.bedroomImages.map((room) => (
+                      <div key={room.name} className="rounded-2xl border border-cream-200 overflow-hidden bg-white">
+                        <div className="relative aspect-[4/3]">
+                          <Image
+                            src={room.img}
+                            alt={room.name}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 45vw, 200px"
+                          />
+                        </div>
+                        <div className="p-3">
+                          <p className="font-body text-sm font-semibold text-forest-900">{room.name}</p>
+                          <p className="font-body text-xs text-forest-500 mt-0.5">{room.bed}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Amenities */}
               <div className="py-7 border-b border-cream-200">

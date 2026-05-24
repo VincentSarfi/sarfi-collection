@@ -39,6 +39,7 @@ export type ApartmentData = {
   };
   faqs: { question: string; answer: string }[];
   isNew?: boolean;
+  bedroomImages?: { name: string; bed: string; img: string }[];
 };
 
 export type PropertyData = {
@@ -364,6 +365,10 @@ export const schoenblick: PropertyData = {
         ],
       },
       faqs: schoenblickFaqs,
+      bedroomImages: [
+        { name: "Schlafzimmer 1", bed: "1 Kingsize-Doppelbett", img: "/images/schoenblick/b5/gallery/haus_schoenblick_251228_227.webp" },
+        { name: "Schlafzimmer 2", bed: "Stockbett (2 Einzelbetten)", img: "/images/schoenblick/b5/gallery/haus_schoenblick_251228_188.webp" },
+      ],
     },
     b6: {
       id: "b6",
@@ -405,6 +410,10 @@ export const schoenblick: PropertyData = {
         ],
       },
       faqs: schoenblickFaqs,
+      bedroomImages: [
+        { name: "Schlafzimmer 1", bed: "1 Kingsize-Doppelbett", img: "/images/schoenblick/b6/gallery/img_9772.webp" },
+        { name: "Schlafzimmer 2", bed: "1 Doppelbett", img: "/images/schoenblick/b6/gallery/img_9767.webp" },
+      ],
     },
     b8: {
       id: "b8",
@@ -457,6 +466,10 @@ export const schoenblick: PropertyData = {
         ],
       },
       faqs: schoenblickFaqs,
+      bedroomImages: [
+        { name: "Schlafzimmer 1", bed: "1 Kingsize-Doppelbett", img: "/images/schoenblick/b8/gallery/haus_schoenblick_251228_083.webp" },
+        { name: "Schlafzimmer 2", bed: "Stockbett (2 Einzelbetten)", img: "/images/schoenblick/b8/gallery/haus_schoenblick_251228_049.webp" },
+      ],
     },
     b7: {
       id: "b7",
@@ -509,6 +522,10 @@ export const schoenblick: PropertyData = {
         ],
       },
       faqs: schoenblickFaqs,
+      bedroomImages: [
+        { name: "Schlafzimmer 1", bed: "1 Kingsize-Bett (180×200 cm)", img: "/images/schoenblick/b7/gallery/img_3059.jpg" },
+        { name: "Schlafzimmer 2", bed: "Ausziehbares Einzelbett (2× 90 cm)", img: "/images/schoenblick/b7/gallery/img_3116.jpg" },
+      ],
     },
     a2: {
       id: "a2",
@@ -555,6 +572,10 @@ export const schoenblick: PropertyData = {
         ],
       },
       faqs: schoenblickFaqs,
+      bedroomImages: [
+        { name: "Schlafzimmer 1", bed: "2 Einzelbetten", img: "/images/schoenblick/a2/gallery/img_9810.webp" },
+        { name: "Schlafzimmer 2", bed: "Stockbett (2 Einzelbetten)", img: "/images/schoenblick/a2/gallery/img_9815.webp" },
+      ],
     },
   },
 };
