@@ -125,7 +125,7 @@ export default function Haus28ClientPage() {
         </div>
 
         {/* Desktop: 5-photo grid */}
-        <div className="hidden md:block container-site pt-6 mb-8">
+        <div className="hidden md:block container-site pt-4 mb-8">
           <div className="grid grid-cols-4 gap-2 rounded-2xl overflow-hidden relative">
             {mainImg && (
               <button
@@ -148,7 +148,7 @@ export default function Haus28ClientPage() {
               <button
                 key={i}
                 onClick={() => setLightboxIndex(i + 1)}
-                className="relative aspect-square group cursor-zoom-in overflow-hidden"
+                className="relative aspect-[4/3] group cursor-zoom-in overflow-hidden"
                 aria-label="Foto vergrößern"
               >
                 <Image
@@ -179,7 +179,7 @@ export default function Haus28ClientPage() {
 
         {/* ── 2. TWO-COLUMN CONTENT ─────────────────────────────────── */}
         <div className="container-site pb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_400px] gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
 
             {/* ── LEFT COLUMN ─────────────────────────────────────────── */}
             <div>
