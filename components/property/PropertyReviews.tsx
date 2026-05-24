@@ -13,10 +13,18 @@ interface PropertyReviewsProps {
   airbnbUrl?: string;
 }
 
+const REVIEW_TRUNCATE = 150;
+
 /* ── Single review card ─────────────────────────────────────────────────── */
 function ReviewCard({ review }: { review: Review }) {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = review.text.length > REVIEW_TRUNCATE;
+  const displayText = isLong && !expanded
+    ? review.text.slice(0, REVIEW_TRUNCATE).trimEnd() + "…"
+    : review.text;
+
   return (
-    <div className="flex flex-col gap-4 p-6 rounded-2xl bg-white border border-cream-200 shadow-card h-full">
+    <div className="flex flex-col gap-3 p-5 rounded-2xl bg-white border border-cream-200 shadow-card">
       {/* Header: avatar + name + date */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-forest-700 flex items-center justify-center shrink-0">
@@ -42,9 +50,19 @@ function ReviewCard({ review }: { review: Review }) {
       </div>
 
       {/* Text */}
-      <p className="font-body text-sm text-forest-700 leading-relaxed flex-1">
-        &ldquo;{review.text}&rdquo;
-      </p>
+      <div>
+        <p className="font-body text-sm text-forest-700 leading-relaxed">
+          &ldquo;{displayText}&rdquo;
+        </p>
+        {isLong && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="mt-1 font-body text-xs font-semibold text-forest-900 underline underline-offset-2 hover:text-gold-700 transition-colors"
+          >
+            {expanded ? "Weniger anzeigen" : "Mehr anzeigen"}
+          </button>
+        )}
+      </div>
 
       {/* Source badge */}
       <div className="pt-2 border-t border-cream-100">
@@ -217,7 +235,7 @@ export default function PropertyReviews({
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.4, delay: Math.min(i, 4) * 0.08 }}
-                className="flex-none w-[300px] sm:w-[340px] lg:w-[calc(33.333%-11px)] snap-start"
+                className="flex-none w-[300px] sm:w-[340px] lg:w-[calc(33.333%-11px)] snap-start self-start"
               >
                 <ReviewCard review={review} />
               </motion.div>
