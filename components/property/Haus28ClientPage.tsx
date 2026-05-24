@@ -608,7 +608,7 @@ export default function Haus28ClientPage() {
                   <p className="font-body text-sm font-semibold text-forest-900">Stornierungsbedingungen</p>
                 </div>
                 <p className="font-body text-sm text-forest-600 mb-3">
-                  Kostenlose Stornierung bis 14 Tage vor Anreise. Danach gelten unsere Stornobedingungen.
+                  Kostenlose Stornierung bis 30 Tage vor Anreise. Danach gelten unsere Stornobedingungen.
                 </p>
                 <Link
                   href="/stornierung"
