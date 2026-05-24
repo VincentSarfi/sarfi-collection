@@ -179,7 +179,7 @@ export default function Haus28ClientPage() {
 
         {/* ── 2. TWO-COLUMN CONTENT ─────────────────────────────────── */}
         <div className="container-site pb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_300px] lg:grid-cols-[1fr_340px] gap-8 items-start">
 
             {/* ── LEFT COLUMN ─────────────────────────────────────────── */}
             <div>
@@ -422,7 +422,7 @@ export default function Haus28ClientPage() {
             </div>
 
             {/* ── RIGHT SIDEBAR ─────────────────────────────────────────── */}
-            <div className="hidden lg:block lg:sticky lg:top-28">
+            <div className="hidden md:block md:sticky md:top-24 lg:top-28">
               <BookingWidget
                 smoobuId={smoobuId}
                 propertyName={config.name}
@@ -648,7 +648,7 @@ export default function Haus28ClientPage() {
         />
 
         {/* Mobile sticky bottom bar */}
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-cream-200 px-4 py-3 flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-cream-200 px-4 py-3 flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
           <div>
             <p className="font-body text-sm font-medium text-forest-900 leading-tight">
               Zeitraum wählen, um Preise anzuzeigen
@@ -676,7 +676,7 @@ export default function Haus28ClientPage() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 280 }}
-              className="lg:hidden fixed inset-0 z-50 bg-cream-50 overflow-y-auto"
+              className="md:hidden fixed inset-0 z-50 bg-cream-50 overflow-y-auto"
             >
               <div className="sticky top-0 z-10 bg-white border-b border-cream-200 px-4 py-3 flex items-center justify-between">
                 <button
