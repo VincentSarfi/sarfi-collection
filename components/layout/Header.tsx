@@ -22,6 +22,7 @@ const navLinks = [
     ],
   },
   { label: "Ausflugsziele", href: "/ausflugsziele" },
+  { label: "Blog", href: "/blog" },
   { label: "Über uns", href: "/ueber-uns" },
   { label: "Kontakt", href: "/kontakt" },
 ];
