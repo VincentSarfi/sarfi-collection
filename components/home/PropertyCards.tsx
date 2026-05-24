@@ -11,7 +11,7 @@ const properties = [
   {
     ...haus28,
     href: "/haus28",
-    bookHref: "/haus28/buchen",
+    bookHref: "/haus28",
     tag: "A-Frame · Natur pur",
     mood: "dark" as const,
     gradient: "from-forest-900/60 via-transparent to-forest-900/80",
