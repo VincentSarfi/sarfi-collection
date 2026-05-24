@@ -98,7 +98,7 @@ export const haus28: PropertyData = {
   guestFavorite: true,
   airbnbUrl: "https://www.airbnb.de/rooms/1375439439358638425",
   airbnbRating: 5.0,
-  airbnbReviewCount: 18,
+  airbnbReviewCount: 19,
   bookingRating: 9.9,
   bookingReviewCount: 11,
   fewoRating: 5.0,

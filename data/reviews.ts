@@ -15,6 +15,16 @@ export type Review = {
 export const reviews: Review[] = [
   // ─── HAUS28 Reviews (echte Airbnb-Bewertungen) ───────────────────────────
   {
+    id: "h28-19",
+    propertyId: "haus28",
+    author: "Nikolai",
+    location: "Airbnb",
+    date: "Mai 2025",
+    rating: 5,
+    text: "Die Unterkunft ist ein Traum im Grünen! Wir konnten unseren Aufenthalt mit der ganzen Familie sehr genießen. Im Haus fehlt es an nichts, man merkt dass alles hier mit sehr viel Liebe eingerichtet und ausgestattet wurde. Es ist sehr ruhig, perfekt um sich zu erholen und eine schöne Zeit zu haben. Die Gegend ist wunderschön, man kann alles sehr gut mit dem Auto erreichen. Wir können die Unterkunft wirklich sehr empfehlen!",
+    avatarInitials: "N",
+  },
+  {
     id: "h28-18",
     propertyId: "haus28",
     author: "Julia",
