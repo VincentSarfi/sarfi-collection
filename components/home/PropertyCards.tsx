@@ -20,7 +20,7 @@ const properties = [
     ...schoenblick,
     href: "/schoenblick",
     bookHref: "/schoenblick/buchen",
-    tag: "4 Apartments · Panoramablick",
+    tag: "5 Apartments · Panoramablick",
     mood: "light" as const,
     gradient: "from-forest-900/40 via-transparent to-forest-900/70",
     maxGuests: 20, // combined across apartments
