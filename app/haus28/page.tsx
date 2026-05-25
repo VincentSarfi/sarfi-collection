@@ -3,11 +3,11 @@ import { haus28 } from "@/data/properties";
 import Haus28ClientPage from "@/components/property/Haus28ClientPage";
 
 export const metadata: Metadata = {
-  title: "HAUS28 – A-Frame Ferienhaus am Büchelstein | Grattersdorf, Bayerischer Wald",
+  title: "HAUS28 – Modernes A-Frame im Wald | Bayerischer Wald",
   description:
     "HAUS28 am Büchelstein in Grattersdorf: 157 m² A-Frame Ferienhaus im Bayerischen Wald – 18× 5★ auf Airbnb. Bis zu 8 Personen, hochwertig ausgestattet, mitten im Wald. Ab 199€ / Nacht. Jetzt direkt buchen!",
   openGraph: {
-    title: "HAUS28 – A-Frame Ferienhaus am Büchelstein, Grattersdorf",
+    title: "HAUS28 – Modernes A-Frame im Wald",
     description:
       "Einzigartiges A-Frame Ferienhaus am Büchelstein im Bayerischen Wald. Natur pur, hochwertig, bis zu 8 Personen. Direkt buchen & sparen.",
     images: [{ url: haus28.images.hero, alt: "HAUS28 – A-Frame Ferienhaus am Büchelstein, Grattersdorf" }],
