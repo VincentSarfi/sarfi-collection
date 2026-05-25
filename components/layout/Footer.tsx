@@ -5,7 +5,7 @@ import SarfiLogo from "@/components/ui/SarfiLogo";
 const footerLinks = {
   unterkuenfte: [
     { label: "HAUS28", href: "/haus28" },
-    { label: "HAUS28 buchen", href: "/haus28/buchen" },
+    { label: "Jetzt buchen", href: "/buchen" },
     { label: "Haus Schönblick", href: "/schoenblick" },
     { label: "Apartment B5", href: "/schoenblick/b5" },
     { label: "Apartment B6", href: "/schoenblick/b6" },
@@ -123,16 +123,10 @@ export default function Footer() {
             </p>
             <div className="flex flex-col gap-2">
               <Link
-                href="/haus28/buchen"
+                href="/buchen"
                 className="inline-flex items-center justify-center px-4 py-2.5 rounded-full text-sm font-body font-medium bg-gold-500 text-forest-900 hover:bg-gold-400 transition-colors shadow-cta"
               >
-                HAUS28 buchen
-              </Link>
-              <Link
-                href="/schoenblick/buchen"
-                className="inline-flex items-center justify-center px-4 py-2.5 rounded-full text-sm font-body font-medium border border-cream-50/20 text-cream-50/80 hover:text-cream-50 hover:border-cream-50/40 transition-colors"
-              >
-                Schönblick buchen
+                Jetzt buchen
               </Link>
             </div>
           </div>
