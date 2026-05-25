@@ -171,7 +171,7 @@ export default function Header() {
         {/* CTA + Mobile Toggle */}
         <div className="flex items-center gap-3">
           <Button
-            href="/haus28/buchen"
+            href="/buchen"
             variant="gold"
             size="sm"
             className="hidden sm:inline-flex"
@@ -233,7 +233,7 @@ export default function Header() {
                 </div>
               ))}
               <div className="pt-3 border-t border-cream-50/10 mt-2">
-                <Button href="/haus28/buchen" variant="gold" size="md" fullWidth>
+                <Button href="/buchen" variant="gold" size="md" fullWidth>
                   Jetzt buchen
                 </Button>
               </div>

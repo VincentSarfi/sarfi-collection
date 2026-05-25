@@ -290,9 +290,9 @@ export const schoenblick: PropertyData = {
   airbnbReviewCount: 95,
   smoobuPropertyId: "2934161",
   shortDescription:
-    "Vier geschmackvolle Ferienwohnungen mit Panoramablick über den Bayerischen Wald – ideal für Paare, Familien und Gruppen.",
+    "Fünf geschmackvolle Ferienwohnungen mit Panoramablick über den Bayerischen Wald – ideal für Paare, Familien und Gruppen.",
   description:
-    "Haus Schönblick in Schöfweg vereint vier individuell eingerichtete Ferienwohnungen unter einem Dach. Alle Apartments bieten einen atemberaubenden Ausblick über die sanfte Hügellandschaft des Bayerischen Waldes. Ob du solo verreist, mit der Familie oder in einer Gruppe – hier findest du dein perfektes Zuhause auf Zeit. Die ruhige Lage, die frische Waldluft und die herzliche Atmosphäre laden zum echten Entschleunigen ein.",
+    "Haus Schönblick in Schöfweg vereint fünf individuell eingerichtete Ferienwohnungen unter einem Dach. Alle Apartments bieten einen atemberaubenden Ausblick über die sanfte Hügellandschaft des Bayerischen Waldes. Ob du solo verreist, mit der Familie oder in einer Gruppe – hier findest du dein perfektes Zuhause auf Zeit. Die ruhige Lage, die frische Waldluft und die herzliche Atmosphäre laden zum echten Entschleunigen ein.",
   amenities: schoenblickAmenities,
   faqs: schoenblickFaqs,
   images: {

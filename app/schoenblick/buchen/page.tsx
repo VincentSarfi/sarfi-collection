@@ -7,7 +7,7 @@ import { IconStar, IconArrowRight, IconUsers } from "@/components/ui/Icons";
 export const metadata: Metadata = {
   title: "Haus Schönblick buchen – Apartments im Bayerischen Wald",
   description:
-    "Buche direkt eines der vier Panorama-Apartments im Haus Schönblick. Ab 85€ / Nacht. Ohne Plattformgebühren.",
+    "Buche direkt eines der fünf Panorama-Apartments im Haus Schönblick. Ab 65€ / Nacht. Ohne Plattformgebühren.",
   robots: { index: false },
 };
 

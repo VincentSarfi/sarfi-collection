@@ -100,7 +100,7 @@ export default function CtaSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-forest-900 via-forest-900/30 to-transparent" />
               <div className="relative z-10 mt-auto p-6">
                 <p className="font-body text-xs tracking-[0.12em] uppercase text-gold-300/80 mb-1">
-                  4 Apartments · Schöfweg
+                  5 Apartments · Schöfweg
                 </p>
                 <h3 className="font-display text-2xl text-cream-50 mb-3">{schoenblick.name}</h3>
                 <div className="flex items-center justify-between">

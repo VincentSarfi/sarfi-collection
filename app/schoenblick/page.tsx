@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Haus Schönblick – Panorama-Apartments im Bayerischen Wald",
     description:
-      "4 Ferienwohnungen mit Panoramablick in Schöfweg. Für Paare, Familien und Gruppen. Direkt buchen und sparen.",
+      "5 Ferienwohnungen mit Panoramablick in Schöfweg. Für Paare, Familien und Gruppen. Direkt buchen und sparen.",
     images: [{ url: schoenblick.images.hero, alt: "Haus Schönblick" }],
   },
   alternates: {
@@ -136,7 +136,7 @@ export default function SchoenblickPage() {
               Wähle dein Apartment
             </h2>
             <p className="font-body text-lg text-forest-600 max-w-2xl leading-relaxed">
-              Alle vier Apartments befinden sich im selben Haus – perfekt für Gruppen, die mehrere Wohnungen gleichzeitig buchen möchten.
+              Alle fünf Apartments befinden sich im selben Haus – perfekt für Gruppen, die mehrere Wohnungen gleichzeitig buchen möchten.
             </p>
           </div>
 

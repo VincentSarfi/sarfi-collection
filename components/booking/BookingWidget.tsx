@@ -326,10 +326,10 @@ export default function BookingWidget({
     return calcPrice(checkIn, checkOut, priceMap, priceFrom, cleaningFee, guests, baseOccupancy, extraPersonFee)
   }, [checkIn, checkOut, priceMap, priceFrom, cleaningFee, guests, baseOccupancy, extraPersonFee])
 
-  // Effective display price: PriceLabs recommended_base_price if available, else priceFrom
+  // Effective display price: minimum PriceLabs price over the fetched year, else priceFrom
   const effectivePrice = useMemo(() => {
-    const first = Object.values(plPriceMap)[0]
-    return first && first.price > 0 ? first.price : priceFrom
+    const prices = Object.values(plPriceMap).map(r => r.price).filter(p => p > 0)
+    return prices.length > 0 ? Math.min(...prices) : priceFrom
   }, [plPriceMap, priceFrom])
 
   // ── Calendar handlers ──
@@ -725,7 +725,6 @@ export default function BookingWidget({
               </button>
             )}
           </div>
-          <p className="font-body text-xs text-forest-400 mt-1">Du wirst noch nicht belastet</p>
         </div>
 
         {/* Date inputs – click opens overlay */}
@@ -803,7 +802,6 @@ export default function BookingWidget({
             >
               {checkIn && checkOut ? "Jetzt buchen" : "Verfügbarkeit prüfen"}
             </button>
-            <p className="text-center font-body text-xs text-forest-400 mt-2.5">Du wirst noch nicht belastet</p>
           </div>
         )}
 
@@ -831,6 +829,7 @@ export default function BookingWidget({
                   <span>Gesamt</span>
                   <span>{priceBreakdown.total.toLocaleString("de-DE")} €</span>
                 </div>
+                <p className="text-center font-body text-xs text-forest-400 pt-1">Du wirst noch nicht belastet</p>
               </div>
             </motion.div>
           )}
