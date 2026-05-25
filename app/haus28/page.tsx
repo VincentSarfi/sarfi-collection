@@ -57,6 +57,22 @@ const jsonLd = {
     latitude: haus28.coordinates.lat,
     longitude: haus28.coordinates.lng,
   },
+  containsPlace: {
+    "@type": "Accommodation",
+    name: "HAUS28 – A-Frame Ferienhaus",
+    numberOfBedrooms: haus28.bedrooms,
+    numberOfBathroomsTotal: haus28.bathrooms,
+    floorSize: {
+      "@type": "QuantitativeValue",
+      value: haus28.sqm,
+      unitCode: "MTK",
+    },
+    occupancy: {
+      "@type": "QuantitativeValue",
+      maxValue: haus28.maxGuests,
+      unitCode: "C62",
+    },
+  },
   additionalType: "https://schema.org/House",
   amenityFeature: [
     { "@type": "LocationFeatureSpecification", name: "Schlafzimmer", value: 4 },

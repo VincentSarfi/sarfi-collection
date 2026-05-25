@@ -23,6 +23,21 @@ const jsonLd = {
   "@id": "https://www.sarfi-collection.de/schoenblick/a2",
   identifier: "a2-schoenblick-sarfi-collection",
   additionalType: "https://schema.org/Apartment",
+  containsPlace: {
+    "@type": "Accommodation",
+    name: apt.name,
+    numberOfBedrooms: apt.bedrooms,
+    floorSize: {
+      "@type": "QuantitativeValue",
+      value: apt.sqm,
+      unitCode: "MTK",
+    },
+    occupancy: {
+      "@type": "QuantitativeValue",
+      maxValue: apt.maxGuests,
+      unitCode: "C62",
+    },
+  },
   amenityFeature: [
     { "@type": "LocationFeatureSpecification", name: "Schlafzimmer", value: 2 },
     { "@type": "LocationFeatureSpecification", name: "Badezimmer", value: 1 },
