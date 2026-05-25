@@ -34,6 +34,7 @@ const jsonLd = {
     },
     occupancy: {
       "@type": "QuantitativeValue",
+      value: apt.maxGuests,
       maxValue: apt.maxGuests,
       unitCode: "C62",
     },
@@ -54,6 +55,7 @@ const jsonLd = {
     "@type": "PostalAddress",
     streetAddress: "Hochwaldstraße 18/20",
     addressLocality: "Schöfweg",
+    addressRegion: "Bayern",
     postalCode: "94572",
     addressCountry: "DE",
   },

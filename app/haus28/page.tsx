@@ -49,6 +49,7 @@ const jsonLd = {
     "@type": "PostalAddress",
     streetAddress: "Büchelstein 28",
     addressLocality: "Grattersdorf",
+    addressRegion: "Bayern",
     postalCode: "94541",
     addressCountry: "DE",
   },
@@ -59,6 +60,7 @@ const jsonLd = {
   },
   containsPlace: {
     "@type": "Accommodation",
+    additionalType: "House",
     name: "HAUS28 – A-Frame Ferienhaus",
     numberOfBedrooms: haus28.bedrooms,
     numberOfBathroomsTotal: haus28.bathrooms,
@@ -69,11 +71,19 @@ const jsonLd = {
     },
     occupancy: {
       "@type": "QuantitativeValue",
+      value: haus28.maxGuests,
       maxValue: haus28.maxGuests,
       unitCode: "C62",
     },
+    amenityFeature: [
+      { "@type": "LocationFeatureSpecification", name: "Sauna", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Kamin", value: true },
+      { "@type": "LocationFeatureSpecification", name: "WLAN", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Küche", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Balkon", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Parkplatz", value: true },
+    ],
   },
-  additionalType: "https://schema.org/House",
   amenityFeature: [
     { "@type": "LocationFeatureSpecification", name: "Schlafzimmer", value: 4 },
     { "@type": "LocationFeatureSpecification", name: "Badezimmer", value: 2 },
@@ -95,6 +105,7 @@ const jsonLd = {
   },
   occupancy: {
     "@type": "QuantitativeValue",
+    value: haus28.maxGuests,
     maxValue: haus28.maxGuests,
     unitCode: "C62",
   },
