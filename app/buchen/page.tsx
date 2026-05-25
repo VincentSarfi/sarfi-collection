@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Unterkunft wählen – Sarfi Collection | Bayerischer Wald",
   description:
     "Wähle deine Unterkunft: HAUS28 A-Frame oder eines der Panorama-Apartments im Haus Schönblick. Direkt buchen, bis zu 20 % günstiger.",
-  robots: { index: false },
+  robots: { index: true, follow: true },
 };
 
 const apartments = Object.values(schoenblick.apartments ?? {});
