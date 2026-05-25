@@ -20,6 +20,13 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "VacationRental",
+  "@id": "https://www.sarfi-collection.de/schoenblick/b6",
+  identifier: "b6-schoenblick-sarfi-collection",
+  additionalType: "https://schema.org/Apartment",
+  containsPlace: [
+    { "@type": "BedRoom", name: "Schlafzimmer 1" },
+    { "@type": "BedRoom", name: "Schlafzimmer 2" },
+  ],
   name: apt.name,
   description: apt.description,
   url: "https://www.sarfi-collection.de/schoenblick/b6",

@@ -39,6 +39,8 @@ const breadcrumbSchema = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "VacationRental",
+  "@id": "https://www.sarfi-collection.de/haus28",
+  identifier: "haus28-sarfi-collection",
   name: "HAUS28",
   description: haus28.description,
   url: "https://www.sarfi-collection.de/haus28",
@@ -55,6 +57,13 @@ const jsonLd = {
     latitude: haus28.coordinates.lat,
     longitude: haus28.coordinates.lng,
   },
+  containsPlace: [
+    { "@type": "BedRoom", name: "Schlafzimmer 1 (EG)", description: "Kingsize-Bett" },
+    { "@type": "BedRoom", name: "Schlafzimmer 2 (EG)", description: "Doppelbett" },
+    { "@type": "BedRoom", name: "Schlafzimmer 3 (OG)", description: "Doppelbett" },
+    { "@type": "BedRoom", name: "Schlafzimmer 4 (OG)", description: "Doppelbett" },
+  ],
+  additionalType: "https://schema.org/House",
   numberOfRooms: haus28.bedrooms,
   numberOfBedrooms: haus28.bedrooms,
   numberOfBathroomsTotal: haus28.bathrooms,
