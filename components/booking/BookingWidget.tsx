@@ -37,6 +37,13 @@ interface FormData {
   email: string
   phone: string
   message: string
+  isBusinessBooking: boolean
+  company: string
+  vatId: string
+  street: string
+  zip: string
+  city: string
+  country: string
 }
 
 interface FormErrors {
@@ -245,6 +252,13 @@ export default function BookingWidget({
     email: "",
     phone: "",
     message: "",
+    isBusinessBooking: false,
+    company: "",
+    vatId: "",
+    street: "",
+    zip: "",
+    city: "",
+    country: "",
   })
   const [formErrors, setFormErrors] = useState<FormErrors>({})
   const [submitting, setSubmitting] = useState(false)
@@ -364,8 +378,10 @@ export default function BookingWidget({
   const handleFormChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const { name, value } = e.target
-    setForm((prev) => ({ ...prev, [name]: value }))
+    const target = e.target as HTMLInputElement
+    const { name, value, type } = target
+    const checked = type === "checkbox" ? target.checked : undefined
+    setForm((prev) => ({ ...prev, [name]: checked !== undefined ? checked : value }))
     if (formErrors[name as keyof FormErrors]) {
       setFormErrors((prev) => ({ ...prev, [name]: undefined }))
     }
@@ -400,6 +416,13 @@ export default function BookingWidget({
           email: form.email.trim().toLowerCase(),
           phone: form.phone.trim(),
           message: form.message.trim() || undefined,
+          isBusinessBooking: form.isBusinessBooking,
+          company: form.company.trim() || undefined,
+          vatId: form.vatId.trim() || undefined,
+          street: form.street.trim() || undefined,
+          zip: form.zip.trim() || undefined,
+          city: form.city.trim() || undefined,
+          country: form.country.trim() || undefined,
           totalPrice: priceBreakdown.total,
           paymentOption,
         }),
@@ -853,6 +876,23 @@ export default function BookingWidget({
                   </div>
                   <Input label="E-Mail" name="email" type="email" value={form.email} onChange={handleFormChange} error={formErrors.email} required autoComplete="email" placeholder="max@beispiel.de" />
                   <Input label="Telefon" name="phone" type="tel" value={form.phone} onChange={handleFormChange} error={formErrors.phone} required autoComplete="tel" placeholder="+49 123 456789" />
+                  <label className="flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" name="isBusinessBooking" checked={form.isBusinessBooking} onChange={handleFormChange} className="w-4 h-4 rounded border-cream-300 accent-forest-700 cursor-pointer" />
+                    <span className="font-body text-xs text-forest-700">Firmenbuchung / Rechnung gewünscht</span>
+                  </label>
+                  {form.isBusinessBooking && (
+                    <div className="space-y-2 rounded-xl border border-cream-200 bg-cream-50 p-3">
+                      <p className="font-body text-xs font-medium text-forest-500 uppercase tracking-wider">Rechnungsdaten</p>
+                      <Input label="Firmenname" name="company" type="text" value={form.company} onChange={handleFormChange} autoComplete="organization" placeholder="Musterfirma GmbH" />
+                      <Input label="USt-IdNr." name="vatId" type="text" value={form.vatId} onChange={handleFormChange} autoComplete="off" placeholder="DE123456789" />
+                      <Input label="Straße & Hausnummer" name="street" type="text" value={form.street} onChange={handleFormChange} autoComplete="street-address" placeholder="Musterstraße 1" />
+                      <div className="grid grid-cols-2 gap-2">
+                        <Input label="PLZ" name="zip" type="text" value={form.zip} onChange={handleFormChange} autoComplete="postal-code" placeholder="12345" />
+                        <Input label="Ort" name="city" type="text" value={form.city} onChange={handleFormChange} autoComplete="address-level2" placeholder="München" />
+                      </div>
+                      <Input label="Land" name="country" type="text" value={form.country} onChange={handleFormChange} autoComplete="country-name" placeholder="Deutschland" />
+                    </div>
+                  )}
                   <div>
                     <label className="block font-body text-xs font-medium text-forest-700 mb-1">Nachricht <span className="text-forest-400 font-normal">(optional)</span></label>
                     <textarea name="message" value={form.message} onChange={handleFormChange} rows={2} placeholder="Besondere Wünsche…" className="w-full rounded-xl border border-cream-300 px-3.5 py-2.5 font-body text-sm text-forest-900 bg-white placeholder:text-forest-300 focus:outline-none focus:ring-2 focus:ring-forest-500 resize-none" />
@@ -1120,6 +1160,81 @@ export default function BookingWidget({
                       autoComplete="tel"
                       placeholder="+49 123 456789"
                     />
+
+                    {/* Business booking toggle */}
+                    <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        name="isBusinessBooking"
+                        checked={form.isBusinessBooking}
+                        onChange={handleFormChange}
+                        className="w-4 h-4 rounded border-cream-300 text-forest-700 accent-forest-700 cursor-pointer"
+                      />
+                      <span className="font-body text-sm text-forest-700">Firmenbuchung / Rechnung gewünscht</span>
+                    </label>
+
+                    {/* Company fields */}
+                    {form.isBusinessBooking && (
+                      <div className="space-y-3 rounded-xl border border-cream-200 bg-cream-50 p-4">
+                        <p className="font-body text-xs font-medium text-forest-500 uppercase tracking-wider">Rechnungsdaten</p>
+                        <Input
+                          label="Firmenname"
+                          name="company"
+                          type="text"
+                          value={form.company}
+                          onChange={handleFormChange}
+                          autoComplete="organization"
+                          placeholder="Musterfirma GmbH"
+                        />
+                        <Input
+                          label="USt-IdNr."
+                          name="vatId"
+                          type="text"
+                          value={form.vatId}
+                          onChange={handleFormChange}
+                          autoComplete="off"
+                          placeholder="DE123456789"
+                        />
+                        <Input
+                          label="Straße & Hausnummer"
+                          name="street"
+                          type="text"
+                          value={form.street}
+                          onChange={handleFormChange}
+                          autoComplete="street-address"
+                          placeholder="Musterstraße 1"
+                        />
+                        <div className="grid grid-cols-2 gap-3">
+                          <Input
+                            label="PLZ"
+                            name="zip"
+                            type="text"
+                            value={form.zip}
+                            onChange={handleFormChange}
+                            autoComplete="postal-code"
+                            placeholder="12345"
+                          />
+                          <Input
+                            label="Ort"
+                            name="city"
+                            type="text"
+                            value={form.city}
+                            onChange={handleFormChange}
+                            autoComplete="address-level2"
+                            placeholder="München"
+                          />
+                        </div>
+                        <Input
+                          label="Land"
+                          name="country"
+                          type="text"
+                          value={form.country}
+                          onChange={handleFormChange}
+                          autoComplete="country-name"
+                          placeholder="Deutschland"
+                        />
+                      </div>
+                    )}
 
                     {/* Optional message */}
                     <div>

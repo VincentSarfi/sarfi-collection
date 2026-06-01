@@ -85,7 +85,7 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     smoobuIdFallback: '3276892',
     maxGuests: 4,
     minStay: 2,
-    cleaningFee: 75,
+    cleaningFee: 65,
     priceFrom: 100,
     baseOccupancy: 2,
     extraPersonFee: 29,
