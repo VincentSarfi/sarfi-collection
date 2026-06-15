@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { escapeHtml } from '@/lib/escape'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -107,6 +108,13 @@ export async function sendCheckoutStartedNotification(data: BookingNotificationD
   const remaining = total - deposit
   const isFullPay = data.paymentOption === "100"
 
+  // Escape user-controlled fields before HTML interpolation
+  const safeProperty = escapeHtml(data.propertyName)
+  const safeName     = escapeHtml(`${data.firstName} ${data.lastName}`)
+  const safeEmail    = escapeHtml(data.email)
+  const safePhone    = escapeHtml(data.phone)
+  const safeMessage  = data.message ? escapeHtml(data.message) : ''
+
   const html = `
 <!DOCTYPE html>
 <html lang="de">
@@ -120,7 +128,7 @@ export async function sendCheckoutStartedNotification(data: BookingNotificationD
         <tr>
           <td style="background:#92400e;padding:28px 32px;">
             <p style="margin:0;color:#fcd34d;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600;">⏳ Checkout gestartet – noch nicht bezahlt</p>
-            <h1 style="margin:6px 0 0;color:#fef3c7;font-size:22px;font-weight:700;">${data.propertyName}</h1>
+            <h1 style="margin:6px 0 0;color:#fef3c7;font-size:22px;font-weight:700;">${safeProperty}</h1>
           </td>
         </tr>
 
@@ -199,17 +207,17 @@ export async function sendCheckoutStartedNotification(data: BookingNotificationD
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td style="padding:5px 0;font-size:14px;color:#888;width:130px;">Name</td>
-                <td style="padding:5px 0;font-size:14px;color:#1a2e1a;font-weight:500;">${data.firstName} ${data.lastName}</td>
+                <td style="padding:5px 0;font-size:14px;color:#1a2e1a;font-weight:500;">${safeName}</td>
               </tr>
               <tr>
                 <td style="padding:5px 0;font-size:14px;color:#888;">E-Mail</td>
-                <td style="padding:5px 0;font-size:14px;"><a href="mailto:${data.email}" style="color:#1a2e1a;">${data.email}</a></td>
+                <td style="padding:5px 0;font-size:14px;"><a href="mailto:${safeEmail}" style="color:#1a2e1a;">${safeEmail}</a></td>
               </tr>
               <tr>
                 <td style="padding:5px 0;font-size:14px;color:#888;">Telefon</td>
-                <td style="padding:5px 0;font-size:14px;"><a href="tel:${data.phone}" style="color:#1a2e1a;">${data.phone}</a></td>
+                <td style="padding:5px 0;font-size:14px;"><a href="tel:${safePhone}" style="color:#1a2e1a;">${safePhone}</a></td>
               </tr>
-              ${data.message ? `<tr><td style="padding:5px 0;font-size:14px;color:#888;vertical-align:top;">Nachricht</td><td style="padding:5px 0;font-size:14px;color:#1a2e1a;">${data.message}</td></tr>` : ''}
+              ${safeMessage ? `<tr><td style="padding:5px 0;font-size:14px;color:#888;vertical-align:top;">Nachricht</td><td style="padding:5px 0;font-size:14px;color:#1a2e1a;">${safeMessage}</td></tr>` : ''}
             </table>
           </td>
         </tr>
@@ -258,6 +266,13 @@ export async function sendBookingNotification(data: BookingNotificationData) {
   const remaining = total - deposit
   const isFullPay = data.paymentOption === "100"
 
+  // Escape user-controlled fields before HTML interpolation
+  const safeProperty = escapeHtml(data.propertyName)
+  const safeName     = escapeHtml(`${data.firstName} ${data.lastName}`)
+  const safeEmail    = escapeHtml(data.email)
+  const safePhone    = escapeHtml(data.phone)
+  const safeMessage  = data.message ? escapeHtml(data.message) : ''
+
   const html = `
 <!DOCTYPE html>
 <html lang="de">
@@ -274,7 +289,7 @@ export async function sendBookingNotification(data: BookingNotificationData) {
         <tr>
           <td style="background:#1a2e1a;padding:28px 32px;">
             <p style="margin:0;color:#c9a84c;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600;">Neue Buchungsanfrage</p>
-            <h1 style="margin:6px 0 0;color:#f5f0e8;font-size:22px;font-weight:700;">${data.propertyName}</h1>
+            <h1 style="margin:6px 0 0;color:#f5f0e8;font-size:22px;font-weight:700;">${safeProperty}</h1>
           </td>
         </tr>
 
@@ -342,24 +357,24 @@ export async function sendBookingNotification(data: BookingNotificationData) {
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td style="padding:5px 0;font-size:14px;color:#888;width:130px;">Name</td>
-                <td style="padding:5px 0;font-size:14px;color:#1a2e1a;font-weight:500;">${data.firstName} ${data.lastName}</td>
+                <td style="padding:5px 0;font-size:14px;color:#1a2e1a;font-weight:500;">${safeName}</td>
               </tr>
               <tr>
                 <td style="padding:5px 0;font-size:14px;color:#888;">E-Mail</td>
                 <td style="padding:5px 0;font-size:14px;color:#1a2e1a;">
-                  <a href="mailto:${data.email}" style="color:#1a2e1a;">${data.email}</a>
+                  <a href="mailto:${safeEmail}" style="color:#1a2e1a;">${safeEmail}</a>
                 </td>
               </tr>
               <tr>
                 <td style="padding:5px 0;font-size:14px;color:#888;">Telefon</td>
                 <td style="padding:5px 0;font-size:14px;color:#1a2e1a;">
-                  <a href="tel:${data.phone}" style="color:#1a2e1a;">${data.phone}</a>
+                  <a href="tel:${safePhone}" style="color:#1a2e1a;">${safePhone}</a>
                 </td>
               </tr>
-              ${data.message ? `
+              ${safeMessage ? `
               <tr>
                 <td style="padding:5px 0;font-size:14px;color:#888;vertical-align:top;">Nachricht</td>
-                <td style="padding:5px 0;font-size:14px;color:#1a2e1a;">${data.message}</td>
+                <td style="padding:5px 0;font-size:14px;color:#1a2e1a;">${safeMessage}</td>
               </tr>` : ''}
             </table>
           </td>
@@ -440,6 +455,12 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   const nightsLabel = data.nights === 1 ? '1 Nacht' : `${data.nights} Nächte`
   const guestsLabel = data.guests === 1 ? '1 Gast' : `${data.guests} Gäste`
 
+  // Escape user-controlled fields before HTML interpolation
+  const safeProperty = escapeHtml(data.propertyName)
+  const safeName     = escapeHtml(`${data.firstName} ${data.lastName}`)
+  const safeEmail    = escapeHtml(data.email)
+  const safePhone    = escapeHtml(data.phone ?? '')
+
   const html = `<!DOCTYPE html>
 <html lang="de">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
@@ -458,7 +479,7 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   <!-- Greeting -->
   <tr>
     <td style="padding:36px 48px 0;">
-      <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;color:#1a2e1a;">Hi ${data.firstName} ${data.lastName},</h1>
+      <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;color:#1a2e1a;">Hi ${safeName},</h1>
       <h2 style="margin:0 0 12px;font-size:20px;font-weight:600;color:#1a2e1a;">deine Buchung ist bestätigt!</h2>
       <p style="margin:0;font-size:14px;color:#4a5568;line-height:1.7;">Dein Aufenthalt ist gesichert. Wir freuen uns, dich bald bei uns begrüßen zu dürfen.${!isFullPay ? ' Den ausstehenden Restbetrag bitten wir dich bis 14&nbsp;Tage vor Anreise zu begleichen.' : ''}</p>
     </td>
@@ -468,12 +489,12 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   <tr>
     <td style="padding:24px 48px 0;">
       <div style="border-radius:6px;overflow:hidden;line-height:0;">
-        <img src="${heroUrl}" width="484" alt="${data.propertyName}" style="display:block;width:100%;height:auto;max-height:280px;object-fit:cover;" />
+        <img src="${heroUrl}" width="484" alt="${safeProperty}" style="display:block;width:100%;height:auto;max-height:280px;object-fit:cover;" />
       </div>
       <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px;">
         <tr>
           <td>
-            <p style="margin:0 0 2px;font-size:16px;font-weight:700;color:#1a2e1a;">${data.propertyName}</p>
+            <p style="margin:0 0 2px;font-size:16px;font-weight:700;color:#1a2e1a;">${safeProperty}</p>
             <p style="margin:0;font-size:12px;color:#aaa;">Bayerischer Wald, Deutschland</p>
             ${data.smoobuBookingId ? `<p style="margin:6px 0 0;font-size:11px;color:#c9c2b5;">Reservierungs-ID: <strong style="color:#999;">#${data.smoobuBookingId}</strong></p>` : ''}
           </td>
@@ -494,7 +515,7 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
       <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
           <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Name</td>
-          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${data.firstName} ${data.lastName}</td>
+          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${safeName}</td>
         </tr>
         <tr>
           <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Buchungsdatum</td>
@@ -502,11 +523,11 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
         </tr>
         <tr>
           <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">E-Mail</td>
-          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;"><a href="mailto:${data.email}" style="color:#1a2e1a;text-decoration:none;">${data.email}</a></td>
+          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;"><a href="mailto:${safeEmail}" style="color:#1a2e1a;text-decoration:none;">${safeEmail}</a></td>
         </tr>
         ${data.phone ? `<tr>
           <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Telefon</td>
-          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${data.phone}</td>
+          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${safePhone}</td>
         </tr>` : ''}
         <tr>
           <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Gäste</td>

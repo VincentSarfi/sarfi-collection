@@ -3,6 +3,10 @@ import { stripe, DEPOSIT_FRACTION, toCents } from '@/lib/stripe'
 import { verifyAvailability } from '@/lib/smoobu'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
 import { sendCheckoutStartedNotification } from '@/lib/notify'
+import { findConfigBySmoobuId, computeExpectedPrice } from '@/lib/pricing'
+
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export interface CreatePaymentIntentRequest {
   apartmentId: string
@@ -51,6 +55,43 @@ export async function POST(request: NextRequest) {
   if (!apartmentId || !checkIn || !checkOut || !firstName || !lastName ||
       !email || !phone || !guests || !totalPrice) {
     return NextResponse.json({ error: 'Pflichtfelder fehlen' }, { status: 422 })
+  }
+
+  // ── Structural validation ──
+  if (!DATE_RE.test(checkIn) || !DATE_RE.test(checkOut) ||
+      isNaN(Date.parse(checkIn)) || isNaN(Date.parse(checkOut))) {
+    return NextResponse.json({ error: 'Ungültiges Datum' }, { status: 422 })
+  }
+  if (checkIn >= checkOut) {
+    return NextResponse.json({ error: 'Abreise muss nach Anreise liegen' }, { status: 422 })
+  }
+  if (checkIn < new Date().toISOString().split('T')[0]) {
+    return NextResponse.json({ error: 'Anreisedatum liegt in der Vergangenheit' }, { status: 422 })
+  }
+  if (!EMAIL_RE.test(email)) {
+    return NextResponse.json({ error: 'Ungültige E-Mail-Adresse' }, { status: 422 })
+  }
+
+  // ── Resolve property from the Smoobu listing id ──
+  const config = findConfigBySmoobuId(apartmentId)
+  if (!config) {
+    return NextResponse.json({ error: 'Unbekannte Unterkunft' }, { status: 422 })
+  }
+  if (guests < 1 || guests > config.maxGuests) {
+    return NextResponse.json({ error: 'Ungültige Gästeanzahl' }, { status: 422 })
+  }
+
+  // ── Server-side price verification (never trust the client total) ──
+  const priceCheck = await computeExpectedPrice(config, apartmentId, checkIn, checkOut, guests)
+  if (totalPrice < priceCheck.minAcceptable) {
+    console.warn(
+      `[payment-intent] Preismanipulation abgelehnt: client=${totalPrice} < min=${priceCheck.minAcceptable} ` +
+      `(erwartet=${priceCheck.expectedTotal}) für ${apartmentId} ${checkIn}–${checkOut} guests=${guests}`,
+    )
+    return NextResponse.json(
+      { error: 'Preis konnte nicht verifiziert werden. Bitte lade die Seite neu und versuche es erneut.' },
+      { status: 422 },
+    )
   }
 
   // Double-check availability before charging

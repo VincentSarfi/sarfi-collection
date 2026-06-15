@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createBooking, verifyAvailability } from '@/lib/smoobu'
 import type { BookingRequest } from '@/lib/smoobu'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { stripe } from '@/lib/stripe'
 
 // ─── Validation helpers ───────────────────────────────────────────────────────
 
@@ -56,6 +57,37 @@ export async function POST(request: NextRequest) {
   }
 
   const req = body as BookingRequest
+
+  // ── Payment verification ──
+  // A booking creates a real, calendar-blocking Smoobu reservation, so it must
+  // be backed by a settled Stripe payment. Without this check anyone could POST
+  // here and create free fraudulent bookings. (The normal flow now creates the
+  // booking from the Stripe webhook; this endpoint is the client-side backup.)
+  const paymentIntentId = (body as { paymentIntentId?: string }).paymentIntentId
+  if (!paymentIntentId || typeof paymentIntentId !== 'string') {
+    return NextResponse.json({ error: 'Zahlungsnachweis fehlt' }, { status: 402 })
+  }
+  try {
+    const pi = await stripe.paymentIntents.retrieve(paymentIntentId)
+    if (pi.status !== 'succeeded') {
+      return NextResponse.json({ error: 'Zahlung nicht abgeschlossen' }, { status: 402 })
+    }
+    const m = pi.metadata ?? {}
+    if (
+      m.apartmentId !== req.apartmentId ||
+      m.checkIn !== req.checkIn ||
+      m.checkOut !== req.checkOut
+    ) {
+      return NextResponse.json({ error: 'Zahlung passt nicht zur Buchung' }, { status: 422 })
+    }
+    if (m.smoobu_booking_id) {
+      // Webhook already created the booking for this payment.
+      return NextResponse.json({ success: true, id: Number(m.smoobu_booking_id) })
+    }
+  } catch (err) {
+    console.error('[booking] Stripe-Verifikation fehlgeschlagen:', err)
+    return NextResponse.json({ error: 'Zahlung konnte nicht verifiziert werden' }, { status: 402 })
+  }
 
   // ── Date logic ──
   const checkInDate = new Date(req.checkIn)

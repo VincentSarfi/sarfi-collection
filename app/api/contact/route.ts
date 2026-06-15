@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { escapeHtml } from '@/lib/escape'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const SUBJECT_LABELS: Record<string, string> = {
   haus28:      'HAUS28 – Anfrage',
@@ -32,6 +35,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Pflichtfelder fehlen' }, { status: 400 })
     }
 
+    if (!EMAIL_RE.test(email.trim())) {
+      return NextResponse.json({ error: 'Ungültige E-Mail-Adresse' }, { status: 400 })
+    }
+
     // CAPTCHA-Verifikation
     const valid = await verifyTurnstile(turnstileToken ?? '')
     if (!valid) {
@@ -39,6 +46,12 @@ export async function POST(request: NextRequest) {
     }
 
     const subjectLabel = SUBJECT_LABELS[subject] ?? 'Kontaktanfrage'
+
+    // Escape all user-controlled values before interpolating into HTML
+    const safeName    = escapeHtml(name)
+    const safeEmail   = escapeHtml(email)
+    const safePhone   = escapeHtml(phone?.trim() ?? '')
+    const safeMessage = escapeHtml(message)
 
     const html = `<!DOCTYPE html>
 <html lang="de">
@@ -60,18 +73,18 @@ export async function POST(request: NextRequest) {
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td style="padding:6px 0;font-size:13px;color:#888;width:100px;">Name</td>
-                <td style="padding:6px 0;font-size:14px;color:#1a2e1a;font-weight:500;">${name}</td>
+                <td style="padding:6px 0;font-size:14px;color:#1a2e1a;font-weight:500;">${safeName}</td>
               </tr>
               <tr>
                 <td style="padding:6px 0;font-size:13px;color:#888;">E-Mail</td>
                 <td style="padding:6px 0;font-size:14px;">
-                  <a href="mailto:${email}" style="color:#1a2e1a;">${email}</a>
+                  <a href="mailto:${safeEmail}" style="color:#1a2e1a;">${safeEmail}</a>
                 </td>
               </tr>
-              ${phone?.trim() ? `<tr>
+              ${safePhone ? `<tr>
                 <td style="padding:6px 0;font-size:13px;color:#888;">Telefon</td>
                 <td style="padding:6px 0;font-size:14px;">
-                  <a href="tel:${phone.trim()}" style="color:#1a2e1a;">${phone.trim()}</a>
+                  <a href="tel:${safePhone}" style="color:#1a2e1a;">${safePhone}</a>
                 </td>
               </tr>` : ''}
               <tr>
@@ -91,14 +104,14 @@ export async function POST(request: NextRequest) {
         <tr>
           <td style="padding:20px 32px 32px;">
             <p style="margin:0 0 8px;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.12em;font-weight:600;">Nachricht</p>
-            <p style="margin:0;font-size:14px;color:#1a2e1a;line-height:1.7;white-space:pre-wrap;">${message}</p>
+            <p style="margin:0;font-size:14px;color:#1a2e1a;line-height:1.7;white-space:pre-wrap;">${safeMessage}</p>
           </td>
         </tr>
 
         <tr>
           <td style="background:#f5f0e8;padding:16px 32px;border-top:1px solid #e8e2d6;">
             <p style="margin:0;font-size:11px;color:#aaa;text-align:center;">
-              Direkt antworten an: <a href="mailto:${email}" style="color:#888;">${email}</a>
+              Direkt antworten an: <a href="mailto:${safeEmail}" style="color:#888;">${safeEmail}</a>
             </p>
           </td>
         </tr>
