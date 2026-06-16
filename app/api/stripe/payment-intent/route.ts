@@ -166,6 +166,9 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Stripe-Fehler'
     console.error('[payment-intent]', msg)
-    return NextResponse.json({ error: msg }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Die Zahlung konnte nicht initialisiert werden. Bitte versuche es später erneut.' },
+      { status: 500 },
+    )
   }
 }

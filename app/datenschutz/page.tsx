@@ -126,8 +126,13 @@ export default function DatenschutzPage() {
             <p className="mb-3">
               Für die Verarbeitung der Daten wird im Rahmen des Absendevorgangs Ihre Einwilligung eingeholt und auf diese Datenschutzerklärung verwiesen. Alternativ ist eine Kontaktaufnahme über die bereitgestellte E-Mail-Adresse möglich. In diesem Fall werden die mit der E-Mail übermittelten personenbezogenen Daten des Nutzers gespeichert.
             </p>
-            <p>
+            <p className="mb-3">
               Rechtsgrundlage für die Verarbeitung der Daten ist Art. 6 Abs. 1 lit. a DSGVO (Einwilligung) sowie Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen). Die Daten werden gelöscht, sobald sie für die Erreichung des Zweckes ihrer Erhebung nicht mehr erforderlich sind, spätestens jedoch nach 3 Jahren.
+            </p>
+
+            <h3 className="font-semibold text-forest-800 mb-2">E-Mail-Versand: Resend</h3>
+            <p>
+              Für den technischen Versand von E-Mails (Benachrichtigungen aus dem Kontaktformular sowie Buchungsbestätigungen, siehe Abschnitt 6) nutzen wir den Dienst Resend (Resend, Inc., USA). Dabei werden die zur Zustellung erforderlichen Daten – insbesondere Name, E-Mail-Adresse, Telefonnummer und Nachrichteninhalt – serverseitig an Resend übermittelt. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem zuverlässigen E-Mail-Versand). Resend verarbeitet die Daten als Auftragsverarbeiter gemäß Art. 28 DSGVO. Eine Übermittlung in die USA wird durch den Abschluss der EU-Standardvertragsklauseln abgesichert. Weitere Informationen: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">resend.com/legal/privacy-policy</a>
             </p>
           </section>
 
