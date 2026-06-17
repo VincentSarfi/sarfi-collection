@@ -84,15 +84,15 @@ export interface BookingNotificationData {
   message?: string
   // Stripe
   paymentIntentId: string
+  // Request-Herkunft (nur für interne Host-Benachrichtigung)
+  clientIp?: string
+  clientCountry?: string
+  userAgent?: string
 }
 
 function formatDate(dateStr: string): string {
   const [year, month, day] = dateStr.split('-')
   return `${day}.${month}.${year}`
-}
-
-function formatPrice(cents: number): string {
-  return (cents / 100).toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €'
 }
 
 export async function sendCheckoutStartedNotification(data: BookingNotificationData) {
@@ -114,6 +114,15 @@ export async function sendCheckoutStartedNotification(data: BookingNotificationD
   const safeEmail    = escapeHtml(data.email)
   const safePhone    = escapeHtml(data.phone)
   const safeMessage  = data.message ? escapeHtml(data.message) : ''
+  const safeIp       = escapeHtml(data.clientIp ?? 'unbekannt')
+  const safeCountry  = escapeHtml(data.clientCountry ?? '–')
+  const safeAgent    = escapeHtml(data.userAgent ?? 'unbekannt')
+
+  // Heuristik: sieht das nach Test-/Platzhalterdaten aus?
+  const looksLikeTest =
+    /\btest\b/i.test(`${data.firstName} ${data.lastName}`) ||
+    /@(test|example|test\.de)/i.test(data.email) ||
+    /^0+$/.test((data.phone ?? '').replace(/\D/g, ''))
 
   const html = `
 <!DOCTYPE html>
@@ -140,6 +149,9 @@ export async function sendCheckoutStartedNotification(data: BookingNotificationD
                 <strong>Achtung:</strong> Dieser Gast hat das Zahlungsformular geöffnet, die Zahlung aber noch <strong>nicht abgeschlossen</strong>. Du erhältst eine zweite Mail sobald die Zahlung erfolgreich war.
               </p>
             </div>
+            ${looksLikeTest ? `<div style="background:#e5e7eb;border:1px solid #9ca3af;border-radius:8px;padding:10px 16px;margin-top:10px;">
+              <p style="margin:0;font-size:12px;color:#374151;">🧪 <strong>Hinweis:</strong> Die Eingaben sehen nach Test-/Platzhalterdaten aus (z. B. „Test", <code>@test.de</code> oder Nummer aus Nullen) – vermutlich ein Bot oder ein Testaufruf.</p>
+            </div>` : ''}
           </td>
         </tr>
 
@@ -218,6 +230,27 @@ export async function sendCheckoutStartedNotification(data: BookingNotificationD
                 <td style="padding:5px 0;font-size:14px;"><a href="tel:${safePhone}" style="color:#1a2e1a;">${safePhone}</a></td>
               </tr>
               ${safeMessage ? `<tr><td style="padding:5px 0;font-size:14px;color:#888;vertical-align:top;">Nachricht</td><td style="padding:5px 0;font-size:14px;color:#1a2e1a;">${safeMessage}</td></tr>` : ''}
+            </table>
+          </td>
+        </tr>
+
+        <!-- Herkunft -->
+        <tr>
+          <td style="padding:20px 32px 0;">
+            <p style="margin:0 0 12px;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.12em;font-weight:600;">Herkunft der Anfrage</p>
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="padding:5px 0;font-size:14px;color:#888;width:130px;">IP-Adresse</td>
+                <td style="padding:5px 0;font-size:14px;color:#1a2e1a;font-weight:500;">${safeIp}</td>
+              </tr>
+              <tr>
+                <td style="padding:5px 0;font-size:14px;color:#888;">Land</td>
+                <td style="padding:5px 0;font-size:14px;color:#1a2e1a;">${safeCountry}</td>
+              </tr>
+              <tr>
+                <td style="padding:5px 0;font-size:14px;color:#888;vertical-align:top;">Browser</td>
+                <td style="padding:5px 0;font-size:12px;color:#666;word-break:break-all;">${safeAgent}</td>
+              </tr>
             </table>
           </td>
         </tr>

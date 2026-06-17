@@ -155,6 +155,9 @@ export async function POST(request: NextRequest) {
       phone,
       message,
       paymentIntentId: paymentIntent.id,
+      clientIp:        ip,
+      clientCountry:   request.headers.get('x-vercel-ip-country') ?? undefined,
+      userAgent:       request.headers.get('user-agent') ?? undefined,
     }).catch(err => console.error('[payment-intent] Checkout-Mail Fehler:', err))
 
     return NextResponse.json({

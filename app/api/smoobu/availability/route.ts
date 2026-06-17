@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAvailability } from '@/lib/smoobu'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { findConfigBySmoobuId } from '@/lib/pricing'
 
 /**
  * GET /api/smoobu/availability
@@ -22,6 +23,11 @@ export async function GET(request: NextRequest) {
   const propertyId = searchParams.get('propertyId')
   if (!propertyId) {
     return NextResponse.json({ error: 'propertyId is required' }, { status: 400 })
+  }
+  // Only allow known Smoobu listing IDs – prevents the unvalidated id from being
+  // interpolated into upstream Smoobu API URLs (path/query injection).
+  if (!findConfigBySmoobuId(propertyId)) {
+    return NextResponse.json({ error: 'Unknown propertyId' }, { status: 400 })
   }
 
   const today = new Date()

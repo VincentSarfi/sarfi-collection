@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPricingMap } from '@/lib/pricelabs'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { findConfigBySmoobuId } from '@/lib/pricing'
 
 /**
  * GET /api/pricelabs/rates?listingId=2610828&startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
@@ -21,6 +22,11 @@ export async function GET(request: NextRequest) {
 
   if (!listingId || !startDate || !endDate) {
     return NextResponse.json({ error: 'listingId, startDate, endDate required' }, { status: 400 })
+  }
+  // Only allow known Smoobu listing IDs (defense in depth – avoids querying the
+  // PriceLabs API with arbitrary attacker-supplied listing ids).
+  if (!findConfigBySmoobuId(listingId)) {
+    return NextResponse.json({ error: 'Unknown listingId' }, { status: 400 })
   }
 
   try {

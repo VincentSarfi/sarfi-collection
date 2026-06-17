@@ -22,7 +22,6 @@
     "react-use": "^17.5.0",
     "resend": "^6.12.2",
     "stripe": "^22.0.0",
-    "swiper": "^11.1.9",
     "yet-another-react-lightbox": "^3.21.4"
   },
   "devDependencies": {
