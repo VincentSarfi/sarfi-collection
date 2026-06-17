@@ -124,44 +124,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
           </button>
         </div>
 
-        {/* ── 2. COMPACT HEADER ─────────────────────────────────────── */}
-        <div className="container-site pt-4 md:pt-6 pb-6">
-          {apartment.isNew && (
-            <span className="inline-block mb-2 px-2 py-0.5 bg-gold-500 rounded-full font-body text-xs font-bold text-forest-900 uppercase tracking-widest">
-              Neu
-            </span>
-          )}
-          <h1 className="font-display text-display-md text-forest-900 leading-tight mb-1">
-            {apartment.name}
-          </h1>
-          <p className="font-body text-base text-forest-600 mb-1">
-            Apartment · {apartment.sqm} m² · {schoenblick.address}
-          </p>
-          <p className="font-body text-sm text-forest-500 mb-3">
-            {apartment.maxGuests} Gäste · {apartment.bedrooms} Schlafzimmer · {apartment.bedrooms} Betten · {apartment.bathrooms} Badezimmer
-          </p>
-          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 font-body text-sm text-forest-700">
-            {apartment.airbnbRating > 0 && (
-              <>
-                <span className="flex items-center gap-1 font-semibold text-forest-900">
-                  <IconStar size={14} filled className="text-forest-900 fill-forest-900" />
-                  {apartment.airbnbRating}
-                </span>
-                <span className="text-forest-300">·</span>
-                <a href="#bewertungen" className="underline underline-offset-2 hover:text-forest-900 transition-colors">
-                  {apartment.airbnbReviewCount} Bewertungen
-                </a>
-                <span className="text-forest-300">·</span>
-              </>
-            )}
-            <span className="flex items-center gap-1">
-              <IconMapPin size={13} />
-              {schoenblick.address}
-            </span>
-          </div>
-        </div>
-
-        {/* ── 3. DESKTOP PHOTO GRID ─────────────────────────────────── */}
+        {/* ── 2. DESKTOP PHOTO GRID ─────────────────────────────────── */}
         <div className="hidden md:block container-site pt-4 mb-8">
           <div className="grid grid-cols-4 gap-2 rounded-2xl overflow-hidden relative">
             {mainImg && (
@@ -214,6 +177,43 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
 
             {/* ── LEFT COLUMN ─────────────────────────────────────────── */}
             <div className="min-w-0">
+
+              {/* Title + stats + inline ratings */}
+              <div className="pb-6 border-b border-cream-200">
+                {apartment.isNew && (
+                  <span className="inline-block mb-2 px-2 py-0.5 bg-gold-500 rounded-full font-body text-xs font-bold text-forest-900 uppercase tracking-widest">
+                    Neu
+                  </span>
+                )}
+                <h1 className="font-display text-display-md text-forest-900 leading-tight mb-2">
+                  {apartment.name}
+                </h1>
+                <p className="font-body text-base text-forest-600 mb-1">
+                  Apartment · {apartment.sqm} m² · {schoenblick.address}
+                </p>
+                <p className="font-body text-sm text-forest-500 mb-3">
+                  {apartment.maxGuests} Gäste · {apartment.bedrooms} Schlafzimmer · {apartment.bedrooms} Betten · {apartment.bathrooms} Badezimmer
+                </p>
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 font-body text-sm text-forest-700">
+                  {apartment.airbnbRating > 0 && (
+                    <>
+                      <span className="flex items-center gap-1 font-semibold text-forest-900">
+                        <IconStar size={14} filled className="text-forest-900 fill-forest-900" />
+                        {apartment.airbnbRating}
+                      </span>
+                      <span className="text-forest-300">·</span>
+                      <a href="#bewertungen" className="underline underline-offset-2 hover:text-forest-900 transition-colors">
+                        {apartment.airbnbReviewCount} Bewertungen
+                      </a>
+                      <span className="text-forest-300">·</span>
+                    </>
+                  )}
+                  <span className="flex items-center gap-1">
+                    <IconMapPin size={13} />
+                    {schoenblick.address}
+                  </span>
+                </div>
+              </div>
 
               {/* Host Info */}
               <div className="pb-6 border-b border-cream-200 flex items-center gap-4">
