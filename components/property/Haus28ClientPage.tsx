@@ -58,7 +58,6 @@ export default function Haus28ClientPage() {
   const slides = haus28.images.gallery.map((img) => ({ src: img.src, alt: img.alt }))
   const mainImg = haus28.images.gallery[0]
   const secondaryImgs = haus28.images.gallery.slice(1, 5)
-  const remaining = haus28.images.gallery.length - 5
 
   // Open the zoomable lightbox at a given index, closing the grid overview first.
   const openLightbox = (i: number) => {
@@ -159,13 +158,9 @@ export default function Haus28ClientPage() {
             {secondaryImgs.map((img, i) => (
               <button
                 key={i}
-                onClick={() =>
-                  i === secondaryImgs.length - 1 && remaining > 0
-                    ? setGalleryOpen(true)
-                    : setLightboxIndex(i + 1)
-                }
+                onClick={() => setLightboxIndex(i + 1)}
                 className="relative aspect-[4/3] group cursor-zoom-in overflow-hidden"
-                aria-label={i === secondaryImgs.length - 1 && remaining > 0 ? "Alle Fotos anzeigen" : "Foto vergrößern"}
+                aria-label="Foto vergrößern"
               >
                 <Image
                   src={img.src}
@@ -175,12 +170,6 @@ export default function Haus28ClientPage() {
                   sizes="25vw"
                 />
                 <div className="absolute inset-0 bg-forest-900/0 group-hover:bg-forest-900/10 transition-colors" />
-                {i === secondaryImgs.length - 1 && remaining > 0 && (
-                  <div className="absolute inset-0 bg-forest-900/50 flex flex-col items-center justify-center gap-1">
-                    <span className="font-display text-2xl text-cream-50">+{remaining}</span>
-                    <span className="font-body text-xs text-cream-50/70">weitere Fotos</span>
-                  </div>
-                )}
               </button>
             ))}
             <button
