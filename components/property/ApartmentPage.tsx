@@ -8,7 +8,6 @@
 import { useState, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
-import Link from "next/link"
 import Lightbox from "yet-another-react-lightbox"
 import "yet-another-react-lightbox/styles.css"
 import Zoom from "yet-another-react-lightbox/plugins/zoom"
@@ -21,7 +20,7 @@ import { schoenblick } from "@/data/properties"
 import { schoenblickReviews } from "@/data/reviews"
 import type { ApartmentData } from "@/data/properties"
 import { type PropertyBookingConfig, resolveSmoobuId } from "@/config/properties.config"
-import { IconStar, IconMapPin, IconArrowRight, IconExpand, AmenityIcon } from "@/components/ui/Icons"
+import { IconStar, IconMapPin, IconArrowRight, IconExpand, IconX, AmenityIcon } from "@/components/ui/Icons"
 
 interface ApartmentPageProps {
   apartment: ApartmentData
@@ -31,6 +30,7 @@ interface ApartmentPageProps {
 export default function ApartmentPage({ apartment, config }: ApartmentPageProps) {
   const smoobuId = resolveSmoobuId(config)
   const [lightboxIndex, setLightboxIndex] = useState(-1)
+  const [galleryOpen, setGalleryOpen] = useState(false)
   const [descExpanded, setDescExpanded] = useState(false)
   const [amenitiesExpanded, setAmenitiesExpanded] = useState(false)
   const [showMobileBooking, setShowMobileBooking] = useState(false)
@@ -47,6 +47,12 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
   const mainImg = apartment.images.gallery[0]
   const secondaryImgs = apartment.images.gallery.slice(1, 5)
   const remaining = apartment.images.gallery.length - 5
+
+  // Open the zoomable lightbox at a given index, closing the grid overview first.
+  const openLightbox = (i: number) => {
+    setGalleryOpen(false)
+    setLightboxIndex(i)
+  }
 
   const isLongDesc = apartment.description.length > 350
   const displayDesc = !isLongDesc || descExpanded
@@ -109,6 +115,14 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
           <div className="absolute bottom-4 right-4 px-2.5 py-1 bg-black/60 rounded-full font-body text-xs text-white pointer-events-none">
             {mobilePhotoIndex + 1} / {apartment.images.gallery.length}
           </div>
+          {/* Alle Fotos (mobil) */}
+          <button
+            onClick={() => setGalleryOpen(true)}
+            className="absolute bottom-4 left-4 flex items-center gap-1.5 px-3 py-1.5 bg-white/95 rounded-full font-body text-xs font-medium text-forest-800 shadow-sm"
+          >
+            <IconExpand size={12} />
+            Alle {apartment.images.gallery.length} Fotos
+          </button>
         </div>
 
         {/* ── 2. COMPACT HEADER ─────────────────────────────────────── */}
@@ -171,9 +185,13 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
             {secondaryImgs.map((img, i) => (
               <button
                 key={i}
-                onClick={() => setLightboxIndex(i + 1)}
+                onClick={() =>
+                  i === secondaryImgs.length - 1 && remaining > 0
+                    ? setGalleryOpen(true)
+                    : setLightboxIndex(i + 1)
+                }
                 className="relative aspect-[4/3] group cursor-zoom-in overflow-hidden"
-                aria-label="Foto vergrößern"
+                aria-label={i === secondaryImgs.length - 1 && remaining > 0 ? "Alle Fotos anzeigen" : "Foto vergrößern"}
               >
                 <Image
                   src={img.src}
@@ -192,7 +210,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
               </button>
             ))}
             <button
-              onClick={() => setLightboxIndex(0)}
+              onClick={() => setGalleryOpen(true)}
               className="absolute bottom-4 right-4 flex items-center gap-1.5 px-3 py-2 bg-white border border-forest-200 rounded-lg font-body text-xs font-medium text-forest-800 hover:bg-cream-100 transition-colors shadow-sm"
             >
               <IconExpand size={13} />
@@ -465,6 +483,60 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
           )}
         </AnimatePresence>
       </article>
+
+      {/* Galerie-Übersicht: alle Fotos auf einen Blick */}
+      <AnimatePresence>
+        {galleryOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[60] bg-cream-50 overflow-y-auto"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Alle ${apartment.images.gallery.length} Fotos`}
+          >
+            {/* Sticky Header */}
+            <div className="sticky top-0 z-10 flex items-center justify-between px-4 md:px-8 py-4 bg-cream-50/90 backdrop-blur-sm border-b border-cream-200">
+              <button
+                onClick={() => setGalleryOpen(false)}
+                className="flex items-center gap-2 font-body text-sm font-medium text-forest-800 hover:text-forest-600 transition-colors"
+                aria-label="Galerie schließen"
+              >
+                <IconX size={20} />
+                Schließen
+              </button>
+              <span className="font-body text-sm text-forest-500">
+                {apartment.images.gallery.length} Fotos
+              </span>
+            </div>
+
+            {/* Foto-Raster */}
+            <div className="container-site py-6 md:py-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+                {apartment.images.gallery.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => openLightbox(i)}
+                    className="relative aspect-[4/3] rounded-xl overflow-hidden group cursor-zoom-in bg-cream-200"
+                    aria-label={`${img.alt} – vergrößern`}
+                  >
+                    <Image
+                      src={img.src}
+                      alt={img.alt}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-forest-900/0 group-hover:bg-forest-900/10 transition-colors" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Lightbox */}
       <Lightbox
