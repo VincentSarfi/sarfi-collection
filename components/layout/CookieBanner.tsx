@@ -3,27 +3,25 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-
-const COOKIE_KEY = "sarfi_cookie_consent";
+import { COOKIE_CONSENT_KEY, CONSENT_EVENT } from "./ConsentedAnalytics";
 
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const consent = localStorage.getItem(COOKIE_KEY);
+    const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
     if (!consent) setVisible(true);
   }, []);
 
-  const accept = () => {
-    localStorage.setItem(COOKIE_KEY, "accepted");
+  const setConsent = (value: "accepted" | "declined") => {
+    localStorage.setItem(COOKIE_CONSENT_KEY, value);
     setVisible(false);
-    // TODO: Initialize analytics / tracking here after consent
+    // Notify ConsentedAnalytics so it (de)activates without a page reload.
+    window.dispatchEvent(new Event(CONSENT_EVENT));
   };
 
-  const decline = () => {
-    localStorage.setItem(COOKIE_KEY, "declined");
-    setVisible(false);
-  };
+  const accept = () => setConsent("accepted");
+  const decline = () => setConsent("declined");
 
   return (
     <AnimatePresence>

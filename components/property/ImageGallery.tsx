@@ -57,7 +57,6 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
               className="col-span-2 row-span-2 relative aspect-[4/3] md:aspect-auto group cursor-zoom-in"
               aria-label={`${main.alt} – Vergrößern`}
             >
-              {/* TODO: Replace with actual photo */}
               <Image
                 src={main.src}
                 alt={main.alt}
@@ -83,7 +82,6 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
               className="relative aspect-square group cursor-zoom-in overflow-hidden"
               aria-label={`${img.alt} – Vergrößern`}
             >
-              {/* TODO: Replace with actual photo */}
               <Image
                 src={img.src}
                 alt={img.alt}

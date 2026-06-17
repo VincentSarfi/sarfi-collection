@@ -4,6 +4,7 @@ import { verifyAvailability } from '@/lib/smoobu'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
 import { sendCheckoutStartedNotification } from '@/lib/notify'
 import { findConfigBySmoobuId, computeExpectedPrice } from '@/lib/pricing'
+import { verifyTurnstile } from '@/lib/turnstile'
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -21,6 +22,7 @@ export interface CreatePaymentIntentRequest {
   message?: string
   totalPrice: number       // full price in EUR
   paymentOption?: "50" | "100"  // default: "50"
+  turnstileToken?: string  // Cloudflare Turnstile bot-check token
 }
 
 export interface CreatePaymentIntentResponse {
@@ -50,11 +52,21 @@ export async function POST(request: NextRequest) {
 
   const { apartmentId, propertyName, checkIn, checkOut, guests,
           firstName, lastName, email, phone, message, totalPrice,
-          paymentOption = "50" } = body
+          paymentOption = "50", turnstileToken } = body
 
   if (!apartmentId || !checkIn || !checkOut || !firstName || !lastName ||
       !email || !phone || !guests || !totalPrice) {
     return NextResponse.json({ error: 'Pflichtfelder fehlen' }, { status: 422 })
+  }
+
+  // ── Bot check (Cloudflare Turnstile) ──
+  // Keeps bots from generating empty PaymentIntents + checkout notifications.
+  // Skipped automatically when no TURNSTILE_SECRET_KEY is configured (dev).
+  if (!(await verifyTurnstile(turnstileToken ?? ''))) {
+    return NextResponse.json(
+      { error: 'Bot-Schutz fehlgeschlagen. Bitte lade die Seite neu und versuche es erneut.' },
+      { status: 403 },
+    )
   }
 
   // ── Structural validation ──

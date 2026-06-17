@@ -3,10 +3,14 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
+import { Turnstile } from "@marsidev/react-turnstile"
 import BookingCalendar, { toDateKey, fmtShort, fmtLong, type SelectionStep } from "./BookingCalendar"
 import PaymentStep from "./PaymentStep"
 import type { AvailabilityMap } from "@/lib/smoobu"
 import type { NightRate } from "@/lib/pricelabs"
+
+// Public Cloudflare Turnstile site key (safe to expose client-side).
+const TURNSTILE_SITE_KEY = "0x4AAAAAADCAIuxW7h0ePfOM"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -262,6 +266,7 @@ export default function BookingWidget({
   })
   const [formErrors, setFormErrors] = useState<FormErrors>({})
   const [submitting, setSubmitting] = useState(false)
+  const turnstileToken = useRef<string>("")
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [bookingId, setBookingId] = useState<number | null>(null)
   const [paymentOption, setPaymentOption] = useState<PaymentOption>("50")
@@ -425,6 +430,7 @@ export default function BookingWidget({
           country: form.country.trim() || undefined,
           totalPrice: priceBreakdown.total,
           paymentOption,
+          turnstileToken: turnstileToken.current,
         }),
       })
 
@@ -924,6 +930,12 @@ export default function BookingWidget({
                     <Link href="/datenschutz" className="underline">Datenschutzhinweisen</Link>{" "}und{" "}
                     <Link href="/stornierung" className="underline">Stornierungsbedingungen</Link> zu.
                   </p>
+                  <Turnstile
+                    siteKey={TURNSTILE_SITE_KEY}
+                    options={{ appearance: "interaction-only", size: "flexible", language: "de" }}
+                    onSuccess={(t) => { turnstileToken.current = t }}
+                    onExpire={() => { turnstileToken.current = "" }}
+                  />
                   <button type="submit" disabled={submitting}
                     className="w-full py-3.5 rounded-xl bg-forest-800 text-cream-50 font-body font-semibold text-sm hover:bg-forest-700 disabled:opacity-60 transition-colors shadow-md flex items-center justify-center gap-2">
                     {submitting ? <><span className="w-4 h-4 border-2 border-cream-50/40 border-t-cream-50 rounded-full animate-spin" />Wird vorbereitet…</> : "Weiter zur Zahlung →"}
@@ -1314,6 +1326,14 @@ export default function BookingWidget({
                       </Link>{" "}
                       zu. Deine Daten werden ausschließlich zur Buchungsabwicklung verwendet.
                     </p>
+
+                    {/* Bot-Schutz (Cloudflare Turnstile) – unsichtbar, sofern keine Interaktion nötig */}
+                    <Turnstile
+                      siteKey={TURNSTILE_SITE_KEY}
+                      options={{ appearance: "interaction-only", size: "flexible", language: "de" }}
+                      onSuccess={(t) => { turnstileToken.current = t }}
+                      onExpire={() => { turnstileToken.current = "" }}
+                    />
 
                     {/* Submit → goes to payment step */}
                     <button

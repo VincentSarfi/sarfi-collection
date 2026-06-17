@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { escapeHtml } from '@/lib/escape'
+import { verifyTurnstile } from '@/lib/turnstile'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -11,19 +12,6 @@ const SUBJECT_LABELS: Record<string, string> = {
   schoenblick: 'Haus Schönblick – Anfrage',
   gruppe:      'Gruppenbuchung',
   other:       'Sonstiges',
-}
-
-async function verifyTurnstile(token: string): Promise<boolean> {
-  const secret = process.env.TURNSTILE_SECRET_KEY
-  if (!secret) return false
-
-  const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ secret, response: token }),
-  })
-  const data = await res.json()
-  return data.success === true
 }
 
 export async function POST(request: NextRequest) {

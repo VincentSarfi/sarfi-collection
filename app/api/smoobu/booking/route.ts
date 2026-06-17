@@ -84,6 +84,12 @@ export async function POST(request: NextRequest) {
       // Webhook already created the booking for this payment.
       return NextResponse.json({ success: true, id: Number(m.smoobu_booking_id) })
     }
+    // Use the server-verified price from the payment metadata, never the client
+    // value, so the price recorded in Smoobu always matches what was charged.
+    const verifiedTotal = Number(m.totalPrice)
+    if (Number.isFinite(verifiedTotal) && verifiedTotal > 0) {
+      req.totalPrice = verifiedTotal
+    }
   } catch (err) {
     console.error('[booking] Stripe-Verifikation fehlgeschlagen:', err)
     return NextResponse.json({ error: 'Zahlung konnte nicht verifiziert werden' }, { status: 402 })

@@ -64,7 +64,6 @@ export default function RelatedProperties({
             >
               {/* Image */}
               <Link href={property.href} className="block relative aspect-[3/2] overflow-hidden">
-                {/* TODO: Replace with actual property photo */}
                 <Image
                   src={property.imageSrc}
                   alt={property.imageAlt}

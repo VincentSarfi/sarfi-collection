@@ -48,7 +48,6 @@ export default function PropertyHero({
     >
       {/* Parallax image */}
       <motion.div style={{ y }} className="absolute inset-0 will-change-transform">
-        {/* TODO: Replace with actual property photo */}
         <Image
           src={heroImage}
           alt={`${name} – ${subtitle}`}

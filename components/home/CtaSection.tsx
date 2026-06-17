@@ -44,7 +44,6 @@ export default function CtaSection() {
               href="/haus28"
               className="group relative flex flex-col overflow-hidden rounded-2xl h-64 md:h-72 bg-forest-800"
             >
-              {/* TODO: Replace with actual HAUS28 photo */}
               <Image
                 src={haus28.images.hero}
                 alt={haus28.name}
@@ -89,7 +88,6 @@ export default function CtaSection() {
               href="/schoenblick"
               className="group relative flex flex-col overflow-hidden rounded-2xl h-64 md:h-72 bg-forest-800"
             >
-              {/* TODO: Replace with actual Schönblick photo */}
               <Image
                 src={schoenblick.images.hero}
                 alt={schoenblick.name}

@@ -4,8 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import CookieBanner from "@/components/layout/CookieBanner";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/next";
+import ConsentedAnalytics from "@/components/layout/ConsentedAnalytics";
 
 // ─── Fonts ──────────────────────────────────────────────────────────────────
 const cormorant = Cormorant_Garamond({
@@ -115,8 +114,7 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <Footer />
         <CookieBanner />
-        <SpeedInsights />
-        <Analytics />
+        <ConsentedAnalytics />
       </body>
     </html>
   );
