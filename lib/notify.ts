@@ -1,5 +1,6 @@
 import { Resend } from 'resend'
 import { escapeHtml } from '@/lib/escape'
+import { invoiceLink } from '@/lib/invoiceLink'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -487,6 +488,7 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   const bookedAt = new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
   const nightsLabel = data.nights === 1 ? '1 Nacht' : `${data.nights} Nächte`
   const guestsLabel = data.guests === 1 ? '1 Gast' : `${data.guests} Gäste`
+  const invoiceUrl  = data.smoobuBookingId ? invoiceLink(data.smoobuBookingId) : null
 
   // Escape user-controlled fields before HTML interpolation
   const safeProperty = escapeHtml(data.propertyName)
@@ -632,6 +634,18 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
           </td>
         </tr>
       </table>
+    </td>
+  </tr>` : ''}
+
+  ${invoiceUrl ? `
+  <tr><td style="padding:24px 48px 0;"><div style="height:1px;background:#ede8df;"></div></td></tr>
+
+  <!-- Rechnung anfordern -->
+  <tr>
+    <td style="padding:24px 48px 0;">
+      <p style="margin:0 0 8px;font-size:16px;font-weight:700;color:#1a2e1a;">Rechnung benötigt?</p>
+      <p style="margin:0 0 16px;font-size:13px;color:#4a5568;line-height:1.6;">Wenn du eine Rechnung mit deiner (Firmen-)Anschrift brauchst, fordere sie hier mit wenigen Klicks an – wir senden sie dir als PDF zu.</p>
+      <a href="${invoiceUrl}" style="display:inline-block;padding:10px 20px;border:1px solid #1a2e1a;border-radius:4px;font-size:13px;font-weight:600;color:#1a2e1a;text-decoration:none;">Rechnung anfordern</a>
     </td>
   </tr>` : ''}
 

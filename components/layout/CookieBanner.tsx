@@ -3,15 +3,21 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { COOKIE_CONSENT_KEY, CONSENT_EVENT } from "./ConsentedAnalytics";
 
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false);
+  const pathname = usePathname();
+  // Reine Transaktionsseite (Self-Service-Rechnung): kein Banner, damit der Gast
+  // ohne Cookie-Klick direkt seine Rechnung anfordern kann.
+  const hideOnPath = pathname?.startsWith("/rechnung") ?? false;
 
   useEffect(() => {
+    if (hideOnPath) return;
     const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
     if (!consent) setVisible(true);
-  }, []);
+  }, [hideOnPath]);
 
   const setConsent = (value: "accepted" | "declined") => {
     localStorage.setItem(COOKIE_CONSENT_KEY, value);
@@ -22,6 +28,8 @@ export default function CookieBanner() {
 
   const accept = () => setConsent("accepted");
   const decline = () => setConsent("declined");
+
+  if (hideOnPath) return null;
 
   return (
     <AnimatePresence>
