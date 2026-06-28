@@ -478,6 +478,189 @@ Stripe PI: ${data.paymentIntentId}
   }
 }
 
+export interface RemainingReminderData {
+  propertyName: string
+  checkIn: string
+  checkOut: string
+  nights?: number
+  firstName: string
+  lastName: string
+  /** Tatsächlicher Empfänger (für Tests ggf. überschrieben) */
+  email: string
+  remainingAmount: number
+  remainingPaymentUrl: string
+  heroImageUrl?: string
+  /** Optionaler Präfix im Betreff, z. B. "[TEST] " */
+  subjectPrefix?: string
+}
+
+/**
+ * Zahlungserinnerung für den ausstehenden Restbetrag (50 %).
+ * Gleiches CI wie die Buchungsbestätigung. Wird vom Cron
+ * (app/api/cron/restbetrag-reminder) vor Anreise verschickt.
+ */
+export async function sendRemainingPaymentReminderEmail(data: RemainingReminderData): Promise<boolean> {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey || apiKey === 'PLACEHOLDER') {
+    console.warn('[notify] RESEND_API_KEY nicht gesetzt – Restbetrag-Erinnerung übersprungen')
+    return false
+  }
+
+  const heroUrl   = data.heroImageUrl ?? getHeroImageUrl(data.propertyName)
+  const remaining = Math.round(data.remainingAmount)
+  const nights    = data.nights ?? Math.round(
+    (new Date(data.checkOut).getTime() - new Date(data.checkIn).getTime()) / (1000 * 60 * 60 * 24)
+  )
+  const nightsLabel = nights === 1 ? '1 Nacht' : `${nights} Nächte`
+
+  // Escape user-controlled fields before HTML interpolation
+  const safeProperty = escapeHtml(data.propertyName)
+  const safeName     = escapeHtml(`${data.firstName} ${data.lastName}`)
+
+  const html = `<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#ede8df;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#ede8df;padding:40px 16px;">
+<tr><td align="center">
+<table width="580" cellpadding="0" cellspacing="0" style="max-width:580px;width:100%;background:#ffffff;border-radius:4px;overflow:hidden;box-shadow:0 2px 40px rgba(0,0,0,0.13);">
+
+  <!-- Header -->
+  <tr>
+    <td align="center" style="background:#0c1a10;padding:44px 48px 36px;">
+      <img src="https://www.sarfi-collection.de/images/logo-email.png" width="220" alt="SARFI Collection" style="display:block;margin:0 auto;border-radius:3px;" />
+    </td>
+  </tr>
+
+  <!-- Greeting -->
+  <tr>
+    <td style="padding:36px 48px 0;">
+      <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;color:#1a2e1a;">Hi ${safeName},</h1>
+      <h2 style="margin:0 0 12px;font-size:20px;font-weight:600;color:#1a2e1a;">deine Anreise rückt näher.</h2>
+      <p style="margin:0;font-size:14px;color:#4a5568;line-height:1.7;">Wir freuen uns auf deinen Aufenthalt im <strong>${safeProperty}</strong> am ${formatDate(data.checkIn)}. Damit alles vorbereitet ist, bitten wir dich, den noch offenen Restbetrag bequem über den Button unten zu begleichen.</p>
+    </td>
+  </tr>
+
+  <!-- Property photo + name -->
+  <tr>
+    <td style="padding:24px 48px 0;">
+      <div style="border-radius:6px;overflow:hidden;line-height:0;">
+        <img src="${heroUrl}" width="484" alt="${safeProperty}" style="display:block;width:100%;height:auto;max-height:240px;object-fit:cover;" />
+      </div>
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px;">
+        <tr>
+          <td>
+            <p style="margin:0 0 2px;font-size:16px;font-weight:700;color:#1a2e1a;">${safeProperty}</p>
+            <p style="margin:0;font-size:12px;color:#aaa;">Bayerischer Wald, Deutschland</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <tr><td style="padding:24px 48px 0;"><div style="height:1px;background:#ede8df;"></div></td></tr>
+
+  <!-- Aufenthalt -->
+  <tr>
+    <td style="padding:24px 48px 0;">
+      <p style="margin:0 0 16px;font-size:16px;font-weight:700;color:#1a2e1a;">Dein Aufenthalt</p>
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Anreise</td>
+          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${formatDate(data.checkIn)} <span style="color:#aaa;font-weight:400;">ab 16:00 Uhr</span></td>
+        </tr>
+        <tr>
+          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Abreise</td>
+          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${formatDate(data.checkOut)} <span style="color:#aaa;font-weight:400;">bis 10:00 Uhr</span></td>
+        </tr>
+        <tr>
+          <td style="padding:11px 0;font-size:13px;color:#888;">Anzahl Nächte</td>
+          <td align="right" style="padding:11px 0;font-size:13px;font-weight:600;color:#1a2e1a;">${nightsLabel}</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- Restbetrag CTA -->
+  <tr>
+    <td style="padding:24px 48px 0;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a2e1a;border-radius:6px;">
+        <tr>
+          <td align="center" style="padding:28px 32px 24px;">
+            <p style="margin:0 0 4px;font-size:9px;color:#c9a84c;text-transform:uppercase;letter-spacing:0.22em;font-weight:600;">Ausstehender Restbetrag</p>
+            <p style="margin:0 0 4px;font-size:34px;font-weight:300;color:#f5f0e8;letter-spacing:-0.5px;">${remaining.toLocaleString('de-DE')} €</p>
+            <p style="margin:0 0 20px;font-size:12px;color:rgba(245,240,232,0.5);">Bitte bis 14 Tage vor Anreise am ${formatDate(data.checkIn)} begleichen</p>
+            <a href="${data.remainingPaymentUrl}" style="display:inline-block;background:#c9a84c;color:#1a2e1a;font-size:13px;font-weight:700;text-decoration:none;padding:14px 32px;border-radius:3px;letter-spacing:0.08em;text-transform:uppercase;">Jetzt bezahlen</a>
+          </td>
+        </tr>
+      </table>
+      <p style="margin:14px 0 0;font-size:12px;color:#aaa;line-height:1.6;">Sichere Zahlung per Kreditkarte über Stripe. Falls du den Betrag bereits überwiesen hast, kannst du diese E-Mail ignorieren.</p>
+    </td>
+  </tr>
+
+  <tr><td style="padding:24px 48px 0;"><div style="height:1px;background:#ede8df;"></div></td></tr>
+
+  <!-- Host -->
+  <tr>
+    <td style="padding:24px 48px 0;">
+      <p style="margin:0 0 14px;font-size:16px;font-weight:700;color:#1a2e1a;">Fragen zur Zahlung?</p>
+      <p style="margin:0 0 16px;font-size:13px;color:#4a5568;">Schreib uns direkt auf WhatsApp – wir helfen dir gern weiter:</p>
+      <a href="https://wa.me/4917656850146" style="display:inline-block;padding:10px 20px;border:1px solid #1a2e1a;border-radius:4px;font-size:13px;font-weight:600;color:#1a2e1a;text-decoration:none;">&#128172;&nbsp; WhatsApp schreiben</a>
+    </td>
+  </tr>
+
+  <!-- Footer -->
+  <tr>
+    <td align="center" style="background:#0c1a10;padding:28px 48px;margin-top:32px;">
+      <img src="https://www.sarfi-collection.de/images/logo-email.png" width="140" alt="SARFI Collection" style="display:block;margin:0 auto 14px;border-radius:2px;opacity:0.9;" />
+      <p style="margin:0 0 4px;font-size:10px;color:rgba(245,240,232,0.5);letter-spacing:0.1em;">SARFI Collection &nbsp;·&nbsp; Bayerischer Wald</p>
+      <a href="https://www.sarfi-collection.de" style="font-size:11px;color:#c9a84c;text-decoration:none;">sarfi-collection.de</a>
+    </td>
+  </tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>`
+
+  const text = `Hi ${data.firstName} ${data.lastName},
+
+deine Anreise im ${data.propertyName} am ${formatDate(data.checkIn)} rückt näher.
+
+Bitte begleiche den noch offenen Restbetrag von ${remaining.toLocaleString('de-DE')} € bis 14 Tage vor Anreise:
+${data.remainingPaymentUrl}
+
+Dein Aufenthalt:
+Anreise:  ${formatDate(data.checkIn)} (ab 16:00 Uhr)
+Abreise:  ${formatDate(data.checkOut)} (bis 10:00 Uhr)
+Nächte:   ${nights}
+
+Falls du den Betrag bereits beglichen hast, kannst du diese E-Mail ignorieren.
+Fragen? Schreib uns auf WhatsApp: https://wa.me/4917656850146
+
+SARFI Collection · sarfi-collection.de`
+
+  try {
+    const { error } = await resend.emails.send({
+      from: 'Sarfi Collection <buchung@sarfi-collection.de>',
+      to:   [data.email],
+      subject: `${data.subjectPrefix ?? ''}Zahlungserinnerung: Restbetrag für ${data.propertyName} · Anreise ${formatDate(data.checkIn)}`,
+      html,
+      text,
+    })
+    if (error) {
+      console.error('[notify] Restbetrag-Erinnerung Fehler:', error)
+      return false
+    }
+    console.log(`[notify] Restbetrag-Erinnerung gesendet an ${data.email}`)
+    return true
+  } catch (err) {
+    console.error('[notify] Restbetrag-Erinnerung Fehler:', err)
+    return false
+  }
+}
+
 export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey || apiKey === 'PLACEHOLDER') return
