@@ -2,6 +2,7 @@ import Link from "next/link";
 import { IconInstagram, IconMail, IconMapPin, IconPhone } from "@/components/ui/Icons";
 import SarfiLogo from "@/components/ui/SarfiLogo";
 import { CookieSettingsButton } from "@/components/layout/CookieBanner";
+import NewsletterForm from "@/components/layout/NewsletterForm";
 
 const footerLinks = {
   unterkuenfte: [
@@ -19,6 +20,7 @@ const footerLinks = {
     { label: "FAQ", href: "/kontakt#faq" },
     { label: "Blog", href: "/blog" },
     { label: "Ausflugsziele", href: "/ausflugsziele" },
+    { label: "Geschenkgutschein", href: "/gutschein" },
     { label: "Stornierungsbedingungen", href: "/stornierung" },
     { label: "Rechnung herunterladen", href: "/rechnung" },
   ],
@@ -150,6 +152,17 @@ export default function Footer() {
               >
                 Jetzt buchen
               </Link>
+            </div>
+
+            {/* Newsletter */}
+            <div className="mt-8">
+              <h3 className="font-body text-xs font-semibold tracking-[0.15em] uppercase text-cream-50/60 mb-3">
+                Newsletter
+              </h3>
+              <p className="font-body text-sm text-cream-50/60 mb-3 leading-relaxed">
+                Angebote &amp; Neuigkeiten aus dem Bayerischen Wald – kein Spam.
+              </p>
+              <NewsletterForm />
             </div>
           </div>
         </div>

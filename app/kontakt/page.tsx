@@ -154,6 +154,9 @@ export default function KontaktPage() {
           <h1 className="font-display text-display-lg text-cream-50">
             Wir freuen uns von dir zu hören
           </h1>
+          <p className="font-body text-sm text-cream-50/60 mt-3">
+            We speak English – feel free to contact us in English anytime.
+          </p>
         </div>
       </div>
 

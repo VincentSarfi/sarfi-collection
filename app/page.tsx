@@ -3,6 +3,7 @@ import HomeHero from "@/components/home/HomeHero";
 import PropertyCards from "@/components/home/PropertyCards";
 import Highlights from "@/components/home/Highlights";
 import ReviewsSection from "@/components/home/ReviewsSection";
+import AwardsStrip from "@/components/home/AwardsStrip";
 import RegionSection from "@/components/home/RegionSection";
 import CtaSection from "@/components/home/CtaSection";
 import { getAggregateReviewStats } from "@/data/properties";
@@ -16,14 +17,7 @@ export const metadata: Metadata = {
     description:
       "Zwei exklusive Ferienunterkünfte mitten im Bayerischen Wald. Direkt buchen und bis zu 20 % sparen.",
     url: "https://www.sarfi-collection.de",
-    images: [
-      {
-        url: "/images/shared/panorama-drohne.jpg",
-        alt: "SARFI Collection – Ferienunterkünfte im Bayerischen Wald",
-        width: 1200,
-        height: 630,
-      },
-    ],
+    // og:image wird von der Datei-Konvention app/opengraph-image.tsx (1200×630) geliefert
   },
   alternates: {
     canonical: "https://www.sarfi-collection.de",
@@ -75,6 +69,7 @@ export default function HomePage() {
       <PropertyCards />
       <Highlights />
       <ReviewsSection />
+      <AwardsStrip />
       <RegionSection />
       <CtaSection />
     </>

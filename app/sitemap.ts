@@ -68,6 +68,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: `${BASE_URL}/gutschein`,
+      changeFrequency: "yearly",
+      priority: 0.5,
+    },
+    {
       url: `${BASE_URL}/ueber-uns`,
       changeFrequency: "monthly",
       priority: 0.5,
