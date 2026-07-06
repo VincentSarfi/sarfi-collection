@@ -92,8 +92,8 @@ export default function PropertyHero({
       {/* Content */}
       <div className="relative z-10 container-site pb-12 md:pb-16">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ y: 24 }}
+          animate={{ y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
           {/* Rating */}

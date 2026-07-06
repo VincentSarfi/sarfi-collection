@@ -36,8 +36,8 @@ export default function HomeHero() {
       {/* Content */}
       <div className="relative z-10 container-site pb-20 md:pb-28 pt-32">
         <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ y: 32 }}
+          animate={{ y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-3xl"
         >
@@ -58,8 +58,8 @@ export default function HomeHero() {
 
           {/* Headline */}
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ y: 20 }}
+            animate={{ y: 0 }}
             transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="font-display text-display-xl text-cream-50 mb-6 text-balance"
           >
@@ -69,8 +69,8 @@ export default function HomeHero() {
 
           {/* Subline */}
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ y: 16 }}
+            animate={{ y: 0 }}
             transition={{ delay: 0.35, duration: 0.7 }}
             className="font-body text-lg md:text-xl text-cream-50/75 mb-8 max-w-xl leading-relaxed"
           >
