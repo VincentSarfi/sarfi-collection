@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
         phone:       m.phone,
         message:     m.message,
         totalPrice:  parseFloat(m.totalPrice),
+        depositAmount: m.depositAmount ? parseFloat(m.depositAmount) : undefined,
       })
 
       // Tag the payment intent with the booking ID

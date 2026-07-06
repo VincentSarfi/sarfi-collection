@@ -37,6 +37,8 @@ export type BookingRequest = {
   phone: string
   message?: string
   totalPrice: number
+  /** Tatsächlich gezahlte Anzahlung in EUR (bei 50%-Zahlung < totalPrice). */
+  depositAmount?: number
 }
 
 export type BookingResult = {
@@ -201,7 +203,7 @@ export async function createBooking(req: BookingRequest): Promise<BookingResult>
     children: 0,
     price: req.totalPrice,
     priceStatus: 1,
-    deposit: 0,
+    deposit: req.depositAmount ?? req.totalPrice,
     language: 'de',
     guestAppMessage: req.message ?? '',
     country: 'DE',

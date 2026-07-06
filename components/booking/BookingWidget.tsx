@@ -267,8 +267,8 @@ export default function BookingWidget({
   const [formErrors, setFormErrors] = useState<FormErrors>({})
   const [submitting, setSubmitting] = useState(false)
   const turnstileToken = useRef<string>("")
+  const [turnstileReady, setTurnstileReady] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
-  const [bookingId, setBookingId] = useState<number | null>(null)
   const [paymentOption, setPaymentOption] = useState<PaymentOption>("50")
 
   // ── Stripe + PriceLabs state ──
@@ -304,6 +304,16 @@ export default function BookingWidget({
     }
     load()
   }, [smoobuId])
+
+  // Kalender-Overlay per Escape schließen (Tastatur-Bedienbarkeit)
+  useEffect(() => {
+    if (!showCalendarOverlay) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowCalendarOverlay(false)
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [showCalendarOverlay])
 
   // ── Derived data ──
   const blockedDates = useMemo<Set<string>>(() => {
@@ -400,6 +410,12 @@ export default function BookingWidget({
     const errors = validateForm(form)
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors)
+      return
+    }
+
+    // Bot-Schutz: nicht ohne Token absenden (sonst 403 → Fehlerscreen + Datenverlust)
+    if (!turnstileToken.current) {
+      setErrorMsg("Die Sicherheitsprüfung läuft noch. Bitte warte einen Moment und tippe erneut auf „Weiter zur Zahlung“.")
       return
     }
 
@@ -535,11 +551,9 @@ export default function BookingWidget({
             <strong>{propertyName}</strong> wurde übermittelt. Du erhältst in Kürze eine
             Bestätigung per E-Mail an <strong>{form.email}</strong>.
           </p>
-          {!bookingId && (
-            <p className="font-body text-xs text-forest-400 mb-4 bg-cream-100 rounded-xl px-4 py-3">
-              Deine Buchung wird gerade verarbeitet. Falls du innerhalb von 10 Minuten keine E-Mail erhältst, melde dich bitte direkt bei uns.
-            </p>
-          )}
+          <p className="font-body text-xs text-forest-400 mb-4 bg-cream-100 rounded-xl px-4 py-3">
+            Deine Bestätigung wird in der Regel innerhalb weniger Minuten per E-Mail zugestellt. Falls du innerhalb von 10 Minuten keine E-Mail (auch im Spam-Ordner) erhältst, melde dich bitte direkt bei uns.
+          </p>
 
           {/* Summary card */}
           <div className="bg-cream-50 rounded-2xl border border-cream-200 p-5 text-left mb-6">
@@ -567,12 +581,6 @@ export default function BookingWidget({
                 <div className="flex justify-between font-body text-sm border-t border-cream-200 pt-2 mt-2">
                   <span className="font-semibold text-forest-800">Gesamtpreis</span>
                   <span className="font-bold text-forest-900">{priceBreakdown.total.toLocaleString("de-DE")} €</span>
-                </div>
-              )}
-              {bookingId && (
-                <div className="flex justify-between font-body text-xs pt-1">
-                  <span className="text-forest-400">Buchungs-ID</span>
-                  <span className="text-forest-500 font-mono">#{bookingId}</span>
                 </div>
               )}
             </div>
@@ -661,6 +669,9 @@ export default function BookingWidget({
                 transition={{ duration: 0.18 }}
                 className="bg-white rounded-2xl shadow-2xl overflow-hidden w-auto"
                 onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Zeitraum wählen"
               >
                 {/* Date input row */}
                 <div className="p-5 border-b border-cream-100">
@@ -759,8 +770,12 @@ export default function BookingWidget({
         {/* Date inputs – click opens overlay */}
         <div className="px-5 pt-4 pb-3">
           <div
-            className="rounded-xl border-2 border-cream-200 hover:border-forest-400 cursor-pointer transition-colors overflow-hidden mb-2"
+            role="button"
+            tabIndex={step === "dates" ? 0 : -1}
+            aria-label="Reisezeitraum im Kalender wählen"
+            className="rounded-xl border-2 border-cream-200 hover:border-forest-400 cursor-pointer transition-colors overflow-hidden mb-2 focus:outline-none focus:ring-2 focus:ring-forest-500"
             onClick={() => { if (step === "dates") { handleReset(); setShowCalendarOverlay(true); } }}
+            onKeyDown={(e) => { if (step === "dates" && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); handleReset(); setShowCalendarOverlay(true); } }}
           >
             <div className="grid grid-cols-2 divide-x-2 divide-cream-200">
               <div className="p-3">
@@ -800,12 +815,12 @@ export default function BookingWidget({
                       <p className="font-body text-xs text-forest-400">max. {maxGuests} Personen</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <button type="button" onClick={() => setGuests(Math.max(1, guests - 1))} disabled={guests <= 1}
+                      <button type="button" aria-label="Weniger Gäste" onClick={() => setGuests(Math.max(1, guests - 1))} disabled={guests <= 1 || step === "payment"}
                         className="w-8 h-8 rounded-full border border-cream-300 flex items-center justify-center text-forest-600 hover:border-forest-500 disabled:opacity-30 transition-colors">
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
                       </button>
                       <span className="font-body text-base font-semibold text-forest-900 w-4 text-center">{guests}</span>
-                      <button type="button" onClick={() => setGuests(Math.min(maxGuests, guests + 1))} disabled={guests >= maxGuests}
+                      <button type="button" aria-label="Mehr Gäste" onClick={() => setGuests(Math.min(maxGuests, guests + 1))} disabled={guests >= maxGuests || step === "payment"}
                         className="w-8 h-8 rounded-full border border-cream-300 flex items-center justify-center text-forest-600 hover:border-forest-500 disabled:opacity-30 transition-colors">
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 3v8M3 7h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
                       </button>
@@ -933,12 +948,15 @@ export default function BookingWidget({
                   <Turnstile
                     siteKey={TURNSTILE_SITE_KEY}
                     options={{ appearance: "interaction-only", size: "flexible", language: "de" }}
-                    onSuccess={(t) => { turnstileToken.current = t }}
-                    onExpire={() => { turnstileToken.current = "" }}
+                    onSuccess={(t) => { turnstileToken.current = t; setTurnstileReady(true) }}
+                    onExpire={() => { turnstileToken.current = ""; setTurnstileReady(false) }}
                   />
-                  <button type="submit" disabled={submitting}
+                  {errorMsg && (
+                    <p className="font-body text-xs text-red-600 bg-red-50 border border-red-100 rounded-xl px-3 py-2">{errorMsg}</p>
+                  )}
+                  <button type="submit" disabled={submitting || !turnstileReady}
                     className="w-full py-3.5 rounded-xl bg-forest-800 text-cream-50 font-body font-semibold text-sm hover:bg-forest-700 disabled:opacity-60 transition-colors shadow-md flex items-center justify-center gap-2">
-                    {submitting ? <><span className="w-4 h-4 border-2 border-cream-50/40 border-t-cream-50 rounded-full animate-spin" />Wird vorbereitet…</> : "Weiter zur Zahlung →"}
+                    {submitting ? <><span className="w-4 h-4 border-2 border-cream-50/40 border-t-cream-50 rounded-full animate-spin" />Wird vorbereitet…</> : !turnstileReady ? "Sicherheitsprüfung läuft…" : "Weiter zur Zahlung →"}
                   </button>
                 </form>
               </div>
@@ -1331,14 +1349,18 @@ export default function BookingWidget({
                     <Turnstile
                       siteKey={TURNSTILE_SITE_KEY}
                       options={{ appearance: "interaction-only", size: "flexible", language: "de" }}
-                      onSuccess={(t) => { turnstileToken.current = t }}
-                      onExpire={() => { turnstileToken.current = "" }}
+                      onSuccess={(t) => { turnstileToken.current = t; setTurnstileReady(true) }}
+                      onExpire={() => { turnstileToken.current = ""; setTurnstileReady(false) }}
                     />
+
+                    {errorMsg && (
+                      <p className="font-body text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{errorMsg}</p>
+                    )}
 
                     {/* Submit → goes to payment step */}
                     <button
                       type="submit"
-                      disabled={submitting}
+                      disabled={submitting || !turnstileReady}
                       className="w-full py-4 rounded-2xl bg-forest-800 text-cream-50 font-body font-semibold text-base hover:bg-forest-700 disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-lg flex items-center justify-center gap-3"
                     >
                       {submitting ? (
@@ -1346,6 +1368,8 @@ export default function BookingWidget({
                           <span className="w-5 h-5 border-2 border-cream-50/40 border-t-cream-50 rounded-full animate-spin" />
                           Wird vorbereitet…
                         </>
+                      ) : !turnstileReady ? (
+                        "Sicherheitsprüfung läuft…"
                       ) : (
                         <>
                           Weiter zur Zahlung
@@ -1470,7 +1494,8 @@ export default function BookingWidget({
                 <button
                   type="button"
                   onClick={() => setGuests((g) => Math.max(1, g - 1))}
-                  className="w-6 h-6 flex items-center justify-center text-forest-600 hover:text-forest-900"
+                  disabled={step === "payment"}
+                  className="w-6 h-6 flex items-center justify-center text-forest-600 hover:text-forest-900 disabled:opacity-30"
                   aria-label="Weniger Gäste"
                 >
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
@@ -1479,7 +1504,8 @@ export default function BookingWidget({
                 <button
                   type="button"
                   onClick={() => setGuests((g) => Math.min(maxGuests, g + 1))}
-                  className="w-6 h-6 flex items-center justify-center text-forest-600 hover:text-forest-900"
+                  disabled={step === "payment"}
+                  className="w-6 h-6 flex items-center justify-center text-forest-600 hover:text-forest-900 disabled:opacity-30"
                   aria-label="Mehr Gäste"
                 >
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
@@ -1557,13 +1583,17 @@ function StickyPanel({
         {/* Date boxes */}
         <div className="grid grid-cols-2 gap-2">
           <div
+            role="button"
+            tabIndex={0}
+            aria-label="Anreisedatum zurücksetzen und neu wählen"
             className={[
-              "rounded-xl border p-3 cursor-pointer transition-colors",
+              "rounded-xl border p-3 cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-forest-500",
               selectionStep === "checkin" && !checkIn
                 ? "border-forest-700 bg-forest-50"
                 : "border-cream-200 hover:border-forest-300",
             ].join(" ")}
             onClick={() => onReset()}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onReset(); } }}
           >
             <p className="font-body text-[10px] text-forest-400 uppercase tracking-wider mb-0.5">
               Anreise
@@ -1624,8 +1654,9 @@ function StickyPanel({
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
+                      aria-label="Weniger Gäste"
                       onClick={() => setGuests(Math.max(1, guests - 1))}
-                      disabled={guests <= 1}
+                      disabled={guests <= 1 || step === "payment"}
                       className="w-8 h-8 rounded-full border border-cream-300 flex items-center justify-center text-forest-600 hover:border-forest-500 transition-colors disabled:opacity-30"
                     >
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
@@ -1633,8 +1664,9 @@ function StickyPanel({
                     <span className="font-body text-base font-semibold text-forest-900 w-4 text-center">{guests}</span>
                     <button
                       type="button"
+                      aria-label="Mehr Gäste"
                       onClick={() => setGuests(Math.min(maxGuests, guests + 1))}
-                      disabled={guests >= maxGuests}
+                      disabled={guests >= maxGuests || step === "payment"}
                       className="w-8 h-8 rounded-full border border-cream-300 flex items-center justify-center text-forest-600 hover:border-forest-500 transition-colors disabled:opacity-30"
                     >
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 3v8M3 7h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
@@ -1665,7 +1697,9 @@ function StickyPanel({
         ) : (
           <div className="rounded-xl bg-forest-50 border border-forest-100 px-4 py-3">
             <p className="font-body text-xs text-forest-600">
-              Fülle das Formular links aus und bestätige die Buchung.
+              {step === "payment"
+                ? "Schließe die Zahlung links ab, um deine Buchung abzusenden."
+                : "Fülle das Formular links aus und bestätige die Buchung."}
             </p>
           </div>
         )}
@@ -1708,10 +1742,12 @@ function StickyPanel({
           )}
         </AnimatePresence>
 
-        {/* Trust note */}
-        <p className="text-center font-body text-xs text-forest-400">
-          Du wirst noch nicht belastet
-        </p>
+        {/* Trust note – nur außerhalb des Zahlungsschritts anzeigen */}
+        {step !== "payment" && (
+          <p className="text-center font-body text-xs text-forest-400">
+            Du wirst noch nicht belastet
+          </p>
+        )}
       </div>
     </div>
   )

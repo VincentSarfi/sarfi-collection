@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { escapeHtml } from '@/lib/escape'
 import { verifyTurnstile } from '@/lib/turnstile'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -15,6 +16,16 @@ const SUBJECT_LABELS: Record<string, string> = {
 }
 
 export async function POST(request: NextRequest) {
+  // Rate limit: max 5 contact mails per IP per 10 minutes
+  const ip = getClientIp(request)
+  const rl = rateLimit(`contact:${ip}`, 5, 10 * 60 * 1000)
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: 'Zu viele Anfragen. Bitte warte kurz und versuche es erneut.' },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } },
+    )
+  }
+
   try {
     const body = await request.json()
     const { name, email, phone, subject, message, turnstileToken } = body

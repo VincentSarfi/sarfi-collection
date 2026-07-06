@@ -5,15 +5,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: [
-        "/haus28/buchen",
-        "/schoenblick/buchen",
-        "/schoenblick/b5/buchen",
-        "/schoenblick/b6/buchen",
-        "/schoenblick/b7/buchen",
-        "/schoenblick/b8/buchen",
-        "/schoenblick/a2/buchen",
-      ],
+      // Die /buchen-Unterseiten und /rechnung tragen Meta-noindex; Google kann
+      // das nur lesen, wenn Crawlen erlaubt ist – daher hier NICHT disallowen.
+      disallow: ["/api/"],
     },
     sitemap: "https://www.sarfi-collection.de/sitemap.xml",
   };

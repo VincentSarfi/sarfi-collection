@@ -31,6 +31,8 @@ const config: Config = {
           500: "#cfa95a",
         },
         gold: {
+          50:  "#faf5e6",
+          100: "#f5ecd1",
           300: "#e5ca7a",
           400: "#d4b05a",
           500: "#c9a84c",

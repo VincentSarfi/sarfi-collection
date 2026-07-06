@@ -62,7 +62,6 @@ export default function UeberUnsPage() {
                 Der Bayerische Wald ist unsere Heimat – und wir lieben ihn für seine Ruhe, seine Ursprünglichkeit und seine besondere Atmosphäre. Mit HAUS28 und Haus Schönblick haben wir zwei Orte geschaffen, an denen unsere Gäste das spüren können, was uns so begeistert.
               </p>
               <p>
-                {/* TODO: Weitere persönliche Details ergänzen */}
                 Als Superhost auf Airbnb legen wir größten Wert auf Qualität, Sauberkeit und persönliche Betreuung. Jeder Gast soll sich bei uns wie zu Hause fühlen – nur schöner.
               </p>
             </div>

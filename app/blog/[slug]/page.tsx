@@ -7,6 +7,9 @@ import { IconArrowRight } from "@/components/ui/Icons";
 
 type Props = { params: Promise<{ slug: string }> };
 
+// Alle Posts kommen aus generateStaticParams – unbekannte Slugs => 404.
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
 }
@@ -99,6 +102,11 @@ export default async function BlogPostPage({ params }: Props) {
     description: post.excerpt,
     image: `https://www.sarfi-collection.de${post.image}`,
     datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://www.sarfi-collection.de/blog/${post.slug}`,
+    },
     author: { "@type": "Organization", name: "SARFI Collection" },
     publisher: {
       "@type": "Organization",

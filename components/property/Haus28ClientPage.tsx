@@ -12,7 +12,7 @@ import PropertyReviews from "@/components/property/PropertyReviews"
 import BookingWidget from "@/components/booking/BookingWidget"
 import FaqAccordion from "@/components/property/FaqAccordion"
 import RelatedProperties from "@/components/property/RelatedProperties"
-import { haus28, schoenblick } from "@/data/properties"
+import { haus28, schoenblick, getAggregateReviewStats } from "@/data/properties"
 import { haus28Reviews } from "@/data/reviews"
 import { PROPERTY_CONFIGS, resolveSmoobuId } from "@/config/properties.config"
 import {
@@ -33,11 +33,9 @@ const bedrooms = [
   { name: "Schlafzimmer 4", bed: "1 Queensize-Doppelbett", img: "/images/haus28/gallery/haus_28_250523_413.webp" },
 ]
 
-const totalReviews =
-  haus28.airbnbReviewCount +
-  (haus28.bookingReviewCount ?? 0) +
-  (haus28.fewoReviewCount ?? 0) +
-  (haus28.googleReviewCount ?? 0)
+const reviewStats = getAggregateReviewStats([haus28])
+const totalReviews = reviewStats.reviewCount
+const averageRatingLabel = `${reviewStats.ratingValue.toFixed(2).replace(".", ",")} ★`
 
 export default function Haus28ClientPage() {
   const smoobuId = resolveSmoobuId(config)
@@ -540,7 +538,7 @@ export default function Haus28ClientPage() {
                 <div className="grid grid-cols-3 divide-x divide-cream-200 border-t border-cream-200 pt-4">
                   {[
                     { value: String(totalReviews), label: "Bewertungen" },
-                    { value: "4,97 ★", label: "Sternebewertung" },
+                    { value: averageRatingLabel, label: "Sternebewertung" },
                     { value: "1", label: "Jahr Gastgeber" },
                   ].map((stat) => (
                     <div key={stat.label} className="flex flex-col items-center gap-0.5 px-2">

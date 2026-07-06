@@ -26,6 +26,7 @@ export type ApartmentData = {
   smoobuPropertyId: string;
   maxGuests: number;
   bedrooms: number;
+  beds: number;
   bathrooms: number;
   sqm: number;
   priceFrom: number;
@@ -230,7 +231,7 @@ const schoenblickFaqs = [
   {
     question: "Wie läuft der Check-in ab?",
     answer:
-      "Self-Check-in mit Schlüsselbox. Du erhältst den Code ca. 24 Stunden vor der Ankunft. Check-in ab 15:00 Uhr.",
+      "Self-Check-in mit Schlüsselbox. Du erhältst den Code ca. 24 Stunden vor der Ankunft. Check-in ab 16:00 Uhr.",
   },
   {
     question: "Wann ist der Check-out?",
@@ -325,6 +326,7 @@ export const schoenblick: PropertyData = {
       smoobuPropertyId: "3025621",
       maxGuests: 4,
       bedrooms: 2,
+      beds: 3,
       bathrooms: 1,
       sqm: 55,
       priceFrom: 59,
@@ -380,6 +382,7 @@ export const schoenblick: PropertyData = {
       smoobuPropertyId: "2934141",
       maxGuests: 4,
       bedrooms: 2,
+      beds: 2,
       bathrooms: 1,
       sqm: 55,
       priceFrom: 59,
@@ -425,6 +428,7 @@ export const schoenblick: PropertyData = {
       smoobuPropertyId: "3025606",
       maxGuests: 4,
       bedrooms: 2,
+      beds: 3,
       bathrooms: 1,
       sqm: 55,
       priceFrom: 79,
@@ -481,10 +485,10 @@ export const schoenblick: PropertyData = {
       smoobuPropertyId: "3276892",
       maxGuests: 4,
       bedrooms: 2,
+      beds: 2,
       bathrooms: 1,
       sqm: 55,
       priceFrom: 100,
-      isNew: true,
       shortDescription:
         "Das premium Apartment im Haus Schönblick – neu renoviert mit modernem Fischgrätparkett, Naturstein-Waschbecken, Balkon und traumhaftem Blick auf den Bayerischen Wald.",
       description:
@@ -509,7 +513,7 @@ export const schoenblick: PropertyData = {
           { src: "/images/schoenblick/b7/gallery/img_3062.jpg", alt: "Apartment B7 – Schlafzimmer 1 Messinglampe Detail" },
           { src: "/images/schoenblick/b7/gallery/img_3116.jpg", alt: "Apartment B7 – Schlafzimmer 2 mit Tagesbett & Wandlampen" },
           { src: "/images/schoenblick/b7/gallery/img_3119.jpg", alt: "Apartment B7 – Schlafzimmer 2 Gesamtansicht mit Wandlampen" },
-          { src: "/images/schoenblick/b7/gallery/img_3067.jpg", alt: "Apartment B7 – Schlafzimmer 3 mit Waldblick" },
+          { src: "/images/schoenblick/b7/gallery/img_3067.jpg", alt: "Apartment B7 – Schlafzimmer 2 mit Waldblick" },
           { src: "/images/schoenblick/b7/gallery/img_3054.jpg", alt: "Apartment B7 – Badezimmer Gesamtansicht" },
           { src: "/images/schoenblick/b7/gallery/img_3055.jpg", alt: "Apartment B7 – Naturstein-Waschbecken Detail" },
           { src: "/images/schoenblick/b7/gallery/img_3057.jpg", alt: "Apartment B7 – Dusche & WC" },
@@ -537,6 +541,7 @@ export const schoenblick: PropertyData = {
       smoobuPropertyId: "2934161",
       maxGuests: 4,
       bedrooms: 2,
+      beds: 4,
       bathrooms: 1,
       sqm: 55,
       priceFrom: 59,
@@ -584,3 +589,41 @@ export const schoenblick: PropertyData = {
 // All properties index
 // ---------------------------------------------------------------------------
 export const allProperties = { haus28, schoenblick };
+
+// ---------------------------------------------------------------------------
+// Aggregierte Bewertungs-Statistik über alle Plattformen
+// (Booking bewertet auf 10er-Skala → auf 5er-Skala umgerechnet)
+// ---------------------------------------------------------------------------
+export type AggregateReviewStats = {
+  ratingValue: number;
+  reviewCount: number;
+};
+
+function collectPlatformReviews(p: PropertyData): { rating: number; count: number }[] {
+  const entries: { rating: number; count: number }[] = [];
+  if (p.airbnbRating > 0 && p.airbnbReviewCount > 0) {
+    entries.push({ rating: p.airbnbRating, count: p.airbnbReviewCount });
+  }
+  if (p.bookingRating && p.bookingReviewCount) {
+    entries.push({ rating: p.bookingRating / 2, count: p.bookingReviewCount });
+  }
+  if (p.fewoRating && p.fewoReviewCount) {
+    entries.push({ rating: p.fewoRating, count: p.fewoReviewCount });
+  }
+  if (p.googleRating && p.googleReviewCount) {
+    entries.push({ rating: p.googleRating, count: p.googleReviewCount });
+  }
+  return entries;
+}
+
+export function getAggregateReviewStats(
+  properties: PropertyData[] = [haus28, schoenblick],
+): AggregateReviewStats {
+  const entries = properties.flatMap(collectPlatformReviews);
+  const reviewCount = entries.reduce((sum, e) => sum + e.count, 0);
+  const ratingValue =
+    reviewCount > 0
+      ? Math.round((entries.reduce((sum, e) => sum + e.rating * e.count, 0) / reviewCount) * 100) / 100
+      : 0;
+  return { ratingValue, reviewCount };
+}

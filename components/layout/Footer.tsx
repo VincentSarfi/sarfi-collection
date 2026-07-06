@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { IconInstagram, IconMail, IconMapPin } from "@/components/ui/Icons";
+import { IconInstagram, IconMail, IconMapPin, IconPhone } from "@/components/ui/Icons";
 import SarfiLogo from "@/components/ui/SarfiLogo";
+import { CookieSettingsButton } from "@/components/layout/CookieBanner";
 
 const footerLinks = {
   unterkuenfte: [
     { label: "HAUS28", href: "/haus28" },
-    { label: "Jetzt buchen", href: "/buchen" },
     { label: "Haus Schönblick", href: "/schoenblick" },
     { label: "Apartment B5", href: "/schoenblick/b5" },
     { label: "Apartment B6", href: "/schoenblick/b6" },
@@ -17,6 +17,10 @@ const footerLinks = {
     { label: "Über uns", href: "/ueber-uns" },
     { label: "Kontakt", href: "/kontakt" },
     { label: "FAQ", href: "/kontakt#faq" },
+    { label: "Blog", href: "/blog" },
+    { label: "Ausflugsziele", href: "/ausflugsziele" },
+    { label: "Stornierungsbedingungen", href: "/stornierung" },
+    { label: "Rechnung herunterladen", href: "/rechnung" },
   ],
   legal: [
     { label: "Impressum", href: "/impressum" },
@@ -55,6 +59,24 @@ export default function Footer() {
                 <IconMail size={15} />
                 hallo@sarfi-collection.de
               </a>
+              <a
+                href="tel:+4917656850146"
+                className="flex items-center gap-2 text-sm text-cream-50/60 hover:text-gold-300 transition-colors font-body"
+                aria-label="Anrufen"
+              >
+                <IconPhone size={15} />
+                +49 176 56850146
+              </a>
+              <a
+                href="https://wa.me/4917656850146"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-cream-50/60 hover:text-gold-300 transition-colors font-body"
+                aria-label="Per WhatsApp schreiben"
+              >
+                <IconPhone size={15} />
+                WhatsApp
+              </a>
               <div className="flex items-start gap-2 text-sm text-cream-50/60 font-body">
                 <IconMapPin size={15} className="mt-0.5 shrink-0" />
                 <span>Bayerischer Wald, Deutschland</span>
@@ -77,7 +99,7 @@ export default function Footer() {
 
           {/* Unterkünfte */}
           <div>
-            <h3 className="font-body text-xs font-semibold tracking-[0.15em] uppercase text-cream-50/40 mb-4">
+            <h3 className="font-body text-xs font-semibold tracking-[0.15em] uppercase text-cream-50/60 mb-4">
               Unterkünfte
             </h3>
             <ul className="flex flex-col gap-2">
@@ -96,7 +118,7 @@ export default function Footer() {
 
           {/* Info */}
           <div>
-            <h3 className="font-body text-xs font-semibold tracking-[0.15em] uppercase text-cream-50/40 mb-4">
+            <h3 className="font-body text-xs font-semibold tracking-[0.15em] uppercase text-cream-50/60 mb-4">
               Informationen
             </h3>
             <ul className="flex flex-col gap-2">
@@ -115,7 +137,7 @@ export default function Footer() {
 
           {/* CTA-Box */}
           <div>
-            <h3 className="font-body text-xs font-semibold tracking-[0.15em] uppercase text-cream-50/40 mb-4">
+            <h3 className="font-body text-xs font-semibold tracking-[0.15em] uppercase text-cream-50/60 mb-4">
               Direkt buchen
             </h3>
             <p className="font-body text-sm text-cream-50/60 mb-4 leading-relaxed">
@@ -136,7 +158,7 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-cream-50/10">
         <div className="container-site py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="font-body text-xs text-cream-50/40">
+          <p className="font-body text-xs text-cream-50/60">
             © {year} SARFI Collection. Alle Rechte vorbehalten.
           </p>
           <div className="flex gap-4">
@@ -144,11 +166,12 @@ export default function Footer() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="font-body text-xs text-cream-50/40 hover:text-cream-50/70 transition-colors"
+                className="font-body text-xs text-cream-50/60 hover:text-cream-50/70 transition-colors"
               >
                 {link.label}
               </Link>
             ))}
+            <CookieSettingsButton className="font-body text-xs text-cream-50/60 hover:text-cream-50/70 transition-colors" />
           </div>
         </div>
       </div>

@@ -57,9 +57,14 @@ export function rateLimit(
  */
 export function getClientIp(request: Request): string {
   const headers = new Headers((request as Request).headers)
-  return (
-    headers.get('x-real-ip') ??
-    headers.get('x-forwarded-for')?.split(',')[0].trim() ??
-    'unknown'
-  )
+  // Vercel setzt x-real-ip vertrauenswürdig; beim x-forwarded-for-Fallback ist
+  // nur das letzte Element vom eigenen Proxy gesetzt und nicht spoofbar.
+  const realIp = headers.get('x-real-ip')
+  if (realIp) return realIp
+  const forwarded = headers.get('x-forwarded-for')
+  if (forwarded) {
+    const parts = forwarded.split(',')
+    return parts[parts.length - 1].trim()
+  }
+  return 'unknown'
 }

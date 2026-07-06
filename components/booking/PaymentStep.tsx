@@ -1,20 +1,18 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import {
   Elements,
   PaymentElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js"
-import { loadStripe } from "@stripe/stripe-js"
+// "/pure" verhindert, dass allein der Import bereits js.stripe.com lädt –
+// das Skript wird erst durch den loadStripe()-Aufruf beim Betreten des
+// Zahlungsschritts nachgeladen (TDDDG/DSGVO).
+import { loadStripe } from "@stripe/stripe-js/pure"
 import { motion } from "framer-motion"
-import { fmtShort, fmtLong } from "./BookingCalendar"
-
-// Load Stripe once outside component to avoid re-initialisation
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "",
-)
+import { fmtLong } from "./BookingCalendar"
 
 // ─── Stripe appearance (matches site design) ─────────────────────────────────
 
@@ -82,7 +80,10 @@ function CheckoutForm({
         elements,
         redirect: "if_required",
         confirmParams: {
-          return_url: `${window.location.origin}/booking/bestaetigung`,
+          // Auf die aktuelle Buchungsseite zurückkehren (keine eigene
+          // /booking/bestaetigung-Route vorhanden); Stripe hängt bei
+          // Redirect-Zahlarten die payment_intent-Parameter an.
+          return_url: window.location.href,
         },
       })
 
@@ -219,6 +220,12 @@ export default function PaymentStep({
   onBack,
 }: PaymentStepProps) {
   const isFullPay = paymentOption === "100"
+  // loadStripe erst hier ausführen – PaymentStep wird nur im Zahlungsschritt
+  // gerendert, sodass js.stripe.com nicht schon beim Seitenaufruf lädt.
+  const stripePromise = useMemo(
+    () => loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""),
+    [],
+  )
   return (
     <motion.div
       initial={{ opacity: 0, x: 16 }}

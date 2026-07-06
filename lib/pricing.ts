@@ -50,6 +50,9 @@ export type PriceCheck = {
   /** Smallest acceptable client total (EUR) before we treat it as manipulation. */
   minAcceptable: number
   nights: number
+  /** Required minimum stay in nights (config minStay, raised by the dynamic
+   *  PriceLabs min_stay of the check-in day when available). */
+  minStayRequired: number
 }
 
 /**
@@ -71,12 +74,15 @@ export async function computeExpectedPrice(
   const nights = Math.max(1, daysBetween(checkIn, checkOut).length)
 
   let nightlyTotal = 0
+  let minStayRequired = config.minStay
   try {
     const map = await getPricingMap(smoobuListingId, checkIn, checkOut)
     for (const day of daysBetween(checkIn, checkOut)) {
       const rate = map[day]?.price && map[day].price > 0 ? map[day].price : config.priceFrom
       nightlyTotal += rate
     }
+    const dynamicMinStay = map[checkIn]?.minStay ?? 0
+    minStayRequired = Math.max(config.minStay, dynamicMinStay)
   } catch {
     nightlyTotal = config.priceFrom * nights
   }
@@ -89,5 +95,5 @@ export async function computeExpectedPrice(
   const floor = config.priceFrom * nights + config.cleaningFee
   const minAcceptable = Math.max(floor, Math.round(expectedTotal * 0.95))
 
-  return { expectedTotal, floor, minAcceptable, nights }
+  return { expectedTotal, floor, minAcceptable, nights, minStayRequired }
 }

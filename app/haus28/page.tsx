@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { haus28 } from "@/data/properties";
+import { haus28, getAggregateReviewStats } from "@/data/properties";
 import Haus28ClientPage from "@/components/property/Haus28ClientPage";
 
 export const metadata: Metadata = {
-  title: "HAUS28 – Modernes A-Frame im Wald | Bayerischer Wald",
+  title: "HAUS28 – A-Frame Ferienhaus im Bayerischen Wald",
   description:
-    "HAUS28 am Büchelstein in Grattersdorf: 157 m² A-Frame Ferienhaus im Bayerischen Wald – 18× 5★ auf Airbnb. Bis zu 8 Personen, hochwertig ausgestattet, mitten im Wald. Ab 199€ / Nacht. Jetzt direkt buchen!",
+    "HAUS28 am Büchelstein in Grattersdorf: 157 m² A-Frame Ferienhaus im Bayerischen Wald – 5,0★ auf Airbnb. Bis zu 8 Personen, hochwertig ausgestattet, mitten im Wald. Ab 199€ / Nacht. Jetzt direkt buchen!",
   openGraph: {
     title: "HAUS28 – Modernes A-Frame im Wald",
     description:
@@ -121,12 +121,8 @@ const jsonLd = {
   ],
   aggregateRating: {
     "@type": "AggregateRating",
-    ratingValue: "5.0",
-    reviewCount:
-      (haus28.airbnbReviewCount ?? 0) +
-      (haus28.bookingReviewCount ?? 0) +
-      (haus28.fewoReviewCount ?? 0) +
-      (haus28.googleReviewCount ?? 0),
+    ratingValue: String(getAggregateReviewStats([haus28]).ratingValue),
+    reviewCount: getAggregateReviewStats([haus28]).reviewCount,
     bestRating: "5",
     worstRating: "1",
   },

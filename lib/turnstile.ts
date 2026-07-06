@@ -10,8 +10,15 @@ const SITEVERIFY_URL =
 
 export async function verifyTurnstile(token: string): Promise<boolean> {
   const secret = process.env.TURNSTILE_SECRET_KEY
-  // No secret configured → don't block (dev/local fallback).
-  if (!secret) return true
+  if (!secret) {
+    // In Produktion nie fail-open – ohne Secret alles blocken.
+    if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production') {
+      console.error('[turnstile] TURNSTILE_SECRET_KEY fehlt in Produktion – Anfrage blockiert')
+      return false
+    }
+    // No secret configured → don't block (dev/local fallback).
+    return true
+  }
   if (!token) return false
 
   try {

@@ -50,7 +50,7 @@ const jsonLd = {
   name: apt.name,
   description: apt.description,
   url: "https://www.sarfi-collection.de/schoenblick/b7",
-  image: apt.images.gallery.map((g: { src: string }) => g.src),
+  image: apt.images.gallery.map((g) => g.src),
   address: {
     "@type": "PostalAddress",
     streetAddress: "Hochwaldstraße 18/20",
@@ -70,9 +70,15 @@ const jsonLd = {
     maxValue: apt.maxGuests,
     unitCode: "C62",
   },
-  checkinTime: "T15:00",
+  checkinTime: "T16:00",
   checkoutTime: "T10:00",
   priceRange: `ab ${apt.priceFrom}€ / Nacht`,
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: apt.airbnbRating,
+    reviewCount: apt.airbnbReviewCount,
+    bestRating: "5",
+  },
 };
 
 const faqSchema = {

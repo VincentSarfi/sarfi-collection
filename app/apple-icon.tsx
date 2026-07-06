@@ -1,9 +1,26 @@
 import { ImageResponse } from "next/og";
 
+export const runtime = "nodejs";
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
-export default function AppleIcon() {
+// Lädt Cormorant Garamond als TTF (gleiches Muster wie app/opengraph-image.tsx),
+// damit das Monogramm der Display-Schrift der Website entspricht.
+async function fetchFont(family: string, weight: number): Promise<ArrayBuffer> {
+  const cssUrl = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family)}:wght@${weight}&display=swap`;
+  const css = await fetch(cssUrl, {
+    headers: { "User-Agent": "Mozilla/5.0" },
+  }).then((r) => r.text());
+  const url =
+    css.match(/src:\s*url\(([^)]+)\)\s*format\('truetype'\)/)?.[1] ??
+    css.match(/src:\s*url\(([^)]+)\)/)?.[1];
+  if (!url) throw new Error(`Font URL not found for ${family}`);
+  return fetch(url).then((r) => r.arrayBuffer());
+}
+
+export default async function AppleIcon() {
+  const cormorant = await fetchFont("Cormorant Garamond", 400);
+
   return new ImageResponse(
     (
       <div
@@ -15,7 +32,7 @@ export default function AppleIcon() {
           justifyContent: "center",
           backgroundColor: "#1C2E1C",
           borderRadius: 32,
-          fontFamily: "Georgia, serif",
+          fontFamily: "'Cormorant Garamond', Georgia, serif",
           color: "#F5F0E8",
           fontSize: 108,
           fontWeight: 400,
@@ -25,6 +42,16 @@ export default function AppleIcon() {
         SC
       </div>
     ),
-    { ...size },
+    {
+      ...size,
+      fonts: [
+        {
+          name: "Cormorant Garamond",
+          data: cormorant,
+          weight: 400,
+          style: "normal",
+        },
+      ],
+    },
   );
 }

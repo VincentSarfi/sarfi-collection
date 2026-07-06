@@ -77,7 +77,8 @@ export async function POST(request: NextRequest) {
   if (checkIn >= checkOut) {
     return NextResponse.json({ error: 'Abreise muss nach Anreise liegen' }, { status: 422 })
   }
-  if (checkIn < new Date().toISOString().split('T')[0]) {
+  const todayBerlin = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Berlin' }).format(new Date())
+  if (checkIn < todayBerlin) {
     return NextResponse.json({ error: 'Anreisedatum liegt in der Vergangenheit' }, { status: 422 })
   }
   if (!EMAIL_RE.test(email)) {
@@ -95,6 +96,12 @@ export async function POST(request: NextRequest) {
 
   // ── Server-side price verification (never trust the client total) ──
   const priceCheck = await computeExpectedPrice(config, apartmentId, checkIn, checkOut, guests)
+  if (priceCheck.nights < priceCheck.minStayRequired) {
+    return NextResponse.json(
+      { error: `Der Mindestaufenthalt für diesen Zeitraum beträgt ${priceCheck.minStayRequired} Nächte.` },
+      { status: 422 },
+    )
+  }
   if (totalPrice < priceCheck.minAcceptable) {
     console.warn(
       `[payment-intent] Preismanipulation abgelehnt: client=${totalPrice} < min=${priceCheck.minAcceptable} ` +
@@ -119,8 +126,9 @@ export async function POST(request: NextRequest) {
     // Continue if check fails – booking API will catch it
   }
 
-  const fraction   = paymentOption === "100" ? 1 : DEPOSIT_FRACTION
-  const depositEur = Math.round(totalPrice * fraction)
+  const serverTotal = Math.max(totalPrice, priceCheck.expectedTotal)
+  const fraction    = paymentOption === "100" ? 1 : DEPOSIT_FRACTION
+  const depositEur  = Math.round(serverTotal * fraction)
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
@@ -141,7 +149,7 @@ export async function POST(request: NextRequest) {
         email,
         phone,
         message: message ?? '',
-        totalPrice: String(totalPrice),
+        totalPrice: String(serverTotal),
         depositAmount: String(depositEur),
         paymentOption: paymentOption ?? "50",
       },
@@ -158,7 +166,7 @@ export async function POST(request: NextRequest) {
       checkOut,
       nights,
       guests,
-      totalPrice,
+      totalPrice: serverTotal,
       depositAmount:   depositEur,
       paymentOption:   paymentOption ?? "50",
       firstName,
@@ -175,7 +183,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret ?? '',
       depositAmount: depositEur,
-      totalAmount: totalPrice,
+      totalAmount: serverTotal,
       paymentIntentId: paymentIntent.id,
     } satisfies CreatePaymentIntentResponse)
   } catch (err) {

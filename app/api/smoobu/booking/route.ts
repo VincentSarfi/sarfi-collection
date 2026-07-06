@@ -104,7 +104,11 @@ export async function POST(request: NextRequest) {
       { status: 422 },
     )
   }
-  if (checkInDate < new Date(new Date().toDateString())) {
+  // Vergleich in der Zeitzone der Unterkunft, nicht in UTC/Server-Lokalzeit
+  const todayBerlin = new Intl.DateTimeFormat('sv-SE', {
+    timeZone: 'Europe/Berlin',
+  }).format(new Date())
+  if (req.checkIn < todayBerlin) {
     return NextResponse.json(
       { error: 'Anreisedatum liegt in der Vergangenheit' },
       { status: 422 },

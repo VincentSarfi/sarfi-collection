@@ -107,7 +107,11 @@ export default function Header() {
                   onClick={() =>
                     setDropdown(dropdown === link.href ? null : link.href)
                   }
-                  className="flex items-center gap-1 px-4 py-2 text-sm font-body text-cream-50/80 hover:text-cream-50 transition-colors rounded-full hover:bg-cream-50/10"
+                  className={`flex items-center gap-1 px-4 py-2 text-sm font-body rounded-full transition-colors ${
+                    pathname.startsWith(link.href)
+                      ? "text-gold-300 bg-cream-50/10"
+                      : "text-cream-50/80 hover:text-cream-50 hover:bg-cream-50/10"
+                  }`}
                   aria-expanded={dropdown === link.href}
                   aria-haspopup="true"
                 >
@@ -161,6 +165,7 @@ export default function Header() {
                     ? "text-gold-300 bg-cream-50/10"
                     : "text-cream-50/80 hover:text-cream-50 hover:bg-cream-50/10"
                 }`}
+                aria-current={pathname.startsWith(link.href) ? "page" : undefined}
               >
                 {link.label}
               </Link>
@@ -214,6 +219,7 @@ export default function Header() {
                         ? "text-gold-300 bg-cream-50/10"
                         : "text-cream-50/80 hover:text-cream-50 hover:bg-cream-50/10"
                     }`}
+                    aria-current={pathname.startsWith(link.href) ? "page" : undefined}
                   >
                     {link.label}
                   </Link>

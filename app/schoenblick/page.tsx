@@ -14,8 +14,7 @@ import { IconStar, IconUsers, IconArrowRight } from "@/components/ui/Icons";
 
 export const metadata: Metadata = {
   title: "Haus Schönblick – Panorama-Ferienwohnungen in Schöfweg",
-  description:
-    "4 gemütliche Ferienwohnungen mit atemberaubendem Panoramablick im Bayerischen Wald. Ideal für Familien und Gruppen. Ab 85€ / Nacht. Jetzt direkt buchen!",
+  description: `5 Ferienwohnungen mit atemberaubendem Panoramablick im Bayerischen Wald. Ideal für Familien und Gruppen. Ab ${schoenblick.priceFrom}€ / Nacht. Jetzt direkt buchen!`,
   openGraph: {
     title: "Haus Schönblick – Panorama-Apartments im Bayerischen Wald",
     description:
@@ -165,7 +164,7 @@ export default function SchoenblickPage() {
                     </div>
                   )}
                   {/* Rating badge */}
-                  {apt.airbnbRating > 0 && (
+                  {apt.airbnbRating > 0 && apt.airbnbUrl !== "" && (
                     <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-1 bg-forest-900/70 backdrop-blur-sm rounded-full">
                       <IconStar size={11} className="text-gold-300 fill-gold-300" filled />
                       <span className="font-body text-xs font-semibold text-cream-50">

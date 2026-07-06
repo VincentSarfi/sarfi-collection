@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Datenschutzerklärung – SARFI Collection",
   robots: { index: false },
+  alternates: {
+    canonical: "https://www.sarfi-collection.de/datenschutz",
+  },
 };
 
 export default function DatenschutzPage() {
@@ -83,12 +86,12 @@ export default function DatenschutzPage() {
               Wir nutzen Vercel Web Analytics, einen datenschutzfreundlichen Analysedienst der Vercel Inc. Dieser Dienst erhebt anonymisierte Nutzungsdaten (Seitenaufrufe, Verweildauer, Gerätekategorie, Land) ohne den Einsatz von Cookies und ohne die Speicherung personenbezogener Daten. Es werden keine individuellen Nutzerprofile erstellt.
             </p>
             <p className="mb-3">
-              Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der anonymen Auswertung des Nutzerverhaltens zur Optimierung unseres Webangebots).
+              Rechtsgrundlage ist Ihre Einwilligung, Art. 6 Abs. 1 lit. a DSGVO i. V. m. § 25 Abs. 1 TDDDG. Der Dienst wird nur geladen, wenn Sie über unser Cookie-Banner eingewilligt haben. Ihre Entscheidung wird im lokalen Speicher Ihres Browsers (localStorage, Eintrag „sarfi_cookie_consent") gespeichert. Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen oder ändern – über den Link „Cookie-Einstellungen" im Footer unserer Website.
             </p>
 
             <h3 className="font-semibold text-forest-800 mb-2">Vercel Speed Insights</h3>
             <p>
-              Wir nutzen Vercel Speed Insights zur Messung der Ladegeschwindigkeit unserer Website. Dabei werden anonymisierte Performance-Metriken (Core Web Vitals) erhoben, ohne Cookies zu setzen oder personenbezogene Daten zu speichern. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO.
+              Wir nutzen Vercel Speed Insights zur Messung der Ladegeschwindigkeit unserer Website. Dabei werden anonymisierte Performance-Metriken (Core Web Vitals) erhoben. Rechtsgrundlage ist auch hier Ihre Einwilligung, Art. 6 Abs. 1 lit. a DSGVO i. V. m. § 25 Abs. 1 TDDDG. Die Entscheidung wird ebenfalls im localStorage (sarfi_cookie_consent) gespeichert und kann jederzeit über den Link „Cookie-Einstellungen" im Footer widerrufen werden.
             </p>
           </section>
 
@@ -104,7 +107,7 @@ export default function DatenschutzPage() {
             </p>
             <h3 className="font-semibold text-forest-800 mb-2">Cookie-Einwilligung</h3>
             <p>
-              Beim ersten Besuch unserer Website wird Ihre Einwilligung zur Verwendung von Cookies über ein Cookie-Banner eingeholt. Ihre Einwilligung können Sie jederzeit mit Wirkung für die Zukunft widerrufen, indem Sie die Cookie-Einstellungen in Ihrem Browser anpassen oder uns kontaktieren.
+              Beim ersten Besuch unserer Website wird Ihre Einwilligung zur Verwendung von Cookies bzw. vergleichbaren Technologien über ein Cookie-Banner eingeholt. Ihre Entscheidung wird im lokalen Speicher Ihres Browsers (localStorage, Eintrag „sarfi_cookie_consent") gespeichert. Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen oder anpassen – über den Link „Cookie-Einstellungen" im Footer unserer Website oder indem Sie uns kontaktieren.
             </p>
           </section>
 
@@ -128,6 +131,11 @@ export default function DatenschutzPage() {
             </p>
             <p className="mb-3">
               Rechtsgrundlage für die Verarbeitung der Daten ist Art. 6 Abs. 1 lit. a DSGVO (Einwilligung) sowie Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen). Die Daten werden gelöscht, sobald sie für die Erreichung des Zweckes ihrer Erhebung nicht mehr erforderlich sind, spätestens jedoch nach 3 Jahren.
+            </p>
+
+            <h3 className="font-semibold text-forest-800 mb-2">Bot-Schutz: Cloudflare Turnstile</h3>
+            <p className="mb-3">
+              Zum Schutz unseres Kontaktformulars und unserer Buchungsstrecke vor Missbrauch durch Bots setzen wir den Dienst Cloudflare Turnstile der Cloudflare, Inc., 101 Townsend St., San Francisco, CA 94107, USA ein. Turnstile prüft, ob Eingaben von einem Menschen stammen, und verarbeitet dazu technische Informationen (z. B. IP-Adresse, Browser-Merkmale, Interaktionsdaten). Dabei kann eine Übertragung von Daten in die USA stattfinden. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am Schutz unserer Website vor Spam, Missbrauch und automatisierten Angriffen). Weitere Informationen: <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">cloudflare.com/privacypolicy</a>
             </p>
 
             <h3 className="font-semibold text-forest-800 mb-2">E-Mail-Versand: Resend</h3>

@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Impressum – SARFI Collection",
   robots: { index: false },
+  alternates: {
+    canonical: "https://www.sarfi-collection.de/impressum",
+  },
 };
 
 export default function ImpressumPage() {
@@ -19,7 +22,7 @@ export default function ImpressumPage() {
 
           <section>
             <h2 className="font-display text-xl text-forest-900 mb-3">
-              Angaben gemäß § 5 TMG
+              Angaben gemäß § 5 DDG
             </h2>
             <p>
               Vincent Sarfi<br />
@@ -53,16 +56,6 @@ export default function ImpressumPage() {
               EU-Streitschlichtung
             </h2>
             <p className="text-sm leading-relaxed">
-              Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{" "}
-              <a
-                href="https://ec.europa.eu/consumers/odr/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gold-600 underline underline-offset-2"
-              >
-                https://ec.europa.eu/consumers/odr/
-              </a>
-              <br /><br />
               Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
             </p>
           </section>
@@ -71,7 +64,7 @@ export default function ImpressumPage() {
             <h2 className="font-display text-xl text-forest-900 mb-3">Haftungsausschluss</h2>
             <h3 className="font-body font-semibold text-forest-800 mb-2">Haftung für Inhalte</h3>
             <p className="text-sm leading-relaxed">
-              Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
+              Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
             </p>
             <h3 className="font-body font-semibold text-forest-800 mb-2 mt-4">Haftung für Links</h3>
             <p className="text-sm leading-relaxed">

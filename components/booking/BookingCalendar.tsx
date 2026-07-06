@@ -301,6 +301,11 @@ export default function BookingCalendar({
   const secondMonth = viewMonth === 11 ? 0 : viewMonth + 1
   const secondYear = viewMonth === 11 ? viewYear + 1 : viewYear
 
+  // Mindestaufenthalt für das aktuell gewählte Anreisedatum (für den Hinweistext)
+  const currentMinStay = checkIn
+    ? minStayMap[toDateKey(checkIn)] ?? defaultMinStay
+    : defaultMinStay
+
   const handlePrev = useCallback(() => {
     const prevDate = new Date(viewYear, viewMonth - 1, 1)
     if (prevDate < today) return // don't go before current month
@@ -367,7 +372,7 @@ export default function BookingCalendar({
         {!checkIn
           ? "Anreisedatum wählen"
           : selectionStep === "checkout"
-            ? "Abreisedatum wählen"
+            ? `Abreisedatum wählen${currentMinStay > 1 ? ` — Mindestaufenthalt: ${currentMinStay} Nächte` : ""}`
             : checkIn && checkOut
               ? `${fmtShort(checkIn)} → ${fmtShort(checkOut)}`
               : ""}

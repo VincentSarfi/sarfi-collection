@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description:
     "Wähle deine Unterkunft: HAUS28 A-Frame oder eines der Panorama-Apartments im Haus Schönblick. Direkt buchen, bis zu 20 % günstiger.",
   robots: { index: true, follow: true },
+  alternates: { canonical: "https://www.sarfi-collection.de/buchen" },
 };
 
 const apartments = Object.values(schoenblick.apartments ?? {});

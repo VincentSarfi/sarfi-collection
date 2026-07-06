@@ -600,7 +600,7 @@ export default function AusflugszielePage() {
             Alle Ausflugsziele direkt vor der Tür
           </h2>
           <p className="font-body text-base text-cream-50/60 leading-relaxed mb-8">
-            HAUS28 am Büchelstein und Haus Schönblick in Schöfweg liegen ideal im Herzen des Bayerischen Waldes – perfekt als Ausgangspunkt für alle Ausflüge auf dieser Seite. Buche direkt und spare bis zu 15% gegenüber Buchungsplattformen.
+            HAUS28 am Büchelstein und Haus Schönblick in Schöfweg liegen ideal im Herzen des Bayerischen Waldes – perfekt als Ausgangspunkt für alle Ausflüge auf dieser Seite. Buche direkt und spare bis zu 20 % gegenüber Buchungsplattformen.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link

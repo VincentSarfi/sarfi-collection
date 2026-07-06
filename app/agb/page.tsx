@@ -83,11 +83,18 @@ export default function AgbPage() {
           </h2>
           <div className="font-body text-sm text-forest-700 leading-relaxed space-y-3">
             <p>
-              Der Mietvertrag kommt mit der schriftlichen Buchungsbestätigung
-              des Vermieters (per E-Mail) zustande. Die Buchungsanfrage des
-              Gastes stellt ein bindendes Angebot dar. Der Vermieter ist
-              berechtigt, eine Buchungsanfrage ohne Angabe von Gründen
-              abzulehnen.
+              Die Buchung erfolgt online über die Website sarfi-collection.de.
+              Im Rahmen des Buchungsvorgangs wählt der Gast den Reisezeitraum,
+              gibt seine Daten ein und zahlt die Anzahlung (oder den
+              Gesamtbetrag) direkt online über den Zahlungsdienstleister
+              Stripe. Die Buchung des Gastes stellt ein bindendes Angebot dar.
+            </p>
+            <p>
+              Der Mietvertrag kommt mit der Zahlungs- bzw. Buchungsbestätigung
+              zustande, die der Gast unmittelbar nach erfolgreicher Zahlung
+              per E-Mail erhält. Der Vermieter ist berechtigt, eine Buchung in
+              begründeten Ausnahmefällen abzulehnen; bereits geleistete
+              Zahlungen werden in diesem Fall vollständig erstattet.
             </p>
           </div>
         </section>
@@ -104,14 +111,16 @@ export default function AgbPage() {
               sofern nicht gesondert ausgewiesen.
             </p>
             <p>
-              Die Zahlung erfolgt in zwei Raten:
+              Die Zahlung erfolgt online per Stripe (Kreditkarte, Debitkarte,
+              Apple Pay oder Google Pay). Der Gast kann bei der Buchung
+              zwischen Vollzahlung und Zahlung in zwei Raten wählen:
             </p>
             <div className="space-y-2">
               <div className="flex items-start gap-3 rounded-xl border border-cream-200 bg-white px-4 py-3.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0 mt-0.5" />
                 <div>
                   <span className="font-semibold text-forest-800">Anzahlung (50 %)</span>
-                  <span className="text-forest-600"> – fällig unmittelbar nach Buchungsbestätigung</span>
+                  <span className="text-forest-600"> – fällig im Rahmen des Online-Buchungsvorgangs</span>
                 </div>
               </div>
               <div className="flex items-start gap-3 rounded-xl border border-cream-200 bg-white px-4 py-3.5">
@@ -177,7 +186,7 @@ export default function AgbPage() {
               </div>
               <Example
                 label="Beispiel"
-                text="Anreise am 1. August – du stornierst am 28. Juni (33 Tage vorher): volle Erstattung. Du stornierst am 20. Juli (11 Tage vorher): keine Erstattung."
+                text="Anreise am 1. August – du stornierst am 28. Juni (34 Tage vorher): volle Erstattung. Du stornierst am 20. Juli (12 Tage vorher): keine Erstattung."
               />
             </div>
 
@@ -208,7 +217,7 @@ export default function AgbPage() {
               </div>
               <Example
                 label="Beispiel"
-                text="Anreise am 1. August – du stornierst am 15. Juli (16 Tage vorher): volle Erstattung. Du stornierst am 28. Juli (3 Tage vorher): keine Erstattung."
+                text="Anreise am 1. August – du stornierst am 15. Juli (17 Tage vorher): volle Erstattung. Du stornierst am 28. Juli (4 Tage vorher): keine Erstattung."
               />
             </div>
 

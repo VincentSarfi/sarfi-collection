@@ -192,10 +192,10 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
                   Apartment · {apartment.sqm} m² · {schoenblick.address}
                 </p>
                 <p className="font-body text-sm text-forest-500 mb-3">
-                  {apartment.maxGuests} Gäste · {apartment.bedrooms} Schlafzimmer · {apartment.bedrooms} Betten · {apartment.bathrooms} Badezimmer
+                  {apartment.maxGuests} Gäste · {apartment.bedrooms} Schlafzimmer · {apartment.beds} Betten · {apartment.bathrooms} Badezimmer
                 </p>
                 <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 font-body text-sm text-forest-700">
-                  {apartment.airbnbRating > 0 && (
+                  {apartment.airbnbRating > 0 && apartment.airbnbUrl !== "" && (
                     <>
                       <span className="flex items-center gap-1 font-semibold text-forest-900">
                         <IconStar size={14} filled className="text-forest-900 fill-forest-900" />
@@ -415,7 +415,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
             <p className="font-body text-sm font-medium text-forest-900 leading-tight">
               Zeitraum wählen, um Preise anzuzeigen
             </p>
-            {apartment.airbnbRating > 0 && (
+            {apartment.airbnbRating > 0 && apartment.airbnbUrl !== "" && (
               <div className="flex items-center gap-1 mt-0.5">
                 <IconStar size={11} filled className="text-forest-700 fill-forest-700" />
                 <span className="font-body text-xs font-semibold text-forest-700">{apartment.airbnbRating}</span>

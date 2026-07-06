@@ -5,6 +5,7 @@ import Highlights from "@/components/home/Highlights";
 import ReviewsSection from "@/components/home/ReviewsSection";
 import RegionSection from "@/components/home/RegionSection";
 import CtaSection from "@/components/home/CtaSection";
+import { getAggregateReviewStats } from "@/data/properties";
 
 export const metadata: Metadata = {
   title: "SARFI Collection – Exklusive Ferienunterkünfte im Bayerischen Wald",
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "SARFI Collection – Dein Rückzugsort im Bayerischen Wald",
     description:
-      "Zwei exklusive Ferienunterkünfte mitten im Bayerischen Wald. Direkt buchen und bis zu 15% sparen.",
+      "Zwei exklusive Ferienunterkünfte mitten im Bayerischen Wald. Direkt buchen und bis zu 20 % sparen.",
     url: "https://www.sarfi-collection.de",
     images: [
       {
@@ -28,6 +29,9 @@ export const metadata: Metadata = {
     canonical: "https://www.sarfi-collection.de",
   },
 };
+
+// Aggregierte Bewertungen dynamisch aus data/properties.ts
+const reviewStats = getAggregateReviewStats();
 
 // JSON-LD structured data
 const jsonLd = {
@@ -49,8 +53,8 @@ const jsonLd = {
   },
   aggregateRating: {
     "@type": "AggregateRating",
-    ratingValue: "4.95",
-    reviewCount: "89",
+    ratingValue: String(reviewStats.ratingValue),
+    reviewCount: String(reviewStats.reviewCount),
     bestRating: "5",
     worstRating: "1",
   },

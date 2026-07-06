@@ -33,6 +33,7 @@ export function getAllPosts(): BlogMeta[] {
 }
 
 export function getPost(slug: string): BlogPost | null {
+  if (!/^[a-z0-9äöüß-]+$/i.test(slug)) return null;
   const file = path.join(POSTS_DIR, `${slug}.json`);
   if (!fs.existsSync(file)) return null;
   return JSON.parse(fs.readFileSync(file, 'utf-8')) as BlogPost;

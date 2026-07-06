@@ -6,6 +6,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { COOKIE_CONSENT_KEY, CONSENT_EVENT } from "./ConsentedAnalytics";
 
+/** Event, mit dem das Cookie-Banner (z.B. aus dem Footer) wieder geöffnet wird. */
+export const OPEN_COOKIE_SETTINGS_EVENT = "sarfi:open-cookie-settings";
+
+/** Kleiner Client-Button für den (Server-)Footer, der das Banner wieder öffnet. */
+export function CookieSettingsButton({ className }: { className?: string }) {
+  return (
+    <button
+      type="button"
+      onClick={() => window.dispatchEvent(new Event(OPEN_COOKIE_SETTINGS_EVENT))}
+      className={className}
+    >
+      Cookie-Einstellungen
+    </button>
+  );
+}
+
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
@@ -18,6 +34,13 @@ export default function CookieBanner() {
     const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
     if (!consent) setVisible(true);
   }, [hideOnPath]);
+
+  // Widerruf: Banner per CustomEvent (Footer-Button) wieder öffnen.
+  useEffect(() => {
+    const open = () => setVisible(true);
+    window.addEventListener(OPEN_COOKIE_SETTINGS_EVENT, open);
+    return () => window.removeEventListener(OPEN_COOKIE_SETTINGS_EVENT, open);
+  }, []);
 
   const setConsent = (value: "accepted" | "declined") => {
     localStorage.setItem(COOKIE_CONSENT_KEY, value);

@@ -4,9 +4,13 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconStar } from "@/components/ui/Icons";
 import { reviews } from "@/data/reviews";
+import { getAggregateReviewStats } from "@/data/properties";
 
 // Show best 6 reviews on homepage
 const featuredReviews = reviews.slice(0, 6);
+
+// Aggregierte Bewertungsstatistik – konsistent mit dem JSON-LD der Startseite
+const aggregate = getAggregateReviewStats();
 
 function ReviewCard({ review, index }: { review: (typeof reviews)[number]; index: number }) {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -81,8 +85,8 @@ export default function ReviewsSection() {
             <div className="flex gap-0.5 text-gold-500">
               {[1,2,3,4,5].map(i => <IconStar key={i} size={14} filled />)}
             </div>
-            <span className="font-body text-sm font-semibold text-forest-800">4.95</span>
-            <span className="font-body text-sm text-forest-600">· {reviews.length}+ verifizierte Gästebewertungen</span>
+            <span className="font-body text-sm font-semibold text-forest-800">{aggregate.ratingValue.toLocaleString("de-DE")}</span>
+            <span className="font-body text-sm text-forest-600">· {aggregate.reviewCount} verifizierte Gästebewertungen</span>
           </div>
         </motion.div>
 

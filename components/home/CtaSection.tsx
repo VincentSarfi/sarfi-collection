@@ -29,7 +29,7 @@ export default function CtaSection() {
             Finde deine perfekte Unterkunft
           </h2>
           <p className="font-body text-lg text-cream-50/60 max-w-xl mx-auto">
-            Direkt buchen und bis zu 15% gegenüber Buchungsplattformen sparen.
+            Direkt buchen und bis zu 20 % gegenüber Buchungsplattformen sparen.
           </p>
         </motion.div>
 

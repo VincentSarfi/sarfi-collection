@@ -1,3 +1,4 @@
+import { createHash, timingSafeEqual } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { sendRemainingPaymentReminderEmail } from '@/lib/notify'
@@ -52,6 +53,32 @@ async function isLinkPaid(linkId: string): Promise<boolean> {
   return sessions.data.some(s => s.payment_status === 'paid' || s.status === 'complete')
 }
 
+/** Timing-sicherer Vergleich zweier Strings (über SHA-256-Hashes). */
+function safeEqual(a: string, b: string): boolean {
+  const ha = createHash('sha256').update(a).digest()
+  const hb = createHash('sha256').update(b).digest()
+  return timingSafeEqual(ha, hb)
+}
+
+/** Link-Metadaten aktualisieren, mit 2 Retries bei Fehlschlag. */
+async function updateLinkMetadata(
+  linkId: string,
+  metadata: Record<string, string>,
+): Promise<boolean> {
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      await stripe.paymentLinks.update(linkId, { metadata })
+      return true
+    } catch (e) {
+      if (attempt === 3) {
+        console.error(`[cron/restbetrag] Metadaten-Update für ${linkId} nach 3 Versuchen fehlgeschlagen:`, e)
+        return false
+      }
+    }
+  }
+  return false
+}
+
 export async function GET(request: NextRequest) {
   // --- Auth ---
   const expected = process.env.CRON_SECRET
@@ -60,7 +87,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'CRON_SECRET not configured' }, { status: 500 })
   }
   const auth = request.headers.get('authorization') ?? ''
-  if (auth !== `Bearer ${expected}`) {
+  if (!safeEqual(auth, `Bearer ${expected}`)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -74,12 +101,13 @@ export async function GET(request: NextRequest) {
     scanned: 0,
     sent: [] as Array<{ pi: string; to: string; property: string; checkIn: string; amount: number }>,
     skipped: [] as Array<{ pi?: string; link: string; reason: string }>,
+    errors: [] as Array<{ pi?: string; link: string; reason: string }>,
     dryRun,
   }
 
   try {
     // Alle Restbetrag-Links durchgehen (auto-paginierend)
-    for await (const link of stripe.paymentLinks.list({ limit: 100 })) {
+    for await (const link of stripe.paymentLinks.list({ active: true, limit: 100 })) {
       const md = link.metadata ?? {}
       if (md.type !== 'restbetrag') continue
 
@@ -88,7 +116,11 @@ export async function GET(request: NextRequest) {
 
       summary.scanned++
 
-      // Schon erinnert? (im Test-/only-Modus mit to-Override erneut erlauben)
+      // Schon bezahlt oder erinnert? (im Test-/only-Modus mit to-Override erneut erlauben)
+      if (md.paid_at) {
+        summary.skipped.push({ pi: piId, link: link.id, reason: `bereits bezahlt am ${md.paid_at}` })
+        continue
+      }
       if (md.reminder_sent_at && !toOverride) {
         summary.skipped.push({ pi: piId, link: link.id, reason: `bereits erinnert am ${md.reminder_sent_at}` })
         continue
@@ -96,11 +128,20 @@ export async function GET(request: NextRequest) {
 
       // Bezahlt?
       let paid = false
-      try { paid = await isLinkPaid(link.id) } catch { /* im Zweifel weiter */ }
+      try {
+        paid = await isLinkPaid(link.id)
+      } catch (e) {
+        // Zahlungsstatus unklar → keinesfalls mahnen, Link überspringen
+        summary.skipped.push({ pi: piId, link: link.id, reason: `Zahlungsstatus nicht prüfbar (${e instanceof Error ? e.message : 'Fehler'})` })
+        continue
+      }
       if (paid) {
         summary.skipped.push({ pi: piId, link: link.id, reason: 'bereits bezahlt' })
-        if (!dryRun && !md.reminder_sent_at) {
-          try { await stripe.paymentLinks.update(link.id, { metadata: { ...md, paid_at: new Date().toISOString() } }) } catch { /* egal */ }
+        if (!dryRun) {
+          await updateLinkMetadata(link.id, { ...md, paid_at: new Date().toISOString() })
+          try { await stripe.paymentLinks.update(link.id, { active: false }) } catch (e) {
+            console.error(`[cron/restbetrag] Konnte bezahlten Link ${link.id} nicht deaktivieren:`, e)
+          }
         }
         continue
       }
@@ -128,6 +169,11 @@ export async function GET(request: NextRequest) {
       // Anreise vorbei → nichts mehr schicken
       if (dleft < 0) {
         summary.skipped.push({ pi: piId, link: link.id, reason: `Anreise vorbei (${checkIn})` })
+        if (!dryRun) {
+          try { await stripe.paymentLinks.update(link.id, { active: false }) } catch (e) {
+            console.error(`[cron/restbetrag] Konnte abgelaufenen Link ${link.id} nicht deaktivieren:`, e)
+          }
+        }
         continue
       }
       // Zeitfenster (im manuellen only-Modus überspringen wir den Fenster-Check)
@@ -167,10 +213,9 @@ export async function GET(request: NextRequest) {
 
       // Nur im echten Versand (nicht bei to-Override-Test) als gesendet markieren
       if (!toOverride) {
-        try {
-          await stripe.paymentLinks.update(link.id, { metadata: { ...md, reminder_sent_at: new Date().toISOString() } })
-        } catch (e) {
-          console.error('[cron/restbetrag] Konnte reminder_sent_at nicht setzen:', e)
+        const marked = await updateLinkMetadata(link.id, { ...md, reminder_sent_at: new Date().toISOString() })
+        if (!marked) {
+          summary.errors.push({ pi: piId, link: link.id, reason: 'reminder_sent_at konnte nicht gesetzt werden – Gefahr doppelter Erinnerung' })
         }
       }
     }
