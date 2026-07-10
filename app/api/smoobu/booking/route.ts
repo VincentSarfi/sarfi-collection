@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { isValidDate, isValidEmail } from '@/lib/validate'
 import { createBooking, verifyAvailability } from '@/lib/smoobu'
 import type { BookingRequest } from '@/lib/smoobu'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
@@ -6,13 +7,7 @@ import { stripe } from '@/lib/stripe'
 
 // ─── Validation helpers ───────────────────────────────────────────────────────
 
-function isValidDate(s: string) {
-  return /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(Date.parse(s))
-}
 
-function isValidEmail(s: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)
-}
 
 // ─── Route handler ────────────────────────────────────────────────────────────
 

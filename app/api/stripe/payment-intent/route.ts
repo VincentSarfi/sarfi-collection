@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { DATE_RE, EMAIL_RE } from '@/lib/validate'
 import { stripe, DEPOSIT_FRACTION, toCents } from '@/lib/stripe'
 import { verifyAvailability } from '@/lib/smoobu'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
@@ -6,8 +7,6 @@ import { sendCheckoutStartedNotification } from '@/lib/notify'
 import { findConfigBySmoobuId, computeExpectedPrice } from '@/lib/pricing'
 import { verifyTurnstile } from '@/lib/turnstile'
 
-const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export interface CreatePaymentIntentRequest {
   apartmentId: string

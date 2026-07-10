@@ -588,7 +588,6 @@ export const schoenblick: PropertyData = {
 // ---------------------------------------------------------------------------
 // All properties index
 // ---------------------------------------------------------------------------
-export const allProperties = { haus28, schoenblick };
 
 // ---------------------------------------------------------------------------
 // Aggregierte Bewertungs-Statistik über alle Plattformen

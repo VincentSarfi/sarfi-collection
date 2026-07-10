@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { EMAIL_RE } from '@/lib/validate'
 import { createHmac } from 'crypto'
 import { Resend } from 'resend'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const BASE_URL = 'https://www.sarfi-collection.de'
 
 /** Signierter Double-Opt-in-Token über die (normalisierte) E-Mail. */

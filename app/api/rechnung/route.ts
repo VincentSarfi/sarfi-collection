@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { EMAIL_RE } from '@/lib/validate'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 // Proxy zur Rechnungs-Engine im Dashboard (Railway). Hält die Dashboard-URL
@@ -6,7 +7,6 @@ import { rateLimit, getClientIp } from '@/lib/rate-limit'
 // INVOICE_API_URL = https://<dashboard>/api/public/invoice-request
 const BASE = process.env.INVOICE_API_URL
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function str(value: unknown, maxLen: number): string {
   return typeof value === 'string' ? value.slice(0, maxLen) : ''

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { EMAIL_RE } from '@/lib/validate'
 import { Resend } from 'resend'
 import { escapeHtml } from '@/lib/escape'
 import { verifyTurnstile } from '@/lib/turnstile'
@@ -6,7 +7,6 @@ import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const SUBJECT_LABELS: Record<string, string> = {
   haus28:      'HAUS28 – Anfrage',

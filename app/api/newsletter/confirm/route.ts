@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { EMAIL_RE } from '@/lib/validate'
 import { createHmac, timingSafeEqual } from 'crypto'
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const BASE_URL = 'https://www.sarfi-collection.de'
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 /** Muss identisch zu newsletterToken() in ../route.ts sein. */
 function newsletterToken(email: string): string {

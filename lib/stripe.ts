@@ -16,4 +16,3 @@ export const DEPOSIT_FRACTION = 0.5
 export const toCents = (eur: number) => Math.round(eur * 100)
 
 /** Convert Stripe cents to EUR */
-export const fromCents = (cents: number) => Math.round(cents) / 100
