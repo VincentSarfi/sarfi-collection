@@ -3,7 +3,8 @@ import { EMAIL_RE } from '@/lib/validate'
 import { createHmac, timingSafeEqual } from 'crypto'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy: sonst wirft `new Resend(undefined)` schon beim `next build`.
+const getResend = () => new Resend(process.env.RESEND_API_KEY)
 const BASE_URL = 'https://www.sarfi-collection.de'
 
 /** Muss identisch zu newsletterToken() in ../route.ts sein. */
@@ -43,10 +44,10 @@ export async function GET(request: NextRequest) {
   try {
     const audienceId = process.env.RESEND_AUDIENCE_ID
     if (audienceId) {
-      await resend.contacts.create({ email, audienceId, unsubscribed: false })
+      await getResend().contacts.create({ email, audienceId, unsubscribed: false })
     } else {
       // Kein Audience konfiguriert – Betreiber informieren, damit keine Anmeldung verloren geht
-      await resend.emails.send({
+      await getResend().emails.send({
         from: 'Website <buchung@sarfi-collection.de>',
         to: ['hallo@sarfi-collection.de'],
         subject: '📰 Neue Newsletter-Anmeldung (bestätigt)',

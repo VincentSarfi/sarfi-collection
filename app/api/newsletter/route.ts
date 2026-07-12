@@ -4,7 +4,8 @@ import { createHmac } from 'crypto'
 import { Resend } from 'resend'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy: sonst wirft `new Resend(undefined)` schon beim `next build`.
+const getResend = () => new Resend(process.env.RESEND_API_KEY)
 
 const BASE_URL = 'https://www.sarfi-collection.de'
 
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest) {
   </table>
 </body></html>`
 
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: 'SARFI Collection <buchung@sarfi-collection.de>',
       to: [email],
       subject: 'Bitte bestätige deine Newsletter-Anmeldung',

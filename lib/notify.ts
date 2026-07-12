@@ -2,7 +2,8 @@ import { Resend } from 'resend'
 import { escapeHtml } from '@/lib/escape'
 import { invoiceLink } from '@/lib/invoiceLink'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy: sonst wirft `new Resend(undefined)` schon beim `next build`.
+const getResend = () => new Resend(process.env.RESEND_API_KEY)
 
 export interface GuestConfirmationData {
   propertyName: string
@@ -275,7 +276,7 @@ export async function sendCheckoutStartedNotification(data: BookingNotificationD
 </html>`
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: 'Buchungssystem <buchung@sarfi-collection.de>',
       to:   ['hallo@sarfi-collection.de'],
       subject: `⏳ Checkout gestartet (noch nicht bezahlt): ${data.propertyName} · ${formatDate(data.checkIn)}–${formatDate(data.checkOut)} · ${data.firstName} ${data.lastName}`,
@@ -460,7 +461,7 @@ Stripe PI: ${data.paymentIntentId}
 `.trim()
 
   try {
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: 'Buchungssystem <buchung@sarfi-collection.de>',
       to:   ['hallo@sarfi-collection.de'],
       subject: `🏠 Neue Buchung: ${data.propertyName} · ${formatDate(data.checkIn)}–${formatDate(data.checkOut)} · ${data.firstName} ${data.lastName}`,
@@ -642,7 +643,7 @@ Fragen? Schreib uns auf WhatsApp: https://wa.me/4917656850146
 SARFI Collection · sarfi-collection.de`
 
   try {
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: 'Sarfi Collection <buchung@sarfi-collection.de>',
       to:   [data.email],
       subject: `${data.subjectPrefix ?? ''}Zahlungserinnerung: Restbetrag für ${data.propertyName} · Anreise ${formatDate(data.checkIn)}`,
@@ -905,7 +906,7 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
 </html>`
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: 'Sarfi Collection <buchung@sarfi-collection.de>',
       to:   [data.email],
       subject: `Buchungsbestätigung: ${data.propertyName} · ${formatDate(data.checkIn)}–${formatDate(data.checkOut)}`,

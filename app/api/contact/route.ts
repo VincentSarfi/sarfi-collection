@@ -5,7 +5,9 @@ import { escapeHtml } from '@/lib/escape'
 import { verifyTurnstile } from '@/lib/turnstile'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy: Client erst zur Laufzeit erzeugen. Sonst wirft `new Resend(undefined)`
+// bereits beim `next build` (Modul-Evaluierung), wenn der Key zur Build-Zeit fehlt.
+const getResend = () => new Resend(process.env.RESEND_API_KEY)
 
 
 const SUBJECT_LABELS: Record<string, string> = {
@@ -121,7 +123,7 @@ export async function POST(request: NextRequest) {
 </body>
 </html>`
 
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from:     'Website <buchung@sarfi-collection.de>',
       to:       ['hallo@sarfi-collection.de'],
       replyTo:  email,
