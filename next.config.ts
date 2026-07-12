@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "node:path";
 
 const securityHeaders = [
   // Force HTTPS for 1 year (including subdomains)
@@ -55,6 +56,14 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Schlanker, selbst-hostbarer Server-Output (server.js + minimales node_modules)
+  // für den Docker/Sliplane-Betrieb. Von Vercel ignoriert — dort unschädlich.
+  output: "standalone",
+  // Root für das File-Tracing FEST auf diesen App-Ordner. Sonst rät Next wegen
+  // mehrerer package-lock.json in übergeordneten Verzeichnissen die Workspace-
+  // Wurzel falsch und verschachtelt den standalone-Output (…/standalone/Desktop/…)
+  // statt server.js direkt unter .next/standalone/ abzulegen.
+  outputFileTracingRoot: path.resolve(),
   async redirects() {
     return [
       // haus28.com → /haus28

@@ -1,0 +1,30 @@
+# Dependencies & Build-Artefakte – werden im Image frisch erzeugt
+node_modules
+.next
+
+# Git
+.git
+.gitignore
+
+# Secrets & lokale Env – in Sliplane setzen (NEXT_PUBLIC_* als Build-Args!)
+.env
+.env.local
+.env*.local
+
+# Vercel-Reste (nicht mehr genutzt)
+.vercel
+
+# Große lokale Assets, nicht Teil des Builds (1,2 GB Rohfotos)
+FOTOS
+
+# Tooling / OS / Editor
+.claude
+.DS_Store
+**/.DS_Store
+*.log
+npm-debug.log*
+tsconfig.tsbuildinfo
+
+# Docker
+Dockerfile
+.dockerignore
