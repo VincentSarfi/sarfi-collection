@@ -21,7 +21,6 @@ const footerLinks = {
     { label: "Ausflugsziele", href: "/ausflugsziele" },
     { label: "Geschenkgutschein", href: "/gutschein" },
     { label: "Stornierungsbedingungen", href: "/stornierung" },
-    { label: "Rechnung herunterladen", href: "/rechnung" },
   ],
   legal: [
     { label: "Impressum", href: "/impressum" },

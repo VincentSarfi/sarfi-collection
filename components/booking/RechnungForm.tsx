@@ -31,7 +31,16 @@ export default function RechnungForm() {
   const [message, setMessage] = useState('')
 
   useEffect(() => {
-    if (!res || !t) { setPrefill({ ok: false, error: 'Ungültiger Link.' }); return }
+    if (!res || !t) {
+      // Ohne signierten Link (res+t aus der Rechnungs-Mail) gibt es hier nichts zu
+      // laden — freundlich erklären statt nur „Ungültig" (z. B. bei abgelaufenem Link).
+      setPrefill({
+        ok: false,
+        error:
+          'Diese Seite ist nur über Ihren persönlichen Rechnungs-Link erreichbar, den Sie per E-Mail von uns erhalten. Falls Ihr Link nicht mehr funktioniert, schreiben Sie uns kurz an hallo@sarfi-collection.de — wir senden Ihnen gerne einen neuen.',
+      })
+      return
+    }
     fetch(`/api/rechnung?res=${encodeURIComponent(res)}&t=${encodeURIComponent(t)}`)
       .then(r => r.json())
       .then((d: Prefill) => setPrefill(d))
