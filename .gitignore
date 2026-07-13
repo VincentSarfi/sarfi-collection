@@ -26,3 +26,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .vercel
+# Beim Build generierte Bild-Varianten (scripts/optimize-images.mjs)
+public/img-opt/

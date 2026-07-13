@@ -123,6 +123,14 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // Statt on-demand-Optimierung (/_next/image, sharp auf der 1-vCPU-Prod-VM):
+    // beim Build vorberechnete statische Varianten (scripts/optimize-images.mjs
+    // → public/img-opt), zugeordnet über den Custom-Loader. Breiten-Stufen
+    // müssen mit WIDTHS im Skript und STEPS im Loader übereinstimmen.
+    loader: "custom",
+    loaderFile: "./lib/imageLoader.ts",
+    deviceSizes: [640, 828, 1080, 1200, 1920],
+    imageSizes: [384],
     remotePatterns: [
       {
         protocol: "https",
