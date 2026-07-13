@@ -33,16 +33,16 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      // Scripts: own + Stripe + Google Pay + Vercel Analytics + Cloudflare Turnstile
-      "script-src 'self' 'unsafe-inline' https://js.stripe.com https://pay.google.com https://va.vercel-scripts.com https://challenges.cloudflare.com",
+      // Scripts: own + Stripe + Google Pay + Cloudflare Turnstile
+      "script-src 'self' 'unsafe-inline' https://js.stripe.com https://pay.google.com https://challenges.cloudflare.com",
       // Styles: own + inline (Tailwind generates inline styles)
       "style-src 'self' 'unsafe-inline'",
       // Images: own + data URIs + Stripe
       "img-src 'self' data: https://*.stripe.com https://images.unsplash.com",
       // Fonts: own origin
       "font-src 'self'",
-      // Connect: own API + Stripe + Smoobu + PriceLabs + Vercel Analytics/Speed Insights
-      "connect-src 'self' https://api.stripe.com https://login.smoobu.com https://api.pricelabs.co https://va.vercel-scripts.com https://vitals.vercel-insights.com",
+      // Connect: own API + Stripe + Smoobu + PriceLabs
+      "connect-src 'self' https://api.stripe.com https://login.smoobu.com https://api.pricelabs.co",
       // Stripe payment UI + Cloudflare Turnstile run in iframes
       "frame-src https://js.stripe.com https://hooks.stripe.com https://pay.google.com https://www.openstreetmap.org https://challenges.cloudflare.com",
       // No object/embed elements allowed

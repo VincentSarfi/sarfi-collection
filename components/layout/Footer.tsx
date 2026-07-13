@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { IconInstagram, IconMail, IconMapPin, IconPhone } from "@/components/ui/Icons";
 import SarfiLogo from "@/components/ui/SarfiLogo";
-import { CookieSettingsButton } from "@/components/layout/CookieBanner";
 import NewsletterForm from "@/components/layout/NewsletterForm";
 
 const footerLinks = {
@@ -184,7 +183,6 @@ export default function Footer() {
                 {link.label}
               </Link>
             ))}
-            <CookieSettingsButton className="font-body text-xs text-cream-50/60 hover:text-cream-50/70 transition-colors" />
           </div>
         </div>
       </div>

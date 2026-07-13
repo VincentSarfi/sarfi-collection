@@ -58,9 +58,9 @@ export default function DatenschutzPage() {
           {/* 3 */}
           <section>
             <h2 className="font-display text-xl text-forest-900 mb-3">3. Bereitstellung der Website und Erstellung von Logfiles</h2>
-            <h3 className="font-semibold text-forest-800 mb-2">Hosting durch Vercel</h3>
+            <h3 className="font-semibold text-forest-800 mb-2">Hosting in Deutschland (Sliplane / Hetzner)</h3>
             <p className="mb-3">
-              Diese Website wird gehostet von Vercel Inc., 340 Pine Street, Suite 900, San Francisco, CA 94104, USA. Bei jedem Aufruf unserer Website erfasst das System automatisiert Daten und Informationen des aufrufenden Rechners. Folgende Daten werden hierbei erhoben:
+              Diese Website wird gehostet über die Hosting-Plattform Sliplane (Wimadev, Inhaber Lukas Mauser, Freienwalder Str. 3, 13359 Berlin, Deutschland). Die eingesetzten Server werden von der Hetzner Online GmbH (Industriestr. 25, 91710 Gunzenhausen, Deutschland) in einem Rechenzentrum in Deutschland betrieben. Die Verarbeitung findet damit ausschließlich innerhalb der Europäischen Union statt. Bei jedem Aufruf unserer Website erfasst das System automatisiert Daten und Informationen des aufrufenden Rechners. Folgende Daten werden hierbei erhoben:
             </p>
             <ul className="list-disc list-inside space-y-1 mb-3 ml-2">
               <li>IP-Adresse des Nutzers (anonymisiert)</li>
@@ -73,25 +73,7 @@ export default function DatenschutzPage() {
               Die Daten werden in Logfiles gespeichert. Eine Zusammenführung dieser Daten mit anderen personenbezogenen Daten des Nutzers findet nicht statt. Rechtsgrundlage für die vorübergehende Speicherung der Daten und der Logfiles ist Art. 6 Abs. 1 lit. f DSGVO. Die Daten werden gelöscht, sobald sie für die Erreichung des Zweckes ihrer Erhebung nicht mehr erforderlich sind.
             </p>
             <p>
-              Vercel verarbeitet Ihre Daten ggf. in den USA. Vercel ist nach dem EU-US Data Privacy Framework zertifiziert. Weitere Informationen finden Sie unter: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">vercel.com/legal/privacy-policy</a>
-            </p>
-          </section>
-
-          {/* 3b */}
-          <section>
-            <h2 className="font-display text-xl text-forest-900 mb-3">3a. Webanalyse</h2>
-
-            <h3 className="font-semibold text-forest-800 mb-2">Vercel Web Analytics</h3>
-            <p className="mb-3">
-              Wir nutzen Vercel Web Analytics, einen datenschutzfreundlichen Analysedienst der Vercel Inc. Dieser Dienst erhebt anonymisierte Nutzungsdaten (Seitenaufrufe, Verweildauer, Gerätekategorie, Land) ohne den Einsatz von Cookies und ohne die Speicherung personenbezogener Daten. Es werden keine individuellen Nutzerprofile erstellt.
-            </p>
-            <p className="mb-3">
-              Rechtsgrundlage ist Ihre Einwilligung, Art. 6 Abs. 1 lit. a DSGVO i. V. m. § 25 Abs. 1 TDDDG. Der Dienst wird nur geladen, wenn Sie über unser Cookie-Banner eingewilligt haben. Ihre Entscheidung wird im lokalen Speicher Ihres Browsers (localStorage, Eintrag „sarfi_cookie_consent") gespeichert. Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen oder ändern – über den Link „Cookie-Einstellungen" im Footer unserer Website.
-            </p>
-
-            <h3 className="font-semibold text-forest-800 mb-2">Vercel Speed Insights</h3>
-            <p>
-              Wir nutzen Vercel Speed Insights zur Messung der Ladegeschwindigkeit unserer Website. Dabei werden anonymisierte Performance-Metriken (Core Web Vitals) erhoben. Rechtsgrundlage ist auch hier Ihre Einwilligung, Art. 6 Abs. 1 lit. a DSGVO i. V. m. § 25 Abs. 1 TDDDG. Die Entscheidung wird ebenfalls im localStorage (sarfi_cookie_consent) gespeichert und kann jederzeit über den Link „Cookie-Einstellungen" im Footer widerrufen werden.
+              Der Hosting-Anbieter verarbeitet die Daten in unserem Auftrag auf Grundlage eines Vertrags über Auftragsverarbeitung gemäß Art. 28 DSGVO. Eine Übermittlung in Drittländer findet im Rahmen des Hostings nicht statt.
             </p>
           </section>
 
@@ -105,9 +87,9 @@ export default function DatenschutzPage() {
             <p className="mb-3">
               Wir setzen technisch notwendige Cookies ein, um unsere Website nutzerfreundlich zu gestalten. Einige Elemente unserer Internetseite erfordern es, dass der aufrufende Browser auch nach einem Seitenwechsel identifiziert werden kann. Rechtsgrundlage für die Verarbeitung personenbezogener Daten unter Verwendung technisch notwendiger Cookies ist Art. 6 Abs. 1 lit. f DSGVO.
             </p>
-            <h3 className="font-semibold text-forest-800 mb-2">Cookie-Einwilligung</h3>
+            <h3 className="font-semibold text-forest-800 mb-2">Keine Analyse-, Tracking- oder Marketing-Cookies</h3>
             <p>
-              Beim ersten Besuch unserer Website wird Ihre Einwilligung zur Verwendung von Cookies bzw. vergleichbaren Technologien über ein Cookie-Banner eingeholt. Ihre Entscheidung wird im lokalen Speicher Ihres Browsers (localStorage, Eintrag „sarfi_cookie_consent") gespeichert. Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen oder anpassen – über den Link „Cookie-Einstellungen" im Footer unserer Website oder indem Sie uns kontaktieren.
+              Wir setzen keine Analyse-, Tracking- oder Marketing-Cookies und keine Webanalyse-Dienste ein. Es kommen ausschließlich technisch notwendige Cookies bzw. vergleichbare Speichertechnologien (z.&nbsp;B. localStorage für den Buchungsvorgang) zum Einsatz, für die nach § 25 Abs. 2 TDDDG keine Einwilligung erforderlich ist. Aus diesem Grund verzichten wir auch auf ein Cookie-Banner.
             </p>
           </section>
 
@@ -215,18 +197,18 @@ export default function DatenschutzPage() {
 
           {/* 8 */}
           <section>
-            <h2 className="font-display text-xl text-forest-900 mb-3">8. Google Maps</h2>
+            <h2 className="font-display text-xl text-forest-900 mb-3">8. Kartendarstellung (OpenStreetMap)</h2>
             <p className="mb-3">
-              Auf dieser Website nutzen wir den Kartendienst Google Maps der Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland. Die Nutzung von Google Maps ist für die Darstellung von Lageplänen unserer Unterkünfte notwendig.
+              Zur Darstellung von Lageplänen unserer Unterkünfte binden wir Kartenausschnitte des Dienstes OpenStreetMap ein, angeboten von der OpenStreetMap Foundation (St John's Innovation Centre, Cowley Road, Cambridge, CB4 0WS, Großbritannien).
             </p>
             <p className="mb-3">
-              Zur Nutzung der Funktionen von Google Maps ist es notwendig, Ihre IP-Adresse zu speichern. Diese Informationen werden in der Regel an einen Server von Google in den USA übertragen und dort gespeichert. Google ist nach dem EU-US Data Privacy Framework zertifiziert.
+              Beim Laden einer Karte wird eine Verbindung zu Servern der OpenStreetMap Foundation aufgebaut; dabei werden technisch bedingt Ihre IP-Adresse sowie übliche Verbindungsdaten übermittelt. Für Großbritannien liegt ein Angemessenheitsbeschluss der EU-Kommission vor (Art. 45 DSGVO). Die Nutzung erfolgt im Interesse einer ansprechenden Darstellung unserer Online-Angebote und einer leichten Auffindbarkeit der angegebenen Orte; dies stellt ein berechtigtes Interesse im Sinne von Art. 6 Abs. 1 lit. f DSGVO dar.
             </p>
             <p className="mb-3">
-              Die Nutzung von Google Maps erfolgt im Interesse einer ansprechenden Darstellung unserer Online-Angebote und an einer leichten Auffindbarkeit der von uns auf der Website angegebenen Orte. Dies stellt ein berechtigtes Interesse im Sinne von Art. 6 Abs. 1 lit. f DSGVO dar. Sofern eine entsprechende Einwilligung abgefragt wurde, erfolgt die Verarbeitung ausschließlich auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO.
+              Daneben verlinken wir für die Routenplanung auf Google Maps (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland). Beim bloßen Besuch unserer Website werden keine Daten an Google übertragen — erst wenn Sie den Link aktiv anklicken, gelten die Datenschutzbestimmungen von Google: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">policies.google.com/privacy</a>
             </p>
             <p>
-              Mehr Informationen zum Umgang mit Nutzerdaten finden Sie in der Datenschutzerklärung von Google: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">policies.google.com/privacy</a>
+              Mehr Informationen zum Umgang mit Nutzerdaten finden Sie in der Datenschutzerklärung der OpenStreetMap Foundation: <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">wiki.osmfoundation.org/wiki/Privacy_Policy</a>
             </p>
           </section>
 
@@ -278,12 +260,12 @@ export default function DatenschutzPage() {
           <section>
             <h2 className="font-display text-xl text-forest-900 mb-3">11. Aktualität und Änderung dieser Datenschutzerklärung</h2>
             <p>
-              Diese Datenschutzerklärung ist aktuell gültig und hat den Stand April 2026. Durch die Weiterentwicklung unserer Website und Angebote oder aufgrund geänderter gesetzlicher beziehungsweise behördlicher Vorgaben kann es notwendig werden, diese Datenschutzerklärung zu ändern. Die jeweils aktuelle Datenschutzerklärung kann jederzeit auf der Website unter <strong>www.sarfi-collection.de/datenschutz</strong> von Ihnen abgerufen und ausgedruckt werden.
+              Diese Datenschutzerklärung ist aktuell gültig und hat den Stand Juli 2026. Durch die Weiterentwicklung unserer Website und Angebote oder aufgrund geänderter gesetzlicher beziehungsweise behördlicher Vorgaben kann es notwendig werden, diese Datenschutzerklärung zu ändern. Die jeweils aktuelle Datenschutzerklärung kann jederzeit auf der Website unter <strong>www.sarfi-collection.de/datenschutz</strong> von Ihnen abgerufen und ausgedruckt werden.
             </p>
           </section>
 
           <p className="text-xs text-forest-400 pt-4 border-t border-cream-200">
-            Stand: April 2026
+            Stand: Juli 2026
           </p>
 
         </div>

@@ -3,8 +3,6 @@ import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import CookieBanner from "@/components/layout/CookieBanner";
-import ConsentedAnalytics from "@/components/layout/ConsentedAnalytics";
 
 // ─── Fonts ──────────────────────────────────────────────────────────────────
 const cormorant = Cormorant_Garamond({
@@ -113,8 +111,6 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
-        <CookieBanner />
-        <ConsentedAnalytics />
       </body>
     </html>
   );
