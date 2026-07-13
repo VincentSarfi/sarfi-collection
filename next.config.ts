@@ -69,8 +69,8 @@ const nextConfig: NextConfig = {
       // Apex → www (kanonische Domain). Auf Vercel machte das die Plattform
       // automatisch; self-hosted muss die App selbst umleiten.
       {
-        source: "/(.*)",
-        destination: "https://www.sarfi-collection.de/$1",
+        source: "/:path*",
+        destination: "https://www.sarfi-collection.de/:path*",
         permanent: true,
         has: [{ type: "host", value: "sarfi-collection.de" }],
       },
