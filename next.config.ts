@@ -128,6 +128,18 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: securityHeaders,
       },
+      {
+        // Vorberechnete Bild-Varianten (scripts/optimize-images): 1 Tag Cache +
+        // 7 Tage stale-while-revalidate. Kein `immutable`, weil die Dateinamen
+        // nicht content-gehasht sind (Bildtausch behält die URL).
+        source: "/img-opt/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
+          },
+        ],
+      },
     ];
   },
   images: {
