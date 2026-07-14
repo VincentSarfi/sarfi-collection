@@ -1,28 +1,12 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
+import { cormorant, dmSans } from "../fonts";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { LocaleProvider } from "@/lib/i18n/LocaleProvider";
+import { organizationSchema } from "@/lib/seo";
 
-// ─── Fonts ──────────────────────────────────────────────────────────────────
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-cormorant",
-  display: "swap",
-  preload: true,
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-dm-sans",
-  display: "swap",
-  preload: true,
-});
-
-// ─── Root Metadata ──────────────────────────────────────────────────────────
+// ─── Root Metadata (Deutsch) ────────────────────────────────────────────────
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.sarfi-collection.de"),
   title: {
@@ -78,24 +62,7 @@ export const metadata: Metadata = {
   },
 };
 
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "SARFI Collection",
-  url: "https://www.sarfi-collection.de",
-  logo: "https://www.sarfi-collection.de/images/logo.svg",
-  email: "hallo@sarfi-collection.de",
-  address: {
-    "@type": "PostalAddress",
-    addressRegion: "Bayern",
-    addressCountry: "DE",
-  },
-  sameAs: [
-    "https://www.airbnb.de/users/show/582496095",
-  ],
-};
-
-// ─── Root Layout ────────────────────────────────────────────────────────────
+// ─── Root Layout (Deutsch, URLs ohne Präfix) ────────────────────────────────
 export default function RootLayout({
   children,
 }: {
@@ -108,9 +75,11 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <LocaleProvider locale="de">
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </LocaleProvider>
       </body>
     </html>
   );
