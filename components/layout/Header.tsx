@@ -7,25 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { IconMenu, IconX, IconChevronDown } from "@/components/ui/Icons";
 import SarfiLogo from "@/components/ui/SarfiLogo";
-
-const navLinks = [
-  { label: "HAUS28", href: "/haus28" },
-  {
-    label: "Haus Schönblick",
-    href: "/schoenblick",
-    children: [
-      { label: "Apartment B7 – Neu ✦", href: "/schoenblick/b7" },
-      { label: "Apartment B5", href: "/schoenblick/b5" },
-      { label: "Apartment B6", href: "/schoenblick/b6" },
-      { label: "Apartment B8", href: "/schoenblick/b8" },
-      { label: "Apartment A2", href: "/schoenblick/a2" },
-    ],
-  },
-  { label: "Ausflugsziele", href: "/ausflugsziele" },
-  { label: "Blog", href: "/blog" },
-  { label: "Über uns", href: "/ueber-uns" },
-  { label: "Kontakt", href: "/kontakt" },
-];
+import { getDict, localizeHref, localizePath, stripLocale, switchLocalePath } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 export default function Header() {
   const [scrolled,  setScrolled]  = useState(false);
@@ -33,6 +16,31 @@ export default function Header() {
   const [dropdown,  setDropdown]  = useState<string | null>(null);
   const pathname = usePathname();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const locale = useLocale();
+  const t = getDict(locale).common.header;
+
+  // Nav-Ziele sind deutsche Referenzpfade; localizeHref mappt sie pro Locale.
+  const navLinks = [
+    { label: t.nav.haus28, href: "/haus28" },
+    {
+      label: t.nav.schoenblick,
+      href: "/schoenblick",
+      children: [
+        { label: t.nav.apartmentB7, href: "/schoenblick/b7" },
+        { label: t.nav.apartmentB5, href: "/schoenblick/b5" },
+        { label: t.nav.apartmentB6, href: "/schoenblick/b6" },
+        { label: t.nav.apartmentB8, href: "/schoenblick/b8" },
+        { label: t.nav.apartmentA2, href: "/schoenblick/a2" },
+      ],
+    },
+    { label: t.nav.ausflugsziele, href: "/ausflugsziele" },
+    { label: t.nav.blog, href: "/blog" },
+    { label: t.nav.ueberUns, href: "/ueber-uns" },
+    { label: t.nav.kontakt, href: "/kontakt" },
+  ];
+
+  // Aktiv-Zustand anhand des Referenzpfads (ohne /en-Präfix) prüfen.
+  const barePath = stripLocale(pathname);
 
   // Detect scroll for header bg
   useEffect(() => {
@@ -58,7 +66,7 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const isHome = pathname === "/";
+  const isHome = barePath === "/";
 
   // On hero pages header starts transparent
   const headerBg = scrolled
@@ -66,6 +74,32 @@ export default function Header() {
     : isHome
     ? "bg-transparent"
     : "bg-forest-900/95 backdrop-blur-md";
+
+  const langSwitch = (
+    <div className="flex items-center gap-1 font-body text-xs tracking-wide">
+      <Link
+        href={switchLocalePath(pathname, "de")}
+        aria-label={t.langSwitchDeAria}
+        aria-current={locale === "de" ? "true" : undefined}
+        className={`px-1.5 py-1 rounded transition-colors ${
+          locale === "de" ? "text-gold-300 font-semibold" : "text-cream-50/60 hover:text-cream-50"
+        }`}
+      >
+        DE
+      </Link>
+      <span className="text-cream-50/30" aria-hidden="true">·</span>
+      <Link
+        href={switchLocalePath(pathname, "en")}
+        aria-label={t.langSwitchEnAria}
+        aria-current={locale === "en" ? "true" : undefined}
+        className={`px-1.5 py-1 rounded transition-colors ${
+          locale === "en" ? "text-gold-300 font-semibold" : "text-cream-50/60 hover:text-cream-50"
+        }`}
+      >
+        EN
+      </Link>
+    </div>
+  );
 
   return (
     <header
@@ -75,9 +109,9 @@ export default function Header() {
       <div className="container-site flex h-16 md:h-18 items-center justify-between gap-4">
         {/* Logo */}
         <Link
-          href="/"
+          href={localizePath("/", locale)}
           className="flex items-center gap-2.5 group"
-          aria-label="SARFI Collection – Startseite"
+          aria-label={t.homeAria}
         >
           <SarfiLogo
             markOnly
@@ -97,7 +131,7 @@ export default function Header() {
         {/* Desktop Nav */}
         <nav
           className="hidden md:flex items-center gap-1"
-          aria-label="Hauptnavigation"
+          aria-label={t.mainNavAria}
           ref={dropdownRef}
         >
           {navLinks.map((link) =>
@@ -108,7 +142,7 @@ export default function Header() {
                     setDropdown(dropdown === link.href ? null : link.href)
                   }
                   className={`flex items-center gap-1 px-4 py-2 text-sm font-body rounded-full transition-colors ${
-                    pathname.startsWith(link.href)
+                    barePath.startsWith(link.href)
                       ? "text-gold-300 bg-cream-50/10"
                       : "text-cream-50/80 hover:text-cream-50 hover:bg-cream-50/10"
                   }`}
@@ -135,17 +169,17 @@ export default function Header() {
                       role="menu"
                     >
                       <Link
-                        href={link.href}
+                        href={localizeHref(link.href, locale)}
                         className="block px-4 py-2 text-sm text-cream-50/70 hover:text-cream-50 hover:bg-cream-50/10 transition-colors font-body"
                         role="menuitem"
                       >
-                        Alle Apartments
+                        {t.nav.allApartments}
                       </Link>
                       <div className="my-1 border-t border-cream-50/10" />
                       {link.children.map((child) => (
                         <Link
                           key={child.href}
-                          href={child.href}
+                          href={localizeHref(child.href, locale)}
                           className="block px-4 py-2 text-sm text-cream-50/80 hover:text-cream-50 hover:bg-cream-50/10 transition-colors font-body"
                           role="menuitem"
                         >
@@ -159,13 +193,13 @@ export default function Header() {
             ) : (
               <Link
                 key={link.href}
-                href={link.href}
+                href={localizeHref(link.href, locale)}
                 className={`px-4 py-2 text-sm font-body rounded-full transition-colors ${
-                  pathname.startsWith(link.href)
+                  barePath.startsWith(link.href)
                     ? "text-gold-300 bg-cream-50/10"
                     : "text-cream-50/80 hover:text-cream-50 hover:bg-cream-50/10"
                 }`}
-                aria-current={pathname.startsWith(link.href) ? "page" : undefined}
+                aria-current={barePath.startsWith(link.href) ? "page" : undefined}
               >
                 {link.label}
               </Link>
@@ -173,23 +207,24 @@ export default function Header() {
           )}
         </nav>
 
-        {/* CTA + Mobile Toggle */}
+        {/* Lang Switch + CTA + Mobile Toggle */}
         <div className="flex items-center gap-3">
+          <div className="hidden md:block">{langSwitch}</div>
           <Button
-            href="/buchen"
+            href={localizeHref("/buchen", locale)}
             variant="gold"
             size="sm"
             className="hidden sm:inline-flex"
-            aria-label="Jetzt buchen"
+            aria-label={t.bookNow}
           >
-            Jetzt buchen
+            {t.bookNow}
           </Button>
 
           <button
             onPointerDown={(e) => { e.preventDefault(); setMenuOpen((prev) => !prev); }}
             className="md:hidden flex items-center justify-center w-10 h-10 rounded-full text-cream-50 hover:bg-cream-50/10 transition-colors"
             style={{ touchAction: "manipulation", WebkitTapHighlightColor: "transparent" }}
-            aria-label={menuOpen ? "Menü schließen" : "Menü öffnen"}
+            aria-label={menuOpen ? t.menuClose : t.menuOpen}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
           >
@@ -209,17 +244,17 @@ export default function Header() {
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="md:hidden overflow-hidden bg-forest-900 border-t border-cream-50/10"
           >
-            <nav className="container-site py-4 flex flex-col gap-1" aria-label="Mobile Navigation">
+            <nav className="container-site py-4 flex flex-col gap-1" aria-label={t.mobileNavAria}>
               {navLinks.map((link) => (
                 <div key={link.href}>
                   <Link
-                    href={link.href}
+                    href={localizeHref(link.href, locale)}
                     className={`block px-4 py-3 text-base font-body rounded-lg transition-colors ${
-                      pathname.startsWith(link.href)
+                      barePath.startsWith(link.href)
                         ? "text-gold-300 bg-cream-50/10"
                         : "text-cream-50/80 hover:text-cream-50 hover:bg-cream-50/10"
                     }`}
-                    aria-current={pathname.startsWith(link.href) ? "page" : undefined}
+                    aria-current={barePath.startsWith(link.href) ? "page" : undefined}
                   >
                     {link.label}
                   </Link>
@@ -228,7 +263,7 @@ export default function Header() {
                       {link.children.map((child) => (
                         <Link
                           key={child.href}
-                          href={child.href}
+                          href={localizeHref(child.href, locale)}
                           className="block px-4 py-2 text-sm font-body text-cream-50/60 hover:text-cream-50/90 hover:bg-cream-50/5 rounded-lg transition-colors"
                         >
                           {child.label}
@@ -238,10 +273,11 @@ export default function Header() {
                   )}
                 </div>
               ))}
-              <div className="pt-3 border-t border-cream-50/10 mt-2">
-                <Button href="/buchen" variant="gold" size="md" fullWidth>
-                  Jetzt buchen
+              <div className="pt-3 border-t border-cream-50/10 mt-2 flex flex-col gap-3">
+                <Button href={localizeHref("/buchen", locale)} variant="gold" size="md" fullWidth>
+                  {t.bookNow}
                 </Button>
+                <div className="flex justify-center">{langSwitch}</div>
               </div>
             </nav>
           </motion.div>

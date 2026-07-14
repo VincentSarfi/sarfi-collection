@@ -1,4 +1,4 @@
-// Shared copy: header, footer, recurring UI elements.
+// Shared copy: header, footer, newsletter, recurring UI elements.
 const common = {
   header: {
     nav: {
@@ -21,7 +21,47 @@ const common = {
     mobileNavAria: "Mobile navigation",
     menuOpen: "Open menu",
     menuClose: "Close menu",
-    langSwitchAria: "Switch language",
+    langSwitchDeAria: "Deutsche Version",
+    langSwitchEnAria: "English version",
+  },
+  footer: {
+    brandText:
+      "Exclusive holiday homes in the Bavarian Forest. Nature, design and comfort – booked direct.",
+    emailAria: "Send an email",
+    phoneAria: "Call us",
+    whatsappAria: "Message us on WhatsApp",
+    location: "Bavarian Forest, Germany",
+    headingHomes: "Our homes",
+    headingInfo: "Information",
+    headingBook: "Book direct",
+    headingNewsletter: "Newsletter",
+    bookText: "Book directly with us and skip the platform fees.",
+    bookCta: "Book now",
+    newsletterText: "Offers & news from the Bavarian Forest (in German) – no spam.",
+    links: {
+      ueberUns: "About us",
+      kontakt: "Contact",
+      faq: "FAQ",
+      blog: "Blog",
+      ausflugsziele: "Things to do",
+      gutschein: "Gift voucher",
+      stornierung: "Cancellation policy",
+      impressum: "Legal notice",
+      datenschutz: "Privacy policy",
+      agb: "Terms & conditions",
+    },
+    copyright: "All rights reserved.",
+  },
+  newsletter: {
+    placeholder: "Your email",
+    submit: "Subscribe",
+    emailAria: "Email address for the newsletter",
+    consentPre: "I'd like to receive the newsletter and accept the",
+    consentLink: "privacy policy",
+    errConsent: "Please accept the privacy policy.",
+    success: "Please check your inbox and confirm your subscription.",
+    errFallback: "Subscription failed. Please try again.",
+    errNetwork: "Connection error. Please try again.",
   },
 };
 

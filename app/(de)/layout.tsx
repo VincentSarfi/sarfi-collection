@@ -78,7 +78,7 @@ export default function RootLayout({
         <LocaleProvider locale="de">
           <Header />
           <main className="flex-1">{children}</main>
-          <Footer />
+          <Footer locale="de" />
         </LocaleProvider>
       </body>
     </html>

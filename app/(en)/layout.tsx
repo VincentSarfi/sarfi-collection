@@ -70,7 +70,7 @@ export default function EnglishRootLayout({
         <LocaleProvider locale="en">
           <Header />
           <main className="flex-1">{children}</main>
-          <Footer />
+          <Footer locale="en" />
         </LocaleProvider>
       </body>
     </html>

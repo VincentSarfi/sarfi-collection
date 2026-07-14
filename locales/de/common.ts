@@ -1,4 +1,4 @@
-// Gemeinsame Texte: Header, Footer, wiederkehrende UI-Elemente.
+// Gemeinsame Texte: Header, Footer, Newsletter, wiederkehrende UI-Elemente.
 const common = {
   header: {
     nav: {
@@ -21,7 +21,47 @@ const common = {
     mobileNavAria: "Mobile Navigation",
     menuOpen: "Menü öffnen",
     menuClose: "Menü schließen",
-    langSwitchAria: "Sprache wechseln",
+    langSwitchDeAria: "Deutsche Version",
+    langSwitchEnAria: "English version",
+  },
+  footer: {
+    brandText:
+      "Exklusive Ferienunterkünfte im Bayerischen Wald. Natur, Design und Komfort – direkt gebucht.",
+    emailAria: "E-Mail schreiben",
+    phoneAria: "Anrufen",
+    whatsappAria: "Per WhatsApp schreiben",
+    location: "Bayerischer Wald, Deutschland",
+    headingHomes: "Unterkünfte",
+    headingInfo: "Informationen",
+    headingBook: "Direkt buchen",
+    headingNewsletter: "Newsletter",
+    bookText: "Buche direkt bei uns und spare Plattformgebühren.",
+    bookCta: "Jetzt buchen",
+    newsletterText: "Angebote & Neuigkeiten aus dem Bayerischen Wald – kein Spam.",
+    links: {
+      ueberUns: "Über uns",
+      kontakt: "Kontakt",
+      faq: "FAQ",
+      blog: "Blog",
+      ausflugsziele: "Ausflugsziele",
+      gutschein: "Geschenkgutschein",
+      stornierung: "Stornierungsbedingungen",
+      impressum: "Impressum",
+      datenschutz: "Datenschutz",
+      agb: "AGB",
+    },
+    copyright: "Alle Rechte vorbehalten.",
+  },
+  newsletter: {
+    placeholder: "Deine E-Mail",
+    submit: "Anmelden",
+    emailAria: "E-Mail-Adresse für den Newsletter",
+    consentPre: "Ich möchte den Newsletter erhalten und akzeptiere die",
+    consentLink: "Datenschutzerklärung",
+    errConsent: "Bitte stimme der Datenschutzerklärung zu.",
+    success: "Bitte prüfe dein Postfach und bestätige die Anmeldung.",
+    errFallback: "Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
+    errNetwork: "Verbindungsfehler. Bitte versuche es erneut.",
   },
 };
 

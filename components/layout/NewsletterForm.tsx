@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { getDict } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -10,13 +12,15 @@ export default function NewsletterForm() {
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
+  const locale = useLocale();
+  const t = getDict(locale).common.newsletter;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (status === "loading") return;
     if (!consent) {
       setStatus("error");
-      setMessage("Bitte stimme der Datenschutzerklärung zu.");
+      setMessage(t.errConsent);
       return;
     }
     setStatus("loading");
@@ -30,16 +34,17 @@ export default function NewsletterForm() {
       const data = await res.json();
       if (res.ok) {
         setStatus("success");
-        setMessage(data.message ?? "Bitte prüfe dein Postfach und bestätige die Anmeldung.");
+        // API-Meldungen sind deutsch – auf /en die Dictionary-Übersetzung zeigen.
+        setMessage(locale === "de" ? (data.message ?? t.success) : t.success);
         setEmail("");
         setConsent(false);
       } else {
         setStatus("error");
-        setMessage(data.error ?? "Anmeldung fehlgeschlagen. Bitte versuche es erneut.");
+        setMessage(locale === "de" ? (data.error ?? t.errFallback) : t.errFallback);
       }
     } catch {
       setStatus("error");
-      setMessage("Verbindungsfehler. Bitte versuche es erneut.");
+      setMessage(t.errNetwork);
     }
   }
 
@@ -59,9 +64,9 @@ export default function NewsletterForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Deine E-Mail"
+          placeholder={t.placeholder}
           autoComplete="email"
-          aria-label="E-Mail-Adresse für den Newsletter"
+          aria-label={t.emailAria}
           className="min-w-0 flex-1 rounded-lg bg-cream-50/10 border border-cream-50/20 px-3 py-2 font-body text-sm text-cream-50 placeholder:text-cream-50/40 focus:outline-none focus:ring-2 focus:ring-gold-400"
         />
         <button
@@ -69,7 +74,7 @@ export default function NewsletterForm() {
           disabled={status === "loading"}
           className="shrink-0 rounded-lg bg-gold-500 px-4 py-2 font-body text-sm font-semibold text-forest-900 hover:bg-gold-400 disabled:opacity-60 transition-colors"
         >
-          {status === "loading" ? "…" : "Anmelden"}
+          {status === "loading" ? "…" : t.submit}
         </button>
       </div>
       <label className="flex items-start gap-2 cursor-pointer select-none">
@@ -80,9 +85,9 @@ export default function NewsletterForm() {
           className="mt-0.5 w-3.5 h-3.5 rounded border-cream-50/30 accent-gold-500 cursor-pointer"
         />
         <span className="font-body text-xs text-cream-50/60 leading-snug">
-          Ich möchte den Newsletter erhalten und akzeptiere die{" "}
+          {t.consentPre}{" "}
           <Link href="/datenschutz" className="underline hover:text-cream-50/90">
-            Datenschutzerklärung
+            {t.consentLink}
           </Link>
           .
         </span>
