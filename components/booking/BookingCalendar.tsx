@@ -297,6 +297,9 @@ export default function BookingCalendar({
     return new Date(d.getFullYear(), d.getMonth(), d.getDate())
   }, [])
 
+  const locale = useLocale()
+  const t = getDict(locale).booking.calendar
+
   // Start showing current month
   const [viewYear, setViewYear] = useState<number>(today.getFullYear())
   const [viewMonth, setViewMonth] = useState<number>(today.getMonth())
@@ -375,11 +378,11 @@ export default function BookingCalendar({
       {/* Instruction hint */}
       <p className="text-xs font-body text-forest-500 mb-4 min-h-[1.25rem]">
         {!checkIn
-          ? "Anreisedatum wählen"
+          ? t.hintCheckin
           : selectionStep === "checkout"
-            ? `Abreisedatum wählen${currentMinStay > 1 ? ` — Mindestaufenthalt: ${currentMinStay} Nächte` : ""}`
+            ? t.hintCheckout(currentMinStay)
             : checkIn && checkOut
-              ? `${fmtShort(checkIn)} → ${fmtShort(checkOut)}`
+              ? `${fmtShort(checkIn, locale)} → ${fmtShort(checkOut, locale)}`
               : ""}
       </p>
 
@@ -390,7 +393,7 @@ export default function BookingCalendar({
           onClick={handlePrev}
           disabled={!canGoPrev}
           className="w-9 h-9 flex items-center justify-center rounded-full border border-cream-300 text-forest-600 hover:bg-cream-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-          aria-label="Vorheriger Monat"
+          aria-label={t.prevMonth}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
             <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -401,7 +404,7 @@ export default function BookingCalendar({
           type="button"
           onClick={handleNext}
           className="w-9 h-9 flex items-center justify-center rounded-full border border-cream-300 text-forest-600 hover:bg-cream-100 transition-colors"
-          aria-label="Nächster Monat"
+          aria-label={t.nextMonth}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
             <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -463,17 +466,17 @@ export default function BookingCalendar({
       <div className="mt-5 flex items-center gap-5 text-xs font-body text-forest-500">
         <span className="flex items-center gap-1.5">
           <span className="w-4 h-4 rounded-full bg-forest-800 inline-block" />
-          Gewählt
+          {t.legendSelected}
         </span>
         <span className="flex items-center gap-1.5">
           <span className="w-4 h-4 rounded bg-forest-100 inline-block" />
-          Zeitraum
+          {t.legendRange}
         </span>
         <span className="flex items-center gap-1.5">
           <span className="w-4 h-4 rounded bg-cream-200 inline-block line-through text-center text-cream-400 text-[9px] leading-4">
             ×
           </span>
-          Belegt
+          {t.legendBooked}
         </span>
       </div>
     </div>

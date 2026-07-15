@@ -5,6 +5,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconStar } from "@/components/ui/Icons";
+import { getDict } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 interface RelatedProperty {
   name: string;
@@ -26,8 +28,11 @@ interface RelatedPropertiesProps {
 
 export default function RelatedProperties({
   properties,
-  title = "Weitere Unterkünfte",
+  title,
 }: RelatedPropertiesProps) {
+  const locale = useLocale();
+  const t = getDict(locale).property.related;
+  const heading = title ?? t.defaultTitle;
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   if (properties.length === 0) return null;
@@ -49,7 +54,7 @@ export default function RelatedProperties({
             id="related-heading"
             className="font-display text-display-md text-forest-900"
           >
-            {title}
+            {heading}
           </h2>
         </motion.div>
 
@@ -95,15 +100,15 @@ export default function RelatedProperties({
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="font-body text-xs text-forest-400">ab </span>
+                    <span className="font-body text-xs text-forest-400">{t.fromPre}</span>
                     <span className="font-display text-xl text-forest-800">{property.priceFrom}€</span>
-                    <span className="font-body text-xs text-forest-400"> / Nacht</span>
+                    <span className="font-body text-xs text-forest-400">{t.perNight}</span>
                   </div>
                   <Link
                     href={property.bookHref}
                     className="px-4 py-2 bg-gold-500 text-forest-900 text-xs font-medium font-body rounded-full hover:bg-gold-400 transition-colors"
                   >
-                    Buchen
+                    {t.book}
                   </Link>
                 </div>
               </div>

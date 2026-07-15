@@ -28,6 +28,13 @@ const property = {
   faq: {
     heading: "Häufige Fragen",
   },
+  // components/property/PropertyDescription.tsx
+  description: {
+    aboutPre: "Über ",
+    aboutFallback: "Über diese Unterkunft",
+    readMore: "Weiterlesen",
+    showLess: "Weniger anzeigen",
+  },
   // components/property/LocationMap.tsx
   location: {
     heading: "Lage & Umgebung",

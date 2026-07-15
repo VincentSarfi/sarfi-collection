@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { getDict } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // Smoobu Account-ID (gleich für alle Unterkünfte)
 const SMOOBU_ACCOUNT_ID = "1163278";
@@ -18,11 +20,13 @@ export default function SmoobuBookingWidget({
   propertyName,
   fallbackUrl,
 }: SmoobuBookingWidgetProps) {
+  const locale = useLocale();
+  const t = getDict(locale).property.smoobu;
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.05 });
   const initialized = useRef(false);
 
   const divId = `apartmentIframe${propertyId}`;
-  const iframeUrl = `https://login.smoobu.com/de/booking-tool/iframe/${SMOOBU_ACCOUNT_ID}/${propertyId}`;
+  const iframeUrl = `https://login.smoobu.com/${locale}/booking-tool/iframe/${SMOOBU_ACCOUNT_ID}/${propertyId}`;
 
   useEffect(() => {
     if (!inView || initialized.current || propertyId === "TODO") return;
@@ -68,13 +72,13 @@ export default function SmoobuBookingWidget({
           className="mb-8"
         >
           <p className="font-body text-sm tracking-[0.15em] uppercase text-gold-600 mb-2">
-            Direkt buchen & sparen
+            {t.eyebrow}
           </p>
           <h2
             id="booking-heading"
             className="font-display text-display-md text-forest-900"
           >
-            {propertyName ? `${propertyName} buchen` : "Jetzt buchen"}
+            {propertyName ? `${t.bookPre}${propertyName}${t.bookPost}` : t.bookNow}
           </h2>
         </motion.div>
 
@@ -90,7 +94,7 @@ export default function SmoobuBookingWidget({
         ) : (
           <div className="rounded-2xl border-2 border-dashed border-forest-200 bg-cream-50 p-10 text-center">
             <p className="font-body text-forest-600 mb-2">
-              Smoobu Property-ID noch nicht konfiguriert.
+              {t.notConfigured}
             </p>
             {fallbackUrl && (
               <a
@@ -99,14 +103,14 @@ export default function SmoobuBookingWidget({
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-gold-500 text-forest-900 font-body font-medium text-sm hover:bg-gold-400 transition-colors"
               >
-                Direkt auf Smoobu buchen →
+                {t.bookOnSmoobu}
               </a>
             )}
           </div>
         )}
 
         <p className="mt-4 text-center font-body text-xs text-forest-400">
-          Sichere Direktbuchung · Keine Plattformgebühren · Persönliche Betreuung
+          {t.trustLine}
         </p>
       </div>
     </section>

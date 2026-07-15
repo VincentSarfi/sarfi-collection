@@ -13,6 +13,11 @@ import {
 import { loadStripe } from "@stripe/stripe-js/pure"
 import { motion } from "framer-motion"
 import { fmtLong } from "./BookingCalendar"
+import { getDict, type Locale } from "@/lib/i18n"
+import { useLocale } from "@/lib/i18n/LocaleProvider"
+
+/** BCP-47 tag für Zahlenformatierung je Locale */
+const numLocale = (locale: Locale): string => (locale === "en" ? "en-GB" : "de-DE")
 
 // ─── Stripe appearance (matches site design) ─────────────────────────────────
 
@@ -69,6 +74,9 @@ function CheckoutForm({
   const stripe = useStripe()
   const elements = useElements()
   const [processing, setProcessing] = useState(false)
+  const locale = useLocale()
+  const t = getDict(locale).booking.payment
+  const nf = numLocale(locale)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -88,17 +96,15 @@ function CheckoutForm({
       })
 
       if (error) {
-        onError(
-          error.message ??
-            "Zahlung fehlgeschlagen. Bitte prüfe deine Kartendaten.",
-        )
+        // Stripe liefert error.message bereits in der Elements-Locale.
+        onError(error.message ?? t.errCard)
       } else if (paymentIntent?.status === "succeeded") {
         onSuccess(paymentIntent.id)
       } else {
-        onError("Unerwarteter Zahlungsstatus. Bitte versuche es erneut.")
+        onError(t.errUnexpectedStatus)
       }
     } catch {
-      onError("Verbindungsfehler. Bitte versuche es erneut.")
+      onError(t.errConnection)
     } finally {
       setProcessing(false)
     }
@@ -114,17 +120,17 @@ function CheckoutForm({
         <p className="font-body text-sm text-forest-700 leading-relaxed">
           {isFullPay ? (
             <>
-              Du zahlst jetzt den{" "}
-              <strong className="text-forest-900">vollen Betrag ({depositAmount.toLocaleString("de-DE")} €)</strong>.
-              {" "}Nach der Zahlung ist die Buchung vollständig beglichen – keine weiteren Zahlungen nötig.
+              {t.fullPayPre}
+              <strong className="text-forest-900">{t.fullPayStrong(depositAmount.toLocaleString(nf))}</strong>
+              {t.fullPayPost}
             </>
           ) : (
             <>
-              Du zahlst jetzt die{" "}
-              <strong className="text-forest-900">50% Anzahlung ({depositAmount.toLocaleString("de-DE")} €)</strong>.
-              Den Restbetrag von{" "}
-              <strong className="text-forest-900">{remaining.toLocaleString("de-DE")} €</strong>{" "}
-              begleichst du 14 Tage vor Anreise oder nach Absprache mit dem Gastgeber.
+              {t.depositPre}
+              <strong className="text-forest-900">{t.depositStrong(depositAmount.toLocaleString(nf))}</strong>
+              {t.depositMid}
+              <strong className="text-forest-900">{remaining.toLocaleString(nf)} €</strong>
+              {t.depositPost}
             </>
           )}
         </p>
@@ -133,7 +139,7 @@ function CheckoutForm({
       {/* Stripe Payment Element */}
       <div>
         <p className="font-body text-xs font-medium text-forest-700 uppercase tracking-wider mb-3">
-          Zahlungsdaten
+          {t.paymentDetails}
         </p>
         <PaymentElement
           options={{
@@ -156,7 +162,7 @@ function CheckoutForm({
           {processing ? (
             <>
               <span className="w-5 h-5 border-2 border-cream-50/40 border-t-cream-50 rounded-full animate-spin" />
-              Zahlung wird verarbeitet…
+              {t.processing}
             </>
           ) : (
             <>
@@ -164,7 +170,7 @@ function CheckoutForm({
                 <rect x="1.5" y="4.5" width="15" height="10.5" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
                 <path d="M1.5 7.5h15" stroke="currentColor" strokeWidth="1.5" />
               </svg>
-              {depositAmount.toLocaleString("de-DE")} € {isFullPay ? "jetzt bezahlen" : "jetzt anzahlen"}
+              {t.payButton(depositAmount.toLocaleString(nf), isFullPay)}
             </>
           )}
         </button>
@@ -175,7 +181,7 @@ function CheckoutForm({
           disabled={processing}
           className="text-sm font-body text-forest-500 hover:text-forest-800 transition-colors disabled:opacity-40"
         >
-          ← Zurück zu meinen Angaben
+          {t.backToDetails}
         </button>
       </div>
 
@@ -184,7 +190,7 @@ function CheckoutForm({
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
           <path d="M6 1L1.5 3v3c0 2.76 1.95 5.34 4.5 6 2.55-.66 4.5-3.24 4.5-6V3L6 1z" stroke="currentColor" strokeWidth="1" strokeLinejoin="round" />
         </svg>
-        SSL-verschlüsselt · Gesichert durch Stripe
+        {t.sslNote}
       </p>
     </form>
   )
@@ -220,6 +226,9 @@ export default function PaymentStep({
   onBack,
 }: PaymentStepProps) {
   const isFullPay = paymentOption === "100"
+  const locale = useLocale()
+  const t = getDict(locale).booking
+  const nf = numLocale(locale)
   // loadStripe erst hier ausführen – PaymentStep wird nur im Zahlungsschritt
   // gerendert, sodass js.stripe.com nicht schon beim Seitenaufruf lädt.
   const stripePromise = useMemo(
@@ -236,37 +245,37 @@ export default function PaymentStep({
       {/* Booking summary */}
       <div className="mb-6">
         <h2 className="font-body text-xl font-semibold text-forest-900 mb-4">
-          {isFullPay ? "Vollzahlung" : "Anzahlung"}
+          {isFullPay ? t.payment.headingFull : t.payment.headingDeposit}
         </h2>
         <div className="rounded-xl border border-cream-200 bg-cream-50 p-4 space-y-2">
           <div className="flex justify-between font-body text-sm">
-            <span className="text-forest-500">Unterkunft</span>
+            <span className="text-forest-500">{t.labels.property}</span>
             <span className="font-medium text-forest-900">{propertyName}</span>
           </div>
           {checkIn && checkOut && (
             <>
               <div className="flex justify-between font-body text-sm">
-                <span className="text-forest-500">Anreise</span>
-                <span className="font-medium text-forest-900">{fmtLong(checkIn)}</span>
+                <span className="text-forest-500">{t.labels.arrival}</span>
+                <span className="font-medium text-forest-900">{fmtLong(checkIn, locale)}</span>
               </div>
               <div className="flex justify-between font-body text-sm">
-                <span className="text-forest-500">Abreise</span>
-                <span className="font-medium text-forest-900">{fmtLong(checkOut)}</span>
+                <span className="text-forest-500">{t.labels.departure}</span>
+                <span className="font-medium text-forest-900">{fmtLong(checkOut, locale)}</span>
               </div>
             </>
           )}
           <div className="flex justify-between font-body text-sm">
-            <span className="text-forest-500">Gäste</span>
+            <span className="text-forest-500">{t.labels.guests}</span>
             <span className="font-medium text-forest-900">{guests}</span>
           </div>
           <div className="border-t border-cream-200 pt-2 mt-1 space-y-1">
             <div className="flex justify-between font-body text-sm text-forest-600">
-              <span>Gesamtpreis</span>
-              <span>{totalAmount.toLocaleString("de-DE")} €</span>
+              <span>{t.labels.totalPrice}</span>
+              <span>{totalAmount.toLocaleString(nf)} €</span>
             </div>
             <div className="flex justify-between font-body text-sm font-bold text-forest-900">
-              <span>{isFullPay ? "Vollzahlung heute (100%)" : "Anzahlung heute (50%)"}</span>
-              <span className="text-forest-800">{depositAmount.toLocaleString("de-DE")} €</span>
+              <span>{isFullPay ? t.payment.todayFull : t.payment.todayDeposit}</span>
+              <span className="text-forest-800">{depositAmount.toLocaleString(nf)} €</span>
             </div>
           </div>
         </div>
@@ -278,7 +287,7 @@ export default function PaymentStep({
         options={{
           clientSecret,
           appearance: STRIPE_APPEARANCE,
-          locale: "de",
+          locale,
           fonts: [
             {
               cssSrc:

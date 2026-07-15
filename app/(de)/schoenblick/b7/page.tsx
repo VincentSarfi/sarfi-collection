@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import ApartmentPage from "@/components/property/ApartmentPage";
 import { schoenblick } from "@/data/properties";
+import { localizeProperty } from "@/data/properties.i18n";
 import { PROPERTY_CONFIGS } from "@/config/properties.config";
+import { alternatesFor } from "@/lib/i18n";
 
 const apt = schoenblick.apartments!.b7;
 const config = PROPERTY_CONFIGS.b7;
@@ -14,7 +16,7 @@ export const metadata: Metadata = {
     description: apt.shortDescription,
     images: [{ url: apt.images.hero, alt: apt.name }],
   },
-  alternates: { canonical: "https://www.sarfi-collection.de/schoenblick/b7" },
+  alternates: alternatesFor("/schoenblick/b7", "de"),
 };
 
 const jsonLd = {
@@ -107,7 +109,7 @@ export default function B7Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <ApartmentPage apartment={apt} config={config} />
+      <ApartmentPage apartment={localizeProperty(apt, "de")} config={config} />
     </>
   );
 }

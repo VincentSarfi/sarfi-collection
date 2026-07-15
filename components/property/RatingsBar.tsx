@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconStar } from "@/components/ui/Icons";
+import { getDict } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 export interface PlatformRating {
   platform: "airbnb" | "booking" | "fewo" | "google";
@@ -20,6 +22,8 @@ interface RatingsBarProps {
 }
 
 function PlatformBadge({ platform, label, displayRating, reviewCount, url }: PlatformRating) {
+  const locale = useLocale();
+  const t = getDict(locale).property.ratingsBar;
   const content = (
     <div className="flex flex-col items-center gap-1.5 px-6 py-4 min-w-[130px] group">
       <span className="font-body text-xs text-cream-50/50 uppercase tracking-widest">{label}</span>
@@ -33,7 +37,7 @@ function PlatformBadge({ platform, label, displayRating, reviewCount, url }: Pla
         )}
       </div>
       <span className="font-body text-xs text-cream-50/40">
-        {reviewCount} {reviewCount === 1 ? "Bewertung" : "Bewertungen"}
+        {reviewCount} {reviewCount === 1 ? t.reviewSingular : t.reviewPlural}
       </span>
     </div>
   );
@@ -55,6 +59,8 @@ function PlatformBadge({ platform, label, displayRating, reviewCount, url }: Pla
 }
 
 export default function RatingsBar({ platforms, totalReviews }: RatingsBarProps) {
+  const locale = useLocale();
+  const t = getDict(locale).property.ratingsBar;
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
 
   return (
@@ -62,7 +68,7 @@ export default function RatingsBar({ platforms, totalReviews }: RatingsBarProps)
       ref={ref}
       className="bg-forest-900 border-b border-forest-800"
       role="region"
-      aria-label="Bewertungen auf allen Plattformen"
+      aria-label={t.regionAria}
     >
       <div className="container-site">
         <div className="flex flex-wrap items-center divide-x divide-forest-700 overflow-x-auto">
@@ -74,13 +80,13 @@ export default function RatingsBar({ platforms, totalReviews }: RatingsBarProps)
             className="flex flex-col gap-0.5 px-6 py-4 min-w-[160px] shrink-0"
           >
             <span className="font-body text-xs text-cream-50/40 uppercase tracking-widest">
-              Plattform-Bewertungen
+              {t.platformRatings}
             </span>
             <span className="font-display text-lg text-cream-50 leading-tight">
-              {totalReviews} Bewertungen
+              {totalReviews}{t.reviewsPost}
             </span>
             <span className="font-body text-xs text-gold-400">
-              Überall 5★ / 10/10
+              {t.allTopRated}
             </span>
           </motion.div>
 

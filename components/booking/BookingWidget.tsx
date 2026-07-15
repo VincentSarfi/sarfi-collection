@@ -8,6 +8,13 @@ import BookingCalendar, { toDateKey, fmtShort, fmtLong, type SelectionStep } fro
 import PaymentStep from "./PaymentStep"
 import type { AvailabilityMap } from "@/lib/smoobu"
 import type { NightRate } from "@/lib/pricelabs"
+import { getDict, localizeHref, type Locale } from "@/lib/i18n"
+import { useLocale } from "@/lib/i18n/LocaleProvider"
+
+type BookingDict = ReturnType<typeof getDict>["booking"]
+
+/** BCP-47 tag für Zahlenformatierung je Locale */
+const numLocale = (locale: Locale): string => (locale === "en" ? "en-GB" : "de-DE")
 
 // Public Cloudflare Turnstile site key (safe to expose client-side).
 const TURNSTILE_SITE_KEY = "0x4AAAAAADCAIuxW7h0ePfOM"
@@ -113,38 +120,38 @@ function calcPrice(
 
 // ─── Form validation ──────────────────────────────────────────────────────────
 
-function validateForm(data: FormData): FormErrors {
+function validateForm(data: FormData, v: BookingDict["validation"]): FormErrors {
   const errors: FormErrors = {}
 
   // Name: min 2 Zeichen, nur Buchstaben (inkl. Umlaute, Bindestriche)
   if (!data.firstName.trim()) {
-    errors.firstName = "Vorname erforderlich"
+    errors.firstName = v.firstNameRequired
   } else if (data.firstName.trim().length < 2) {
-    errors.firstName = "Vorname zu kurz"
+    errors.firstName = v.firstNameTooShort
   } else if (!/^[a-zA-ZÄÖÜäöüß\s\-']+$/.test(data.firstName.trim())) {
-    errors.firstName = "Bitte nur Buchstaben eingeben"
+    errors.firstName = v.lettersOnly
   }
 
   if (!data.lastName.trim()) {
-    errors.lastName = "Nachname erforderlich"
+    errors.lastName = v.lastNameRequired
   } else if (data.lastName.trim().length < 2) {
-    errors.lastName = "Nachname zu kurz"
+    errors.lastName = v.lastNameTooShort
   } else if (!/^[a-zA-ZÄÖÜäöüß\s\-']+$/.test(data.lastName.trim())) {
-    errors.lastName = "Bitte nur Buchstaben eingeben"
+    errors.lastName = v.lettersOnly
   }
 
   // E-Mail: gültiges Format, TLD min 2 Zeichen
   if (!data.email.trim()) {
-    errors.email = "E-Mail erforderlich"
+    errors.email = v.emailRequired
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email.trim())) {
-    errors.email = "Ungültige E-Mail-Adresse"
+    errors.email = v.emailInvalid
   }
 
   // Telefon: muss mind. 6 Ziffern enthalten, kein reiner Text
   if (!data.phone.trim()) {
-    errors.phone = "Telefonnummer erforderlich"
+    errors.phone = v.phoneRequired
   } else if ((data.phone.replace(/\D/g, "").length < 6)) {
-    errors.phone = "Bitte eine gültige Telefonnummer eingeben"
+    errors.phone = v.phoneInvalid
   }
 
   return errors
@@ -152,19 +159,19 @@ function validateForm(data: FormData): FormErrors {
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
+const TRUST_BADGE_EMOJIS = ["🔒", "💬", "💰"] as const
+
 function TrustBadges() {
+  const locale = useLocale()
+  const t = getDict(locale).booking
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6">
-      {[
-        { emoji: "🔒", title: "Sichere Buchung", text: "SSL-verschlüsselt" },
-        { emoji: "💬", title: "Persönliche Betreuung", text: "Direkt vom Gastgeber" },
-        { emoji: "💰", title: "Bis zu 20 % günstiger", text: "Als auf Buchungsportalen" },
-      ].map((b) => (
+      {t.trustBadges.map((b, i) => (
         <div
           key={b.title}
           className="flex items-center gap-3 p-3 rounded-xl bg-cream-50 border border-cream-200"
         >
-          <span className="text-xl">{b.emoji}</span>
+          <span className="text-xl">{TRUST_BADGE_EMOJIS[i]}</span>
           <div>
             <p className="font-body text-xs font-semibold text-forest-800">{b.title}</p>
             <p className="font-body text-xs text-forest-400">{b.text}</p>
@@ -231,6 +238,11 @@ export default function BookingWidget({
   hideMobileBar = false,
   sidebarMode = false,
 }: BookingWidgetProps) {
+  // ── Locale (Texte + Zahlen-/Datumsformatierung) ──
+  const locale = useLocale()
+  const t = getDict(locale).booking
+  const nf = numLocale(locale)
+
   // ── Ref zum Scrollen zum Widget-Anfang (nicht Seitenanfang) ──
   const widgetRef = useRef<HTMLDivElement>(null)
 
@@ -407,7 +419,7 @@ export default function BookingWidget({
     e.preventDefault()
     if (!checkIn || !checkOut || !priceBreakdown) return
 
-    const errors = validateForm(form)
+    const errors = validateForm(form, t.validation)
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors)
       return
@@ -415,7 +427,7 @@ export default function BookingWidget({
 
     // Bot-Schutz: nicht ohne Token absenden (sonst 403 → Fehlerscreen + Datenverlust)
     if (!turnstileToken.current) {
-      setErrorMsg("Die Sicherheitsprüfung läuft noch. Bitte warte einen Moment und tippe erneut auf „Weiter zur Zahlung“.")
+      setErrorMsg(t.errors.securityCheckPending)
       return
     }
 
@@ -447,13 +459,16 @@ export default function BookingWidget({
           totalPrice: priceBreakdown.total,
           paymentOption,
           turnstileToken: turnstileToken.current,
+          // Buchungssprache des Gasts – steuert serverseitig Gast-Mails & Smoobu
+          locale,
         }),
       })
 
       const data = await res.json()
 
       if (!res.ok) {
-        setErrorMsg(data.error ?? "Fehler beim Zahlungsvorgang. Bitte versuche es erneut.")
+        // API-Meldungen sind deutsch – auf /en die generische Dictionary-Meldung zeigen.
+        setErrorMsg(locale === "de" ? (data.error ?? t.errors.paymentGeneric) : t.errors.paymentGeneric)
         setStep("error")
       } else {
         setStripeClientSecret(data.clientSecret)
@@ -462,7 +477,7 @@ export default function BookingWidget({
         scrollToWidget()
       }
     } catch {
-      setErrorMsg("Verbindungsfehler. Bitte überprüfe deine Internetverbindung.")
+      setErrorMsg(t.errors.connectionCheck)
       setStep("error")
     } finally {
       setSubmitting(false)
@@ -483,10 +498,10 @@ export default function BookingWidget({
   // ── Render helpers ──
   const datesLabel =
     checkIn && checkOut
-      ? `${fmtShort(checkIn)} – ${fmtShort(checkOut)}`
+      ? `${fmtShort(checkIn, locale)} – ${fmtShort(checkOut, locale)}`
       : checkIn
-        ? `${fmtShort(checkIn)} → …`
-        : "Datum wählen"
+        ? `${fmtShort(checkIn, locale)} → …`
+        : t.labels.chooseDate
 
   // ══════════════════════════════════════════════════════════════════════════
   // CONFIRMED SCREEN
@@ -500,23 +515,23 @@ export default function BookingWidget({
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h3 className="font-display text-xl text-forest-900 mb-1">Buchung eingegangen!</h3>
+          <h3 className="font-display text-xl text-forest-900 mb-1">{t.confirmed.title}</h3>
           <p className="font-body text-sm text-forest-500 mb-4">
-            Vielen Dank, <strong>{form.firstName}</strong>! Bestätigung kommt per E-Mail.
+            {t.confirmed.sidebarThanksPre}<strong>{form.firstName}</strong>{t.confirmed.sidebarThanksPost}
           </p>
           <div className="bg-cream-50 rounded-xl border border-cream-200 p-4 text-left space-y-1.5 mb-4">
             <div className="flex justify-between font-body text-sm">
-              <span className="text-forest-400">Anreise</span>
-              <span className="font-medium text-forest-900">{checkIn ? fmtLong(checkIn) : "–"}</span>
+              <span className="text-forest-400">{t.labels.arrival}</span>
+              <span className="font-medium text-forest-900">{checkIn ? fmtLong(checkIn, locale) : "–"}</span>
             </div>
             <div className="flex justify-between font-body text-sm">
-              <span className="text-forest-400">Abreise</span>
-              <span className="font-medium text-forest-900">{checkOut ? fmtLong(checkOut) : "–"}</span>
+              <span className="text-forest-400">{t.labels.departure}</span>
+              <span className="font-medium text-forest-900">{checkOut ? fmtLong(checkOut, locale) : "–"}</span>
             </div>
             {priceBreakdown && (
               <div className="flex justify-between font-body text-sm border-t border-cream-200 pt-1.5">
-                <span className="font-semibold text-forest-800">Gesamt</span>
-                <span className="font-bold text-forest-900">{priceBreakdown.total.toLocaleString("de-DE")} €</span>
+                <span className="font-semibold text-forest-800">{t.labels.total}</span>
+                <span className="font-bold text-forest-900">{priceBreakdown.total.toLocaleString(nf)} €</span>
               </div>
             )}
           </div>
@@ -544,53 +559,52 @@ export default function BookingWidget({
           </div>
 
           <h2 className="font-display text-3xl text-forest-900 mb-2">
-            Buchung eingegangen!
+            {t.confirmed.title}
           </h2>
           <p className="font-body text-forest-600 mb-6">
-            Vielen Dank, <strong>{form.firstName}</strong>! Deine Buchungsanfrage für{" "}
-            <strong>{propertyName}</strong> wurde übermittelt. Du erhältst in Kürze eine
-            Bestätigung per E-Mail an <strong>{form.email}</strong>.
+            {t.confirmed.thanksPre}<strong>{form.firstName}</strong>{t.confirmed.thanksAfterName}
+            <strong>{propertyName}</strong>{t.confirmed.thanksAfterProperty}<strong>{form.email}</strong>{t.confirmed.thanksAfterEmail}
           </p>
           <p className="font-body text-xs text-forest-400 mb-4 bg-cream-100 rounded-xl px-4 py-3">
-            Deine Bestätigung wird in der Regel innerhalb weniger Minuten per E-Mail zugestellt. Falls du innerhalb von 10 Minuten keine E-Mail (auch im Spam-Ordner) erhältst, melde dich bitte direkt bei uns.
+            {t.confirmed.deliveryNote}
           </p>
 
           {/* Summary card */}
           <div className="bg-cream-50 rounded-2xl border border-cream-200 p-5 text-left mb-6">
             <p className="font-body text-xs text-forest-500 uppercase tracking-wider mb-3">
-              Buchungsdetails
+              {t.confirmed.detailsHeading}
             </p>
             <div className="space-y-2">
               <div className="flex justify-between font-body text-sm">
-                <span className="text-forest-500">Unterkunft</span>
+                <span className="text-forest-500">{t.labels.property}</span>
                 <span className="font-medium text-forest-900">{propertyName}</span>
               </div>
               <div className="flex justify-between font-body text-sm">
-                <span className="text-forest-500">Anreise</span>
-                <span className="font-medium text-forest-900">{checkIn ? fmtLong(checkIn) : "–"}</span>
+                <span className="text-forest-500">{t.labels.arrival}</span>
+                <span className="font-medium text-forest-900">{checkIn ? fmtLong(checkIn, locale) : "–"}</span>
               </div>
               <div className="flex justify-between font-body text-sm">
-                <span className="text-forest-500">Abreise</span>
-                <span className="font-medium text-forest-900">{checkOut ? fmtLong(checkOut) : "–"}</span>
+                <span className="text-forest-500">{t.labels.departure}</span>
+                <span className="font-medium text-forest-900">{checkOut ? fmtLong(checkOut, locale) : "–"}</span>
               </div>
               <div className="flex justify-between font-body text-sm">
-                <span className="text-forest-500">Gäste</span>
+                <span className="text-forest-500">{t.labels.guests}</span>
                 <span className="font-medium text-forest-900">{guests}</span>
               </div>
               {priceBreakdown && (
                 <div className="flex justify-between font-body text-sm border-t border-cream-200 pt-2 mt-2">
-                  <span className="font-semibold text-forest-800">Gesamtpreis</span>
-                  <span className="font-bold text-forest-900">{priceBreakdown.total.toLocaleString("de-DE")} €</span>
+                  <span className="font-semibold text-forest-800">{t.labels.totalPrice}</span>
+                  <span className="font-bold text-forest-900">{priceBreakdown.total.toLocaleString(nf)} €</span>
                 </div>
               )}
             </div>
           </div>
 
           <Link
-            href={propertyHref}
+            href={localizeHref(propertyHref, locale)}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-forest-800 text-cream-50 font-body text-sm font-medium hover:bg-forest-700 transition-colors"
           >
-            ← Zurück zur Unterkunft
+            {t.confirmed.backToProperty}
           </Link>
         </motion.div>
       </div>
@@ -604,13 +618,13 @@ export default function BookingWidget({
     if (sidebarMode) {
       return (
         <div ref={widgetRef} className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center">
-          <p className="font-body text-sm font-semibold text-red-700 mb-2">Fehler bei der Buchung</p>
+          <p className="font-body text-sm font-semibold text-red-700 mb-2">{t.errorScreen.title}</p>
           <p className="font-body text-xs text-red-600 mb-4">{errorMsg}</p>
           <button
             onClick={() => { setStep("form"); setErrorMsg(null) }}
             className="px-4 py-2 rounded-xl bg-forest-800 text-cream-50 font-body text-sm hover:bg-forest-700 transition-colors"
           >
-            Erneut versuchen
+            {t.errorScreen.retry}
           </button>
         </div>
       )
@@ -623,20 +637,20 @@ export default function BookingWidget({
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
-          <h2 className="font-display text-2xl text-forest-900 mb-2">Fehler bei der Buchung</h2>
+          <h2 className="font-display text-2xl text-forest-900 mb-2">{t.errorScreen.title}</h2>
           <p className="font-body text-forest-600 mb-6">{errorMsg}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={() => { setStep("form"); setErrorMsg(null) }}
               className="px-6 py-3 rounded-full bg-forest-800 text-cream-50 font-body text-sm font-medium hover:bg-forest-700 transition-colors"
             >
-              Erneut versuchen
+              {t.errorScreen.retry}
             </button>
             <Link
-              href="/kontakt"
+              href={localizeHref("/kontakt", locale)}
               className="px-6 py-3 rounded-full border border-forest-300 text-forest-700 font-body text-sm font-medium hover:bg-cream-100 transition-colors"
             >
-              Kontakt aufnehmen
+              {t.errorScreen.contact}
             </Link>
           </div>
         </div>
@@ -671,22 +685,22 @@ export default function BookingWidget({
                 onClick={(e) => e.stopPropagation()}
                 role="dialog"
                 aria-modal="true"
-                aria-label="Zeitraum wählen"
+                aria-label={t.sidebar.overlayTitle}
               >
                 {/* Date input row */}
                 <div className="p-5 border-b border-cream-100">
-                  <h3 className="font-display text-lg text-forest-900 mb-4">Zeitraum wählen</h3>
+                  <h3 className="font-display text-lg text-forest-900 mb-4">{t.sidebar.overlayTitle}</h3>
                   <div className="grid grid-cols-2 gap-2">
                     <div className={["rounded-xl border-2 p-3 transition-colors", selectionStep === "checkin" ? "border-forest-700 bg-forest-50" : "border-cream-200"].join(" ")}>
-                      <p className="font-body text-[10px] font-bold text-forest-400 uppercase tracking-wider">Check-in</p>
+                      <p className="font-body text-[10px] font-bold text-forest-400 uppercase tracking-wider">{t.sidebar.checkInField}</p>
                       <p className={`font-body text-sm font-medium mt-0.5 ${checkIn ? "text-forest-900" : "text-forest-400"}`}>
-                        {checkIn ? fmtShort(checkIn) : "TT.MM.JJJJ"}
+                        {checkIn ? fmtShort(checkIn, locale) : t.sidebar.dateFormatHint}
                       </p>
                     </div>
                     <div className={["rounded-xl border-2 p-3 transition-colors", selectionStep === "checkout" && checkIn ? "border-forest-700 bg-forest-50" : "border-cream-200"].join(" ")}>
-                      <p className="font-body text-[10px] font-bold text-forest-400 uppercase tracking-wider">Check-out</p>
+                      <p className="font-body text-[10px] font-bold text-forest-400 uppercase tracking-wider">{t.sidebar.checkOutField}</p>
                       <p className={`font-body text-sm font-medium mt-0.5 ${checkOut ? "text-forest-900" : "text-forest-400"}`}>
-                        {checkOut ? fmtShort(checkOut) : "Datum hinzufügen"}
+                        {checkOut ? fmtShort(checkOut, locale) : t.sidebar.addDate}
                       </p>
                     </div>
                   </div>
@@ -697,7 +711,7 @@ export default function BookingWidget({
                   {loadingAvailability && (
                     <div className="flex items-center gap-2 mb-3 text-xs font-body text-forest-400">
                       <span className="w-3 h-3 border-2 border-forest-300 border-t-forest-700 rounded-full animate-spin" />
-                      Verfügbarkeiten laden…
+                      {t.sidebar.loadingAvailability}
                     </div>
                   )}
                   <BookingCalendar
@@ -720,14 +734,14 @@ export default function BookingWidget({
                     onClick={() => { handleReset(); }}
                     className="font-body text-sm text-forest-500 underline hover:text-forest-900 transition-colors"
                   >
-                    Zeitraum zurücksetzen
+                    {t.sidebar.resetDates}
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowCalendarOverlay(false)}
                     className="px-5 py-2.5 rounded-xl bg-forest-900 text-cream-50 font-body text-sm font-semibold hover:bg-forest-700 transition-colors"
                   >
-                    Schließen
+                    {t.labels.close}
                   </button>
                 </div>
               </motion.div>
@@ -748,20 +762,20 @@ export default function BookingWidget({
             <div>
               {priceBreakdown ? (
                 <>
-                  <span className="font-body text-sm text-forest-500">Gesamtpreis </span>
-                  <span className="font-display text-2xl text-forest-900">{priceBreakdown.total.toLocaleString("de-DE")} €</span>
+                  <span className="font-body text-sm text-forest-500">{t.sidebar.totalPriceSpaced}</span>
+                  <span className="font-display text-2xl text-forest-900">{priceBreakdown.total.toLocaleString(nf)} €</span>
                 </>
               ) : (
                 <>
-                  <span className="font-body text-sm text-forest-500">ab </span>
+                  <span className="font-body text-sm text-forest-500">{t.labels.from}</span>
                   <span className="font-display text-2xl text-forest-900">{effectivePrice} €</span>
-                  <span className="font-body text-sm text-forest-400 ml-1">/ Nacht</span>
+                  <span className="font-body text-sm text-forest-400 ml-1">{t.labels.perNight}</span>
                 </>
               )}
             </div>
             {checkIn && checkOut && (
               <button onClick={handleReset} className="font-body text-xs text-forest-400 underline hover:text-forest-700 transition-colors">
-                Zurücksetzen
+                {t.labels.reset}
               </button>
             )}
           </div>
@@ -772,22 +786,22 @@ export default function BookingWidget({
           <div
             role="button"
             tabIndex={step === "dates" ? 0 : -1}
-            aria-label="Reisezeitraum im Kalender wählen"
+            aria-label={t.sidebar.ariaChooseRange}
             className="rounded-xl border-2 border-cream-200 hover:border-forest-400 cursor-pointer transition-colors overflow-hidden mb-2 focus:outline-none focus:ring-2 focus:ring-forest-500"
             onClick={() => { if (step === "dates") { handleReset(); setShowCalendarOverlay(true); } }}
             onKeyDown={(e) => { if (step === "dates" && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); handleReset(); setShowCalendarOverlay(true); } }}
           >
             <div className="grid grid-cols-2 divide-x-2 divide-cream-200">
               <div className="p-3">
-                <p className="font-body text-[10px] font-bold uppercase tracking-wider text-forest-700">Anreise</p>
+                <p className="font-body text-[10px] font-bold uppercase tracking-wider text-forest-700">{t.labels.arrival}</p>
                 <p className={`font-body text-sm mt-0.5 ${checkIn ? "text-forest-900 font-medium" : "text-forest-400"}`}>
-                  {checkIn ? fmtShort(checkIn) : "Datum wählen"}
+                  {checkIn ? fmtShort(checkIn, locale) : t.labels.chooseDate}
                 </p>
               </div>
               <div className="p-3">
-                <p className="font-body text-[10px] font-bold uppercase tracking-wider text-forest-700">Abreise</p>
+                <p className="font-body text-[10px] font-bold uppercase tracking-wider text-forest-700">{t.labels.departure}</p>
                 <p className={`font-body text-sm mt-0.5 ${checkOut ? "text-forest-900 font-medium" : "text-forest-400"}`}>
-                  {checkOut ? fmtShort(checkOut) : "–"}
+                  {checkOut ? fmtShort(checkOut, locale) : "–"}
                 </p>
               </div>
             </div>
@@ -798,8 +812,8 @@ export default function BookingWidget({
             <button type="button" onClick={() => setShowGuestDropdown(!showGuestDropdown)}
               className="w-full rounded-xl border-2 border-cream-200 hover:border-forest-300 px-3 py-2.5 flex items-center justify-between transition-colors">
               <div className="text-left">
-                <p className="font-body text-[10px] text-forest-400 uppercase tracking-wider mb-0.5">Gäste</p>
-                <p className="font-body text-sm text-forest-900 font-medium">{guests} {guests === 1 ? "Gast" : "Gäste"}</p>
+                <p className="font-body text-[10px] text-forest-400 uppercase tracking-wider mb-0.5">{t.labels.guests}</p>
+                <p className="font-body text-sm text-forest-900 font-medium">{t.labels.guestCount(guests)}</p>
               </div>
               <svg className={`w-4 h-4 text-forest-500 transition-transform ${showGuestDropdown ? "rotate-180" : ""}`} fill="none" viewBox="0 0 16 16">
                 <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -811,23 +825,23 @@ export default function BookingWidget({
                   className="absolute top-full left-0 right-0 mt-1 bg-white rounded-xl border border-cream-200 shadow-card-lg p-4 z-20">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-body text-sm font-medium text-forest-800">Gäste</p>
-                      <p className="font-body text-xs text-forest-400">max. {maxGuests} Personen</p>
+                      <p className="font-body text-sm font-medium text-forest-800">{t.labels.guests}</p>
+                      <p className="font-body text-xs text-forest-400">{t.labels.maxPersons(maxGuests)}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <button type="button" aria-label="Weniger Gäste" onClick={() => setGuests(Math.max(1, guests - 1))} disabled={guests <= 1 || step === "payment"}
+                      <button type="button" aria-label={t.labels.ariaFewerGuests} onClick={() => setGuests(Math.max(1, guests - 1))} disabled={guests <= 1 || step === "payment"}
                         className="w-8 h-8 rounded-full border border-cream-300 flex items-center justify-center text-forest-600 hover:border-forest-500 disabled:opacity-30 transition-colors">
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
                       </button>
                       <span className="font-body text-base font-semibold text-forest-900 w-4 text-center">{guests}</span>
-                      <button type="button" aria-label="Mehr Gäste" onClick={() => setGuests(Math.min(maxGuests, guests + 1))} disabled={guests >= maxGuests || step === "payment"}
+                      <button type="button" aria-label={t.labels.ariaMoreGuests} onClick={() => setGuests(Math.min(maxGuests, guests + 1))} disabled={guests >= maxGuests || step === "payment"}
                         className="w-8 h-8 rounded-full border border-cream-300 flex items-center justify-center text-forest-600 hover:border-forest-500 disabled:opacity-30 transition-colors">
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 3v8M3 7h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
                       </button>
                     </div>
                   </div>
                   <button type="button" onClick={() => setShowGuestDropdown(false)}
-                    className="mt-3 text-xs font-body text-forest-500 underline hover:text-forest-800 w-full text-right">Schließen</button>
+                    className="mt-3 text-xs font-body text-forest-500 underline hover:text-forest-800 w-full text-right">{t.labels.close}</button>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -844,7 +858,7 @@ export default function BookingWidget({
               }}
               className="w-full py-3.5 rounded-xl bg-gold-500 text-forest-900 font-body font-semibold text-base hover:bg-gold-400 transition-colors shadow-sm"
             >
-              {checkIn && checkOut ? "Jetzt buchen" : "Verfügbarkeit prüfen"}
+              {checkIn && checkOut ? t.sidebar.bookNow : t.sidebar.checkAvailability}
             </button>
           </div>
         )}
@@ -856,24 +870,24 @@ export default function BookingWidget({
               className="overflow-hidden px-5 pb-2">
               <div className="border-t border-cream-100 py-3 space-y-1.5">
                 <div className="flex justify-between font-body text-sm text-forest-600">
-                  <span className="underline underline-offset-2 decoration-forest-300">{priceBreakdown.avgNightly} € × {priceBreakdown.nights} Nächte</span>
+                  <span className="underline underline-offset-2 decoration-forest-300">{priceBreakdown.avgNightly} € × {priceBreakdown.nights} {t.labels.nightsPlural}</span>
                   <span>{priceBreakdown.nightlyTotal} €</span>
                 </div>
                 {priceBreakdown.extraPersonTotal > 0 && (
                   <div className="flex justify-between font-body text-sm text-forest-600">
-                    <span>Personenaufschlag</span>
+                    <span>{t.labels.extraPersonFee}</span>
                     <span>+{priceBreakdown.extraPersonTotal} €</span>
                   </div>
                 )}
                 <div className="flex justify-between font-body text-sm text-forest-600">
-                  <span className="underline underline-offset-2 decoration-forest-300">Reinigungsgebühr</span>
+                  <span className="underline underline-offset-2 decoration-forest-300">{t.labels.cleaningFee}</span>
                   <span>{priceBreakdown.cleaningFee} €</span>
                 </div>
                 <div className="flex justify-between font-body text-sm font-bold text-forest-900 border-t border-cream-200 pt-1.5">
-                  <span>Gesamt</span>
-                  <span>{priceBreakdown.total.toLocaleString("de-DE")} €</span>
+                  <span>{t.labels.total}</span>
+                  <span>{priceBreakdown.total.toLocaleString(nf)} €</span>
                 </div>
-                <p className="text-center font-body text-xs text-forest-400 pt-1">Du wirst noch nicht belastet</p>
+                <p className="text-center font-body text-xs text-forest-400 pt-1">{t.labels.notCharged}</p>
               </div>
             </motion.div>
           )}
@@ -888,43 +902,43 @@ export default function BookingWidget({
                 <button type="button" onClick={() => setStep("dates")}
                   className="mb-4 flex items-center gap-1.5 text-sm font-body text-forest-500 hover:text-forest-900 transition-colors">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                  Zurück
+                  {t.form.back}
                 </button>
                 <form onSubmit={handleSubmit} noValidate className="space-y-3">
                   <div className="grid grid-cols-2 gap-2">
-                    <Input label="Vorname" name="firstName" type="text" value={form.firstName} onChange={handleFormChange} error={formErrors.firstName} required autoComplete="given-name" placeholder="Max" />
-                    <Input label="Nachname" name="lastName" type="text" value={form.lastName} onChange={handleFormChange} error={formErrors.lastName} required autoComplete="family-name" placeholder="Mustermann" />
+                    <Input label={t.form.firstName} name="firstName" type="text" value={form.firstName} onChange={handleFormChange} error={formErrors.firstName} required autoComplete="given-name" placeholder={t.form.phFirstName} />
+                    <Input label={t.form.lastName} name="lastName" type="text" value={form.lastName} onChange={handleFormChange} error={formErrors.lastName} required autoComplete="family-name" placeholder={t.form.phLastName} />
                   </div>
-                  <Input label="E-Mail" name="email" type="email" value={form.email} onChange={handleFormChange} error={formErrors.email} required autoComplete="email" placeholder="max@beispiel.de" />
-                  <Input label="Telefon" name="phone" type="tel" value={form.phone} onChange={handleFormChange} error={formErrors.phone} required autoComplete="tel" placeholder="+49 123 456789" />
+                  <Input label={t.form.emailShort} name="email" type="email" value={form.email} onChange={handleFormChange} error={formErrors.email} required autoComplete="email" placeholder={t.form.phEmail} />
+                  <Input label={t.form.phoneShort} name="phone" type="tel" value={form.phone} onChange={handleFormChange} error={formErrors.phone} required autoComplete="tel" placeholder={t.form.phPhone} />
                   <label className="flex items-center gap-2 cursor-pointer select-none">
                     <input type="checkbox" name="isBusinessBooking" checked={form.isBusinessBooking} onChange={handleFormChange} className="w-4 h-4 rounded border-cream-300 accent-forest-700 cursor-pointer" />
-                    <span className="font-body text-xs text-forest-700">Firmenbuchung / Rechnung gewünscht</span>
+                    <span className="font-body text-xs text-forest-700">{t.form.businessToggle}</span>
                   </label>
                   {form.isBusinessBooking && (
                     <div className="space-y-2 rounded-xl border border-cream-200 bg-cream-50 p-3">
-                      <p className="font-body text-xs font-medium text-forest-500 uppercase tracking-wider">Rechnungsdaten</p>
-                      <Input label="Firmenname" name="company" type="text" value={form.company} onChange={handleFormChange} autoComplete="organization" placeholder="Musterfirma GmbH" />
-                      <Input label="USt-IdNr." name="vatId" type="text" value={form.vatId} onChange={handleFormChange} autoComplete="off" placeholder="DE123456789" />
-                      <Input label="Straße & Hausnummer" name="street" type="text" value={form.street} onChange={handleFormChange} autoComplete="street-address" placeholder="Musterstraße 1" />
+                      <p className="font-body text-xs font-medium text-forest-500 uppercase tracking-wider">{t.form.billingHeading}</p>
+                      <Input label={t.form.company} name="company" type="text" value={form.company} onChange={handleFormChange} autoComplete="organization" placeholder={t.form.phCompany} />
+                      <Input label={t.form.vatId} name="vatId" type="text" value={form.vatId} onChange={handleFormChange} autoComplete="off" placeholder={t.form.phVatId} />
+                      <Input label={t.form.street} name="street" type="text" value={form.street} onChange={handleFormChange} autoComplete="street-address" placeholder={t.form.phStreet} />
                       <div className="grid grid-cols-2 gap-2">
-                        <Input label="PLZ" name="zip" type="text" value={form.zip} onChange={handleFormChange} autoComplete="postal-code" placeholder="12345" />
-                        <Input label="Ort" name="city" type="text" value={form.city} onChange={handleFormChange} autoComplete="address-level2" placeholder="München" />
+                        <Input label={t.form.zip} name="zip" type="text" value={form.zip} onChange={handleFormChange} autoComplete="postal-code" placeholder={t.form.phZip} />
+                        <Input label={t.form.city} name="city" type="text" value={form.city} onChange={handleFormChange} autoComplete="address-level2" placeholder={t.form.phCity} />
                       </div>
-                      <Input label="Land" name="country" type="text" value={form.country} onChange={handleFormChange} autoComplete="country-name" placeholder="Deutschland" />
+                      <Input label={t.form.country} name="country" type="text" value={form.country} onChange={handleFormChange} autoComplete="country-name" placeholder={t.form.phCountry} />
                     </div>
                   )}
                   <div>
-                    <label className="block font-body text-xs font-medium text-forest-700 mb-1">Nachricht <span className="text-forest-400 font-normal">(optional)</span></label>
-                    <textarea name="message" value={form.message} onChange={handleFormChange} rows={2} placeholder="Besondere Wünsche…" className="w-full rounded-xl border border-cream-300 px-3.5 py-2.5 font-body text-sm text-forest-900 bg-white placeholder:text-forest-300 focus:outline-none focus:ring-2 focus:ring-forest-500 resize-none" />
+                    <label className="block font-body text-xs font-medium text-forest-700 mb-1">{t.form.messageShort} <span className="text-forest-400 font-normal">{t.form.optional}</span></label>
+                    <textarea name="message" value={form.message} onChange={handleFormChange} rows={2} placeholder={t.form.phMessageShort} className="w-full rounded-xl border border-cream-300 px-3.5 py-2.5 font-body text-sm text-forest-900 bg-white placeholder:text-forest-300 focus:outline-none focus:ring-2 focus:ring-forest-500 resize-none" />
                   </div>
                   {priceBreakdown && (
                     <div>
-                      <p className="font-body text-xs font-medium text-forest-700 uppercase tracking-wider mb-2">Zahlung</p>
+                      <p className="font-body text-xs font-medium text-forest-700 uppercase tracking-wider mb-2">{t.form.paymentHeading}</p>
                       <div className="space-y-2">
                         {([
-                          { value: "50" as PaymentOption, label: "50% Anzahlung", sub: `${Math.round(priceBreakdown.total * 0.5).toLocaleString("de-DE")} € jetzt` },
-                          { value: "100" as PaymentOption, label: "100% Vollzahlung", sub: `${priceBreakdown.total.toLocaleString("de-DE")} € jetzt` },
+                          { value: "50" as PaymentOption, label: t.form.deposit50Label, sub: t.form.subNow(Math.round(priceBreakdown.total * 0.5).toLocaleString(nf)) },
+                          { value: "100" as PaymentOption, label: t.form.full100Label, sub: t.form.subNow(priceBreakdown.total.toLocaleString(nf)) },
                         ] as const).map((opt) => (
                           <button key={opt.value} type="button" onClick={() => setPaymentOption(opt.value)}
                             className={["flex items-center gap-3 w-full rounded-xl border px-3 py-2.5 text-left transition-colors", paymentOption === opt.value ? "border-forest-700 bg-forest-50" : "border-cream-300"].join(" ")}>
@@ -941,14 +955,16 @@ export default function BookingWidget({
                     </div>
                   )}
                   <p className="text-xs font-body text-forest-400 leading-relaxed">
-                    Mit deiner Buchung stimmst du unseren{" "}
-                    <Link href="/datenschutz" className="underline">Datenschutzhinweisen</Link>{" "}und{" "}
-                    <Link href="/stornierung" className="underline">Stornierungsbedingungen</Link> zu.
+                    {t.form.legalSidebar.pre}
+                    <Link href={localizeHref("/datenschutz", locale)} className="underline">{t.form.legalSidebar.privacy}</Link>
+                    {t.form.legalSidebar.mid}
+                    <Link href={localizeHref("/stornierung", locale)} className="underline">{t.form.legalSidebar.cancellation}</Link>
+                    {t.form.legalSidebar.post}
                   </p>
                   <Turnstile
                     siteKey={TURNSTILE_SITE_KEY}
-                    options={{ appearance: "interaction-only", size: "flexible", language: "de" }}
-                    onSuccess={(t) => { turnstileToken.current = t; setTurnstileReady(true) }}
+                    options={{ appearance: "interaction-only", size: "flexible", language: locale }}
+                    onSuccess={(token) => { turnstileToken.current = token; setTurnstileReady(true) }}
                     onExpire={() => { turnstileToken.current = ""; setTurnstileReady(false) }}
                   />
                   {errorMsg && (
@@ -956,7 +972,7 @@ export default function BookingWidget({
                   )}
                   <button type="submit" disabled={submitting || !turnstileReady}
                     className="w-full py-3.5 rounded-xl bg-forest-800 text-cream-50 font-body font-semibold text-sm hover:bg-forest-700 disabled:opacity-60 transition-colors shadow-md flex items-center justify-center gap-2">
-                    {submitting ? <><span className="w-4 h-4 border-2 border-cream-50/40 border-t-cream-50 rounded-full animate-spin" />Wird vorbereitet…</> : !turnstileReady ? "Sicherheitsprüfung läuft…" : "Weiter zur Zahlung →"}
+                    {submitting ? <><span className="w-4 h-4 border-2 border-cream-50/40 border-t-cream-50 rounded-full animate-spin" />{t.form.preparing}</> : !turnstileReady ? t.form.securityRunning : t.form.continueToPaymentArrow}
                   </button>
                 </form>
               </div>
@@ -986,12 +1002,9 @@ export default function BookingWidget({
         {/* Trust badges */}
         {step === "dates" && (
           <div className="px-5 pb-5 pt-1 border-t border-cream-100 space-y-2">
-            {[
-              { emoji: "🔒", title: "Sichere Zahlung", text: "SSL-verschlüsselt" },
-              { emoji: "💰", title: "Bis zu 20 % günstiger", text: "Als auf Buchungsportalen" },
-            ].map((b) => (
+            {t.sidebarTrust.map((b, i) => (
               <div key={b.title} className="flex items-center gap-2.5">
-                <span className="text-base">{b.emoji}</span>
+                <span className="text-base">{["🔒", "💰"][i]}</span>
                 <div>
                   <span className="font-body text-xs font-semibold text-forest-800">{b.title} · </span>
                   <span className="font-body text-xs text-forest-400">{b.text}</span>
@@ -1031,7 +1044,7 @@ export default function BookingWidget({
                   {loadingAvailability && (
                     <div className="flex items-center gap-2 mb-4 text-xs font-body text-forest-400">
                       <span className="w-3 h-3 border-2 border-forest-300 border-t-forest-700 rounded-full animate-spin" />
-                      Verfügbarkeiten werden geladen…
+                      {t.widget.loadingAvailabilityLong}
                     </div>
                   )}
 
@@ -1053,13 +1066,13 @@ export default function BookingWidget({
                     {/* Guest counter – only inline when fixed bar is hidden (multi-widget page) */}
                     {hideMobileBar && (
                       <div className="flex items-center justify-between bg-cream-100 rounded-2xl px-4 py-3">
-                        <span className="font-body text-sm text-forest-700">Gäste</span>
+                        <span className="font-body text-sm text-forest-700">{t.labels.guests}</span>
                         <div className="flex items-center gap-3">
                           <button
                             type="button"
                             onClick={() => setGuests((g) => Math.max(1, g - 1))}
                             className="w-8 h-8 flex items-center justify-center rounded-full border border-forest-300 text-forest-700 hover:bg-forest-100 transition-colors"
-                            aria-label="Weniger Gäste"
+                            aria-label={t.labels.ariaFewerGuests}
                           >
                             <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
                           </button>
@@ -1068,7 +1081,7 @@ export default function BookingWidget({
                             type="button"
                             onClick={() => setGuests((g) => Math.min(maxGuests, g + 1))}
                             className="w-8 h-8 flex items-center justify-center rounded-full border border-forest-300 text-forest-700 hover:bg-forest-100 transition-colors"
-                            aria-label="Mehr Gäste"
+                            aria-label={t.labels.ariaMoreGuests}
                           >
                             <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
                           </button>
@@ -1080,22 +1093,22 @@ export default function BookingWidget({
                     {checkIn && checkOut && priceBreakdown && (
                       <div className="bg-white rounded-2xl border border-cream-200 px-4 py-3 space-y-1.5">
                         <div className="flex justify-between font-body text-sm text-forest-700">
-                          <span>{priceBreakdown.avgNightly} € × {priceBreakdown.nights} Nächte</span>
+                          <span>{priceBreakdown.avgNightly} € × {priceBreakdown.nights} {t.labels.nightsPlural}</span>
                           <span>{priceBreakdown.nightlyTotal} €</span>
                         </div>
                         {priceBreakdown.extraGuests > 0 && (
                           <div className="flex justify-between font-body text-sm text-gold-700">
-                            <span>+{priceBreakdown.extraGuests} Pers. × {extraPersonFee} € × {priceBreakdown.nights} Nächte</span>
+                            <span>{t.widget.extraPersShort(priceBreakdown.extraGuests)} × {extraPersonFee} € × {priceBreakdown.nights} {t.labels.nightsPlural}</span>
                             <span>+{priceBreakdown.extraPersonTotal} €</span>
                           </div>
                         )}
                         <div className="flex justify-between font-body text-sm text-forest-700">
-                          <span>Reinigung</span>
+                          <span>{t.labels.cleaningShort}</span>
                           <span>{priceBreakdown.cleaningFee} €</span>
                         </div>
                         <div className="flex justify-between font-body text-sm font-bold text-forest-900 pt-1.5 border-t border-cream-200">
-                          <span>Gesamt</span>
-                          <span>{priceBreakdown.total.toLocaleString("de-DE")} €</span>
+                          <span>{t.labels.total}</span>
+                          <span>{priceBreakdown.total.toLocaleString(nf)} €</span>
                         </div>
                       </div>
                     )}
@@ -1106,7 +1119,7 @@ export default function BookingWidget({
                         onClick={() => setStep("form")}
                         className="w-full py-4 rounded-2xl bg-forest-800 text-cream-50 font-body font-semibold text-base hover:bg-forest-700 transition-colors shadow-lg"
                       >
-                        Weiter zur Buchung →
+                        {t.widget.continueToBooking}
                       </button>
                     )}
                   </div>
@@ -1133,18 +1146,18 @@ export default function BookingWidget({
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
                       <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    Zurück zum Kalender
+                    {t.form.backToCalendar}
                   </button>
 
                   <h2 className="font-display text-2xl text-forest-900 mb-6">
-                    Deine Angaben
+                    {t.form.yourDetails}
                   </h2>
 
                   <form onSubmit={handleSubmit} noValidate className="space-y-4">
                     {/* Name row */}
                     <div className="grid grid-cols-2 gap-3">
                       <Input
-                        label="Vorname"
+                        label={t.form.firstName}
                         name="firstName"
                         type="text"
                         value={form.firstName}
@@ -1152,10 +1165,10 @@ export default function BookingWidget({
                         error={formErrors.firstName}
                         required
                         autoComplete="given-name"
-                        placeholder="Max"
+                        placeholder={t.form.phFirstName}
                       />
                       <Input
-                        label="Nachname"
+                        label={t.form.lastName}
                         name="lastName"
                         type="text"
                         value={form.lastName}
@@ -1163,12 +1176,12 @@ export default function BookingWidget({
                         error={formErrors.lastName}
                         required
                         autoComplete="family-name"
-                        placeholder="Mustermann"
+                        placeholder={t.form.phLastName}
                       />
                     </div>
 
                     <Input
-                      label="E-Mail-Adresse"
+                      label={t.form.emailFull}
                       name="email"
                       type="email"
                       value={form.email}
@@ -1176,11 +1189,11 @@ export default function BookingWidget({
                       error={formErrors.email}
                       required
                       autoComplete="email"
-                      placeholder="max@beispiel.de"
+                      placeholder={t.form.phEmail}
                     />
 
                     <Input
-                      label="Telefonnummer"
+                      label={t.form.phoneFull}
                       name="phone"
                       type="tel"
                       value={form.phone}
@@ -1188,7 +1201,7 @@ export default function BookingWidget({
                       error={formErrors.phone}
                       required
                       autoComplete="tel"
-                      placeholder="+49 123 456789"
+                      placeholder={t.form.phPhone}
                     />
 
                     {/* Business booking toggle */}
@@ -1200,68 +1213,68 @@ export default function BookingWidget({
                         onChange={handleFormChange}
                         className="w-4 h-4 rounded border-cream-300 text-forest-700 accent-forest-700 cursor-pointer"
                       />
-                      <span className="font-body text-sm text-forest-700">Firmenbuchung / Rechnung gewünscht</span>
+                      <span className="font-body text-sm text-forest-700">{t.form.businessToggle}</span>
                     </label>
 
                     {/* Company fields */}
                     {form.isBusinessBooking && (
                       <div className="space-y-3 rounded-xl border border-cream-200 bg-cream-50 p-4">
-                        <p className="font-body text-xs font-medium text-forest-500 uppercase tracking-wider">Rechnungsdaten</p>
+                        <p className="font-body text-xs font-medium text-forest-500 uppercase tracking-wider">{t.form.billingHeading}</p>
                         <Input
-                          label="Firmenname"
+                          label={t.form.company}
                           name="company"
                           type="text"
                           value={form.company}
                           onChange={handleFormChange}
                           autoComplete="organization"
-                          placeholder="Musterfirma GmbH"
+                          placeholder={t.form.phCompany}
                         />
                         <Input
-                          label="USt-IdNr."
+                          label={t.form.vatId}
                           name="vatId"
                           type="text"
                           value={form.vatId}
                           onChange={handleFormChange}
                           autoComplete="off"
-                          placeholder="DE123456789"
+                          placeholder={t.form.phVatId}
                         />
                         <Input
-                          label="Straße & Hausnummer"
+                          label={t.form.street}
                           name="street"
                           type="text"
                           value={form.street}
                           onChange={handleFormChange}
                           autoComplete="street-address"
-                          placeholder="Musterstraße 1"
+                          placeholder={t.form.phStreet}
                         />
                         <div className="grid grid-cols-2 gap-3">
                           <Input
-                            label="PLZ"
+                            label={t.form.zip}
                             name="zip"
                             type="text"
                             value={form.zip}
                             onChange={handleFormChange}
                             autoComplete="postal-code"
-                            placeholder="12345"
+                            placeholder={t.form.phZip}
                           />
                           <Input
-                            label="Ort"
+                            label={t.form.city}
                             name="city"
                             type="text"
                             value={form.city}
                             onChange={handleFormChange}
                             autoComplete="address-level2"
-                            placeholder="München"
+                            placeholder={t.form.phCity}
                           />
                         </div>
                         <Input
-                          label="Land"
+                          label={t.form.country}
                           name="country"
                           type="text"
                           value={form.country}
                           onChange={handleFormChange}
                           autoComplete="country-name"
-                          placeholder="Deutschland"
+                          placeholder={t.form.phCountry}
                         />
                       </div>
                     )}
@@ -1269,15 +1282,15 @@ export default function BookingWidget({
                     {/* Optional message */}
                     <div>
                       <label className="block font-body text-xs font-medium text-forest-700 mb-1">
-                        Nachricht an den Gastgeber{" "}
-                        <span className="text-forest-400 font-normal">(optional)</span>
+                        {t.form.messageFull}{" "}
+                        <span className="text-forest-400 font-normal">{t.form.optional}</span>
                       </label>
                       <textarea
                         name="message"
                         value={form.message}
                         onChange={handleFormChange}
                         rows={3}
-                        placeholder="Besondere Wünsche, Anreisezeit, …"
+                        placeholder={t.form.phMessageFull}
                         className="w-full rounded-xl border border-cream-300 px-3.5 py-2.5 font-body text-sm text-forest-900 bg-white placeholder:text-forest-300 transition-colors hover:border-forest-300 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent resize-none"
                       />
                     </div>
@@ -1286,19 +1299,19 @@ export default function BookingWidget({
                     {priceBreakdown && (
                       <div>
                         <p className="font-body text-xs font-medium text-forest-700 uppercase tracking-wider mb-2">
-                          Zahlungsoption
+                          {t.form.paymentOptionHeading}
                         </p>
                         <div className="grid grid-cols-1 gap-2">
                           {([
                             {
                               value: "50" as PaymentOption,
-                              label: "50% Anzahlung",
-                              sub: `${Math.round(priceBreakdown.total * 0.5).toLocaleString("de-DE")} € jetzt · Rest 14 Tage vor Anreise`,
+                              label: t.form.deposit50Label,
+                              sub: t.form.subDeposit(Math.round(priceBreakdown.total * 0.5).toLocaleString(nf)),
                             },
                             {
                               value: "100" as PaymentOption,
-                              label: "100% Vollzahlung",
-                              sub: `${priceBreakdown.total.toLocaleString("de-DE")} € jetzt · Keine weiteren Zahlungen`,
+                              label: t.form.full100Label,
+                              sub: t.form.subFull(priceBreakdown.total.toLocaleString(nf)),
                             },
                           ] as const).map((opt) => (
                             <button
@@ -1334,22 +1347,22 @@ export default function BookingWidget({
 
                     {/* DSGVO note */}
                     <p className="text-xs font-body text-forest-400 leading-relaxed">
-                      Mit deiner Buchung stimmst du unseren{" "}
-                      <Link href="/datenschutz" className="underline hover:text-forest-700">
-                        Datenschutzhinweisen
-                      </Link>{" "}
-                      und den{" "}
-                      <Link href="/stornierung" className="underline hover:text-forest-700">
-                        Stornierungsbedingungen
-                      </Link>{" "}
-                      zu. Deine Daten werden ausschließlich zur Buchungsabwicklung verwendet.
+                      {t.form.legalFull.pre}
+                      <Link href={localizeHref("/datenschutz", locale)} className="underline hover:text-forest-700">
+                        {t.form.legalFull.privacy}
+                      </Link>
+                      {t.form.legalFull.mid}
+                      <Link href={localizeHref("/stornierung", locale)} className="underline hover:text-forest-700">
+                        {t.form.legalFull.cancellation}
+                      </Link>
+                      {t.form.legalFull.post}
                     </p>
 
                     {/* Bot-Schutz (Cloudflare Turnstile) – unsichtbar, sofern keine Interaktion nötig */}
                     <Turnstile
                       siteKey={TURNSTILE_SITE_KEY}
-                      options={{ appearance: "interaction-only", size: "flexible", language: "de" }}
-                      onSuccess={(t) => { turnstileToken.current = t; setTurnstileReady(true) }}
+                      options={{ appearance: "interaction-only", size: "flexible", language: locale }}
+                      onSuccess={(token) => { turnstileToken.current = token; setTurnstileReady(true) }}
                       onExpire={() => { turnstileToken.current = ""; setTurnstileReady(false) }}
                     />
 
@@ -1366,13 +1379,13 @@ export default function BookingWidget({
                       {submitting ? (
                         <>
                           <span className="w-5 h-5 border-2 border-cream-50/40 border-t-cream-50 rounded-full animate-spin" />
-                          Wird vorbereitet…
+                          {t.form.preparing}
                         </>
                       ) : !turnstileReady ? (
-                        "Sicherheitsprüfung läuft…"
+                        t.form.securityRunning
                       ) : (
                         <>
-                          Weiter zur Zahlung
+                          {t.form.continueToPayment}
                           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
                             <path d="M3.75 9h10.5M9.75 4.5L14.25 9l-4.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
@@ -1438,15 +1451,15 @@ export default function BookingWidget({
               {priceBreakdown ? (
                 <>
                   <p className="font-body text-sm font-bold text-forest-900 leading-tight">
-                    {priceBreakdown.total.toLocaleString("de-DE")} €{" "}
-                    <span className="font-normal text-forest-500">gesamt</span>
+                    {priceBreakdown.total.toLocaleString(nf)} €{" "}
+                    <span className="font-normal text-forest-500">{t.widget.totalWord}</span>
                   </p>
                   <p className="font-body text-xs text-forest-500 truncate">
-                    {fmtShort(checkIn!)} – {fmtShort(checkOut!)}{" · "}
-                    {priceBreakdown.nights} Nächte
+                    {fmtShort(checkIn!, locale)} – {fmtShort(checkOut!, locale)}{" · "}
+                    {priceBreakdown.nights} {t.labels.nightsPlural}
                     {priceBreakdown.extraGuests > 0 && (
                       <span className="text-gold-600">
-                        {" · "}+{priceBreakdown.extraGuests} Pers.
+                        {" · "}{t.widget.extraPersShort(priceBreakdown.extraGuests)}
                       </span>
                     )}
                   </p>
@@ -1454,16 +1467,16 @@ export default function BookingWidget({
               ) : checkIn ? (
                 <>
                   <p className="font-body text-sm font-bold text-forest-900 leading-tight">
-                    Ab {effectivePrice} € / Nacht
+                    {t.widget.fromPerNightBar(effectivePrice)}
                   </p>
-                  <p className="font-body text-xs text-forest-500">Abreise wählen</p>
+                  <p className="font-body text-xs text-forest-500">{t.widget.chooseDeparture}</p>
                 </>
               ) : (
                 <>
                   <p className="font-body text-sm font-bold text-forest-900 leading-tight">
-                    Ab {effectivePrice} € / Nacht
+                    {t.widget.fromPerNightBar(effectivePrice)}
                   </p>
-                  <p className="font-body text-xs text-forest-500">Datum wählen</p>
+                  <p className="font-body text-xs text-forest-500">{t.labels.chooseDate}</p>
                 </>
               )}
             </div>
@@ -1475,7 +1488,7 @@ export default function BookingWidget({
                 disabled={!checkIn || !checkOut}
                 className="flex-shrink-0 px-5 py-3 rounded-xl bg-forest-800 text-cream-50 font-body font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-forest-700 transition-colors"
               >
-                {checkIn && checkOut ? "Weiter →" : "Datum wählen"}
+                {checkIn && checkOut ? t.widget.continueShort : t.labels.chooseDate}
               </button>
             ) : step === "form" ? (
               <button
@@ -1483,20 +1496,20 @@ export default function BookingWidget({
                 disabled={submitting}
                 className="flex-shrink-0 px-5 py-3 rounded-xl bg-forest-800 text-cream-50 font-body font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-forest-700 transition-colors"
               >
-                {submitting ? "…" : "Buchen"}
+                {submitting ? "…" : t.widget.bookShort}
               </button>
             ) : null}
 
             {/* Guest counter (compact) */}
             <div className="flex flex-col items-center gap-0.5">
-              <span className="font-body text-[10px] text-forest-400 leading-none">Gäste</span>
+              <span className="font-body text-[10px] text-forest-400 leading-none">{t.labels.guests}</span>
               <div className="flex items-center gap-1 bg-cream-100 rounded-lg px-2 py-1.5">
                 <button
                   type="button"
                   onClick={() => setGuests((g) => Math.max(1, g - 1))}
                   disabled={step === "payment"}
                   className="w-6 h-6 flex items-center justify-center text-forest-600 hover:text-forest-900 disabled:opacity-30"
-                  aria-label="Weniger Gäste"
+                  aria-label={t.labels.ariaFewerGuests}
                 >
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
                 </button>
@@ -1506,7 +1519,7 @@ export default function BookingWidget({
                   onClick={() => setGuests((g) => Math.min(maxGuests, g + 1))}
                   disabled={step === "payment"}
                   className="w-6 h-6 flex items-center justify-center text-forest-600 hover:text-forest-900 disabled:opacity-30"
-                  aria-label="Mehr Gäste"
+                  aria-label={t.labels.ariaMoreGuests}
                 >
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
                 </button>
@@ -1556,6 +1569,9 @@ function StickyPanel({
   selectionStep,
 }: StickyPanelProps) {
   const datesSelected = checkIn && checkOut
+  const locale = useLocale()
+  const t = getDict(locale).booking
+  const nf = numLocale(locale)
 
   return (
     <div className="rounded-2xl border border-cream-200 shadow-card-lg bg-white overflow-hidden">
@@ -1564,16 +1580,16 @@ function StickyPanel({
         <div className="flex items-baseline justify-between">
           <div>
             <span className="font-display text-2xl text-forest-900">
-              ab {priceFrom} €
+              {t.widget.fromPrice(priceFrom)}
             </span>
-            <span className="font-body text-sm text-forest-400 ml-1">/ Nacht</span>
+            <span className="font-body text-sm text-forest-400 ml-1">{t.labels.perNight}</span>
           </div>
           {datesSelected && (
             <button
               onClick={onReset}
               className="text-xs font-body text-forest-400 underline hover:text-forest-700 transition-colors"
             >
-              Zurücksetzen
+              {t.labels.reset}
             </button>
           )}
         </div>
@@ -1585,7 +1601,7 @@ function StickyPanel({
           <div
             role="button"
             tabIndex={0}
-            aria-label="Anreisedatum zurücksetzen und neu wählen"
+            aria-label={t.widget.ariaResetCheckin}
             className={[
               "rounded-xl border p-3 cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-forest-500",
               selectionStep === "checkin" && !checkIn
@@ -1596,10 +1612,10 @@ function StickyPanel({
             onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onReset(); } }}
           >
             <p className="font-body text-[10px] text-forest-400 uppercase tracking-wider mb-0.5">
-              Anreise
+              {t.labels.arrival}
             </p>
             <p className={`font-body text-sm ${checkIn ? "text-forest-900 font-medium" : "text-forest-400"}`}>
-              {checkIn ? fmtShort(checkIn) : "Wählen"}
+              {checkIn ? fmtShort(checkIn, locale) : t.labels.select}
             </p>
           </div>
           <div
@@ -1611,10 +1627,10 @@ function StickyPanel({
             ].join(" ")}
           >
             <p className="font-body text-[10px] text-forest-400 uppercase tracking-wider mb-0.5">
-              Abreise
+              {t.labels.departure}
             </p>
             <p className={`font-body text-sm ${checkOut ? "text-forest-900 font-medium" : "text-forest-400"}`}>
-              {checkOut ? fmtShort(checkOut) : checkIn ? "Wählen" : "–"}
+              {checkOut ? fmtShort(checkOut, locale) : checkIn ? t.labels.select : "–"}
             </p>
           </div>
         </div>
@@ -1627,8 +1643,8 @@ function StickyPanel({
             className="w-full rounded-xl border border-cream-200 hover:border-forest-300 p-3 flex items-center justify-between transition-colors"
           >
             <div className="text-left">
-              <p className="font-body text-[10px] text-forest-400 uppercase tracking-wider mb-0.5">Gäste</p>
-              <p className="font-body text-sm text-forest-900 font-medium">{guests} {guests === 1 ? "Gast" : "Gäste"}</p>
+              <p className="font-body text-[10px] text-forest-400 uppercase tracking-wider mb-0.5">{t.labels.guests}</p>
+              <p className="font-body text-sm text-forest-900 font-medium">{t.labels.guestCount(guests)}</p>
             </div>
             <svg
               className={`w-4 h-4 text-forest-500 transition-transform ${showGuestDropdown ? "rotate-180" : ""}`}
@@ -1648,13 +1664,13 @@ function StickyPanel({
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-body text-sm font-medium text-forest-800">Gäste</p>
-                    <p className="font-body text-xs text-forest-400">max. {maxGuests} Personen</p>
+                    <p className="font-body text-sm font-medium text-forest-800">{t.labels.guests}</p>
+                    <p className="font-body text-xs text-forest-400">{t.labels.maxPersons(maxGuests)}</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
-                      aria-label="Weniger Gäste"
+                      aria-label={t.labels.ariaFewerGuests}
                       onClick={() => setGuests(Math.max(1, guests - 1))}
                       disabled={guests <= 1 || step === "payment"}
                       className="w-8 h-8 rounded-full border border-cream-300 flex items-center justify-center text-forest-600 hover:border-forest-500 transition-colors disabled:opacity-30"
@@ -1664,7 +1680,7 @@ function StickyPanel({
                     <span className="font-body text-base font-semibold text-forest-900 w-4 text-center">{guests}</span>
                     <button
                       type="button"
-                      aria-label="Mehr Gäste"
+                      aria-label={t.labels.ariaMoreGuests}
                       onClick={() => setGuests(Math.min(maxGuests, guests + 1))}
                       disabled={guests >= maxGuests || step === "payment"}
                       className="w-8 h-8 rounded-full border border-cream-300 flex items-center justify-center text-forest-600 hover:border-forest-500 transition-colors disabled:opacity-30"
@@ -1678,7 +1694,7 @@ function StickyPanel({
                   onClick={() => setShowGuestDropdown(false)}
                   className="mt-3 text-xs font-body text-forest-500 underline hover:text-forest-800 w-full text-right"
                 >
-                  Schließen
+                  {t.labels.close}
                 </button>
               </motion.div>
             )}
@@ -1692,14 +1708,12 @@ function StickyPanel({
             disabled={!datesSelected}
             className="w-full py-3.5 rounded-xl bg-forest-800 text-cream-50 font-body font-semibold text-sm hover:bg-forest-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-md"
           >
-            {datesSelected ? "Weiter zur Buchung →" : "Datum im Kalender wählen"}
+            {datesSelected ? t.widget.continueToBooking : t.widget.chooseDateInCalendar}
           </button>
         ) : (
           <div className="rounded-xl bg-forest-50 border border-forest-100 px-4 py-3">
             <p className="font-body text-xs text-forest-600">
-              {step === "payment"
-                ? "Schließe die Zahlung links ab, um deine Buchung abzusenden."
-                : "Fülle das Formular links aus und bestätige die Buchung."}
+              {step === "payment" ? t.widget.paymentHint : t.widget.formHint}
             </p>
           </div>
         )}
@@ -1716,26 +1730,26 @@ function StickyPanel({
               <div className="border-t border-cream-100 pt-3 space-y-2">
                 <div className="flex justify-between font-body text-sm text-forest-600">
                   <span>
-                    {priceBreakdown.avgNightly.toLocaleString("de-DE")} € × {priceBreakdown.nights}{" "}
-                    {priceBreakdown.nights === 1 ? "Nacht" : "Nächte"}
+                    {priceBreakdown.avgNightly.toLocaleString(nf)} € × {priceBreakdown.nights}{" "}
+                    {t.labels.nightWord(priceBreakdown.nights)}
                   </span>
-                  <span>{priceBreakdown.nightlyTotal.toLocaleString("de-DE")} €</span>
+                  <span>{priceBreakdown.nightlyTotal.toLocaleString(nf)} €</span>
                 </div>
                 {priceBreakdown.extraPersonTotal > 0 && (
                   <div className="flex justify-between font-body text-sm text-forest-600">
                     <span>
-                      Personenaufschlag ({priceBreakdown.extraGuests} {priceBreakdown.extraGuests === 1 ? "Person" : "Personen"} × {extraPersonFee} € × {priceBreakdown.nights} {priceBreakdown.nights === 1 ? "Nacht" : "Nächte"})
+                      {t.labels.extraPersonFee} ({priceBreakdown.extraGuests} {t.labels.personWord(priceBreakdown.extraGuests)} × {extraPersonFee} € × {priceBreakdown.nights} {t.labels.nightWord(priceBreakdown.nights)})
                     </span>
-                    <span>{priceBreakdown.extraPersonTotal.toLocaleString("de-DE")} €</span>
+                    <span>{priceBreakdown.extraPersonTotal.toLocaleString(nf)} €</span>
                   </div>
                 )}
                 <div className="flex justify-between font-body text-sm text-forest-600">
-                  <span>Reinigungsgebühr</span>
-                  <span>{priceBreakdown.cleaningFee.toLocaleString("de-DE")} €</span>
+                  <span>{t.labels.cleaningFee}</span>
+                  <span>{priceBreakdown.cleaningFee.toLocaleString(nf)} €</span>
                 </div>
                 <div className="flex justify-between font-body text-sm font-bold text-forest-900 border-t border-cream-200 pt-2">
-                  <span>Gesamt</span>
-                  <span>{priceBreakdown.total.toLocaleString("de-DE")} €</span>
+                  <span>{t.labels.total}</span>
+                  <span>{priceBreakdown.total.toLocaleString(nf)} €</span>
                 </div>
               </div>
             </motion.div>
@@ -1745,7 +1759,7 @@ function StickyPanel({
         {/* Trust note – nur außerhalb des Zahlungsschritts anzeigen */}
         {step !== "payment" && (
           <p className="text-center font-body text-xs text-forest-400">
-            Du wirst noch nicht belastet
+            {t.labels.notCharged}
           </p>
         )}
       </div>

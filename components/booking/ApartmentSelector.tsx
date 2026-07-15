@@ -7,6 +7,8 @@ import BookingWidget from "./BookingWidget"
 import type { ApartmentData } from "@/data/properties"
 import type { PropertyBookingConfig } from "@/config/properties.config"
 import { IconUsers, IconStar } from "@/components/ui/Icons"
+import { getDict, localizeHref } from "@/lib/i18n"
+import { useLocale } from "@/lib/i18n/LocaleProvider"
 
 interface ApartmentOption {
   apt: ApartmentData
@@ -21,6 +23,8 @@ interface ApartmentSelectorProps {
 export default function ApartmentSelector({ apartments }: ApartmentSelectorProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const widgetRef = useRef<HTMLDivElement>(null)
+  const locale = useLocale()
+  const t = getDict(locale).booking
 
   const selectedOption = apartments.find((a) => a.apt.id === selectedId)
 
@@ -37,10 +41,10 @@ export default function ApartmentSelector({ apartments }: ApartmentSelectorProps
       {/* Apartment Cards */}
       <div className="container-site py-8">
         <h2 className="font-display text-xl text-forest-900 mb-2">
-          Wähle dein Apartment:
+          {t.selector.chooseHeading}
         </h2>
         <p className="font-body text-sm text-forest-500 mb-6">
-          Klicke auf ein Apartment, um den Buchungskalender zu öffnen.
+          {t.selector.chooseSub}
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -71,7 +75,7 @@ export default function ApartmentSelector({ apartments }: ApartmentSelectorProps
                   {apt.isNew && (
                     <div className="absolute top-3 left-3 px-2 py-0.5 bg-gold-500 rounded-full">
                       <span className="font-body text-xs font-bold text-forest-900 tracking-widest uppercase">
-                        Neu
+                        {t.selector.newBadge}
                       </span>
                     </div>
                   )}
@@ -104,19 +108,19 @@ export default function ApartmentSelector({ apartments }: ApartmentSelectorProps
                   <div className="flex items-center gap-3 text-forest-400 text-xs font-body mb-3">
                     <span className="flex items-center gap-1">
                       <IconUsers size={12} />
-                      {apt.maxGuests} Gäste
+                      {t.selector.guestsN(apt.maxGuests)}
                     </span>
                     <span>·</span>
-                    <span>{apt.bedrooms} SZ</span>
+                    <span>{apt.bedrooms} {t.selector.bedroomsShort}</span>
                     <span>·</span>
                     <span>{apt.sqm} m²</span>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="font-body text-xs text-forest-400">ab </span>
+                      <span className="font-body text-xs text-forest-400">{t.labels.from}</span>
                       <span className="font-display text-xl text-forest-800">{apt.priceFrom}€</span>
-                      <span className="font-body text-xs text-forest-400"> / Nacht</span>
+                      <span className="font-body text-xs text-forest-400"> {t.labels.perNight}</span>
                     </div>
                     <span
                       className={[
@@ -126,7 +130,7 @@ export default function ApartmentSelector({ apartments }: ApartmentSelectorProps
                           : "bg-forest-900 text-cream-50 group-hover:bg-forest-700",
                       ].join(" ")}
                     >
-                      {isSelected ? "Ausgewählt ✓" : "Buchen"}
+                      {isSelected ? t.selector.selected : t.selector.book}
                     </span>
                   </div>
                 </div>
@@ -138,21 +142,21 @@ export default function ApartmentSelector({ apartments }: ApartmentSelectorProps
         {/* Details link */}
         {selectedOption && (
           <p className="mt-3 font-body text-xs text-forest-400">
-            Mehr Infos zu{" "}
+            {t.selector.moreInfoPre}
             <Link
-              href={selectedOption.config.propertyHref}
+              href={localizeHref(selectedOption.config.propertyHref, locale)}
               className="text-gold-600 underline underline-offset-2 hover:text-gold-700"
             >
-              {selectedOption.apt.name} ansehen →
+              {t.selector.moreInfoLink(selectedOption.apt.name)}
             </Link>
           </p>
         )}
 
         {!selectedId && (
           <p className="mt-4 font-body text-sm text-forest-500">
-            Für Gruppenbuchungen mehrerer Apartments:{" "}
-            <Link href="/kontakt" className="text-gold-600 underline underline-offset-2">
-              Anfrage stellen
+            {t.selector.groupPre}
+            <Link href={localizeHref("/kontakt", locale)} className="text-gold-600 underline underline-offset-2">
+              {t.selector.groupLink}
             </Link>
           </p>
         )}
@@ -165,15 +169,18 @@ export default function ApartmentSelector({ apartments }: ApartmentSelectorProps
             <div className="container-site py-5 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="font-body text-xs text-cream-50/40 mb-0.5 uppercase tracking-wider">
-                  Haus Schönblick · Apartment {selectedOption.apt.id.toUpperCase()}
+                  {t.selector.headerKicker(selectedOption.apt.id.toUpperCase())}
                 </p>
                 <h2 className="font-display text-xl text-cream-50">
-                  {selectedOption.apt.name}{" "}
-                  <span className="text-gold-300">buchen</span>
+                  {t.selector.bookTitle(selectedOption.apt.name).plain}
+                  <span className="text-gold-300">{t.selector.bookTitle(selectedOption.apt.name).gold}</span>
                 </h2>
                 <p className="font-body text-sm text-cream-50/60 mt-0.5">
-                  {selectedOption.config.subtitle} · bis {selectedOption.config.maxGuests} Personen · ab{" "}
-                  {selectedOption.config.priceFrom}€ / Nacht
+                  {t.selector.headerMeta(
+                    selectedOption.config.subtitle,
+                    selectedOption.config.maxGuests,
+                    selectedOption.config.priceFrom,
+                  )}
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -181,13 +188,13 @@ export default function ApartmentSelector({ apartments }: ApartmentSelectorProps
                   onClick={() => setSelectedId(null)}
                   className="font-body text-xs text-cream-50/50 hover:text-cream-50/80 transition-colors underline underline-offset-2"
                 >
-                  ← Anderes Apartment wählen
+                  {t.selector.chooseOther}
                 </button>
                 <Link
-                  href={selectedOption.config.propertyHref}
+                  href={localizeHref(selectedOption.config.propertyHref, locale)}
                   className="font-body text-xs text-cream-50/50 hover:text-cream-50/80 transition-colors underline underline-offset-2"
                 >
-                  Apartment ansehen →
+                  {t.selector.viewApartment}
                 </Link>
               </div>
             </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { haus28, getAggregateReviewStats } from "@/data/properties";
 import Haus28ClientPage from "@/components/property/Haus28ClientPage";
+import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "HAUS28 – A-Frame Ferienhaus im Bayerischen Wald",
@@ -12,9 +13,7 @@ export const metadata: Metadata = {
       "Einzigartiges A-Frame Ferienhaus am Büchelstein im Bayerischen Wald. Natur pur, hochwertig, bis zu 8 Personen. Direkt buchen & sparen.",
     images: [{ url: haus28.images.hero, alt: "HAUS28 – A-Frame Ferienhaus am Büchelstein, Grattersdorf" }],
   },
-  alternates: {
-    canonical: "https://www.sarfi-collection.de/haus28",
-  },
+  alternates: alternatesFor("/haus28", "de"),
 };
 
 const faqSchema = {

@@ -10,7 +10,8 @@ import { getAggregateReviewStats } from "@/data/properties";
 import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
-  title: "SARFI Collection – Exclusive Holiday Homes in the Bavarian Forest",
+  // absolute: sonst hängt das Layout-Template "%s | SARFI Collection" den Brand doppelt an
+  title: { absolute: "SARFI Collection – Exclusive Holiday Homes in the Bavarian Forest" },
   description:
     "HAUS28 – a modern A-frame at Büchelstein near Grattersdorf. Haus Schönblick – panorama apartments in Schöfweg. Two unique holiday homes in the Bavarian Forest, Germany. Book direct & save.",
   openGraph: {

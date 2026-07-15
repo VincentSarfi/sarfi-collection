@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { getDict } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 interface PropertyDescriptionProps {
   description: string;
@@ -13,6 +15,8 @@ export default function PropertyDescription({
   description,
   propertyName,
 }: PropertyDescriptionProps) {
+  const locale = useLocale();
+  const t = getDict(locale).property.description;
   const [expanded, setExpanded] = useState(false);
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
@@ -35,7 +39,7 @@ export default function PropertyDescription({
             id="description-heading"
             className="font-display text-display-md text-forest-900 mb-5"
           >
-            {propertyName ? `Über ${propertyName}` : "Über diese Unterkunft"}
+            {propertyName ? `${t.aboutPre}${propertyName}` : t.aboutFallback}
           </h2>
 
           <p className="prose-property">{displayText}</p>
@@ -45,7 +49,7 @@ export default function PropertyDescription({
               onClick={() => setExpanded(!expanded)}
               className="mt-4 inline-flex items-center font-body text-sm font-medium text-forest-700 hover:text-gold-600 transition-colors underline underline-offset-4 decoration-forest-300"
             >
-              {expanded ? "Weniger anzeigen" : "Weiterlesen"}
+              {expanded ? t.showLess : t.readMore}
             </button>
           )}
         </motion.div>

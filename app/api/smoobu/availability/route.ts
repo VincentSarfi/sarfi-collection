@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getAvailability } from '@/lib/smoobu'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
 import { findConfigBySmoobuId } from '@/lib/pricing'
+import { DATE_RE } from '@/lib/validate'
 
 /**
  * GET /api/smoobu/availability
@@ -38,6 +39,11 @@ export async function GET(request: NextRequest) {
     searchParams.get('startDate') ?? today.toISOString().split('T')[0]
   const endDate =
     searchParams.get('endDate') ?? defaultEnd.toISOString().split('T')[0]
+
+  // Format streng validieren – schützt daysBetween vor Endlos-/Riesenschleifen
+  if (!DATE_RE.test(startDate) || !DATE_RE.test(endDate) || startDate >= endDate) {
+    return NextResponse.json({ error: 'Invalid date range' }, { status: 400 })
+  }
 
   try {
     const availability = await getAvailability(propertyId, startDate, endDate)

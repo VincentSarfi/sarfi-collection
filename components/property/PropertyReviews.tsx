@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconStar, IconChevronRight } from "@/components/ui/Icons";
 import type { Review } from "@/data/reviews";
+import { getDict } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 interface PropertyReviewsProps {
   reviews: Review[];
@@ -17,6 +19,8 @@ const REVIEW_TRUNCATE = 150;
 
 /* ── Single review card ─────────────────────────────────────────────────── */
 function ReviewCard({ review }: { review: Review }) {
+  const locale = useLocale();
+  const t = getDict(locale).property.reviews;
   const [expanded, setExpanded] = useState(false);
   const isLong = review.text.length > REVIEW_TRUNCATE;
   const displayText = isLong && !expanded
@@ -59,7 +63,7 @@ function ReviewCard({ review }: { review: Review }) {
             onClick={() => setExpanded(!expanded)}
             className="mt-1 font-body text-xs font-semibold text-forest-900 underline underline-offset-2 hover:text-gold-700 transition-colors"
           >
-            {expanded ? "Weniger anzeigen" : "Mehr anzeigen"}
+            {expanded ? t.showLess : t.showMore}
           </button>
         )}
       </div>
@@ -106,6 +110,8 @@ export default function PropertyReviews({
   totalCount,
   airbnbUrl,
 }: PropertyReviewsProps) {
+  const locale = useLocale();
+  const t = getDict(locale).property.reviews;
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -155,7 +161,7 @@ export default function PropertyReviews({
               id="reviews-heading"
               className="font-display text-display-md text-forest-900 mb-2"
             >
-              Gästebewertungen
+              {t.heading}
             </h2>
             <div className="flex items-center gap-2">
               <div className="flex gap-0.5 text-gold-500">
@@ -171,7 +177,7 @@ export default function PropertyReviews({
                 {averageRating}
               </span>
               <span className="font-body text-sm text-forest-500">
-                · {totalCount} Bewertungen
+                · {totalCount}{t.reviewsPost}
               </span>
             </div>
           </div>
@@ -183,7 +189,7 @@ export default function PropertyReviews({
               <button
                 onClick={() => scroll("left")}
                 disabled={!canScrollLeft}
-                aria-label="Vorherige Bewertungen"
+                aria-label={t.prevAria}
                 className="w-9 h-9 rounded-full border border-forest-200 flex items-center justify-center text-forest-600 hover:text-forest-900 hover:border-forest-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <IconChevronLeft size={18} />
@@ -191,7 +197,7 @@ export default function PropertyReviews({
               <button
                 onClick={() => scroll("right")}
                 disabled={!canScrollRight}
-                aria-label="Nächste Bewertungen"
+                aria-label={t.nextAria}
                 className="w-9 h-9 rounded-full border border-forest-200 flex items-center justify-center text-forest-600 hover:text-forest-900 hover:border-forest-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <IconChevronRight size={18} />
@@ -205,7 +211,7 @@ export default function PropertyReviews({
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 font-body text-sm text-forest-600 hover:text-forest-900 transition-colors"
               >
-                Alle auf Airbnb
+                {t.allOnAirbnb}
                 <IconChevronRight size={14} />
               </a>
             )}
@@ -245,7 +251,7 @@ export default function PropertyReviews({
 
         {/* ── Mobile hint ───────────────────────────────────────── */}
         <p className="md:hidden text-center font-body text-xs text-forest-400 mt-3">
-          Wische für mehr Bewertungen →
+          {t.swipeHint}
         </p>
       </div>
     </section>

@@ -51,15 +51,20 @@ export type BookingResult = {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function addDays(dateStr: string, n: number): string {
+  // Durchgängig UTC: 'YYYY-MM-DD' wird als UTC geparst – lokale Arithmetik
+  // (setDate/getDate) bleibt sonst in Zeitzonen östlich von UTC am Tag der
+  // Sommerzeit-Umstellung hängen (addDays('2027-03-28', 1) === '2027-03-28'
+  // unter Europe/Berlin → Endlosschleife in daysBetween).
   const d = new Date(dateStr)
-  d.setDate(d.getDate() + n)
+  d.setUTCDate(d.getUTCDate() + n)
   return d.toISOString().split('T')[0]
 }
 
 function daysBetween(start: string, end: string): string[] {
   const days: string[] = []
   let cur = start
-  while (cur < end) {
+  // Obergrenze als Notbremse gegen ungültige Eingaben (max. ~3 Jahre)
+  while (cur < end && days.length < 1100) {
     days.push(cur)
     cur = addDays(cur, 1)
   }

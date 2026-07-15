@@ -4,12 +4,16 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { AmenityIcon } from "@/components/ui/Icons";
 import type { Amenity } from "@/data/properties";
+import { getDict } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 interface AmenitiesGridProps {
   amenities: Amenity[];
 }
 
 export default function AmenitiesGrid({ amenities }: AmenitiesGridProps) {
+  const locale = useLocale();
+  const t = getDict(locale).property.amenitiesGrid;
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   return (
@@ -29,7 +33,7 @@ export default function AmenitiesGrid({ amenities }: AmenitiesGridProps) {
             id="amenities-heading"
             className="font-display text-display-md text-forest-900"
           >
-            Ausstattung
+            {t.heading}
           </h2>
         </motion.div>
 
