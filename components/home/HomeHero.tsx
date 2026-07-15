@@ -5,8 +5,12 @@ import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { IconArrowRight, IconStar } from "@/components/ui/Icons";
+import { getDict, localizeHref } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 export default function HomeHero() {
+  const locale = useLocale();
+  const t = getDict(locale).home.hero;
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
@@ -15,13 +19,13 @@ export default function HomeHero() {
     <section
       ref={ref}
       className="relative hero-full flex items-end overflow-hidden bg-forest-900"
-      aria-label="Willkommen bei SARFI Collection"
+      aria-label={t.sectionAria}
     >
       {/* Parallax background */}
       <motion.div style={{ y }} className="absolute inset-0 will-change-transform">
         <Image
           src="/images/haus28/hero.webp"
-          alt="SARFI Collection – Ferienunterkünfte im Bayerischen Wald"
+          alt={t.imageAlt}
           fill
           priority
           quality={90}
@@ -52,7 +56,7 @@ export default function HomeHero() {
               {[1,2,3,4,5].map(i => <IconStar key={i} size={14} filled />)}
             </div>
             <span className="font-body text-sm text-cream-50/70 tracking-wide">
-              Superhost · Bayerischer Wald
+              {t.eyebrow}
             </span>
           </motion.div>
 
@@ -63,8 +67,8 @@ export default function HomeHero() {
             transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="font-display text-display-xl text-cream-50 mb-6 text-balance"
           >
-            Dein Rückzugsort im{" "}
-            <em className="not-italic text-gold-300">Bayerischen Wald</em>
+            {t.titlePre}{" "}
+            <em className="not-italic text-gold-300">{t.titleHighlight}</em>
           </motion.h1>
 
           {/* Subline */}
@@ -74,7 +78,7 @@ export default function HomeHero() {
             transition={{ delay: 0.35, duration: 0.7 }}
             className="font-body text-lg md:text-xl text-cream-50/75 mb-8 max-w-xl leading-relaxed"
           >
-            Zwei einzigartige Ferienunterkünfte – das moderne A-Frame HAUS28 und die Panorama-Apartments Haus Schönblick. Mitten in der Natur. Direkt buchbar.
+            {t.subline}
           </motion.p>
 
           {/* CTAs */}
@@ -84,11 +88,11 @@ export default function HomeHero() {
             transition={{ delay: 0.5, duration: 0.6 }}
             className="flex flex-wrap gap-3"
           >
-            <Button href="/haus28" variant="gold" size="lg" icon={<IconArrowRight size={18} />} iconPosition="right">
-              HAUS28 entdecken
+            <Button href={localizeHref("/haus28", locale)} variant="gold" size="lg" icon={<IconArrowRight size={18} />} iconPosition="right">
+              {t.ctaHaus28}
             </Button>
-            <Button href="/schoenblick" variant="ghost" size="lg">
-              Haus Schönblick
+            <Button href={localizeHref("/schoenblick", locale)} variant="ghost" size="lg">
+              {t.ctaSchoenblick}
             </Button>
           </motion.div>
         </motion.div>
@@ -103,7 +107,7 @@ export default function HomeHero() {
         aria-hidden="true"
       >
         <span className="font-body text-xs tracking-[0.15em] uppercase text-cream-50/40">
-          Entdecken
+          {t.scrollHint}
         </span>
         <motion.div
           animate={{ y: [0, 6, 0] }}

@@ -2,8 +2,13 @@
 
 import { useState, useMemo, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { getDict, type Locale } from "@/lib/i18n"
+import { useLocale } from "@/lib/i18n/LocaleProvider"
 
 // ─── Date utilities (no external library needed) ──────────────────────────────
+
+/** BCP-47 tag für Datumsformatierung je Locale */
+const dateLocale = (locale: Locale): string => (locale === "en" ? "en-GB" : "de-DE")
 
 /** Returns YYYY-MM-DD for a Date */
 export const toDateKey = (d: Date): string =>
@@ -17,16 +22,16 @@ const addDays = (d: Date, n: number): Date =>
 const sameDay = (a: Date, b: Date): boolean => toDateKey(a) === toDateKey(b)
 
 /** Formatted short display: "12. Jun" */
-export const fmtShort = (d: Date): string =>
-  d.toLocaleDateString("de-DE", { day: "numeric", month: "short" })
+export const fmtShort = (d: Date, locale: Locale = "de"): string =>
+  d.toLocaleDateString(dateLocale(locale), { day: "numeric", month: "short" })
 
 /** Formatted long display: "12.06.2025" */
-export const fmtLong = (d: Date): string =>
-  d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" })
+export const fmtLong = (d: Date, locale: Locale = "de"): string =>
+  d.toLocaleDateString(dateLocale(locale), { day: "2-digit", month: "2-digit", year: "numeric" })
 
 /** Month name + year: "Juni 2025" */
-const fmtMonthYear = (d: Date): string =>
-  d.toLocaleDateString("de-DE", { month: "long", year: "numeric" })
+const fmtMonthYear = (d: Date, locale: Locale = "de"): string =>
+  d.toLocaleDateString(dateLocale(locale), { month: "long", year: "numeric" })
 
 /** Returns all Date objects for the calendar grid of a given month (Mon-first, padded) */
 function buildMonthGrid(year: number, month: number): Array<Date | null> {
@@ -141,8 +146,6 @@ function classifyDay(
 
 // ─── Day Styles ───────────────────────────────────────────────────────────────
 
-const WEEKDAYS = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
-
 function getDayButtonClasses(cls: DayClass): string {
   const base =
     "relative h-9 w-full text-sm font-body select-none transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-inset"
@@ -203,18 +206,20 @@ function MonthView({
   showWeekdays = true,
 }: MonthViewProps) {
   const grid = useMemo(() => buildMonthGrid(year, month), [year, month])
+  const locale = useLocale()
+  const t = getDict(locale).booking.calendar
 
   return (
     <div className="min-w-0">
       {/* Month heading */}
       <p className="text-center font-display text-base font-semibold text-forest-900 mb-3">
-        {fmtMonthYear(new Date(year, month, 1))}
+        {fmtMonthYear(new Date(year, month, 1), locale)}
       </p>
 
       {/* Weekday headers */}
       {showWeekdays && (
         <div className="grid grid-cols-7 mb-1">
-          {WEEKDAYS.map((wd) => (
+          {t.weekdays.map((wd) => (
             <div
               key={wd}
               className="h-8 flex items-center justify-center text-xs font-body text-forest-400 font-medium"
@@ -251,7 +256,7 @@ function MonthView({
                 onClick={() => !cls.disabled && onDateClick(day)}
                 onMouseEnter={() => !cls.disabled && onDateHover(day)}
                 onMouseLeave={() => onDateHover(null)}
-                aria-label={`${fmtLong(day)}${cls.isBlocked ? " (belegt)" : ""}${cls.disabled ? " (nicht verfügbar)" : ""}`}
+                aria-label={`${fmtLong(day, locale)}${cls.isBlocked ? t.ariaBooked : ""}${cls.disabled ? t.ariaUnavailable : ""}`}
                 aria-pressed={cls.isCheckIn || cls.isCheckOut}
               >
                 <span className="flex flex-col items-center justify-center leading-tight">

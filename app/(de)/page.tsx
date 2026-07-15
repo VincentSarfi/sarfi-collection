@@ -7,6 +7,7 @@ import AwardsStrip from "@/components/home/AwardsStrip";
 import RegionSection from "@/components/home/RegionSection";
 import CtaSection from "@/components/home/CtaSection";
 import { getAggregateReviewStats } from "@/data/properties";
+import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "SARFI Collection – Exklusive Ferienunterkünfte im Bayerischen Wald",
@@ -19,9 +20,7 @@ export const metadata: Metadata = {
     url: "https://www.sarfi-collection.de",
     // og:image wird von der Datei-Konvention app/opengraph-image.tsx (1200×630) geliefert
   },
-  alternates: {
-    canonical: "https://www.sarfi-collection.de",
-  },
+  alternates: alternatesFor("/", "de"),
 };
 
 // Aggregierte Bewertungen dynamisch aus data/properties.ts

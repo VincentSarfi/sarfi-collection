@@ -22,6 +22,7 @@ export interface CreatePaymentIntentRequest {
   totalPrice: number       // full price in EUR
   paymentOption?: "50" | "100"  // default: "50"
   turnstileToken?: string  // Cloudflare Turnstile bot-check token
+  locale?: string          // Buchungssprache des Gasts ("de" | "en"), steuert Gast-Mails & Smoobu
 }
 
 export interface CreatePaymentIntentResponse {
@@ -52,6 +53,9 @@ export async function POST(request: NextRequest) {
   const { apartmentId, propertyName, checkIn, checkOut, guests,
           firstName, lastName, email, phone, message, totalPrice,
           paymentOption = "50", turnstileToken } = body
+
+  // Buchungssprache: alles außer "en" fällt auf "de" zurück (Alt-Clients senden nichts)
+  const locale = body.locale === 'en' ? 'en' : 'de'
 
   if (!apartmentId || !checkIn || !checkOut || !firstName || !lastName ||
       !email || !phone || !guests || !totalPrice) {
@@ -151,6 +155,7 @@ export async function POST(request: NextRequest) {
         totalPrice: String(serverTotal),
         depositAmount: String(depositEur),
         paymentOption: paymentOption ?? "50",
+        locale,
       },
     })
 

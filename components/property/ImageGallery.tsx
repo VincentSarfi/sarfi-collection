@@ -9,6 +9,8 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconExpand } from "@/components/ui/Icons";
 import type { GalleryImage } from "@/data/properties";
+import { getDict } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 interface ImageGalleryProps {
   images: GalleryImage[];
@@ -16,6 +18,8 @@ interface ImageGalleryProps {
 }
 
 export default function ImageGallery({ images }: ImageGalleryProps) {
+  const locale = useLocale();
+  const t = getDict(locale).property.imageGallery;
   const [lightboxIndex, setLightboxIndex] = useState(-1);
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
@@ -40,7 +44,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
           transition={{ duration: 0.5 }}
           className="font-display text-display-md text-forest-900 mb-6"
         >
-          Fotos
+          {t.heading}
         </motion.h2>
 
         {/* Airbnb-style grid */}
@@ -55,7 +59,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
             <button
               onClick={() => setLightboxIndex(0)}
               className="col-span-2 row-span-2 relative aspect-[4/3] md:aspect-auto group cursor-zoom-in"
-              aria-label={`${main.alt} – Vergrößern`}
+              aria-label={`${main.alt}${t.enlargeAriaPost}`}
             >
               <Image
                 src={main.src}
@@ -68,7 +72,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
               <div className="absolute inset-0 bg-forest-900/0 group-hover:bg-forest-900/10 transition-colors" />
               <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity">
                 <span className="bg-forest-900/80 text-cream-50 text-xs font-body px-2 py-1 rounded-full flex items-center gap-1">
-                  <IconExpand size={12} /> Vergrößern
+                  <IconExpand size={12} /> {t.enlarge}
                 </span>
               </div>
             </button>
@@ -80,7 +84,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
               key={i}
               onClick={() => setLightboxIndex(i + 1)}
               className="relative aspect-square group cursor-zoom-in overflow-hidden"
-              aria-label={`${img.alt} – Vergrößern`}
+              aria-label={`${img.alt}${t.enlargeAriaPost}`}
             >
               <Image
                 src={img.src}
@@ -95,7 +99,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
               {i === secondary.length - 1 && remaining > 0 && (
                 <div className="absolute inset-0 bg-forest-900/60 flex flex-col items-center justify-center gap-1">
                   <span className="font-display text-2xl text-cream-50">+{remaining}</span>
-                  <span className="font-body text-xs text-cream-50/70">weitere Fotos</span>
+                  <span className="font-body text-xs text-cream-50/70">{t.morePhotos}</span>
                 </div>
               )}
             </button>
@@ -107,10 +111,10 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
           <button
             onClick={() => setLightboxIndex(0)}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-forest-200 font-body text-sm text-forest-600 hover:text-forest-900 hover:border-forest-400 transition-colors"
-            aria-label="Alle Fotos anzeigen"
+            aria-label={t.allPhotosAria}
           >
             <IconExpand size={15} />
-            Alle {images.length} Fotos anzeigen
+            {t.showAllPre}{images.length}{t.showAllPost}
           </button>
         </div>
       </div>

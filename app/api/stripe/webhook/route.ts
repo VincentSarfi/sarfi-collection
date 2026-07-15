@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe, toCents } from '@/lib/stripe'
 import { createBooking } from '@/lib/smoobu'
-import { sendBookingNotification, sendGuestConfirmationEmail } from '@/lib/notify'
+import { sendBookingNotification, sendGuestConfirmationEmail, toMailLocale } from '@/lib/notify'
 
 /**
  * Stripe webhook – backup handler.
@@ -43,6 +43,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ received: true })
     }
 
+    // Buchungssprache des Gasts (aus payment-intent-Metadata; Alt-Buchungen: de)
+    const guestLocale = toMailLocale(m.locale)
+
     try {
       const result = await createBooking({
         apartmentId: m.apartmentId,
@@ -56,6 +59,7 @@ export async function POST(request: NextRequest) {
         message:     m.message,
         totalPrice:  parseFloat(m.totalPrice),
         depositAmount: m.depositAmount ? parseFloat(m.depositAmount) : undefined,
+        language:    guestLocale,
       })
 
       // Tag the payment intent with the booking ID
@@ -76,7 +80,10 @@ export async function POST(request: NextRequest) {
             currency: 'eur',
             unit_amount: toCents(remaining),
             product_data: {
-              name: `Restbetrag – ${m.propertyName} · ${m.checkIn} bis ${m.checkOut}`,
+              // Erscheint auf der Stripe-Bezahlseite des Gasts → Buchungssprache
+              name: guestLocale === 'en'
+                ? `Remaining balance – ${m.propertyName} · ${m.checkIn} to ${m.checkOut}`
+                : `Restbetrag – ${m.propertyName} · ${m.checkIn} bis ${m.checkOut}`,
             },
           })
           const paymentLink = await stripe.paymentLinks.create({
@@ -86,6 +93,7 @@ export async function POST(request: NextRequest) {
               propertyName: m.propertyName,
               smoobu_booking_id: String(result.id),
               original_payment_intent: pi.id,
+              locale: guestLocale,
             },
           })
           remainingPaymentUrl = paymentLink.url
@@ -132,6 +140,7 @@ export async function POST(request: NextRequest) {
           phone:              m.phone,
           smoobuBookingId:    result.id,
           remainingPaymentUrl,
+          locale:             guestLocale,
         }),
       ])
 

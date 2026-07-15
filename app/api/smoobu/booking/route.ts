@@ -85,6 +85,8 @@ export async function POST(request: NextRequest) {
     if (Number.isFinite(verifiedTotal) && verifiedTotal > 0) {
       req.totalPrice = verifiedTotal
     }
+    // Buchungssprache aus den verifizierten Payment-Metadaten (nie vom Client)
+    req.language = m.locale === 'en' ? 'en' : 'de'
   } catch (err) {
     console.error('[booking] Stripe-Verifikation fehlgeschlagen:', err)
     return NextResponse.json({ error: 'Zahlung konnte nicht verifiziert werden' }, { status: 402 })

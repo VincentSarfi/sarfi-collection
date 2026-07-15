@@ -192,8 +192,11 @@ export async function GET(request: NextRequest) {
         continue
       }
 
+      // Buchungssprache: aus den PI-Metadaten (Alt-Buchungen ohne locale → de)
+      const guestLocale = pm.locale === 'en' ? 'en' as const : 'de' as const
+
       const ok = await sendRemainingPaymentReminderEmail({
-        propertyName:        pm.propertyName ?? 'deine Unterkunft',
+        propertyName:        pm.propertyName ?? (guestLocale === 'en' ? 'your accommodation' : 'deine Unterkunft'),
         checkIn,
         checkOut:            checkOut ?? checkIn,
         firstName:           pm.firstName ?? '',
@@ -202,6 +205,7 @@ export async function GET(request: NextRequest) {
         remainingAmount:     remaining,
         remainingPaymentUrl: link.url,
         subjectPrefix:       toOverride ? '[TEST] ' : '',
+        locale:              guestLocale,
       })
 
       if (!ok) {

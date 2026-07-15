@@ -2,36 +2,26 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { getDict } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
-const highlights = [
-  {
-    icon: "🌲",
-    title: "Natur pur",
-    description:
-      "Mitten im Bayerischen Wald – Wanderwege, frische Luft und absolute Ruhe direkt vor der Haustür.",
-  },
-  {
-    icon: "✦",
-    title: "Außergewöhnliches Design",
-    description:
-      "Von der Architektur bis zum letzten Detail – unsere Unterkünfte sind sorgfältig gestaltet und hochwertig ausgestattet.",
-  },
-  {
-    icon: "🌄",
-    title: "Atemberaubende Aussicht",
-    description:
-      "Panoramablick über die sanften Hügel des Bayerischen Waldes – morgens beim Kaffee, abends beim Sonnenuntergang.",
-  },
-  {
-    icon: "💫",
-    title: "Direkt buchen & sparen",
-    description:
-      "Buche direkt bei uns und spare die Plattformgebühren. Einfacher Buchungsvorgang, persönliche Betreuung.",
-  },
-];
+// Icons pro Highlight; Titel & Beschreibung kommen aus dem Dictionary.
+const highlightIcons = {
+  nature: "🌲",
+  design: "✦",
+  view: "🌄",
+  direct: "💫",
+} as const;
 
 export default function Highlights() {
+  const locale = useLocale();
+  const t = getDict(locale).home.highlights;
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+
+  const highlights = (["nature", "design", "view", "direct"] as const).map((key) => ({
+    icon: highlightIcons[key],
+    ...t.items[key],
+  }));
 
   return (
     <section className="section-pad bg-forest-900 overflow-hidden" aria-labelledby="highlights-heading">
@@ -50,13 +40,13 @@ export default function Highlights() {
           className="text-center mb-12 md:mb-16"
         >
           <p className="font-body text-sm tracking-[0.15em] uppercase text-gold-400 mb-3">
-            Warum SARFI Collection
+            {t.eyebrow}
           </p>
           <h2
             id="highlights-heading"
             className="font-display text-display-lg text-cream-50 text-balance"
           >
-            Was uns besonders macht
+            {t.heading}
           </h2>
         </motion.div>
 

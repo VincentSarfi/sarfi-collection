@@ -3,19 +3,28 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { getDict } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
-const highlights = [
-  { emoji: "🥾", label: "Wandern", text: "Hunderte km markierter Wege direkt ab Haustür" },
-  { emoji: "⛷️", label: "Winter", text: "Skifahren, Langlauf & Winterwandern" },
-  { emoji: "🦌", label: "Wildtiere", text: "Hirsche, Rehe & einzigartige Natur" },
-  { emoji: "🏘️", label: "Kultur", text: "Klöster, Museen & bayerische Lebensart" },
-  { emoji: "🌊", label: "Seen", text: "Kristallklare Badeseen in der Umgebung" },
-  { emoji: "🧖", label: "Wellness", text: "Thermalbäder & Saunen in der Region" },
-];
+// Emojis pro Regions-Highlight; Label & Text kommen aus dem Dictionary.
+const regionEmojis = {
+  hiking: "🥾",
+  winter: "⛷️",
+  wildlife: "🦌",
+  culture: "🏘️",
+  lakes: "🌊",
+  wellness: "🧖",
+} as const;
 
 export default function RegionSection() {
+  const locale = useLocale();
+  const t = getDict(locale).home.region;
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [imgRef, imgInView] = useInView({ triggerOnce: true, threshold: 0.1 });
+
+  const highlights = (
+    ["hiking", "winter", "wildlife", "culture", "lakes", "wellness"] as const
+  ).map((key) => ({ emoji: regionEmojis[key], ...t.items[key] }));
 
   return (
     <section className="section-pad bg-cream-100 overflow-hidden" aria-labelledby="region-heading">
@@ -29,7 +38,7 @@ export default function RegionSection() {
               transition={{ duration: 0.5 }}
               className="font-body text-sm tracking-[0.15em] uppercase text-gold-600 mb-3"
             >
-              Die Region
+              {t.eyebrow}
             </motion.p>
             <motion.h2
               id="region-heading"
@@ -38,7 +47,7 @@ export default function RegionSection() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="font-display text-display-md text-forest-900 mb-5 text-balance"
             >
-              Bayerischer Wald – Deutschlands ältester Nationalpark
+              {t.heading}
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 16 }}
@@ -46,7 +55,7 @@ export default function RegionSection() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="font-body text-base text-forest-600 leading-relaxed mb-8"
             >
-              Der Bayerische Wald ist eine der ursprünglichsten Landschaften Deutschlands. Dichte Wälder, klare Bäche, sanfte Hügel und eine entspannte, herzliche Atmosphäre machen die Region zum perfekten Urlaubsziel – zu jeder Jahreszeit.
+              {t.intro}
             </motion.p>
 
             <motion.div
@@ -79,7 +88,7 @@ export default function RegionSection() {
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-card-lg">
               <Image
                 src="/images/shared/region-bayerischer-wald.jpg"
-                alt="Bayerischer Wald – Sonnenaufgang über dem Nebelmeer"
+                alt={t.imageAlt}
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -87,9 +96,9 @@ export default function RegionSection() {
             </div>
             {/* Decorative card */}
             <div className="absolute -bottom-5 -left-5 md:-left-8 bg-forest-900 rounded-2xl p-4 shadow-card-lg">
-              <p className="font-body text-xs text-cream-50/50 mb-0.5">Nationalpark seit</p>
+              <p className="font-body text-xs text-cream-50/50 mb-0.5">{t.parkSince}</p>
               <p className="font-display text-2xl text-gold-300 font-medium">1970</p>
-              <p className="font-body text-xs text-cream-50/70">Bayerischer Wald</p>
+              <p className="font-body text-xs text-cream-50/70">{t.parkName}</p>
             </div>
           </motion.div>
         </div>

@@ -5,6 +5,8 @@ import { useInView } from "react-intersection-observer";
 import { IconStar } from "@/components/ui/Icons";
 import { reviews } from "@/data/reviews";
 import { getAggregateReviewStats } from "@/data/properties";
+import { getDict } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // Show best 6 reviews on homepage
 const featuredReviews = reviews.slice(0, 6);
@@ -13,6 +15,8 @@ const featuredReviews = reviews.slice(0, 6);
 const aggregate = getAggregateReviewStats();
 
 function ReviewCard({ review, index }: { review: (typeof reviews)[number]; index: number }) {
+  const locale = useLocale();
+  const t = getDict(locale).home.reviews;
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   return (
@@ -50,7 +54,7 @@ function ReviewCard({ review, index }: { review: (typeof reviews)[number]; index
         </div>
         <div className="ml-auto shrink-0">
           <span className="font-body text-xs text-gold-600 bg-gold-300/20 px-2 py-0.5 rounded-full">
-            {review.propertyId === "haus28" ? "HAUS28" : "Schönblick"}
+            {review.propertyId === "haus28" ? t.badgeHaus28 : t.badgeSchoenblick}
           </span>
         </div>
       </div>
@@ -59,6 +63,8 @@ function ReviewCard({ review, index }: { review: (typeof reviews)[number]; index
 }
 
 export default function ReviewsSection() {
+  const locale = useLocale();
+  const t = getDict(locale).home.reviews;
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   return (
@@ -72,21 +78,21 @@ export default function ReviewsSection() {
           className="text-center mb-12 md:mb-16"
         >
           <p className="font-body text-sm tracking-[0.15em] uppercase text-gold-600 mb-3">
-            Gästebewertungen
+            {t.eyebrow}
           </p>
           <h2
             id="reviews-heading"
             className="font-display text-display-lg text-forest-900 mb-4 text-balance"
           >
-            Was unsere Gäste sagen
+            {t.heading}
           </h2>
           {/* Aggregate rating */}
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-gold-300/20 rounded-full">
             <div className="flex gap-0.5 text-gold-500">
               {[1,2,3,4,5].map(i => <IconStar key={i} size={14} filled />)}
             </div>
-            <span className="font-body text-sm font-semibold text-forest-800">{aggregate.ratingValue.toLocaleString("de-DE")}</span>
-            <span className="font-body text-sm text-forest-600">· {aggregate.reviewCount} verifizierte Gästebewertungen</span>
+            <span className="font-body text-sm font-semibold text-forest-800">{aggregate.ratingValue.toLocaleString(locale === "de" ? "de-DE" : "en-GB")}</span>
+            <span className="font-body text-sm text-forest-600">· {aggregate.reviewCount} {t.aggregateSuffix}</span>
           </div>
         </motion.div>
 

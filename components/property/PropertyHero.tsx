@@ -6,6 +6,8 @@ import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { IconStar, IconMapPin, IconArrowRight } from "@/components/ui/Icons";
 import Button from "@/components/ui/Button";
+import { getDict, localizeHref } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 interface PropertyHeroProps {
   name: string;
@@ -36,6 +38,8 @@ export default function PropertyHero({
   breadcrumb,
   guestFavorite,
 }: PropertyHeroProps) {
+  const locale = useLocale();
+  const t = getDict(locale).property.hero;
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
@@ -69,8 +73,8 @@ export default function PropertyHero({
         >
           <ol className="flex items-center gap-2 font-body text-xs text-cream-50/50">
             <li>
-              <Link href="/" className="hover:text-cream-50/80 transition-colors">
-                Startseite
+              <Link href={localizeHref("/", locale)} className="hover:text-cream-50/80 transition-colors">
+                {t.breadcrumbHome}
               </Link>
             </li>
             {breadcrumb.map((crumb) => (
@@ -102,11 +106,11 @@ export default function PropertyHero({
               {[1,2,3,4,5].map(i => <IconStar key={i} size={14} filled />)}
             </div>
             <span className="font-body text-sm text-cream-50/80">
-              {airbnbRating} · {airbnbReviewCount} Bewertungen auf Airbnb
+              {airbnbRating} · {airbnbReviewCount}{t.reviewsOnAirbnbPost}
             </span>
             {guestFavorite && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gold-300/20 border border-gold-300/40 font-body text-xs text-gold-300">
-                🏅 Gäste-Favorit
+                {t.guestFavoriteBadge}
               </span>
             )}
           </div>
@@ -126,22 +130,22 @@ export default function PropertyHero({
           {/* Price + CTA row */}
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-baseline gap-1">
-              <span className="font-body text-sm text-cream-50/50">ab</span>
+              <span className="font-body text-sm text-cream-50/50">{t.pricePre}</span>
               <span className="font-display text-3xl text-cream-50 font-medium">{priceFrom}€</span>
-              <span className="font-body text-sm text-cream-50/50">/ Nacht</span>
+              <span className="font-body text-sm text-cream-50/50">{t.priceUnit}</span>
             </div>
 
             <div className="flex gap-3">
               <Button href={bookHref} variant="gold" size="lg">
-                Jetzt buchen
+                {t.bookNow}
               </Button>
               {galleryCount && onGalleryOpen && (
                 <button
                   onClick={onGalleryOpen}
                   className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-cream-50/30 text-cream-50/80 hover:text-cream-50 hover:border-cream-50/50 transition-colors font-body text-sm"
-                  aria-label="Alle Fotos anzeigen"
+                  aria-label={t.allPhotosAria}
                 >
-                  Alle {galleryCount} Fotos
+                  {t.allPhotosPre}{galleryCount}{t.allPhotosPost}
                 </button>
               )}
             </div>

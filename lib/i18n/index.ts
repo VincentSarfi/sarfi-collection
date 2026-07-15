@@ -84,7 +84,9 @@ export function switchLocalePath(pathname: string, target: Locale): string {
 
 /** Absolute URL der Seite in der jeweiligen Locale (für hreflang/canonical). */
 export function localizedUrl(path: string, locale: Locale): string {
-  return `https://www.sarfi-collection.de${localizePath(path, locale)}`;
+  const p = localizePath(path, locale);
+  // Startseite ohne Trailing-Slash (konsistent mit bestehenden Canonicals)
+  return p === "/" ? "https://www.sarfi-collection.de" : `https://www.sarfi-collection.de${p}`;
 }
 
 /** alternates-Objekt (canonical + hreflang) für eine in beiden Sprachen vorhandene Seite. */

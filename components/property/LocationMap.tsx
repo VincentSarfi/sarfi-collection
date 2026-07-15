@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconMapPin } from "@/components/ui/Icons";
 import type { Coordinates } from "@/data/properties";
+import { getDict } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 interface LocationMapProps {
   address: string;
@@ -12,19 +14,15 @@ interface LocationMapProps {
   nearbyAttractions?: { name: string; distance: string }[];
 }
 
-const defaultAttractions = [
-  { name: "Nationalpark Bayerischer Wald", distance: "~20 km" },
-  { name: "Deggendorf (Einkaufen)", distance: "~20 min" },
-  { name: "Thermalbad Regen", distance: "~30 min" },
-  { name: "Glasmuseum Frauenau", distance: "~25 min" },
-];
-
 export default function LocationMap({
   address,
   coordinates,
   description,
-  nearbyAttractions = defaultAttractions,
+  nearbyAttractions,
 }: LocationMapProps) {
+  const locale = useLocale();
+  const t = getDict(locale).property.location;
+  const attractions = nearbyAttractions ?? t.defaultAttractions;
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   // OpenStreetMap embed – zuverlässig ohne API-Key
@@ -52,7 +50,7 @@ export default function LocationMap({
             id="location-heading"
             className="font-display text-display-md text-forest-900 mb-2"
           >
-            Lage & Umgebung
+            {t.heading}
           </h2>
           <div className="flex items-start gap-2 text-forest-600">
             <IconMapPin size={16} className="mt-0.5 shrink-0" />
@@ -77,8 +75,8 @@ export default function LocationMap({
                   style={{ border: 0, position: "absolute", inset: 0 }}
                   loading="lazy"
                   allowFullScreen
-                  title={`Karte: ${address}`}
-                  aria-label={`OpenStreetMap Karte für ${address}`}
+                  title={`${t.mapTitlePre}${address}`}
+                  aria-label={`${t.mapAriaPre}${address}`}
                 />
               )}
             </div>
@@ -93,17 +91,17 @@ export default function LocationMap({
           >
             {description && (
               <div>
-                <h3 className="font-display text-lg text-forest-800 mb-2">Die Umgebung</h3>
+                <h3 className="font-display text-lg text-forest-800 mb-2">{t.surroundings}</h3>
                 <p className="font-body text-sm text-forest-600 leading-relaxed">{description}</p>
               </div>
             )}
 
             <div>
               <h3 className="font-body text-sm font-semibold text-forest-800 mb-3 tracking-wide">
-                In der Nähe
+                {t.nearby}
               </h3>
               <ul className="flex flex-col gap-2">
-                {nearbyAttractions.map((attr) => (
+                {attractions.map((attr) => (
                   <li
                     key={attr.name}
                     className="flex items-center justify-between py-2 border-b border-cream-200 last:border-0"
@@ -119,7 +117,7 @@ export default function LocationMap({
 
             {/* GPS */}
             <div className="p-3 rounded-xl bg-cream-200 border border-cream-300">
-              <p className="font-body text-xs text-forest-500 mb-1">GPS-Koordinaten</p>
+              <p className="font-body text-xs text-forest-500 mb-1">{t.gps}</p>
               <p className="font-body text-xs text-forest-700 font-medium">
                 {coordinates.lat.toFixed(4)}°N, {coordinates.lng.toFixed(4)}°E
               </p>

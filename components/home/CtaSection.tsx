@@ -6,8 +6,12 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconArrowRight } from "@/components/ui/Icons";
 import { haus28, schoenblick } from "@/data/properties";
+import { getDict, localizeHref } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 export default function CtaSection() {
+  const locale = useLocale();
+  const t = getDict(locale).home.cta;
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.15 });
 
   return (
@@ -20,16 +24,16 @@ export default function CtaSection() {
           className="text-center mb-12"
         >
           <p className="font-body text-sm tracking-[0.15em] uppercase text-gold-400 mb-3">
-            Jetzt buchen
+            {t.eyebrow}
           </p>
           <h2
             id="cta-heading"
             className="font-display text-display-lg text-cream-50 mb-4 text-balance"
           >
-            Finde deine perfekte Unterkunft
+            {t.heading}
           </h2>
           <p className="font-body text-lg text-cream-50/60 max-w-xl mx-auto">
-            Direkt buchen und bis zu 20 % gegenüber Buchungsplattformen sparen.
+            {t.intro}
           </p>
         </motion.div>
 
@@ -41,7 +45,7 @@ export default function CtaSection() {
             transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
             <Link
-              href="/haus28"
+              href={localizeHref("/haus28", locale)}
               className="group relative flex flex-col overflow-hidden rounded-2xl h-64 md:h-72 bg-forest-800"
             >
               <Image
@@ -54,27 +58,27 @@ export default function CtaSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-forest-900 via-forest-900/30 to-transparent" />
               <div className="relative z-10 mt-auto p-6">
                 <p className="font-body text-xs tracking-[0.12em] uppercase text-gold-300/80 mb-1">
-                  A-Frame · Grattersdorf
+                  {t.tagHaus28}
                 </p>
                 <h3 className="font-display text-2xl text-cream-50 mb-3">{haus28.name}</h3>
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="font-body text-sm text-cream-50/50">ab </span>
+                    <span className="font-body text-sm text-cream-50/50">{t.priceFrom}</span>
                     <span className="font-display text-xl text-cream-50">{haus28.priceFrom}€</span>
-                    <span className="font-body text-sm text-cream-50/50"> / Nacht</span>
+                    <span className="font-body text-sm text-cream-50/50">{t.priceNight}</span>
                   </div>
                   <div className="flex items-center gap-1 text-cream-50/60 group-hover:text-gold-300 group-hover:gap-2 transition-all">
-                    <span className="font-body text-sm">Entdecken</span>
+                    <span className="font-body text-sm">{t.discover}</span>
                     <IconArrowRight size={16} />
                   </div>
                 </div>
               </div>
             </Link>
             <Link
-              href="/haus28/buchen"
+              href={localizeHref("/haus28/buchen", locale)}
               className="mt-3 flex items-center justify-center w-full py-3.5 bg-gold-500 text-forest-900 text-sm font-medium font-body rounded-xl hover:bg-gold-400 transition-colors shadow-cta"
             >
-              HAUS28 jetzt buchen
+              {t.bookHaus28}
             </Link>
           </motion.div>
 
@@ -85,7 +89,7 @@ export default function CtaSection() {
             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <Link
-              href="/schoenblick"
+              href={localizeHref("/schoenblick", locale)}
               className="group relative flex flex-col overflow-hidden rounded-2xl h-64 md:h-72 bg-forest-800"
             >
               <Image
@@ -98,27 +102,27 @@ export default function CtaSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-forest-900 via-forest-900/30 to-transparent" />
               <div className="relative z-10 mt-auto p-6">
                 <p className="font-body text-xs tracking-[0.12em] uppercase text-gold-300/80 mb-1">
-                  5 Apartments · Schöfweg
+                  {t.tagSchoenblick}
                 </p>
                 <h3 className="font-display text-2xl text-cream-50 mb-3">{schoenblick.name}</h3>
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="font-body text-sm text-cream-50/50">ab </span>
+                    <span className="font-body text-sm text-cream-50/50">{t.priceFrom}</span>
                     <span className="font-display text-xl text-cream-50">{schoenblick.priceFrom}€</span>
-                    <span className="font-body text-sm text-cream-50/50"> / Nacht</span>
+                    <span className="font-body text-sm text-cream-50/50">{t.priceNight}</span>
                   </div>
                   <div className="flex items-center gap-1 text-cream-50/60 group-hover:text-gold-300 group-hover:gap-2 transition-all">
-                    <span className="font-body text-sm">Entdecken</span>
+                    <span className="font-body text-sm">{t.discover}</span>
                     <IconArrowRight size={16} />
                   </div>
                 </div>
               </div>
             </Link>
             <Link
-              href="/schoenblick/buchen"
+              href={localizeHref("/schoenblick/buchen", locale)}
               className="mt-3 flex items-center justify-center w-full py-3.5 border border-cream-50/20 text-cream-50/80 text-sm font-body rounded-xl hover:text-cream-50 hover:border-cream-50/40 hover:bg-cream-50/5 transition-all"
             >
-              Schönblick buchen
+              {t.bookSchoenblick}
             </Link>
           </motion.div>
         </div>

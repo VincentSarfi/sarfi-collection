@@ -4,6 +4,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconChevronDown } from "@/components/ui/Icons";
+import { getDict } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 interface FaqAccordionProps {
   faqs: { question: string; answer: string }[];
@@ -64,6 +66,8 @@ function FaqItem({
 }
 
 export default function FaqAccordion({ faqs }: FaqAccordionProps) {
+  const locale = useLocale();
+  const t = getDict(locale).property.faq;
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
@@ -86,7 +90,7 @@ export default function FaqAccordion({ faqs }: FaqAccordionProps) {
             id="faq-heading"
             className="font-display text-display-md text-forest-900"
           >
-            Häufige Fragen
+            {t.heading}
           </h2>
         </motion.div>
 

@@ -1,5 +1,5 @@
 import KontaktPageContent from "@/components/pages/KontaktPageContent";
 
-export default function KontaktPage() {
+export default function EnglishKontaktPage() {
   return <KontaktPageContent />;
 }

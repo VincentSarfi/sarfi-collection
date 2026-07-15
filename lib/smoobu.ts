@@ -39,6 +39,8 @@ export type BookingRequest = {
   totalPrice: number
   /** Tatsächlich gezahlte Anzahlung in EUR (bei 50%-Zahlung < totalPrice). */
   depositAmount?: number
+  /** Sprache des Gasts für Smoobu-Gastkommunikation (Default: de). */
+  language?: 'de' | 'en'
 }
 
 export type BookingResult = {
@@ -204,7 +206,7 @@ export async function createBooking(req: BookingRequest): Promise<BookingResult>
     price: req.totalPrice,
     priceStatus: 1,
     deposit: req.depositAmount ?? req.totalPrice,
-    language: 'de',
+    language: req.language ?? 'de',
     guestAppMessage: req.message ?? '',
     country: 'DE',
     address: { street: 'k.A.', zip: '00000', city: 'Deutschland', country: 'DE' },

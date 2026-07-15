@@ -5,6 +5,14 @@ import { invoiceLink } from '@/lib/invoiceLink'
 // Lazy: sonst wirft `new Resend(undefined)` schon beim `next build`.
 const getResend = () => new Resend(process.env.RESEND_API_KEY)
 
+/** Sprache der Gast-Mails. Kommt aus den PaymentIntent-Metadaten (metadata.locale);
+ *  fehlt sie (Alt-Buchungen, deutsche Gäste), wird Deutsch verwendet. */
+export type MailLocale = 'de' | 'en'
+
+export function toMailLocale(value: unknown): MailLocale {
+  return value === 'en' ? 'en' : 'de'
+}
+
 export interface GuestConfirmationData {
   propertyName: string
   checkIn: string
@@ -21,6 +29,7 @@ export interface GuestConfirmationData {
   smoobuBookingId?: string | number
   remainingPaymentUrl?: string
   heroImageUrl?: string
+  locale?: MailLocale
 }
 
 /** Leitet vom Unterkunftsnamen zur Hero-Bild-URL */
@@ -32,37 +41,30 @@ function getHeroImageUrl(propertyName: string): string {
   return 'https://www.sarfi-collection.de/images/schoenblick/aussen/hero.webp'
 }
 
-function getCancellationRows(propertyName: string): string {
+function getCancellationRows(propertyName: string, locale: MailLocale = 'de'): string {
   const lower = propertyName.toLowerCase()
-  if (lower.includes('haus28') || lower.includes('haus 28')) {
-    return `
+  const en = locale === 'en'
+  const row = (period: string, refund: string, last: boolean) => `
         <tr>
-          <td style="padding:10px 14px;font-size:13px;color:#4a5568;border-bottom:1px solid #f0ece4;">Mehr als 30 Tage</td>
-          <td style="padding:10px 14px;font-size:13px;color:#4a5568;border-bottom:1px solid #f0ece4;">100 % Erstattung</td>
-        </tr>
-        <tr>
-          <td style="padding:10px 14px;font-size:13px;color:#4a5568;border-bottom:1px solid #f0ece4;">14–30 Tage</td>
-          <td style="padding:10px 14px;font-size:13px;color:#4a5568;border-bottom:1px solid #f0ece4;">50 % Erstattung</td>
-        </tr>
-        <tr>
-          <td style="padding:10px 14px;font-size:13px;color:#4a5568;">Weniger als 14 Tage</td>
-          <td style="padding:10px 14px;font-size:13px;color:#4a5568;">Keine Erstattung</td>
+          <td style="padding:10px 14px;font-size:13px;color:#4a5568;${last ? '' : 'border-bottom:1px solid #f0ece4;'}">${period}</td>
+          <td style="padding:10px 14px;font-size:13px;color:#4a5568;${last ? '' : 'border-bottom:1px solid #f0ece4;'}">${refund}</td>
         </tr>`
+  const full = en ? '100% refund' : '100 % Erstattung'
+  const half = en ? '50% refund' : '50 % Erstattung'
+  const none = en ? 'No refund' : 'Keine Erstattung'
+  if (lower.includes('haus28') || lower.includes('haus 28')) {
+    return [
+      row(en ? 'More than 30 days' : 'Mehr als 30 Tage', full, false),
+      row(en ? '14–30 days' : '14–30 Tage', half, false),
+      row(en ? 'Less than 14 days' : 'Weniger als 14 Tage', none, true),
+    ].join('')
   }
   // Schönblick (B5–B8, A2)
-  return `
-        <tr>
-          <td style="padding:10px 14px;font-size:13px;color:#4a5568;border-bottom:1px solid #f0ece4;">Mehr als 14 Tage</td>
-          <td style="padding:10px 14px;font-size:13px;color:#4a5568;border-bottom:1px solid #f0ece4;">100 % Erstattung</td>
-        </tr>
-        <tr>
-          <td style="padding:10px 14px;font-size:13px;color:#4a5568;border-bottom:1px solid #f0ece4;">7–14 Tage</td>
-          <td style="padding:10px 14px;font-size:13px;color:#4a5568;border-bottom:1px solid #f0ece4;">50 % Erstattung</td>
-        </tr>
-        <tr>
-          <td style="padding:10px 14px;font-size:13px;color:#4a5568;">Weniger als 7 Tage</td>
-          <td style="padding:10px 14px;font-size:13px;color:#4a5568;">Keine Erstattung</td>
-        </tr>`
+  return [
+    row(en ? 'More than 14 days' : 'Mehr als 14 Tage', full, false),
+    row(en ? '7–14 days' : '7–14 Tage', half, false),
+    row(en ? 'Less than 7 days' : 'Weniger als 7 Tage', none, true),
+  ].join('')
 }
 
 export interface BookingNotificationData {
@@ -92,8 +94,14 @@ export interface BookingNotificationData {
   userAgent?: string
 }
 
-function formatDate(dateStr: string): string {
+const EN_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+function formatDate(dateStr: string, locale: MailLocale = 'de'): string {
   const [year, month, day] = dateStr.split('-')
+  if (locale === 'en') {
+    // "14 Aug 2026" – für alle englischsprachigen Gäste eindeutig (US wie UK)
+    return `${parseInt(day, 10)} ${EN_MONTHS[parseInt(month, 10) - 1] ?? month} ${year}`
+  }
   return `${day}.${month}.${year}`
 }
 
@@ -493,6 +501,7 @@ export interface RemainingReminderData {
   heroImageUrl?: string
   /** Optionaler Präfix im Betreff, z. B. "[TEST] " */
   subjectPrefix?: string
+  locale?: MailLocale
 }
 
 /**
@@ -507,19 +516,63 @@ export async function sendRemainingPaymentReminderEmail(data: RemainingReminderD
     return false
   }
 
+  const L  = toMailLocale(data.locale)
+  const en = L === 'en'
   const heroUrl   = data.heroImageUrl ?? getHeroImageUrl(data.propertyName)
   const remaining = Math.round(data.remainingAmount)
+  const remainingFmt = remaining.toLocaleString(en ? 'en-US' : 'de-DE')
   const nights    = data.nights ?? Math.round(
     (new Date(data.checkOut).getTime() - new Date(data.checkIn).getTime()) / (1000 * 60 * 60 * 24)
   )
-  const nightsLabel = nights === 1 ? '1 Nacht' : `${nights} Nächte`
+  const nightsLabel = en
+    ? (nights === 1 ? '1 night' : `${nights} nights`)
+    : (nights === 1 ? '1 Nacht' : `${nights} Nächte`)
 
   // Escape user-controlled fields before HTML interpolation
   const safeProperty = escapeHtml(data.propertyName)
   const safeName     = escapeHtml(`${data.firstName} ${data.lastName}`)
 
+  // Deutsche Texte müssen zeichengleich zur bisherigen Mail bleiben.
+  const t = en ? {
+    heading: 'your arrival is coming up.',
+    intro: `We're looking forward to your stay at <strong>${safeProperty}</strong> starting ${formatDate(data.checkIn, L)}. To have everything ready, please settle the outstanding balance using the button below.`,
+    location: 'Bavarian Forest, Germany',
+    stayHeading: 'Your stay',
+    arrival: 'Arrival',
+    arrivalTime: 'from 4 p.m.',
+    departure: 'Departure',
+    departureTime: 'by 10 a.m.',
+    nightsRow: 'Nights',
+    outstanding: 'Outstanding balance',
+    dueNote: `Please pay no later than 14 days before your arrival on ${formatDate(data.checkIn, L)}`,
+    payNow: 'Pay now',
+    secureNote: 'Secure card payment via Stripe. If you have already paid the balance, please disregard this email.',
+    questionsHeading: 'Questions about your payment?',
+    questionsText: "Message us directly on WhatsApp – we're happy to help:",
+    whatsappBtn: 'Chat on WhatsApp',
+    footerRegion: 'Bavarian Forest',
+  } : {
+    heading: 'deine Anreise rückt näher.',
+    intro: `Wir freuen uns auf deinen Aufenthalt im <strong>${safeProperty}</strong> am ${formatDate(data.checkIn)}. Damit alles vorbereitet ist, bitten wir dich, den noch offenen Restbetrag bequem über den Button unten zu begleichen.`,
+    location: 'Bayerischer Wald, Deutschland',
+    stayHeading: 'Dein Aufenthalt',
+    arrival: 'Anreise',
+    arrivalTime: 'ab 16:00 Uhr',
+    departure: 'Abreise',
+    departureTime: 'bis 10:00 Uhr',
+    nightsRow: 'Anzahl Nächte',
+    outstanding: 'Ausstehender Restbetrag',
+    dueNote: `Bitte bis 14 Tage vor Anreise am ${formatDate(data.checkIn)} begleichen`,
+    payNow: 'Jetzt bezahlen',
+    secureNote: 'Sichere Zahlung per Kreditkarte über Stripe. Falls du den Betrag bereits überwiesen hast, kannst du diese E-Mail ignorieren.',
+    questionsHeading: 'Fragen zur Zahlung?',
+    questionsText: 'Schreib uns direkt auf WhatsApp – wir helfen dir gern weiter:',
+    whatsappBtn: 'WhatsApp schreiben',
+    footerRegion: 'Bayerischer Wald',
+  }
+
   const html = `<!DOCTYPE html>
-<html lang="de">
+<html lang="${L}">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
 <body style="margin:0;padding:0;background:#ede8df;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#ede8df;padding:40px 16px;">
@@ -537,8 +590,8 @@ export async function sendRemainingPaymentReminderEmail(data: RemainingReminderD
   <tr>
     <td style="padding:36px 48px 0;">
       <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;color:#1a2e1a;">Hi ${safeName},</h1>
-      <h2 style="margin:0 0 12px;font-size:20px;font-weight:600;color:#1a2e1a;">deine Anreise rückt näher.</h2>
-      <p style="margin:0;font-size:14px;color:#4a5568;line-height:1.7;">Wir freuen uns auf deinen Aufenthalt im <strong>${safeProperty}</strong> am ${formatDate(data.checkIn)}. Damit alles vorbereitet ist, bitten wir dich, den noch offenen Restbetrag bequem über den Button unten zu begleichen.</p>
+      <h2 style="margin:0 0 12px;font-size:20px;font-weight:600;color:#1a2e1a;">${t.heading}</h2>
+      <p style="margin:0;font-size:14px;color:#4a5568;line-height:1.7;">${t.intro}</p>
     </td>
   </tr>
 
@@ -552,7 +605,7 @@ export async function sendRemainingPaymentReminderEmail(data: RemainingReminderD
         <tr>
           <td>
             <p style="margin:0 0 2px;font-size:16px;font-weight:700;color:#1a2e1a;">${safeProperty}</p>
-            <p style="margin:0;font-size:12px;color:#aaa;">Bayerischer Wald, Deutschland</p>
+            <p style="margin:0;font-size:12px;color:#aaa;">${t.location}</p>
           </td>
         </tr>
       </table>
@@ -564,18 +617,18 @@ export async function sendRemainingPaymentReminderEmail(data: RemainingReminderD
   <!-- Aufenthalt -->
   <tr>
     <td style="padding:24px 48px 0;">
-      <p style="margin:0 0 16px;font-size:16px;font-weight:700;color:#1a2e1a;">Dein Aufenthalt</p>
+      <p style="margin:0 0 16px;font-size:16px;font-weight:700;color:#1a2e1a;">${t.stayHeading}</p>
       <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
-          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Anreise</td>
-          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${formatDate(data.checkIn)} <span style="color:#aaa;font-weight:400;">ab 16:00 Uhr</span></td>
+          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">${t.arrival}</td>
+          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${formatDate(data.checkIn, L)} <span style="color:#aaa;font-weight:400;">${t.arrivalTime}</span></td>
         </tr>
         <tr>
-          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Abreise</td>
-          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${formatDate(data.checkOut)} <span style="color:#aaa;font-weight:400;">bis 10:00 Uhr</span></td>
+          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">${t.departure}</td>
+          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${formatDate(data.checkOut, L)} <span style="color:#aaa;font-weight:400;">${t.departureTime}</span></td>
         </tr>
         <tr>
-          <td style="padding:11px 0;font-size:13px;color:#888;">Anzahl Nächte</td>
+          <td style="padding:11px 0;font-size:13px;color:#888;">${t.nightsRow}</td>
           <td align="right" style="padding:11px 0;font-size:13px;font-weight:600;color:#1a2e1a;">${nightsLabel}</td>
         </tr>
       </table>
@@ -588,14 +641,14 @@ export async function sendRemainingPaymentReminderEmail(data: RemainingReminderD
       <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a2e1a;border-radius:6px;">
         <tr>
           <td align="center" style="padding:28px 32px 24px;">
-            <p style="margin:0 0 4px;font-size:9px;color:#c9a84c;text-transform:uppercase;letter-spacing:0.22em;font-weight:600;">Ausstehender Restbetrag</p>
-            <p style="margin:0 0 4px;font-size:34px;font-weight:300;color:#f5f0e8;letter-spacing:-0.5px;">${remaining.toLocaleString('de-DE')} €</p>
-            <p style="margin:0 0 20px;font-size:12px;color:rgba(245,240,232,0.5);">Bitte bis 14 Tage vor Anreise am ${formatDate(data.checkIn)} begleichen</p>
-            <a href="${data.remainingPaymentUrl}" style="display:inline-block;background:#c9a84c;color:#1a2e1a;font-size:13px;font-weight:700;text-decoration:none;padding:14px 32px;border-radius:3px;letter-spacing:0.08em;text-transform:uppercase;">Jetzt bezahlen</a>
+            <p style="margin:0 0 4px;font-size:9px;color:#c9a84c;text-transform:uppercase;letter-spacing:0.22em;font-weight:600;">${t.outstanding}</p>
+            <p style="margin:0 0 4px;font-size:34px;font-weight:300;color:#f5f0e8;letter-spacing:-0.5px;">${remainingFmt} €</p>
+            <p style="margin:0 0 20px;font-size:12px;color:rgba(245,240,232,0.5);">${t.dueNote}</p>
+            <a href="${data.remainingPaymentUrl}" style="display:inline-block;background:#c9a84c;color:#1a2e1a;font-size:13px;font-weight:700;text-decoration:none;padding:14px 32px;border-radius:3px;letter-spacing:0.08em;text-transform:uppercase;">${t.payNow}</a>
           </td>
         </tr>
       </table>
-      <p style="margin:14px 0 0;font-size:12px;color:#aaa;line-height:1.6;">Sichere Zahlung per Kreditkarte über Stripe. Falls du den Betrag bereits überwiesen hast, kannst du diese E-Mail ignorieren.</p>
+      <p style="margin:14px 0 0;font-size:12px;color:#aaa;line-height:1.6;">${t.secureNote}</p>
     </td>
   </tr>
 
@@ -604,9 +657,9 @@ export async function sendRemainingPaymentReminderEmail(data: RemainingReminderD
   <!-- Host -->
   <tr>
     <td style="padding:24px 48px 0;">
-      <p style="margin:0 0 14px;font-size:16px;font-weight:700;color:#1a2e1a;">Fragen zur Zahlung?</p>
-      <p style="margin:0 0 16px;font-size:13px;color:#4a5568;">Schreib uns direkt auf WhatsApp – wir helfen dir gern weiter:</p>
-      <a href="https://wa.me/4917656850146" style="display:inline-block;padding:10px 20px;border:1px solid #1a2e1a;border-radius:4px;font-size:13px;font-weight:600;color:#1a2e1a;text-decoration:none;">&#128172;&nbsp; WhatsApp schreiben</a>
+      <p style="margin:0 0 14px;font-size:16px;font-weight:700;color:#1a2e1a;">${t.questionsHeading}</p>
+      <p style="margin:0 0 16px;font-size:13px;color:#4a5568;">${t.questionsText}</p>
+      <a href="https://wa.me/4917656850146" style="display:inline-block;padding:10px 20px;border:1px solid #1a2e1a;border-radius:4px;font-size:13px;font-weight:600;color:#1a2e1a;text-decoration:none;">&#128172;&nbsp; ${t.whatsappBtn}</a>
     </td>
   </tr>
 
@@ -614,7 +667,7 @@ export async function sendRemainingPaymentReminderEmail(data: RemainingReminderD
   <tr>
     <td align="center" style="background:#0c1a10;padding:28px 48px;margin-top:32px;">
       <img src="https://www.sarfi-collection.de/images/logo-email.png" width="140" alt="SARFI Collection" style="display:block;margin:0 auto 14px;border-radius:2px;opacity:0.9;" />
-      <p style="margin:0 0 4px;font-size:10px;color:rgba(245,240,232,0.5);letter-spacing:0.1em;">SARFI Collection &nbsp;·&nbsp; Bayerischer Wald</p>
+      <p style="margin:0 0 4px;font-size:10px;color:rgba(245,240,232,0.5);letter-spacing:0.1em;">SARFI Collection &nbsp;·&nbsp; ${t.footerRegion}</p>
       <a href="https://www.sarfi-collection.de" style="font-size:11px;color:#c9a84c;text-decoration:none;">sarfi-collection.de</a>
     </td>
   </tr>
@@ -625,7 +678,22 @@ export async function sendRemainingPaymentReminderEmail(data: RemainingReminderD
 </body>
 </html>`
 
-  const text = `Hi ${data.firstName} ${data.lastName},
+  const text = en ? `Hi ${data.firstName} ${data.lastName},
+
+your arrival at ${data.propertyName} on ${formatDate(data.checkIn, 'en')} is coming up.
+
+Please settle the outstanding balance of ${remainingFmt} € no later than 14 days before arrival:
+${data.remainingPaymentUrl}
+
+Your stay:
+Arrival:   ${formatDate(data.checkIn, 'en')} (from 4 p.m.)
+Departure: ${formatDate(data.checkOut, 'en')} (by 10 a.m.)
+Nights:    ${nights}
+
+If you have already paid the balance, please disregard this email.
+Questions? Message us on WhatsApp: https://wa.me/4917656850146
+
+SARFI Collection · sarfi-collection.de` : `Hi ${data.firstName} ${data.lastName},
 
 deine Anreise im ${data.propertyName} am ${formatDate(data.checkIn)} rückt näher.
 
@@ -646,7 +714,9 @@ SARFI Collection · sarfi-collection.de`
     const { error } = await getResend().emails.send({
       from: 'Sarfi Collection <buchung@sarfi-collection.de>',
       to:   [data.email],
-      subject: `${data.subjectPrefix ?? ''}Zahlungserinnerung: Restbetrag für ${data.propertyName} · Anreise ${formatDate(data.checkIn)}`,
+      subject: en
+        ? `${data.subjectPrefix ?? ''}Payment reminder: balance for ${data.propertyName} · arrival ${formatDate(data.checkIn, 'en')}`
+        : `${data.subjectPrefix ?? ''}Zahlungserinnerung: Restbetrag für ${data.propertyName} · Anreise ${formatDate(data.checkIn)}`,
       html,
       text,
     })
@@ -666,12 +736,24 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey || apiKey === 'PLACEHOLDER') return
 
+  const L  = toMailLocale(data.locale)
+  const en = L === 'en'
   const isFullPay = data.paymentOption === "100"
   const remaining = Math.round(data.totalPrice - data.depositAmount)
+  const numLocale = en ? 'en-US' : 'de-DE'
+  const remainingFmt = remaining.toLocaleString(numLocale)
+  const totalFmt     = data.totalPrice.toLocaleString(numLocale)
+  const depositFmt   = data.depositAmount.toLocaleString(numLocale)
   const heroUrl = data.heroImageUrl ?? getHeroImageUrl(data.propertyName)
-  const bookedAt = new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
-  const nightsLabel = data.nights === 1 ? '1 Nacht' : `${data.nights} Nächte`
-  const guestsLabel = data.guests === 1 ? '1 Gast' : `${data.guests} Gäste`
+  const bookedAt = en
+    ? new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+    : new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+  const nightsLabel = en
+    ? (data.nights === 1 ? '1 night' : `${data.nights} nights`)
+    : (data.nights === 1 ? '1 Nacht' : `${data.nights} Nächte`)
+  const guestsLabel = en
+    ? (data.guests === 1 ? '1 guest' : `${data.guests} guests`)
+    : (data.guests === 1 ? '1 Gast' : `${data.guests} Gäste`)
   const invoiceUrl  = data.smoobuBookingId ? invoiceLink(data.smoobuBookingId) : null
 
   // Escape user-controlled fields before HTML interpolation
@@ -680,8 +762,105 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   const safeEmail    = escapeHtml(data.email)
   const safePhone    = escapeHtml(data.phone ?? '')
 
+  // Deutsche Texte müssen zeichengleich zur bisherigen Mail bleiben.
+  const t = en ? {
+    heading: 'your booking is confirmed!',
+    intro: `Your stay is secured – we look forward to welcoming you soon.${!isFullPay ? ' Please settle the outstanding balance no later than 14&nbsp;days before arrival.' : ''}`,
+    location: 'Bavarian Forest, Germany',
+    reservationId: 'Reservation ID',
+    toProperty: 'View property',
+    propertyUrl: 'https://www.sarfi-collection.de/en',
+    detailsHeading: 'Booking details',
+    nameRow: 'Name',
+    bookedAtRow: 'Booking date',
+    emailRow: 'Email',
+    phoneRow: 'Phone',
+    guestsRow: 'Guests',
+    nightsRow: 'Nights',
+    checkInTime: 'from 4 p.m.',
+    checkOutTime: 'by 10 a.m.',
+    paymentHeading: 'Payment summary',
+    totalRow: 'Total price',
+    statusRow: 'Payment status',
+    paidFull: 'Paid in full',
+    paidDeposit: '50% deposit paid',
+    paidAmountRow: 'Amount paid',
+    cardNote: 'Credit card',
+    outstanding: 'Outstanding balance',
+    outstandingDue: 'due 14 days before arrival',
+    dueNote: `Due no later than 14 days before your arrival on ${formatDate(data.checkIn, 'en')}`,
+    payNow: 'Pay now',
+    invoiceHeading: 'Need an invoice?',
+    invoiceText: "If you need an invoice with your (company) address, request it here in a few clicks – we'll send it to you as a PDF.",
+    invoiceBtn: 'Request invoice',
+    rulesHeading: 'House rules',
+    rules: [
+      'Check-in from 4 p.m. &nbsp;·&nbsp; check-out by 10 a.m.',
+      'Smoking permitted outdoors only',
+      'Pets on request – please check with us in advance',
+      'Please use water and energy considerately',
+      'Please close all doors and windows when leaving',
+      'Please report any damage immediately',
+    ],
+    cancelHeading: 'Cancellation policy',
+    cancelColPeriod: 'Time before arrival',
+    cancelColRefund: 'Refund',
+    cancelFull: 'Full terms:',
+    helpHeading: 'Need help?',
+    helpText: 'Message us directly on WhatsApp:',
+    whatsappBtn: 'Chat on WhatsApp',
+    footerRegion: 'Bavarian Forest',
+  } : {
+    heading: 'deine Buchung ist bestätigt!',
+    intro: `Dein Aufenthalt ist gesichert. Wir freuen uns, dich bald bei uns begrüßen zu dürfen.${!isFullPay ? ' Den ausstehenden Restbetrag bitten wir dich bis 14&nbsp;Tage vor Anreise zu begleichen.' : ''}`,
+    location: 'Bayerischer Wald, Deutschland',
+    reservationId: 'Reservierungs-ID',
+    toProperty: 'Zur Unterkunft',
+    propertyUrl: 'https://www.sarfi-collection.de',
+    detailsHeading: 'Buchungsdetails',
+    nameRow: 'Name',
+    bookedAtRow: 'Buchungsdatum',
+    emailRow: 'E-Mail',
+    phoneRow: 'Telefon',
+    guestsRow: 'Gäste',
+    nightsRow: 'Anzahl Nächte',
+    checkInTime: 'ab 16:00 Uhr',
+    checkOutTime: 'bis 10:00 Uhr',
+    paymentHeading: 'Zahlungsübersicht',
+    totalRow: 'Gesamtpreis',
+    statusRow: 'Zahlungsstatus',
+    paidFull: 'Vollständig bezahlt',
+    paidDeposit: '50 % Anzahlung bezahlt',
+    paidAmountRow: 'Bezahlter Betrag',
+    cardNote: 'Kreditkarte',
+    outstanding: 'Ausstehender Restbetrag',
+    outstandingDue: 'fällig 14 Tage vor Anreise',
+    dueNote: `Fällig bis 14 Tage vor Anreise am ${formatDate(data.checkIn)}`,
+    payNow: 'Jetzt bezahlen',
+    invoiceHeading: 'Rechnung benötigt?',
+    invoiceText: 'Wenn du eine Rechnung mit deiner (Firmen-)Anschrift brauchst, fordere sie hier mit wenigen Klicks an – wir senden sie dir als PDF zu.',
+    invoiceBtn: 'Rechnung anfordern',
+    rulesHeading: 'Hausregeln',
+    rules: [
+      'Check-in ab 16:00 Uhr &nbsp;·&nbsp; Check-out bis 10:00 Uhr',
+      'Rauchen nur im Außenbereich erlaubt',
+      'Haustiere auf Anfrage – bitte vorab abstimmen',
+      'Wasser und Energie bitte sorgsam verwenden',
+      'Bitte beim Verlassen alle Türen und Fenster schließen',
+      'Schäden bitte sofort melden',
+    ],
+    cancelHeading: 'Stornierungsbedingungen',
+    cancelColPeriod: 'Zeitraum vor Anreise',
+    cancelColRefund: 'Erstattung',
+    cancelFull: 'Vollständige Bedingungen:',
+    helpHeading: 'Brauchst du Hilfe?',
+    helpText: 'Schreib uns direkt auf WhatsApp:',
+    whatsappBtn: 'WhatsApp schreiben',
+    footerRegion: 'Bayerischer Wald',
+  }
+
   const html = `<!DOCTYPE html>
-<html lang="de">
+<html lang="${L}">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
 <body style="margin:0;padding:0;background:#ede8df;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#ede8df;padding:40px 16px;">
@@ -699,8 +878,8 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   <tr>
     <td style="padding:36px 48px 0;">
       <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;color:#1a2e1a;">Hi ${safeName},</h1>
-      <h2 style="margin:0 0 12px;font-size:20px;font-weight:600;color:#1a2e1a;">deine Buchung ist bestätigt!</h2>
-      <p style="margin:0;font-size:14px;color:#4a5568;line-height:1.7;">Dein Aufenthalt ist gesichert. Wir freuen uns, dich bald bei uns begrüßen zu dürfen.${!isFullPay ? ' Den ausstehenden Restbetrag bitten wir dich bis 14&nbsp;Tage vor Anreise zu begleichen.' : ''}</p>
+      <h2 style="margin:0 0 12px;font-size:20px;font-weight:600;color:#1a2e1a;">${t.heading}</h2>
+      <p style="margin:0;font-size:14px;color:#4a5568;line-height:1.7;">${t.intro}</p>
     </td>
   </tr>
 
@@ -714,11 +893,11 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
         <tr>
           <td>
             <p style="margin:0 0 2px;font-size:16px;font-weight:700;color:#1a2e1a;">${safeProperty}</p>
-            <p style="margin:0;font-size:12px;color:#aaa;">Bayerischer Wald, Deutschland</p>
-            ${data.smoobuBookingId ? `<p style="margin:6px 0 0;font-size:11px;color:#c9c2b5;">Reservierungs-ID: <strong style="color:#999;">#${data.smoobuBookingId}</strong></p>` : ''}
+            <p style="margin:0;font-size:12px;color:#aaa;">${t.location}</p>
+            ${data.smoobuBookingId ? `<p style="margin:6px 0 0;font-size:11px;color:#c9c2b5;">${t.reservationId}: <strong style="color:#999;">#${data.smoobuBookingId}</strong></p>` : ''}
           </td>
           <td align="right" valign="top">
-            <a href="https://www.sarfi-collection.de" style="display:inline-block;padding:9px 18px;border:1px solid #1a2e1a;border-radius:4px;font-size:12px;font-weight:600;color:#1a2e1a;text-decoration:none;white-space:nowrap;">Zur Unterkunft</a>
+            <a href="${t.propertyUrl}" style="display:inline-block;padding:9px 18px;border:1px solid #1a2e1a;border-radius:4px;font-size:12px;font-weight:600;color:#1a2e1a;text-decoration:none;white-space:nowrap;">${t.toProperty}</a>
           </td>
         </tr>
       </table>
@@ -730,44 +909,44 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   <!-- Booking Details -->
   <tr>
     <td style="padding:24px 48px 0;">
-      <p style="margin:0 0 16px;font-size:16px;font-weight:700;color:#1a2e1a;">Buchungsdetails</p>
+      <p style="margin:0 0 16px;font-size:16px;font-weight:700;color:#1a2e1a;">${t.detailsHeading}</p>
       <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
-          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Name</td>
+          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">${t.nameRow}</td>
           <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${safeName}</td>
         </tr>
         <tr>
-          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Buchungsdatum</td>
+          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">${t.bookedAtRow}</td>
           <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${bookedAt}</td>
         </tr>
         <tr>
-          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">E-Mail</td>
+          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">${t.emailRow}</td>
           <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;"><a href="mailto:${safeEmail}" style="color:#1a2e1a;text-decoration:none;">${safeEmail}</a></td>
         </tr>
         ${data.phone ? `<tr>
-          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Telefon</td>
+          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">${t.phoneRow}</td>
           <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${safePhone}</td>
         </tr>` : ''}
         <tr>
-          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Gäste</td>
+          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">${t.guestsRow}</td>
           <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${guestsLabel}</td>
         </tr>
         <tr>
-          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Anzahl Nächte</td>
+          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">${t.nightsRow}</td>
           <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${nightsLabel}</td>
         </tr>
         <tr>
           <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Check-in</td>
           <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;">
-            <span style="font-size:13px;font-weight:600;color:#1a2e1a;">${formatDate(data.checkIn)}</span>
-            <span style="font-size:11px;color:#aaa;display:block;text-align:right;">ab 16:00 Uhr</span>
+            <span style="font-size:13px;font-weight:600;color:#1a2e1a;">${formatDate(data.checkIn, L)}</span>
+            <span style="font-size:11px;color:#aaa;display:block;text-align:right;">${t.checkInTime}</span>
           </td>
         </tr>
         <tr>
           <td style="padding:11px 0;font-size:13px;color:#888;">Check-out</td>
           <td align="right" style="padding:11px 0;">
-            <span style="font-size:13px;font-weight:600;color:#1a2e1a;">${formatDate(data.checkOut)}</span>
-            <span style="font-size:11px;color:#aaa;display:block;text-align:right;">bis 10:00 Uhr</span>
+            <span style="font-size:13px;font-weight:600;color:#1a2e1a;">${formatDate(data.checkOut, L)}</span>
+            <span style="font-size:11px;color:#aaa;display:block;text-align:right;">${t.checkOutTime}</span>
           </td>
         </tr>
       </table>
@@ -779,26 +958,26 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   <!-- Payment -->
   <tr>
     <td style="padding:24px 48px 0;">
-      <p style="margin:0 0 16px;font-size:16px;font-weight:700;color:#1a2e1a;">Zahlungsübersicht</p>
+      <p style="margin:0 0 16px;font-size:16px;font-weight:700;color:#1a2e1a;">${t.paymentHeading}</p>
       <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
-          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Gesamtpreis</td>
-          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${data.totalPrice.toLocaleString('de-DE')} €</td>
+          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">${t.totalRow}</td>
+          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#1a2e1a;">${totalFmt} €</td>
         </tr>
         <tr>
-          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">Zahlungsstatus</td>
-          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#2d6a4f;">${isFullPay ? 'Vollständig bezahlt' : '50 % Anzahlung bezahlt'}</td>
+          <td style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;color:#888;">${t.statusRow}</td>
+          <td align="right" style="padding:11px 0;border-bottom:1px solid #f0ece4;font-size:13px;font-weight:600;color:#2d6a4f;">${isFullPay ? t.paidFull : t.paidDeposit}</td>
         </tr>
         <tr>
           <td style="padding:11px 0;${!isFullPay ? 'border-bottom:1px solid #f0ece4;' : ''}font-size:13px;color:#888;">
-            Bezahlter Betrag
-            <span style="display:block;font-size:11px;color:#bbb;">Kreditkarte · ${bookedAt}</span>
+            ${t.paidAmountRow}
+            <span style="display:block;font-size:11px;color:#bbb;">${t.cardNote} · ${bookedAt}</span>
           </td>
-          <td align="right" style="padding:11px 0;${!isFullPay ? 'border-bottom:1px solid #f0ece4;' : ''}font-size:15px;font-weight:700;color:#1a2e1a;">${data.depositAmount.toLocaleString('de-DE')} €</td>
+          <td align="right" style="padding:11px 0;${!isFullPay ? 'border-bottom:1px solid #f0ece4;' : ''}font-size:15px;font-weight:700;color:#1a2e1a;">${depositFmt} €</td>
         </tr>
         ${!isFullPay ? `<tr>
-          <td style="padding:11px 0;font-size:13px;color:#888;">Ausstehender Restbetrag <span style="display:block;font-size:11px;color:#bbb;">fällig 14 Tage vor Anreise</span></td>
-          <td align="right" style="padding:11px 0;font-size:15px;font-weight:700;color:#1a2e1a;">${remaining.toLocaleString('de-DE')} €</td>
+          <td style="padding:11px 0;font-size:13px;color:#888;">${t.outstanding} <span style="display:block;font-size:11px;color:#bbb;">${t.outstandingDue}</span></td>
+          <td align="right" style="padding:11px 0;font-size:15px;font-weight:700;color:#1a2e1a;">${remainingFmt} €</td>
         </tr>` : ''}
       </table>
     </td>
@@ -811,10 +990,10 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
       <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a2e1a;border-radius:6px;">
         <tr>
           <td align="center" style="padding:28px 32px 24px;">
-            <p style="margin:0 0 4px;font-size:9px;color:#c9a84c;text-transform:uppercase;letter-spacing:0.22em;font-weight:600;">Ausstehender Restbetrag</p>
-            <p style="margin:0 0 4px;font-size:34px;font-weight:300;color:#f5f0e8;letter-spacing:-0.5px;">${remaining.toLocaleString('de-DE')} €</p>
-            <p style="margin:0 0 20px;font-size:12px;color:rgba(245,240,232,0.5);">Fällig bis 14 Tage vor Anreise am ${formatDate(data.checkIn)}</p>
-            <a href="${data.remainingPaymentUrl}" style="display:inline-block;background:#c9a84c;color:#1a2e1a;font-size:13px;font-weight:700;text-decoration:none;padding:14px 32px;border-radius:3px;letter-spacing:0.08em;text-transform:uppercase;">Jetzt bezahlen</a>
+            <p style="margin:0 0 4px;font-size:9px;color:#c9a84c;text-transform:uppercase;letter-spacing:0.22em;font-weight:600;">${t.outstanding}</p>
+            <p style="margin:0 0 4px;font-size:34px;font-weight:300;color:#f5f0e8;letter-spacing:-0.5px;">${remainingFmt} €</p>
+            <p style="margin:0 0 20px;font-size:12px;color:rgba(245,240,232,0.5);">${t.dueNote}</p>
+            <a href="${data.remainingPaymentUrl}" style="display:inline-block;background:#c9a84c;color:#1a2e1a;font-size:13px;font-weight:700;text-decoration:none;padding:14px 32px;border-radius:3px;letter-spacing:0.08em;text-transform:uppercase;">${t.payNow}</a>
           </td>
         </tr>
       </table>
@@ -827,9 +1006,9 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   <!-- Rechnung anfordern -->
   <tr>
     <td style="padding:24px 48px 0;">
-      <p style="margin:0 0 8px;font-size:16px;font-weight:700;color:#1a2e1a;">Rechnung benötigt?</p>
-      <p style="margin:0 0 16px;font-size:13px;color:#4a5568;line-height:1.6;">Wenn du eine Rechnung mit deiner (Firmen-)Anschrift brauchst, fordere sie hier mit wenigen Klicks an – wir senden sie dir als PDF zu.</p>
-      <a href="${invoiceUrl}" style="display:inline-block;padding:10px 20px;border:1px solid #1a2e1a;border-radius:4px;font-size:13px;font-weight:600;color:#1a2e1a;text-decoration:none;">Rechnung anfordern</a>
+      <p style="margin:0 0 8px;font-size:16px;font-weight:700;color:#1a2e1a;">${t.invoiceHeading}</p>
+      <p style="margin:0 0 16px;font-size:13px;color:#4a5568;line-height:1.6;">${t.invoiceText}</p>
+      <a href="${invoiceUrl}" style="display:inline-block;padding:10px 20px;border:1px solid #1a2e1a;border-radius:4px;font-size:13px;font-weight:600;color:#1a2e1a;text-decoration:none;">${t.invoiceBtn}</a>
     </td>
   </tr>` : ''}
 
@@ -838,26 +1017,11 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   <!-- House Rules -->
   <tr>
     <td style="padding:24px 48px 0;">
-      <p style="margin:0 0 14px;font-size:16px;font-weight:700;color:#1a2e1a;">Hausregeln</p>
+      <p style="margin:0 0 14px;font-size:16px;font-weight:700;color:#1a2e1a;">${t.rulesHeading}</p>
       <table width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-          <td style="padding:6px 0;font-size:13px;color:#4a5568;">&#9679;&nbsp; Check-in ab 16:00 Uhr &nbsp;·&nbsp; Check-out bis 10:00 Uhr</td>
-        </tr>
-        <tr>
-          <td style="padding:6px 0;font-size:13px;color:#4a5568;">&#9679;&nbsp; Rauchen nur im Außenbereich erlaubt</td>
-        </tr>
-        <tr>
-          <td style="padding:6px 0;font-size:13px;color:#4a5568;">&#9679;&nbsp; Haustiere auf Anfrage – bitte vorab abstimmen</td>
-        </tr>
-        <tr>
-          <td style="padding:6px 0;font-size:13px;color:#4a5568;">&#9679;&nbsp; Wasser und Energie bitte sorgsam verwenden</td>
-        </tr>
-        <tr>
-          <td style="padding:6px 0;font-size:13px;color:#4a5568;">&#9679;&nbsp; Bitte beim Verlassen alle Türen und Fenster schließen</td>
-        </tr>
-        <tr>
-          <td style="padding:6px 0;font-size:13px;color:#4a5568;">&#9679;&nbsp; Schäden bitte sofort melden</td>
-        </tr>
+        ${t.rules.map((rule) => `<tr>
+          <td style="padding:6px 0;font-size:13px;color:#4a5568;">&#9679;&nbsp; ${rule}</td>
+        </tr>`).join('\n        ')}
       </table>
     </td>
   </tr>
@@ -867,15 +1031,15 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   <!-- Cancellation Policy -->
   <tr>
     <td style="padding:24px 48px 0;">
-      <p style="margin:0 0 14px;font-size:16px;font-weight:700;color:#1a2e1a;">Stornierungsbedingungen</p>
+      <p style="margin:0 0 14px;font-size:16px;font-weight:700;color:#1a2e1a;">${t.cancelHeading}</p>
       <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #f0ece4;border-radius:6px;overflow:hidden;">
         <tr style="background:#f7f4ef;">
-          <td style="padding:10px 14px;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.08em;border-bottom:1px solid #f0ece4;">Zeitraum vor Anreise</td>
-          <td style="padding:10px 14px;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.08em;border-bottom:1px solid #f0ece4;">Erstattung</td>
+          <td style="padding:10px 14px;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.08em;border-bottom:1px solid #f0ece4;">${t.cancelColPeriod}</td>
+          <td style="padding:10px 14px;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.08em;border-bottom:1px solid #f0ece4;">${t.cancelColRefund}</td>
         </tr>
-        ${getCancellationRows(data.propertyName)}
+        ${getCancellationRows(data.propertyName, L)}
       </table>
-      <p style="margin:10px 0 0;font-size:11px;color:#bbb;">Vollständige Bedingungen: <a href="https://www.sarfi-collection.de/stornierung" style="color:#999;text-decoration:underline;">sarfi-collection.de/stornierung</a></p>
+      <p style="margin:10px 0 0;font-size:11px;color:#bbb;">${t.cancelFull} <a href="https://www.sarfi-collection.de/stornierung" style="color:#999;text-decoration:underline;">sarfi-collection.de/stornierung</a></p>
     </td>
   </tr>
 
@@ -884,9 +1048,9 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   <!-- Host -->
   <tr>
     <td style="padding:24px 48px 0;">
-      <p style="margin:0 0 14px;font-size:16px;font-weight:700;color:#1a2e1a;">Brauchst du Hilfe?</p>
-      <p style="margin:0 0 16px;font-size:13px;color:#4a5568;">Schreib uns direkt auf WhatsApp:</p>
-      <a href="https://wa.me/4917656850146" style="display:inline-block;padding:10px 20px;border:1px solid #1a2e1a;border-radius:4px;font-size:13px;font-weight:600;color:#1a2e1a;text-decoration:none;">&#128172;&nbsp; WhatsApp schreiben</a>
+      <p style="margin:0 0 14px;font-size:16px;font-weight:700;color:#1a2e1a;">${t.helpHeading}</p>
+      <p style="margin:0 0 16px;font-size:13px;color:#4a5568;">${t.helpText}</p>
+      <a href="https://wa.me/4917656850146" style="display:inline-block;padding:10px 20px;border:1px solid #1a2e1a;border-radius:4px;font-size:13px;font-weight:600;color:#1a2e1a;text-decoration:none;">&#128172;&nbsp; ${t.whatsappBtn}</a>
     </td>
   </tr>
 
@@ -894,7 +1058,7 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   <tr>
     <td align="center" style="background:#0c1a10;padding:28px 48px;margin-top:32px;">
       <img src="https://www.sarfi-collection.de/images/logo-email.png" width="140" alt="SARFI Collection" style="display:block;margin:0 auto 14px;border-radius:2px;opacity:0.9;" />
-      <p style="margin:0 0 4px;font-size:10px;color:rgba(245,240,232,0.5);letter-spacing:0.1em;">SARFI Collection &nbsp;·&nbsp; Bayerischer Wald</p>
+      <p style="margin:0 0 4px;font-size:10px;color:rgba(245,240,232,0.5);letter-spacing:0.1em;">SARFI Collection &nbsp;·&nbsp; ${t.footerRegion}</p>
       <a href="https://www.sarfi-collection.de" style="font-size:11px;color:#c9a84c;text-decoration:none;">sarfi-collection.de</a>
     </td>
   </tr>
@@ -909,7 +1073,9 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
     await getResend().emails.send({
       from: 'Sarfi Collection <buchung@sarfi-collection.de>',
       to:   [data.email],
-      subject: `Buchungsbestätigung: ${data.propertyName} · ${formatDate(data.checkIn)}–${formatDate(data.checkOut)}`,
+      subject: en
+        ? `Booking confirmation: ${data.propertyName} · ${formatDate(data.checkIn, 'en')}–${formatDate(data.checkOut, 'en')}`
+        : `Buchungsbestätigung: ${data.propertyName} · ${formatDate(data.checkIn)}–${formatDate(data.checkOut)}`,
       html,
     })
     console.log(`[notify] Gastbestätigung gesendet an ${data.email}`)

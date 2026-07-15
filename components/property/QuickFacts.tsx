@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconUsers, IconBed, IconBath, IconHome, IconStar, IconMapPin } from "@/components/ui/Icons";
+import { getDict } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 interface QuickFactsProps {
   maxGuests?: number;
@@ -23,19 +25,21 @@ export default function QuickFacts({
   airbnbReviewCount,
   address,
 }: QuickFactsProps) {
+  const locale = useLocale();
+  const t = getDict(locale).property.quickFacts;
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
 
   const facts = [
-    maxGuests   && { icon: <IconUsers size={20} />,   label: "Gäste",       value: `bis zu ${maxGuests}` },
-    bedrooms    && { icon: <IconBed size={20} />,     label: "Schlafzimmer", value: bedrooms.toString() },
-    bathrooms   && { icon: <IconBath size={20} />,    label: "Badezimmer",  value: bathrooms.toString() },
-    sqm         && { icon: <IconHome size={20} />,    label: "Fläche",      value: `${sqm} m²` },
+    maxGuests   && { icon: <IconUsers size={20} />,   label: t.guests,       value: `${t.guestsUpToPre}${maxGuests}` },
+    bedrooms    && { icon: <IconBed size={20} />,     label: t.bedrooms, value: bedrooms.toString() },
+    bathrooms   && { icon: <IconBath size={20} />,    label: t.bathrooms,  value: bathrooms.toString() },
+    sqm         && { icon: <IconHome size={20} />,    label: t.area,      value: `${sqm} m²` },
     (airbnbRating && airbnbReviewCount) && {
       icon: <IconStar size={20} />,
-      label: "Bewertung",
+      label: t.rating,
       value: `${airbnbRating} (${airbnbReviewCount})`,
     },
-    address && { icon: <IconMapPin size={20} />, label: "Adresse", value: address },
+    address && { icon: <IconMapPin size={20} />, label: t.address, value: address },
   ].filter(Boolean) as { icon: React.ReactNode; label: string; value: string }[];
 
   return (
@@ -43,7 +47,7 @@ export default function QuickFacts({
       ref={ref}
       className="bg-cream-50 border-b border-cream-200"
       role="region"
-      aria-label="Eckdaten"
+      aria-label={t.regionAria}
     >
       <div className="container-site">
         <div className="flex flex-wrap divide-x divide-cream-200 overflow-x-auto">

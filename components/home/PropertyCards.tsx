@@ -6,13 +6,16 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconStar, IconUsers, IconArrowRight, IconMapPin } from "@/components/ui/Icons";
 import { haus28, schoenblick } from "@/data/properties";
+import { localizeProperty } from "@/data/properties.i18n";
+import { getDict, localizeHref } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
-const properties = [
+// Kartendaten ohne lokalisierbare Texte; das Tag kommt aus dem Dictionary.
+const baseProperties = [
   {
     ...haus28,
     href: "/haus28",
     bookHref: "/haus28",
-    tag: "A-Frame · Natur pur",
     mood: "dark" as const,
     gradient: "from-forest-900/60 via-transparent to-forest-900/80",
   },
@@ -20,7 +23,6 @@ const properties = [
     ...schoenblick,
     href: "/schoenblick",
     bookHref: "/schoenblick/buchen",
-    tag: "5 Apartments · Panoramablick",
     mood: "light" as const,
     gradient: "from-forest-900/40 via-transparent to-forest-900/70",
     maxGuests: 20, // combined across apartments
@@ -44,7 +46,9 @@ function PropertyCard({
   tag,
   gradient,
   index,
-}: (typeof properties)[number] & { index: number }) {
+}: (typeof baseProperties)[number] & { tag: string; index: number }) {
+  const locale = useLocale();
+  const t = getDict(locale).home.properties;
   const totalReviews =
     (airbnbReviewCount ?? 0) +
     (bookingReviewCount ?? 0) +
@@ -106,30 +110,30 @@ function PropertyCard({
           {maxGuests && (
             <div className="flex items-center gap-1.5 text-cream-50/50">
               <IconUsers size={14} />
-              <span className="font-body text-xs">Bis zu {maxGuests} Gäste</span>
+              <span className="font-body text-xs">{t.guestsPre} {maxGuests} {t.guestsPost}</span>
             </div>
           )}
           <div className="mt-2">
-            <span className="font-body text-xs text-cream-50/50">ab </span>
+            <span className="font-body text-xs text-cream-50/50">{t.priceFrom}</span>
             <span className="font-display text-2xl text-cream-50 font-medium">
               {priceFrom}€
             </span>
-            <span className="font-body text-sm text-cream-50/50"> / Nacht</span>
+            <span className="font-body text-sm text-cream-50/50">{t.priceNight}</span>
           </div>
         </div>
 
         <div className="flex flex-col gap-2 shrink-0">
           <Link
-            href={bookHref}
+            href={localizeHref(bookHref, locale)}
             className="inline-flex items-center justify-center px-5 py-2.5 bg-gold-500 text-forest-900 text-sm font-medium font-body rounded-full hover:bg-gold-400 transition-colors shadow-cta whitespace-nowrap"
           >
-            Jetzt buchen
+            {t.bookNow}
           </Link>
           <Link
-            href={href}
+            href={localizeHref(href, locale)}
             className="inline-flex items-center justify-center gap-1 px-5 py-2 text-sm font-body text-cream-50/60 hover:text-cream-50 transition-colors group/link"
           >
-            Mehr entdecken
+            {t.discoverMore}
             <IconArrowRight size={14} className="transition-transform group-hover/link:translate-x-0.5" />
           </Link>
         </div>
@@ -139,7 +143,15 @@ function PropertyCard({
 }
 
 export default function PropertyCards() {
+  const locale = useLocale();
+  const t = getDict(locale).home.properties;
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+
+  // Texte (subtitle etc.) locale-abhängig aus dem EN-Overlay; de = Original.
+  const properties = [
+    { ...baseProperties[0], ...localizeProperty(haus28, locale), tag: t.tagHaus28 },
+    { ...baseProperties[1], ...localizeProperty(schoenblick, locale), maxGuests: 20, tag: t.tagSchoenblick },
+  ];
 
   return (
     <section className="section-pad bg-cream-100" aria-labelledby="properties-heading">
@@ -153,16 +165,16 @@ export default function PropertyCards() {
           className="text-center mb-12 md:mb-16"
         >
           <p className="font-body text-sm tracking-[0.15em] uppercase text-gold-600 mb-3">
-            Unsere Unterkünfte
+            {t.eyebrow}
           </p>
           <h2
             id="properties-heading"
             className="font-display text-display-lg text-forest-900 mb-4 text-balance"
           >
-            Zwei besondere Orte im Bayerischen Wald
+            {t.heading}
           </h2>
           <p className="font-body text-lg text-forest-600 max-w-2xl mx-auto leading-relaxed">
-            Ob architektonisch einzigartiges A-Frame im Wald oder Panorama-Apartments mit atemberaubendem Ausblick – finde dein perfektes Zuhause auf Zeit.
+            {t.intro}
           </p>
         </motion.div>
 

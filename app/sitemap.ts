@@ -1,7 +1,29 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
+import { hasEnglishVersion, localizedUrl } from "@/lib/i18n";
 
 const BASE_URL = "https://www.sarfi-collection.de";
+
+type Freq = NonNullable<MetadataRoute.Sitemap[number]["changeFrequency"]>;
+
+/**
+ * Eintrag für einen deutschen Pfad; existiert eine englische Version,
+ * werden hreflang-Alternates gesetzt und zusätzlich die /en-URL gelistet.
+ */
+function entries(path: string, changeFrequency: Freq, priority: number): MetadataRoute.Sitemap {
+  const url = path === "/" ? BASE_URL : `${BASE_URL}${path}`;
+  if (!hasEnglishVersion(path)) {
+    return [{ url, changeFrequency, priority }];
+  }
+  const languages = {
+    de: localizedUrl(path, "de"),
+    en: localizedUrl(path, "en"),
+  };
+  return [
+    { url, changeFrequency, priority, alternates: { languages } },
+    { url: localizedUrl(path, "en"), changeFrequency, priority, alternates: { languages } },
+  ];
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const blogPosts = getAllPosts().map((post) => ({
@@ -12,91 +34,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   return [
-    {
-      url: BASE_URL,
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: `${BASE_URL}/haus28`,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/schoenblick`,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/buchen`,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/schoenblick/b5`,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/schoenblick/b6`,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/schoenblick/b7`,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/schoenblick/b8`,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/schoenblick/a2`,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/blog`,
-      changeFrequency: "weekly",
-      priority: 0.7,
-    },
-    {
-      url: `${BASE_URL}/ausflugsziele`,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${BASE_URL}/gutschein`,
-      changeFrequency: "yearly",
-      priority: 0.5,
-    },
-    {
-      url: `${BASE_URL}/ueber-uns`,
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${BASE_URL}/kontakt`,
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${BASE_URL}/impressum`,
-      changeFrequency: "yearly",
-      priority: 0.2,
-    },
-    {
-      url: `${BASE_URL}/datenschutz`,
-      changeFrequency: "yearly",
-      priority: 0.2,
-    },
-    {
-      url: `${BASE_URL}/agb`,
-      changeFrequency: "yearly",
-      priority: 0.2,
-    },
+    ...entries("/", "weekly", 1),
+    ...entries("/haus28", "weekly", 0.9),
+    ...entries("/schoenblick", "weekly", 0.9),
+    ...entries("/buchen", "weekly", 0.8),
+    ...entries("/schoenblick/b5", "weekly", 0.8),
+    ...entries("/schoenblick/b6", "weekly", 0.8),
+    ...entries("/schoenblick/b7", "weekly", 0.8),
+    ...entries("/schoenblick/b8", "weekly", 0.8),
+    ...entries("/schoenblick/a2", "weekly", 0.8),
+    ...entries("/blog", "weekly", 0.7),
+    ...entries("/ausflugsziele", "monthly", 0.7),
+    ...entries("/gutschein", "yearly", 0.5),
+    ...entries("/ueber-uns", "monthly", 0.5),
+    ...entries("/kontakt", "monthly", 0.5),
+    ...entries("/impressum", "yearly", 0.2),
+    ...entries("/datenschutz", "yearly", 0.2),
+    ...entries("/agb", "yearly", 0.2),
     ...blogPosts,
   ];
 }
