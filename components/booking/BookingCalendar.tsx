@@ -121,14 +121,17 @@ function classifyDay(
 
   // Disable logic
   let disabled = isPast || isBlocked
-  if (!disabled && selectionStep === "checkout" && checkIn) {
+  if (selectionStep === "checkout" && checkIn && day > checkIn && !isPast) {
     const checkInKey = toDateKey(checkIn)
     const minStay = minStayMap[checkInKey] ?? defaultMinStay
     const minCheckout = addDays(checkIn, minStay)
     if (day < minCheckout) {
       disabled = true // Before minimum stay
     } else {
-      // Disable if any night in [checkIn, day) is blocked
+      // Als Abreisetag zählt nur, ob alle Nächte [checkIn, day) frei sind.
+      // Der Tag selbst darf belegt sein: Er kann Anreisetag der Folgebuchung
+      // sein – die eigene letzte Nacht endet am Morgen dieses Tages.
+      disabled = false
       const cursor = new Date(checkIn)
       while (cursor < day) {
         const ck = toDateKey(cursor)
@@ -150,11 +153,14 @@ function getDayButtonClasses(cls: DayClass): string {
   const base =
     "relative h-9 w-full text-sm font-body select-none transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-inset"
 
-  if (cls.disabled) {
-    return `${base} text-cream-300 cursor-not-allowed ${cls.isBlocked ? "line-through" : ""}`
-  }
+  // Gewählte An-/Abreise vor disabled prüfen: Ein Abreisetag auf dem
+  // Anreisetag der Folgebuchung ist im Anreise-Schritt disabled, soll aber
+  // weiterhin als gewählt (dunkler Kreis) erscheinen.
   if (cls.isCheckIn || cls.isCheckOut) {
     return `${base} bg-forest-800 text-cream-50 font-semibold rounded-full z-10 cursor-pointer hover:bg-forest-700`
+  }
+  if (cls.disabled) {
+    return `${base} text-cream-300 cursor-not-allowed ${cls.isBlocked ? "line-through" : ""}`
   }
   if (cls.isInRange) {
     return `${base} bg-forest-100 text-forest-900 cursor-pointer hover:bg-forest-200`
@@ -256,12 +262,12 @@ function MonthView({
                 onClick={() => !cls.disabled && onDateClick(day)}
                 onMouseEnter={() => !cls.disabled && onDateHover(day)}
                 onMouseLeave={() => onDateHover(null)}
-                aria-label={`${fmtLong(day, locale)}${cls.isBlocked ? t.ariaBooked : ""}${cls.disabled ? t.ariaUnavailable : ""}`}
+                aria-label={`${fmtLong(day, locale)}${cls.isBlocked && cls.disabled ? t.ariaBooked : ""}${cls.disabled ? t.ariaUnavailable : ""}`}
                 aria-pressed={cls.isCheckIn || cls.isCheckOut}
               >
                 <span className="flex flex-col items-center justify-center leading-tight">
                   <span>{day.getDate()}</span>
-                  {price !== undefined && !cls.disabled && (
+                  {price !== undefined && !cls.disabled && !cls.isBlocked && (
                     <span className="text-[9px] text-forest-400 leading-none mt-0.5">
                       {price}€
                     </span>
