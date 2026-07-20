@@ -27,7 +27,10 @@ async function* walk(dir) {
 async function processImage(srcPath) {
   const rel = path.relative('public', srcPath) // images/…/foo.webp
   const meta = await sharp(srcPath).metadata()
-  const srcW = meta.width ?? 1920
+  // EXIF-Orientierung 5–8 = um 90° gedreht gespeichert → wirksame Breite ist
+  // die physische Höhe (rotate() unten richtet das Bild entsprechend auf).
+  const rotated = (meta.orientation ?? 1) >= 5
+  const srcW = (rotated ? meta.height : meta.width) ?? 1920
   let made = 0
   for (const w of WIDTHS) {
     const outPath = path.join(OUT_DIR, `${rel}.w${w}.webp`)
@@ -40,6 +43,9 @@ async function processImage(srcPath) {
     // Nie hochskalieren: kleinere Quellen behalten ihre Breite, der Dateiname
     // bleibt trotzdem .w<stufe>. — der Loader kennt so immer einen gültigen Pfad.
     await sharp(srcPath)
+      // EXIF-Orientierung anwenden – beim Neukodieren gehen die EXIF-Daten
+      // verloren; ohne rotate() landen solche Bilder gedreht im Output.
+      .rotate()
       .resize({ width: Math.min(w, srcW), withoutEnlargement: true })
       .webp({ quality: QUALITY })
       .toFile(outPath)
