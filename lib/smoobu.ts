@@ -3,17 +3,9 @@
  * Import ONLY from API routes / Server Components – never from client components.
  */
 
-const SMOOBU_BASE = 'https://login.smoobu.com/api'
+import { smoobuHeaders } from './smoobu-auth'
 
-function getHeaders() {
-  const apiKey = process.env.SMOOBU_API_KEY
-  if (!apiKey) console.warn('[Smoobu] SMOOBU_API_KEY is not set.')
-  return {
-    'Api-Key': apiKey ?? '',
-    'Cache-Control': 'no-cache',
-    'Content-Type': 'application/json',
-  }
-}
+const SMOOBU_BASE = 'https://login.smoobu.com/api'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -105,7 +97,7 @@ export async function getAvailability(
         `&pageSize=100&page=${page}`
 
       const res = await fetch(url, {
-        headers: getHeaders(),
+        headers: smoobuHeaders('GET', url),
         next: { revalidate: 300 },
       })
 
@@ -151,7 +143,7 @@ export async function getAvailability(
       `?startDate=${startDate}&endDate=${endDate}`
 
     const res = await fetch(ratesUrl, {
-      headers: getHeaders(),
+      headers: smoobuHeaders('GET', ratesUrl),
       next: { revalidate: 300 },
     })
 
@@ -217,10 +209,14 @@ export async function createBooking(req: BookingRequest): Promise<BookingResult>
     address: { street: 'k.A.', zip: '00000', city: 'Deutschland', country: 'DE' },
   }
 
-  const res = await fetch(`${SMOOBU_BASE}/reservations`, {
+  // Body EINMAL serialisieren: derselbe String wird signiert UND gesendet, sonst
+  // weicht der BODY_HASH in der Signatur vom tatsächlich übertragenen Body ab.
+  const url = `${SMOOBU_BASE}/reservations`
+  const payload = JSON.stringify(body)
+  const res = await fetch(url, {
     method: 'POST',
-    headers: getHeaders(),
-    body: JSON.stringify(body),
+    headers: smoobuHeaders('POST', url, payload),
+    body: payload,
   })
 
   if (!res.ok) {
