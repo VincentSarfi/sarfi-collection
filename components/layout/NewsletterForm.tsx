@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { getDict } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 type Status = "idle" | "loading" | "success" | "error";
+
+// Öffentlicher Cloudflare-Turnstile-Site-Key (client-seitig unbedenklich).
+const TURNSTILE_SITE_KEY = "0x4AAAAAADCAIuxW7h0ePfOM";
+const TURNSTILE_CONTAINER_ID = "newsletter-turnstile";
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState("");
@@ -15,6 +19,41 @@ export default function NewsletterForm() {
   const locale = useLocale();
   const t = getDict(locale).common.newsletter;
 
+  // Turnstile wird erst bei erster Interaktion geladen (spart Script-Last auf
+  // jeder Seite, da das Formular im Footer global gerendert wird).
+  const turnstileToken = useRef<string>("");
+  const turnstileLoaded = useRef(false);
+
+  const ensureTurnstile = useCallback(() => {
+    if (turnstileLoaded.current) return;
+    turnstileLoaded.current = true;
+
+    const render = () => {
+      const el = document.getElementById(TURNSTILE_CONTAINER_ID);
+      if (!el || el.childElementCount > 0) return; // schon gerendert
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).turnstile?.render(`#${TURNSTILE_CONTAINER_ID}`, {
+        sitekey: TURNSTILE_SITE_KEY,
+        appearance: "interaction-only", // unsichtbar, bis eine Challenge nötig ist
+        language: locale,
+        callback: (token: string) => { turnstileToken.current = token; },
+        "expired-callback": () => { turnstileToken.current = ""; },
+      });
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((window as any).turnstile) {
+      render();
+    } else {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async = true;
+      script.defer = true;
+      script.onload = render;
+      document.head.appendChild(script);
+    }
+  }, [locale]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (status === "loading") return;
@@ -23,13 +62,20 @@ export default function NewsletterForm() {
       setMessage(t.errConsent);
       return;
     }
+    // Bot-Schutz: ohne Token nicht absenden (Server lehnt sonst mit 400 ab).
+    if (!turnstileToken.current) {
+      ensureTurnstile();
+      setStatus("error");
+      setMessage(t.errSecurity);
+      return;
+    }
     setStatus("loading");
     setMessage("");
     try {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), consent }),
+        body: JSON.stringify({ email: email.trim(), consent, turnstileToken: turnstileToken.current }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -64,6 +110,7 @@ export default function NewsletterForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          onFocus={ensureTurnstile}
           placeholder={t.placeholder}
           autoComplete="email"
           aria-label={t.emailAria}
@@ -92,6 +139,8 @@ export default function NewsletterForm() {
           .
         </span>
       </label>
+      {/* Turnstile-Container (unsichtbar bei interaction-only); leer bis erste Interaktion */}
+      <div id={TURNSTILE_CONTAINER_ID} />
       {status === "error" && (
         <p className="font-body text-xs text-red-300">{message}</p>
       )}

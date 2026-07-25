@@ -52,19 +52,32 @@ export function rateLimit(
 }
 
 /**
- * Extract the real client IP from a Next.js request,
- * falling back through common proxy headers.
+ * Extract the real client IP from a Next.js request.
+ *
+ * Trust model (Sliplane-Hosting): Der Reverse-Proxy hängt die echte Client-IP
+ * als LETZTES Element an `x-forwarded-for` an – empirisch verifiziert (rotierende
+ * x-forwarded-for-Werte umgehen das Limit NICHT, weil der Proxy die echte IP
+ * anhängt). Nur dieses letzte Element ist vertrauenswürdig.
+ *
+ * `x-real-ip` und vordere x-forwarded-for-Einträge sind vom Client frei setzbar
+ * und werden vom Sliplane-Proxy NICHT überschrieben – sie dürfen daher niemals
+ * als Rate-Limit-Schlüssel dienen, sonst umgeht ein Bot das Limit trivial per
+ * Header-Spoofing (`x-real-ip: 10.0.0.<n>` → jede Fake-IP = eigener Zähler).
+ *
+ * Annahme: genau EIN vertrauenswürdiger Proxy-Hop (aktueller Stand: kein
+ * Cloudflare/CDN davor). Käme ein weiterer Proxy davor, müsste hier der
+ * vorletzte Eintrag genutzt werden.
  */
 export function getClientIp(request: Request): string {
   const headers = new Headers((request as Request).headers)
-  // Vercel setzt x-real-ip vertrauenswürdig; beim x-forwarded-for-Fallback ist
-  // nur das letzte Element vom eigenen Proxy gesetzt und nicht spoofbar.
-  const realIp = headers.get('x-real-ip')
-  if (realIp) return realIp
   const forwarded = headers.get('x-forwarded-for')
   if (forwarded) {
-    const parts = forwarded.split(',')
-    return parts[parts.length - 1].trim()
+    // Letztes nicht-leeres Element = vom vertrauenswürdigen Proxy angehängte IP.
+    const parts = forwarded.split(',').map((p) => p.trim()).filter(Boolean)
+    if (parts.length > 0) return parts[parts.length - 1]
   }
+  // Fallback nur für lokale/Direktverbindungen ohne Proxy (dort kein Angreifer).
+  const realIp = headers.get('x-real-ip')
+  if (realIp) return realIp
   return 'unknown'
 }

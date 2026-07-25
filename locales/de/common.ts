@@ -59,6 +59,7 @@ const common = {
     consentPre: "Ich möchte den Newsletter erhalten und akzeptiere die",
     consentLink: "Datenschutzerklärung",
     errConsent: "Bitte stimme der Datenschutzerklärung zu.",
+    errSecurity: "Sicherheitsprüfung läuft noch – bitte kurz warten und erneut klicken.",
     success: "Bitte prüfe dein Postfach und bestätige die Anmeldung.",
     errFallback: "Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
     errNetwork: "Verbindungsfehler. Bitte versuche es erneut.",

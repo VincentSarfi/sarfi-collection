@@ -59,6 +59,7 @@ const common = {
     consentPre: "I'd like to receive the newsletter and accept the",
     consentLink: "privacy policy",
     errConsent: "Please accept the privacy policy.",
+    errSecurity: "Security check still running – please wait a moment and click again.",
     success: "Please check your inbox and confirm your subscription.",
     errFallback: "Subscription failed. Please try again.",
     errNetwork: "Connection error. Please try again.",

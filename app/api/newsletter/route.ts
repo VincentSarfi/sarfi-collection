@@ -3,6 +3,7 @@ import { EMAIL_RE } from '@/lib/validate'
 import { createHmac } from 'crypto'
 import { Resend } from 'resend'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { verifyTurnstile } from '@/lib/turnstile'
 
 // Lazy: sonst wirft `new Resend(undefined)` schon beim `next build`.
 const getResend = () => new Resend(process.env.RESEND_API_KEY)
@@ -33,6 +34,13 @@ export async function POST(request: NextRequest) {
 
     if (!EMAIL_RE.test(email) || email.length > 254 || !consent) {
       return NextResponse.json({ error: 'Bitte gib eine gültige E-Mail-Adresse an und stimme der Datenschutzerklärung zu.' }, { status: 400 })
+    }
+
+    // Bot-Schutz: verhindert automatisiertes Versenden von Bestätigungs-Mails an
+    // fremde Adressen (Subscription-Bombing über unsere Domain). In Dev ohne
+    // TURNSTILE_SECRET_KEY wird die Prüfung übersprungen.
+    if (!(await verifyTurnstile(String(body?.turnstileToken ?? '')))) {
+      return NextResponse.json({ error: 'Bot-Schutz fehlgeschlagen. Bitte lade die Seite neu und versuche es erneut.' }, { status: 400 })
     }
 
     let token: string

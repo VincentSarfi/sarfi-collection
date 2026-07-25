@@ -180,7 +180,8 @@ export async function POST(request: NextRequest) {
       message,
       paymentIntentId: paymentIntent.id,
       clientIp:        ip,
-      clientCountry:   request.headers.get('x-vercel-ip-country') ?? undefined,
+      // Kein GeoIP-Header mehr verfügbar (Sliplane, kein Cloudflare/Vercel davor);
+      // x-vercel-ip-country war seit dem Hosting-Umzug tot → weggelassen.
       userAgent:       request.headers.get('user-agent') ?? undefined,
     }).catch(err => console.error('[payment-intent] Checkout-Mail Fehler:', err))
 
