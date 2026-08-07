@@ -108,7 +108,8 @@ export async function POST(request: NextRequest) {
   if (totalPrice < priceCheck.minAcceptable) {
     console.warn(
       `[payment-intent] Preismanipulation abgelehnt: client=${totalPrice} < min=${priceCheck.minAcceptable} ` +
-      `(erwartet=${priceCheck.expectedTotal}) für ${apartmentId} ${checkIn}–${checkOut} guests=${guests}`,
+      `(erwartet=${priceCheck.expectedTotal}, PriceLabs-Raten=${priceCheck.usedDynamicRates}) ` +
+      `für ${apartmentId} ${checkIn}–${checkOut} guests=${guests}`,
     )
     return NextResponse.json(
       { error: 'Preis konnte nicht verifiziert werden. Bitte lade die Seite neu und versuche es erneut.' },
@@ -129,7 +130,12 @@ export async function POST(request: NextRequest) {
     // Continue if check fails – booking API will catch it
   }
 
-  const serverTotal = Math.max(totalPrice, priceCheck.expectedTotal)
+  // Nie weniger als der echte Preis belasten – aber nur, wenn PriceLabs-Raten
+  // vorlagen. Ohne sie beruht expectedTotal auf priceFrom und läge über dem,
+  // was der Gast gesehen hat; ein API-Ausfall darf ihn nicht teurer machen.
+  const serverTotal = priceCheck.usedDynamicRates
+    ? Math.max(totalPrice, priceCheck.expectedTotal)
+    : totalPrice
   const fraction    = paymentOption === "100" ? 1 : DEPOSIT_FRACTION
   const depositEur  = Math.round(serverTotal * fraction)
 
