@@ -143,7 +143,10 @@ export async function POST(request: NextRequest) {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: toCents(depositEur),
       currency: 'eur',
-      payment_method_types: ['card'],
+      // Zahlarten steuert das Stripe-Dashboard (Einstellungen → Zahlungsmethoden).
+      // Achtung: keine asynchronen Methoden (SEPA-Lastschrift) aktivieren –
+      // der Webhook legt die Smoobu-Buchung erst bei payment_intent.succeeded an.
+      automatic_payment_methods: { enabled: true },
       receipt_email: email,
       description: `${paymentOption === "100" ? "100% Vollzahlung" : "50% Anzahlung"} – ${propertyName} · ${checkIn} bis ${checkOut}`,
       metadata: {

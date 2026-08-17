@@ -17,7 +17,11 @@ type BookingDict = ReturnType<typeof getDict>["booking"]
 const numLocale = (locale: Locale): string => (locale === "en" ? "en-GB" : "de-DE")
 
 // Public Cloudflare Turnstile site key (safe to expose client-side).
-const TURNSTILE_SITE_KEY = "0x4AAAAAADCAIuxW7h0ePfOM"
+// Lokal überschreibbar (NEXT_PUBLIC_TURNSTILE_SITE_KEY): der Live-Key erlaubt
+// localhost nicht (Error 110200) – für Dev-Tests Cloudflares Test-Key
+// 1x00000000000000000000AA setzen, der immer besteht.
+const TURNSTILE_SITE_KEY =
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAADCAIuxW7h0ePfOM"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -281,7 +285,13 @@ export default function BookingWidget({
   const turnstileToken = useRef<string>("")
   const [turnstileReady, setTurnstileReady] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  // Wohin „Erneut versuchen" führt – nach Redirect-Rückkehr ist der
+  // Formular-State weg, dann muss der Gast wieder bei den Daten starten.
+  const [errorRetryStep, setErrorRetryStep] = useState<Step>("form")
   const [paymentOption, setPaymentOption] = useState<PaymentOption>("50")
+  // Gast kam per Redirect-Zahlart (PayPal, Klarna …) zurück → Formular-State
+  // ist nach dem Seiten-Reload leer, Bestätigung generisch rendern.
+  const [redirectReturn, setRedirectReturn] = useState(false)
 
   // ── Stripe + PriceLabs state ──
   const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(null)
@@ -316,6 +326,54 @@ export default function BookingWidget({
     }
     load()
   }, [smoobuId])
+
+  // ── Rückkehr von Redirect-Zahlarten (PayPal, Klarna …) ──
+  // Stripe leitet den Gast nach externer Zahlung auf die return_url zurück und
+  // hängt payment_intent_client_secret + redirect_status an; sc_widget (von uns
+  // in PaymentStep gesetzt) stellt sicher, dass bei mehreren Widgets auf einer
+  // Seite nur das der bezahlten Unterkunft reagiert. Die Smoobu-Buchung legt
+  // der Webhook an – hier wird dem Gast nur Bestätigung bzw. Fehler angezeigt.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const piClientSecret = params.get("payment_intent_client_secret")
+    if (!piClientSecret || params.get("sc_widget") !== smoobuId) return
+
+    // Stripe-Parameter sofort entfernen, damit ein Reload nicht erneut auslöst
+    const url = new URL(window.location.href)
+    for (const p of ["payment_intent", "payment_intent_client_secret", "redirect_status", "source_type", "sc_widget"]) {
+      url.searchParams.delete(p)
+    }
+    window.history.replaceState({}, "", url.toString())
+
+    let cancelled = false
+    ;(async () => {
+      const errs = getDict(locale).booking.errors
+      try {
+        const { loadStripe } = await import("@stripe/stripe-js/pure")
+        const stripeJs = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "")
+        if (!stripeJs) throw new Error("Stripe.js nicht geladen")
+        const { paymentIntent } = await stripeJs.retrievePaymentIntent(piClientSecret)
+        if (cancelled) return
+        // "processing" wie Erfolg behandeln: Gast hat bezahlt, deliveryNote
+        // deckt den Fall „keine Mail erhalten → melde dich" ab.
+        if (paymentIntent?.status === "succeeded" || paymentIntent?.status === "processing") {
+          setRedirectReturn(true)
+          setStep("confirmed")
+        } else {
+          setErrorMsg(errs.redirectFailed)
+          setErrorRetryStep("dates")
+          setStep("error")
+        }
+      } catch {
+        if (cancelled) return
+        setErrorMsg(errs.redirectUnknown)
+        setErrorRetryStep("dates")
+        setStep("error")
+      }
+      scrollToWidget()
+    })()
+    return () => { cancelled = true }
+  }, [smoobuId, locale, scrollToWidget])
 
   // Kalender-Overlay per Escape schließen (Tastatur-Bedienbarkeit)
   useEffect(() => {
@@ -492,6 +550,7 @@ export default function BookingWidget({
 
   const handlePaymentError = (msg: string) => {
     setErrorMsg(msg)
+    setErrorRetryStep("form")
     setStep("error")
   }
 
@@ -517,8 +576,13 @@ export default function BookingWidget({
           </div>
           <h3 className="font-display text-xl text-forest-900 mb-1">{t.confirmed.title}</h3>
           <p className="font-body text-sm text-forest-500 mb-4">
-            {t.confirmed.sidebarThanksPre}<strong>{form.firstName}</strong>{t.confirmed.sidebarThanksPost}
+            {redirectReturn ? (
+              t.confirmed.redirectThanks
+            ) : (
+              <>{t.confirmed.sidebarThanksPre}<strong>{form.firstName}</strong>{t.confirmed.sidebarThanksPost}</>
+            )}
           </p>
+          {!redirectReturn && (
           <div className="bg-cream-50 rounded-xl border border-cream-200 p-4 text-left space-y-1.5 mb-4">
             <div className="flex justify-between font-body text-sm">
               <span className="text-forest-400">{t.labels.arrival}</span>
@@ -535,6 +599,7 @@ export default function BookingWidget({
               </div>
             )}
           </div>
+          )}
         </div>
       )
     }
@@ -562,14 +627,21 @@ export default function BookingWidget({
             {t.confirmed.title}
           </h2>
           <p className="font-body text-forest-600 mb-6">
-            {t.confirmed.thanksPre}<strong>{form.firstName}</strong>{t.confirmed.thanksAfterName}
-            <strong>{propertyName}</strong>{t.confirmed.thanksAfterProperty}<strong>{form.email}</strong>{t.confirmed.thanksAfterEmail}
+            {redirectReturn ? (
+              t.confirmed.redirectThanks
+            ) : (
+              <>
+                {t.confirmed.thanksPre}<strong>{form.firstName}</strong>{t.confirmed.thanksAfterName}
+                <strong>{propertyName}</strong>{t.confirmed.thanksAfterProperty}<strong>{form.email}</strong>{t.confirmed.thanksAfterEmail}
+              </>
+            )}
           </p>
           <p className="font-body text-xs text-forest-400 mb-4 bg-cream-100 rounded-xl px-4 py-3">
             {t.confirmed.deliveryNote}
           </p>
 
-          {/* Summary card */}
+          {/* Summary card – nach Redirect-Rückkehr fehlen die Daten (State weg) */}
+          {!redirectReturn && (
           <div className="bg-cream-50 rounded-2xl border border-cream-200 p-5 text-left mb-6">
             <p className="font-body text-xs text-forest-500 uppercase tracking-wider mb-3">
               {t.confirmed.detailsHeading}
@@ -599,6 +671,7 @@ export default function BookingWidget({
               )}
             </div>
           </div>
+          )}
 
           <Link
             href={localizeHref(propertyHref, locale)}
@@ -621,7 +694,7 @@ export default function BookingWidget({
           <p className="font-body text-sm font-semibold text-red-700 mb-2">{t.errorScreen.title}</p>
           <p className="font-body text-xs text-red-600 mb-4">{errorMsg}</p>
           <button
-            onClick={() => { setStep("form"); setErrorMsg(null) }}
+            onClick={() => { setStep(errorRetryStep); setErrorMsg(null) }}
             className="px-4 py-2 rounded-xl bg-forest-800 text-cream-50 font-body text-sm hover:bg-forest-700 transition-colors"
           >
             {t.errorScreen.retry}
@@ -641,7 +714,7 @@ export default function BookingWidget({
           <p className="font-body text-forest-600 mb-6">{errorMsg}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
-              onClick={() => { setStep("form"); setErrorMsg(null) }}
+              onClick={() => { setStep(errorRetryStep); setErrorMsg(null) }}
               className="px-6 py-3 rounded-full bg-forest-800 text-cream-50 font-body text-sm font-medium hover:bg-forest-700 transition-colors"
             >
               {t.errorScreen.retry}
@@ -984,6 +1057,7 @@ export default function BookingWidget({
         {step === "payment" && stripeClientSecret && priceBreakdown && (
           <div className="border-t border-cream-100 px-5 py-4">
             <PaymentStep
+              apartmentId={smoobuId}
               clientSecret={stripeClientSecret}
               depositAmount={depositAmount}
               totalAmount={priceBreakdown.total}
@@ -1399,6 +1473,7 @@ export default function BookingWidget({
               {/* ── PAYMENT STEP ── */}
               {step === "payment" && stripeClientSecret && priceBreakdown && (
                 <PaymentStep
+                  apartmentId={smoobuId}
                   clientSecret={stripeClientSecret}
                   depositAmount={depositAmount}
                   totalAmount={priceBreakdown.total}

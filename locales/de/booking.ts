@@ -22,6 +22,10 @@ const booking = {
       "Die Sicherheitsprüfung läuft noch. Bitte warte einen Moment und tippe erneut auf „Weiter zur Zahlung“.",
     paymentGeneric: "Fehler beim Zahlungsvorgang. Bitte versuche es erneut.",
     connectionCheck: "Verbindungsfehler. Bitte überprüfe deine Internetverbindung.",
+    redirectFailed:
+      "Die Zahlung wurde nicht abgeschlossen oder abgebrochen. Es wurde nichts abgebucht – du kannst die Buchung gerne erneut starten.",
+    redirectUnknown:
+      "Der Zahlungsstatus konnte nicht geprüft werden. Falls du eine Bestätigungs-E-Mail erhalten hast, war deine Buchung erfolgreich – ansonsten melde dich bitte bei uns.",
   },
 
   // ── Wiederkehrende Labels ─────────────────────────────────────────────────
@@ -76,6 +80,8 @@ const booking = {
       "Deine Bestätigung wird in der Regel innerhalb weniger Minuten per E-Mail zugestellt. Falls du innerhalb von 10 Minuten keine E-Mail (auch im Spam-Ordner) erhältst, melde dich bitte direkt bei uns.",
     detailsHeading: "Buchungsdetails",
     backToProperty: "← Zurück zur Unterkunft",
+    redirectThanks:
+      "Vielen Dank! Deine Zahlung war erfolgreich und deine Buchung ist bei uns eingegangen. Alle Details erhältst du in Kürze per E-Mail.",
   },
 
   // ── Fehler-Screen ─────────────────────────────────────────────────────────
@@ -206,6 +212,8 @@ const booking = {
     depositMid: ". Den Restbetrag von ",
     depositPost: " begleichst du 14 Tage vor Anreise oder nach Absprache mit dem Gastgeber.",
     paymentDetails: "Zahlungsdaten",
+    // PayPal hier ergänzen, sobald es im Stripe-Dashboard aktiviert ist
+    acceptedMethods: "Apple Pay · Google Pay · Klarna · Kreditkarte u. v. m.",
     errCard: "Zahlung fehlgeschlagen. Bitte prüfe deine Kartendaten.",
     errUnexpectedStatus: "Unerwarteter Zahlungsstatus. Bitte versuche es erneut.",
     errConnection: "Verbindungsfehler. Bitte versuche es erneut.",

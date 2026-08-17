@@ -55,6 +55,7 @@ const STRIPE_APPEARANCE = {
 // ─── Inner checkout form ──────────────────────────────────────────────────────
 
 interface CheckoutFormProps {
+  apartmentId: string
   depositAmount: number
   totalAmount: number
   paymentOption: "50" | "100"
@@ -64,6 +65,7 @@ interface CheckoutFormProps {
 }
 
 function CheckoutForm({
+  apartmentId,
   depositAmount,
   totalAmount,
   paymentOption,
@@ -84,14 +86,18 @@ function CheckoutForm({
 
     setProcessing(true)
     try {
+      // Auf die aktuelle Buchungsseite zurückkehren (keine eigene
+      // /booking/bestaetigung-Route vorhanden); Stripe hängt bei
+      // Redirect-Zahlarten (PayPal, Klarna …) die payment_intent-Parameter an.
+      // sc_widget: bei Seiten mit mehreren Widgets reagiert nur das richtige.
+      const returnUrl = new URL(window.location.href)
+      returnUrl.searchParams.set("sc_widget", apartmentId)
+
       const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
         redirect: "if_required",
         confirmParams: {
-          // Auf die aktuelle Buchungsseite zurückkehren (keine eigene
-          // /booking/bestaetigung-Route vorhanden); Stripe hängt bei
-          // Redirect-Zahlarten die payment_intent-Parameter an.
-          return_url: window.location.href,
+          return_url: returnUrl.toString(),
         },
       })
 
@@ -141,10 +147,11 @@ function CheckoutForm({
         <p className="font-body text-xs font-medium text-forest-700 uppercase tracking-wider mb-3">
           {t.paymentDetails}
         </p>
+        <p className="font-body text-xs text-forest-400 mb-3">{t.acceptedMethods}</p>
         <PaymentElement
           options={{
             layout: "accordion",
-            paymentMethodOrder: ["apple_pay", "google_pay", "card"],
+            paymentMethodOrder: ["apple_pay", "google_pay", "paypal", "card", "klarna"],
             wallets: { applePay: "auto", googlePay: "auto" },
           }}
         />
@@ -199,6 +206,7 @@ function CheckoutForm({
 // ─── PaymentStep (public) ─────────────────────────────────────────────────────
 
 interface PaymentStepProps {
+  apartmentId: string
   clientSecret: string
   depositAmount: number
   totalAmount: number
@@ -213,6 +221,7 @@ interface PaymentStepProps {
 }
 
 export default function PaymentStep({
+  apartmentId,
   clientSecret,
   depositAmount,
   totalAmount,
@@ -297,6 +306,7 @@ export default function PaymentStep({
         }}
       >
         <CheckoutForm
+          apartmentId={apartmentId}
           depositAmount={depositAmount}
           totalAmount={totalAmount}
           paymentOption={paymentOption}

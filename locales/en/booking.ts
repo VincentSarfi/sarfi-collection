@@ -30,6 +30,10 @@ const booking = {
       "The security check is still running. Please wait a moment and tap “Continue to payment” again.",
     paymentGeneric: "Something went wrong while preparing the payment. Please try again.",
     connectionCheck: "Connection error. Please check your internet connection.",
+    redirectFailed:
+      "The payment was not completed or was cancelled. Nothing has been charged – feel free to start the booking again.",
+    redirectUnknown:
+      "We couldn't verify the payment status. If you've received a confirmation email, your booking was successful – otherwise please get in touch with us.",
   },
 
   // ── Recurring labels ──────────────────────────────────────────────────────
@@ -84,6 +88,8 @@ const booking = {
       "Your confirmation is usually delivered by email within a few minutes. If you haven't received an email within 10 minutes (please also check your spam folder), get in touch with us directly.",
     detailsHeading: "Booking details",
     backToProperty: "← Back to the property",
+    redirectThanks:
+      "Thank you! Your payment was successful and your booking has been received. You'll get all the details by email shortly.",
   },
 
   // ── Error screen ──────────────────────────────────────────────────────────
@@ -214,6 +220,8 @@ const booking = {
     depositMid: " now. The remaining balance of ",
     depositPost: " is due 14 days before arrival, or as arranged with your host.",
     paymentDetails: "Payment details",
+    // Add PayPal here once it is activated in the Stripe dashboard
+    acceptedMethods: "Apple Pay · Google Pay · Klarna · credit card & more",
     errCard: "Payment failed. Please check your card details.",
     errUnexpectedStatus: "Unexpected payment status. Please try again.",
     errConnection: "Connection error. Please try again.",

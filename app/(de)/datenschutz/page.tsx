@@ -190,6 +190,22 @@ export default function DatenschutzPage() {
             <p className="mb-3">
               Wir bieten die Zahlung per Google Pay an (Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA). Wenn Sie Google Pay als Zahlungsmethode wählen, wird die Transaktion über Stripe abgewickelt. Google übermittelt dabei tokenisierte Zahlungsdaten. Google verarbeitet Ihre Daten gemäß der Google-Datenschutzrichtlinie: <a href="https://policies.google.com/privacy?hl=de" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">policies.google.com/privacy</a>
             </p>
+            <p className="mb-3">
+              Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung).
+            </p>
+
+            <h3 className="font-semibold text-forest-800 mb-2">PayPal</h3>
+            <p className="mb-3">
+              Wir bieten die Zahlung per PayPal an (PayPal (Europe) S.à r.l. et Cie, S.C.A., 22-24 Boulevard Royal, L-2449 Luxemburg). Wenn Sie PayPal als Zahlungsmethode wählen, wird die Transaktion über Stripe abgewickelt; Sie werden dazu vorübergehend zu PayPal weitergeleitet und kehren nach Abschluss der Zahlung auf unsere Website zurück. PayPal verarbeitet Ihre Daten gemäß der PayPal-Datenschutzerklärung: <a href="https://www.paypal.com/de/legalhub/privacy-full" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">paypal.com/de/legalhub/privacy-full</a>
+            </p>
+            <p className="mb-3">
+              Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung).
+            </p>
+
+            <h3 className="font-semibold text-forest-800 mb-2">Klarna</h3>
+            <p className="mb-3">
+              Wir bieten die Zahlung per Klarna an (Klarna Bank AB (publ), Sveavägen 46, 111 34 Stockholm, Schweden). Wenn Sie Klarna als Zahlungsmethode wählen, wird die Transaktion über Stripe abgewickelt; Sie werden dazu vorübergehend zu Klarna weitergeleitet. Klarna kann zur Abwicklung der gewählten Zahlungsart (z. B. Sofortüberweisung oder Rechnungskauf) eigene Bonitäts- und Identitätsprüfungen durchführen und verarbeitet Ihre Daten gemäß der Klarna-Datenschutzerklärung: <a href="https://www.klarna.com/de/datenschutz/" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">klarna.com/de/datenschutz</a>
+            </p>
             <p>
               Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung).
             </p>
