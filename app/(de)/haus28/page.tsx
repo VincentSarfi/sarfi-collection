@@ -4,14 +4,14 @@ import Haus28ClientPage from "@/components/property/Haus28ClientPage";
 import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
-  title: "HAUS28 – A-Frame Ferienhaus im Bayerischen Wald",
+  title: "HAUS28 – A-Frame mit Whirlpool im Bayerischen Wald",
   description:
-    "HAUS28 am Büchelstein in Grattersdorf: 157 m² A-Frame Ferienhaus im Bayerischen Wald – 5,0★ auf Airbnb. Bis zu 8 Personen, hochwertig ausgestattet, mitten im Wald. Ab 199€ / Nacht. Jetzt direkt buchen!",
+    "Privater Outdoor-Whirlpool, 4 Schlafzimmer, 8 Gäste – modernes A-Frame in Grattersdorf. Direkt beim Gastgeber buchen, ohne Portalgebühren.",
   openGraph: {
-    title: "HAUS28 – Modernes A-Frame im Wald",
+    title: "HAUS28 – A-Frame mit Whirlpool im Bayerischen Wald",
     description:
-      "Einzigartiges A-Frame Ferienhaus am Büchelstein im Bayerischen Wald. Natur pur, hochwertig, bis zu 8 Personen. Direkt buchen & sparen.",
-    images: [{ url: haus28.images.hero, alt: "HAUS28 – A-Frame Ferienhaus am Büchelstein, Grattersdorf" }],
+      "Privater Outdoor-Whirlpool, ganzjährig nutzbar, 4 Schlafzimmer, Platz für 8 Gäste: modernes A-Frame am Büchelstein im Bayerischen Wald. Direkt buchen & sparen.",
+    images: [{ url: haus28.images.hero, alt: "HAUS28 – A-Frame Ferienhaus mit Whirlpool am Büchelstein, Grattersdorf" }],
   },
   alternates: alternatesFor("/haus28", "de"),
 };
@@ -75,22 +75,24 @@ const jsonLd = {
       unitCode: "C62",
     },
     amenityFeature: [
-      { "@type": "LocationFeatureSpecification", name: "Sauna", value: true },
-      { "@type": "LocationFeatureSpecification", name: "Kamin", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Whirlpool", value: true },
       { "@type": "LocationFeatureSpecification", name: "WLAN", value: true },
       { "@type": "LocationFeatureSpecification", name: "Küche", value: true },
-      { "@type": "LocationFeatureSpecification", name: "Balkon", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Balkone", value: 2 },
+      { "@type": "LocationFeatureSpecification", name: "Terrasse", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Feuerschale", value: true },
       { "@type": "LocationFeatureSpecification", name: "Parkplatz", value: true },
     ],
   },
   amenityFeature: [
     { "@type": "LocationFeatureSpecification", name: "Schlafzimmer", value: 4 },
     { "@type": "LocationFeatureSpecification", name: "Badezimmer", value: 2 },
-    { "@type": "LocationFeatureSpecification", name: "Sauna", value: true },
-    { "@type": "LocationFeatureSpecification", name: "Kamin", value: true },
+    { "@type": "LocationFeatureSpecification", name: "Whirlpool", value: true },
+    { "@type": "LocationFeatureSpecification", name: "Feuerschale", value: true },
     { "@type": "LocationFeatureSpecification", name: "WLAN", value: true },
     { "@type": "LocationFeatureSpecification", name: "Küche", value: true },
-    { "@type": "LocationFeatureSpecification", name: "Balkon", value: true },
+    { "@type": "LocationFeatureSpecification", name: "Balkone", value: 2 },
+    { "@type": "LocationFeatureSpecification", name: "Terrasse", value: true },
     { "@type": "LocationFeatureSpecification", name: "Parkplatz", value: true },
     { "@type": "LocationFeatureSpecification", name: "Self-Check-in", value: true },
   ],

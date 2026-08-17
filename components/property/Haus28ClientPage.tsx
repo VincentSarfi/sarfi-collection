@@ -200,6 +200,9 @@ export default function Haus28ClientPage() {
               <div className="pb-6 border-b border-cream-200">
                 <h1 className="font-display text-display-md text-forest-900 leading-tight mb-2">
                   {haus.name}
+                  <span className="block font-display text-xl md:text-2xl text-forest-700 mt-1">
+                    {t.haus28.h1Suffix}
+                  </span>
                 </h1>
                 <p className="font-body text-base text-forest-600 mb-1">
                   {t.haus28.typePre}{haus.address}

@@ -7,14 +7,14 @@ import { alternatesFor } from "@/lib/i18n";
 const haus28En = localizeProperty(haus28, "en");
 
 export const metadata: Metadata = {
-  title: "HAUS28 – A-Frame Holiday Home in the Bavarian Forest",
+  title: "HAUS28 – A-Frame with Hot Tub in the Bavarian Forest",
   description:
-    "HAUS28 at the Büchelstein in Grattersdorf: a 157 m² A-frame holiday home in the Bavarian Forest – 5.0★ on Airbnb. Sleeps up to 8, beautifully appointed, deep in the woods. From 199€ / night. Book direct now!",
+    "Private outdoor hot tub, 4 bedrooms, sleeps 8 – a modern A-frame in Grattersdorf. Book direct with your host, without platform fees.",
   openGraph: {
-    title: "HAUS28 – A Modern A-Frame in the Woods",
+    title: "HAUS28 – A-Frame with Hot Tub in the Bavarian Forest",
     description:
-      "A one-of-a-kind A-frame holiday home at the Büchelstein in the Bavarian Forest. Pure nature, premium quality, up to 8 guests. Book direct & save.",
-    images: [{ url: haus28.images.hero, alt: "HAUS28 – A-frame holiday home at the Büchelstein, Grattersdorf" }],
+      "Private outdoor hot tub, open all year, 4 bedrooms, room for 8 guests: a modern A-frame at the Büchelstein in the Bavarian Forest. Book direct & save.",
+    images: [{ url: haus28.images.hero, alt: "HAUS28 – A-frame holiday home with hot tub at the Büchelstein, Grattersdorf" }],
   },
   alternates: alternatesFor("/haus28", "en"),
 };
@@ -78,22 +78,24 @@ const jsonLd = {
       unitCode: "C62",
     },
     amenityFeature: [
-      { "@type": "LocationFeatureSpecification", name: "Sauna", value: true },
-      { "@type": "LocationFeatureSpecification", name: "Fireplace", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Hot tub", value: true },
       { "@type": "LocationFeatureSpecification", name: "Wi-Fi", value: true },
       { "@type": "LocationFeatureSpecification", name: "Kitchen", value: true },
-      { "@type": "LocationFeatureSpecification", name: "Balcony", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Balconies", value: 2 },
+      { "@type": "LocationFeatureSpecification", name: "Terrace", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Fire pit", value: true },
       { "@type": "LocationFeatureSpecification", name: "Parking", value: true },
     ],
   },
   amenityFeature: [
     { "@type": "LocationFeatureSpecification", name: "Bedrooms", value: 4 },
     { "@type": "LocationFeatureSpecification", name: "Bathrooms", value: 2 },
-    { "@type": "LocationFeatureSpecification", name: "Sauna", value: true },
-    { "@type": "LocationFeatureSpecification", name: "Fireplace", value: true },
+    { "@type": "LocationFeatureSpecification", name: "Hot tub", value: true },
+    { "@type": "LocationFeatureSpecification", name: "Fire pit", value: true },
     { "@type": "LocationFeatureSpecification", name: "Wi-Fi", value: true },
     { "@type": "LocationFeatureSpecification", name: "Kitchen", value: true },
-    { "@type": "LocationFeatureSpecification", name: "Balcony", value: true },
+    { "@type": "LocationFeatureSpecification", name: "Balconies", value: 2 },
+    { "@type": "LocationFeatureSpecification", name: "Terrace", value: true },
     { "@type": "LocationFeatureSpecification", name: "Parking", value: true },
     { "@type": "LocationFeatureSpecification", name: "Self check-in", value: true },
   ],

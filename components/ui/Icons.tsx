@@ -244,6 +244,14 @@ export function IconFirepit({ className, size = defaultSize }: IconProps) {
   );
 }
 
+export function IconWhirlpool({ className, size = defaultSize }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <path d="M3 12h18v4a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4v-4z" /><path d="M7 12V7a2 2 0 0 1 2-2h1" /><path d="M11 7h.01" /><path d="M6 9c.7-.8.7-1.7 0-2.5" /><path d="M10 9c.7-.8.7-1.7 0-2.5" />
+    </svg>
+  );
+}
+
 export function IconDryer({ className, size = defaultSize }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
@@ -297,6 +305,7 @@ export function AmenityIcon({ name, className, size }: { name: string; className
     mountain: IconMountain,
     ac: IconAc,
     firepit: IconFirepit,
+    whirlpool: IconWhirlpool,
     smoke_detector: IconSmokeDetector,
     baby_crib: IconBabyCrib,
   };

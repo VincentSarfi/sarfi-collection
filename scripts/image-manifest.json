@@ -479,6 +479,14 @@
       "thumb": "/images/haus28/gallery/t_haus_28_250523_745.webp",
       "name": "haus_28_250523_745",
       "originalFilename": "Haus_28_250523_745.jpg"
+    },
+    {
+      "src": "/Users/vincent/Desktop/Immobilien/Website Direktbuchung/FOTOS/HAUS28/IMG_5694.jpeg",
+      "full": "/images/haus28/gallery/img_5694.webp",
+      "medium": "/images/haus28/gallery/m_img_5694.webp",
+      "thumb": "/images/haus28/gallery/t_img_5694.webp",
+      "name": "img_5694",
+      "originalFilename": "IMG_5694.jpeg"
     }
   ],
   "B5": [
@@ -692,6 +700,30 @@
     }
   ],
   "B6": [
+    {
+      "src": "/Users/vincent/Desktop/Immobilien/Website Direktbuchung/FOTOS/B6/IMG_1812.jpeg",
+      "full": "/images/schoenblick/b6/gallery/img_1812.webp",
+      "medium": "/images/schoenblick/b6/gallery/m_img_1812.webp",
+      "thumb": "/images/schoenblick/b6/gallery/t_img_1812.webp",
+      "name": "img_1812",
+      "originalFilename": "IMG_1812.jpeg"
+    },
+    {
+      "src": "/Users/vincent/Desktop/Immobilien/Website Direktbuchung/FOTOS/B6/IMG_1814.jpeg",
+      "full": "/images/schoenblick/b6/gallery/img_1814.webp",
+      "medium": "/images/schoenblick/b6/gallery/m_img_1814.webp",
+      "thumb": "/images/schoenblick/b6/gallery/t_img_1814.webp",
+      "name": "img_1814",
+      "originalFilename": "IMG_1814.jpeg"
+    },
+    {
+      "src": "/Users/vincent/Desktop/Immobilien/Website Direktbuchung/FOTOS/B6/IMG_1815.jpeg",
+      "full": "/images/schoenblick/b6/gallery/img_1815.webp",
+      "medium": "/images/schoenblick/b6/gallery/m_img_1815.webp",
+      "thumb": "/images/schoenblick/b6/gallery/t_img_1815.webp",
+      "name": "img_1815",
+      "originalFilename": "IMG_1815.jpeg"
+    },
     {
       "src": "/Users/vincent/Desktop/Immobilien/Website Direktbuchung/FOTOS/B6/IMG_9750.JPG",
       "full": "/images/schoenblick/b6/gallery/img_9750.webp",

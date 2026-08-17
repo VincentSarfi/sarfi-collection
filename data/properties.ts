@@ -112,14 +112,16 @@ export const haus28: PropertyData = {
   shortDescription:
     "Einzigartiges A-Frame Ferienhaus am Büchelstein bei Grattersdorf – ein architektonischer Rückzugsort für bis zu 8 Personen im Bayerischen Wald.",
   description:
-    "Am Büchelstein bei Grattersdorf erwartet dich HAUS28 – ein modernes A-Frame Ferienhaus mit 157 m² Wohnfläche, das Architektur und Natur zu einer einzigartigen Atmosphäre verbindet. Die markante Dreiecksform, das hochwertige Holz-Interior und das raumhohe Panoramafenster lassen die Grenze zwischen drinnen und draußen verschwimmen. Vier Schlafzimmer und zwei Bäder bieten Platz für bis zu 8 Personen. Morgens erwachst du im Wald, abends sitzt du an der Feuerschale oder auf der großzügigen Terrasse. Perfekt für Familien, Freundesgruppen oder alle, die wirklich abschalten wollen.",
+    "Am Büchelstein bei Grattersdorf erwartet dich HAUS28 – ein modernes A-Frame Ferienhaus mit 157 m² Wohnfläche und privatem Outdoor-Whirlpool im Garten, das Architektur und Natur zu einer einzigartigen Atmosphäre verbindet. Die markante Dreiecksform, das hochwertige Holz-Interior und das raumhohe Panoramafenster lassen die Grenze zwischen drinnen und draußen verschwimmen. Vier Schlafzimmer und zwei Bäder bieten Platz für bis zu 8 Personen. Morgens erwachst du zwischen Bäumen, abends sitzt du im warmen Wasser, an der Feuerschale oder auf der großzügigen Terrasse. Perfekt für Familien, Freundesgruppen oder alle, die wirklich abschalten wollen.",
   amenities: [
+    { icon: "whirlpool", label: "Privater Outdoor-Whirlpool" },
     { icon: "wifi", label: "WLAN" },
     { icon: "kitchen", label: "Voll ausgestattete Küche" },
     { icon: "parking", label: "Kostenloser Parkplatz" },
     { icon: "ac", label: "Klimaanlage" },
     { icon: "firepit", label: "Feuerschale" },
     { icon: "terrace", label: "Große Terrasse" },
+    { icon: "terrace", label: "2 Balkone" },
     { icon: "bbq", label: "Grill" },
     { icon: "washing", label: "Waschmaschine" },
     { icon: "dryer", label: "Trockner" },
@@ -138,6 +140,7 @@ export const haus28: PropertyData = {
     thumbnail: "/images/haus28/hero-thumb.webp",
     gallery: [
       { src: "/images/haus28/gallery/haus_28_250523_160.webp", alt: "HAUS28 – A-Frame Frontansicht im Abendlicht" },
+      { src: "/images/haus28/gallery/img_5694.webp", alt: "HAUS28 – Privater Outdoor-Whirlpool im Garten am Waldrand" },
       { src: "/images/haus28/gallery/haus_28_250523_455.webp", alt: "HAUS28 – Wohnbereich mit Panoramafenster zum Wald" },
       { src: "/images/haus28/gallery/haus_28_250523_556.webp", alt: "HAUS28 – Offene Wohn- und Küchenfläche" },
       { src: "/images/haus28/gallery/haus_28_250523_165.webp", alt: "HAUS28 – Außenansicht durch den Wald" },
@@ -164,6 +167,11 @@ export const haus28: PropertyData = {
       question: "Wo genau liegt HAUS28 am Büchelstein?",
       answer:
         "HAUS28 liegt an der Adresse Büchelstein 28 bei Grattersdorf im Bayerischen Wald. Direkt am Fuße des Büchelsteins (831 m), umgeben von Wald und Natur. Der Büchelstein-Gipfel mit Panoramablick ist in wenigen Minuten zu Fuß erreichbar.",
+    },
+    {
+      question: "Gibt es einen Whirlpool – und ist er ganzjährig nutzbar?",
+      answer:
+        "Ja. Zum HAUS28 gehört ein privater Outdoor-Whirlpool im Garten, den du exklusiv für dich hast. Er ist ganzjährig nutzbar – auch im Winter, wenn ringsum Schnee liegt. Beheizt wird er über einen Holzofen direkt am Becken.",
     },
     {
       question: "Wie läuft der Check-in ab?",

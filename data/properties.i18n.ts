@@ -38,12 +38,14 @@ type TextOverlay = {
 // ---------------------------------------------------------------------------
 
 const amenityLabelEn: Record<string, string> = {
+  "Privater Outdoor-Whirlpool": "Private outdoor hot tub",
   WLAN: "Wi-Fi",
   "Voll ausgestattete Küche": "Fully equipped kitchen",
   "Kostenloser Parkplatz": "Free parking",
   Klimaanlage: "Air conditioning",
   Feuerschale: "Fire pit",
   "Große Terrasse": "Large terrace",
+  "2 Balkone": "2 balconies",
   Grill: "BBQ grill",
   Waschmaschine: "Washing machine",
   Trockner: "Dryer",
@@ -79,6 +81,8 @@ const bedLabelEn: Record<string, string> = {
 const galleryAltEn: Record<string, string> = {
   // HAUS28
   "HAUS28 – A-Frame Frontansicht im Abendlicht": "HAUS28 – A-frame front view in evening light",
+  "HAUS28 – Privater Outdoor-Whirlpool im Garten am Waldrand":
+    "HAUS28 – Private outdoor hot tub in the garden at the forest's edge",
   "HAUS28 – Wohnbereich mit Panoramafenster zum Wald": "HAUS28 – Living area with panoramic window facing the forest",
   "HAUS28 – Offene Wohn- und Küchenfläche": "HAUS28 – Open-plan living and kitchen area",
   "HAUS28 – Außenansicht durch den Wald": "HAUS28 – Exterior view through the forest",
@@ -309,13 +313,19 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
     shortDescription:
       "A one-of-a-kind A-frame holiday home at the Büchelstein near Grattersdorf – an architectural retreat for up to 8 guests in the Bavarian Forest.",
     description:
-      "At the Büchelstein near Grattersdorf, HAUS28 awaits – a modern A-frame holiday home with 157 m² of living space, where architecture and nature blend into an atmosphere all of its own. The striking triangular silhouette, warm wooden interior and floor-to-ceiling panoramic window blur the line between inside and out. Four bedrooms and two bathrooms sleep up to 8 guests. Wake up in the forest in the morning, and end the day around the fire pit or on the spacious terrace. Perfect for families, groups of friends, or anyone who truly wants to switch off.",
+      "At the Büchelstein near Grattersdorf, HAUS28 awaits – a modern A-frame holiday home with 157 m² of living space and a private outdoor hot tub in the garden, where architecture and nature blend into an atmosphere all of its own. The striking triangular silhouette, warm wooden interior and floor-to-ceiling panoramic window blur the line between inside and out. Four bedrooms and two bathrooms sleep up to 8 guests. Wake up among the trees in the morning, and end the day in the warm water, around the fire pit or on the spacious terrace. Perfect for families, groups of friends, or anyone who truly wants to switch off.",
     faqs: [
       {
         de: "Wo genau liegt HAUS28 am Büchelstein?",
         question: "Where exactly is HAUS28 at the Büchelstein?",
         answer:
           "HAUS28 is located at Büchelstein 28 near Grattersdorf in the Bavarian Forest – right at the foot of the Büchelstein (831 m), surrounded by forest and nature. The Büchelstein summit with its panoramic views is just a few minutes away on foot.",
+      },
+      {
+        de: "Gibt es einen Whirlpool – und ist er ganzjährig nutzbar?",
+        question: "Is there a hot tub – and can it be used all year round?",
+        answer:
+          "Yes. HAUS28 comes with a private outdoor hot tub in the garden, exclusively yours. It can be used all year round – including in winter with snow all around. It is heated by a wood-burning stove right next to the tub.",
       },
       {
         de: "Wie läuft der Check-in ab?",
