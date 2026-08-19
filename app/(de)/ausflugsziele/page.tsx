@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { IconArrowRight, IconMapPin } from "@/components/ui/Icons";
 import AusflugszieleFilter, {
   type OverviewCategory,
@@ -556,6 +557,10 @@ const seasons = [
     season: "Frühling",
     emoji: "🌸",
     months: "März – Mai",
+    image: {
+      src: "/images/schoenblick/aussen/gallery/img_9830.webp",
+      alt: "Haus Schönblick in Schöfweg mit Weitblick über die grünen Hügel des Bayerischen Waldes",
+    },
     activities: [
       "Büchelstein & ruhige Wanderwege ohne Trubel",
       "Tier-Freigelände im Nationalpark (kostenlos)",
@@ -568,6 +573,10 @@ const seasons = [
     season: "Sommer",
     emoji: "☀️",
     months: "Juni – August",
+    image: {
+      src: "/images/haus28/gallery/haus_28_250523_147.webp",
+      alt: "HAUS28: A-Frame Ferienhaus im sommerlich grünen Wald am Büchelstein",
+    },
     activities: [
       "Pullman City & Baumwipfelpfad",
       "Büchelstein-Wanderung ab HAUS28",
@@ -581,6 +590,10 @@ const seasons = [
     season: "Herbst",
     emoji: "🍂",
     months: "September – November",
+    image: {
+      src: "/images/schoenblick/b6/gallery/img_9759.webp",
+      alt: "Herbstliche Dekoration am Fenster im Haus Schönblick mit Blick ins Grüne",
+    },
     activities: [
       "Herbstfarben & klare Fernsicht am Büchelstein",
       "Indoor Golf in der Rusel-Arena",
@@ -594,6 +607,10 @@ const seasons = [
     season: "Winter",
     emoji: "❄️",
     months: "Dezember – Februar",
+    image: {
+      src: "/images/schoenblick/b8/gallery/haus_schoenblick_251228_006.webp",
+      alt: "Winterlicher Blick vom Balkon im Haus Schönblick über das Nebelmeer des Bayerischen Waldes",
+    },
     activities: [
       "Skifahren & Rodeln im Skigebiet Sonnenwald",
       "Langlauf & Winterwandern",
@@ -863,6 +880,17 @@ export default function AusflugszielePage() {
               Unsere Lieblingswanderung startet direkt an der Haustür von HAUS28: Der markierte Rundweg Nr. 54 führt über den Kleinen Büchelstein auf den Großen Büchelstein (832 m) und an der historischen Wallfahrtskapelle Rastbuche vorbei durch dichten Bayerwald-Forst. Die Tour ist mittelschwer, auch für geübte Familien machbar und belohnt mit weitem Blick ins Donautal.
             </p>
 
+            {/* Panorama */}
+            <div className="relative aspect-[21/9] rounded-2xl overflow-hidden my-8">
+              <Image
+                src="/images/shared/panorama-drohne.jpg"
+                alt="Drohnenpanorama am Büchelstein: Sonnenaufgang über dem Nebelmeer des Bayerischen Waldes"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 768px"
+              />
+            </div>
+
             {/* Stats row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4 mb-10 font-body text-sm">
               {hikeStats.map((s) => (
@@ -971,7 +999,17 @@ export default function AusflugszielePage() {
           </div>
 
           {/* HAUS28 Wellness Callout */}
-          <div className="rounded-3xl bg-forest-900 p-6 sm:p-8 flex flex-col md:flex-row md:items-center gap-6">
+          <div className="rounded-3xl bg-forest-900 overflow-hidden flex flex-col md:flex-row md:items-stretch">
+            <div className="relative aspect-[4/3] md:aspect-auto md:w-2/5 flex-none">
+              <Image
+                src="/images/haus28/gallery/img_5694.webp"
+                alt="Privater holzbefeuerter Outdoor-Whirlpool im Garten von HAUS28 am Waldrand"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 40vw"
+              />
+            </div>
+            <div className="flex-1 p-6 sm:p-8 flex flex-col md:flex-row md:items-center gap-6">
             <div className="flex-1">
               <p className="font-body text-xs tracking-[0.14em] uppercase text-gold-400 mb-2">
                 Oder einfach: drinnen bleiben
@@ -984,7 +1022,7 @@ export default function AusflugszielePage() {
                 <Link href="/blog/premium-hottub-rechtzeitig-fur-die-wintersaison-2627-wir-machen-nagel-mit-kopfen" className="underline underline-offset-2 hover:text-gold-300 transition-colors">
                   alle Details im Blog
                 </Link>
-                . Dazu Panoramafenster mit Waldblick, Kamin und viel Platz zum Ankommen.
+                . Dazu Panoramafenster mit Waldblick, Feuerschale und viel Platz zum Ankommen.
               </p>
             </div>
             <div className="flex-none">
@@ -995,6 +1033,7 @@ export default function AusflugszielePage() {
                 HAUS28 für deine Wellness- und Naturauszeit buchen
                 <IconArrowRight size={14} />
               </Link>
+            </div>
             </div>
           </div>
         </div>
@@ -1033,6 +1072,16 @@ export default function AusflugszielePage() {
                 </Link>
               </div>
             </div>
+            <div>
+              <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-4">
+                <Image
+                  src="/images/schoenblick/aussen/hero.webp"
+                  alt="Haus Schönblick in Schöfweg: 5 Ferienwohnungen unter einem Dach mit Blick auf den Bayerischen Wald"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              </div>
             <ul className="space-y-3">
               {[
                 { emoji: "🤠", text: "Pullman City: Shows & Western-Gastronomie – Programm für Jung und Alt" },
@@ -1047,13 +1096,15 @@ export default function AusflugszielePage() {
                 </li>
               ))}
             </ul>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ── Ohne Auto ─────────────────────────────────────────────────── */}
       <section id="ohne-auto" className="section-pad-sm bg-cream-50 scroll-mt-16" aria-labelledby="ohne-auto-heading">
-        <div className="container-site max-w-3xl">
+        <div className="container-site grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div>
           <h2 id="ohne-auto-heading" className="font-display text-display-sm text-forest-900 mb-3">
             Ausflüge ohne Auto
           </h2>
@@ -1075,6 +1126,16 @@ export default function AusflugszielePage() {
               </span>
             </li>
           </ul>
+          </div>
+          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
+            <Image
+              src="/images/haus28/gallery/haus_28_250523_165.webp"
+              alt="HAUS28 mitten im Wald am Büchelstein – Startpunkt der Rundwanderung Nr. 54"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </div>
         </div>
       </section>
 
@@ -1092,7 +1153,17 @@ export default function AusflugszielePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {seasons.map((s) => (
-              <div key={s.season} className={`rounded-2xl border p-5 flex flex-col ${s.color}`}>
+              <div key={s.season} className={`rounded-2xl border overflow-hidden flex flex-col ${s.color}`}>
+                <div className="relative aspect-[16/10]">
+                  <Image
+                    src={s.image.src}
+                    alt={s.image.alt}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  />
+                </div>
+                <div className="p-5 flex flex-col flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xl" aria-hidden="true">{s.emoji}</span>
                   <h3 className="font-display text-lg text-forest-900">{s.season}</h3>
@@ -1113,6 +1184,7 @@ export default function AusflugszielePage() {
                   {s.cta.label}
                   <IconArrowRight size={12} />
                 </Link>
+                </div>
               </div>
             ))}
           </div>
