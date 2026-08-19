@@ -169,7 +169,7 @@ export default function BuchenOverviewContent({ locale }: { locale: Locale }) {
           <div className="mt-6 p-4 rounded-2xl bg-forest-900/5 border border-forest-200">
             <p className="font-body text-sm text-forest-700">
               <strong className="font-semibold">{t.groupHint.strong}</strong>{t.groupHint.text}
-              <Link href={localizeHref("/kontakt", locale)} className="text-gold-600 underline underline-offset-2 hover:text-gold-700">
+              <Link href={localizeHref("/schoenblick/gruppen", locale)} className="text-gold-600 underline underline-offset-2 hover:text-gold-700">
                 {t.groupHint.link}
               </Link>
             </p>

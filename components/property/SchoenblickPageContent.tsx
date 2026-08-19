@@ -151,14 +151,17 @@ export default function SchoenblickPageContent({ locale }: { locale: Locale }) {
             ))}
           </div>
 
-          {/* Group booking hint */}
-          <div className="mt-8 p-5 rounded-2xl bg-forest-900/5 border border-forest-200">
-            <p className="font-body text-sm text-forest-700">
-              <strong className="font-semibold">{t.groupStrong}</strong>{t.groupText}{" "}
-              <Link href={localizeHref("/kontakt", locale)} className="text-gold-600 underline underline-offset-2 hover:text-gold-700">
-                {t.groupCta}
-              </Link>
+          {/* Group booking teaser → /schoenblick/gruppen */}
+          <div className="mt-8 p-6 rounded-2xl bg-forest-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <p className="font-body text-sm text-cream-50/85 max-w-xl">
+              <strong className="font-semibold text-cream-50">{t.groupStrong}</strong>{t.groupText}
             </p>
+            <Link
+              href={localizeHref("/schoenblick/gruppen", locale)}
+              className="flex-none inline-flex items-center gap-2 px-5 py-2.5 bg-gold-500 text-forest-900 font-body text-sm font-bold rounded-full hover:bg-gold-400 transition-colors whitespace-nowrap"
+            >
+              {t.groupCta}
+            </Link>
           </div>
         </div>
       </section>

@@ -126,6 +126,31 @@ export default function CtaSection() {
             </Link>
           </motion.div>
         </div>
+
+        {/* Gruppen-Banner: bis zu 20 Personen im Haus Schönblick */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-4xl mx-auto mt-6"
+        >
+          <Link
+            href={localizeHref("/schoenblick/gruppen", locale)}
+            className="group flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-gold-500/30 bg-cream-50/5 hover:bg-cream-50/10 hover:border-gold-500/50 transition-all p-6"
+          >
+            <div>
+              <p className="font-body text-xs tracking-[0.12em] uppercase text-gold-300/80 mb-1">
+                {t.groupTag}
+              </p>
+              <p className="font-display text-xl text-cream-50 mb-1">{t.groupHeading}</p>
+              <p className="font-body text-sm text-cream-50/60">{t.groupText}</p>
+            </div>
+            <span className="flex-none inline-flex items-center gap-2 font-body text-sm text-gold-300 group-hover:gap-3 transition-all whitespace-nowrap">
+              {t.groupCta}
+              <IconArrowRight size={15} />
+            </span>
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

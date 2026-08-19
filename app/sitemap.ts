@@ -38,6 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...entries("/haus28", "weekly", 0.9),
     ...entries("/schoenblick", "weekly", 0.9),
     ...entries("/buchen", "weekly", 0.8),
+    ...entries("/schoenblick/gruppen", "weekly", 0.8),
     ...entries("/schoenblick/b5", "weekly", 0.8),
     ...entries("/schoenblick/b6", "weekly", 0.8),
     ...entries("/schoenblick/b7", "weekly", 0.8),

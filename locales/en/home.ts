@@ -97,6 +97,10 @@ const home = {
     discover: "Explore",
     bookHaus28: "Book HAUS28 now",
     bookSchoenblick: "Book Schönblick",
+    groupTag: "Groups up to 20 guests",
+    groupHeading: "Travelling with the whole group?",
+    groupText: "Several apartments at Haus Schönblick in a single booking – one date range, one payment.",
+    groupCta: "Go to group booking",
   },
 };
 

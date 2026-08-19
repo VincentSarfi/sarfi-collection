@@ -246,8 +246,8 @@ const booking = {
     book: "Book",
     moreInfoPre: "More info: ",
     moreInfoLink: (name: string) => `view ${name} →`,
-    groupPre: "Booking several apartments for a group? ",
-    groupLink: "Send an enquiry",
+    groupPre: "More than 4 of you? Book several apartments for up to 20 guests: ",
+    groupLink: "Go to group booking →",
     headerKicker: (id: string) => `Haus Schönblick · Apartment ${id}`,
     bookTitle: (name: string) => ({ plain: "Book ", gold: name }),
     headerMeta: (subtitle: string, maxGuests: number, priceFrom: number) =>
@@ -280,8 +280,8 @@ const booking = {
     bookH1: (name: string) => ({ plain: "Book ", gold: name }),
     groupHint: {
       strong: "For groups:",
-      text: " Book several apartments at the same time – ideal for family celebrations or company retreats. ",
-      link: "Send an enquiry →",
+      text: " Book several apartments for up to 20 guests in a single booking – ideal for family celebrations or company retreats. ",
+      link: "Go to group booking →",
     },
     overview: {
       crumb: "Choose accommodation",
@@ -311,6 +311,62 @@ const booking = {
         { title: "No fees", text: "Cheaper than platforms" },
       ],
     },
+  },
+
+  // ── Group booking Haus Schönblick ───────────────────────────────────────────
+  group: {
+    kicker: "Haus Schönblick · Group booking",
+    heading: "Several apartments, one booking",
+    sub: "Up to 20 guests across 5 apartments under one roof – one date range, one payment, everything confirmed.",
+    guestsLabel: "Guests",
+    guestsHint: (cap: number) => `up to ${cap} guests`,
+    datesHeading: "1. Choose your dates",
+    datesHint: "Only days with enough free apartments for your group size are shown as available.",
+    aptsHeading: "2. Choose apartments",
+    aptsAvailable: (n: number) => `${n} apartment${n === 1 ? "" : "s"} free for these dates`,
+    aptsNoneAvailable: "Not enough apartments are free for the selected dates. Please choose different dates.",
+    recommended: "Recommended combination",
+    recommendedApplied: "Cheapest suitable combination pre-selected – adjust as you like.",
+    capacity: (used: number, cap: number) => `Room for ${cap} – ${used} guests selected`,
+    capacityShort: (n: number) => `up to ${n} guests`,
+    tooFewCapacity: (missing: number) => `Still missing room for ${missing} guest${missing === 1 ? "" : "s"} – add another apartment.`,
+    occupancyLine: (guests: number) => `${guests} guest${guests === 1 ? "" : "s"}`,
+    perApartment: "Price per apartment",
+    inclCleaning: "incl. cleaning",
+    nightsSummary: (nights: number) => `${nights} night${nights === 1 ? "" : "s"}`,
+    totalLabel: "Total for the group",
+    continueButton: "Continue to booking",
+    formHeading: "3. Your details",
+    payHeading: "4. Payment",
+    summaryApartments: "Apartments",
+    benefit1: "One host, one invoice",
+    benefit2: "No platform fees – book direct",
+    benefit3: "All apartments in the same house",
+    confirmedHeading: "Group booking confirmed!",
+    confirmedText: "All apartments are reserved for you. A confirmation email is on its way.",
+    errorBlockedApt: "One of the selected apartments was just booked by someone else. Please pick a different combination.",
+  },
+
+  // ── Group landing page (/schoenblick/gruppen) ──────────────────────────────
+  groupPage: {
+    home: "Home",
+    breadcrumb: "Group booking",
+    h1: "Room for the whole group – under one roof",
+    intro: (cap: number) =>
+      `Up to ${cap} guests across five holiday apartments at Haus Schönblick, in the heart of the Bavarian Forest. Pick your dates and apartments, pay once – done. Ideal for family celebrations, club trips and company retreats.`,
+    heroAlt: "Haus Schönblick – group accommodation in the Bavarian Forest",
+    combosHeading: "Popular combinations",
+    combosSub:
+      "For orientation – in the booking calendar you build your own combination and see the live total for your dates.",
+    combos: [
+      { ids: ["b5", "b6"], label: "2 families", desc: "Two apartments side by side – travel together, stay separately." },
+      { ids: ["b5", "b6", "b7"], label: "Friends up to 12", desc: "Three apartments with plenty of shared space outside." },
+      { ids: ["b5", "b6", "b7", "b8", "a2"], label: "The whole house", desc: "All five apartments exclusively – maximum privacy for your event." },
+    ],
+    apartmentsWord: "apartments",
+    fromPre: "from ",
+    perNight: " / night",
+    allApartmentsHeading: "The five apartments at a glance",
   },
 };
 

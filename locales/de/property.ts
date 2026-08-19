@@ -273,8 +273,8 @@ const property = {
     book: "Buchen",
     groupStrong: "Für Gruppen:",
     groupText:
-      " Mehrere Apartments gleichzeitig buchen und den ganzen Hausbereich genießen – ideal für Familienfeiern, Geburtstage oder Firmenausflüge.",
-    groupCta: "Anfrage stellen →",
+      " Mehrere Apartments für bis zu 20 Personen direkt online buchen – ein Zeitraum, eine Zahlung. Ideal für Familienfeiern, Geburtstage oder Firmenausflüge.",
+    groupCta: "Gruppenbuchung starten →",
     locationDescription:
       "Haus Schönblick liegt im Ortsteil Langfurth bei Schöfweg, mitten im Bayerischen Wald. Wanderwege beginnen direkt vor der Haustür. Die beliebte Westernstadt Pullman City ist nur 15 Minuten entfernt – ideal für Familien mit Kindern. Die Region bietet Natur pur, klare Luft und echte Erholung zu jeder Jahreszeit.",
     attractions: [

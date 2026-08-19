@@ -35,6 +35,7 @@ const translatedRoutes = new Set([
   "/schoenblick/b7/buchen",
   "/schoenblick/b8/buchen",
   "/schoenblick/buchen",
+  "/schoenblick/gruppen",
   "/buchen",
   "/kontakt",
   "/ueber-uns",

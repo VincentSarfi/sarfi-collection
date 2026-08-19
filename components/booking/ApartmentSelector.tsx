@@ -155,7 +155,7 @@ export default function ApartmentSelector({ apartments }: ApartmentSelectorProps
         {!selectedId && (
           <p className="mt-4 font-body text-sm text-forest-500">
             {t.selector.groupPre}
-            <Link href={localizeHref("/kontakt", locale)} className="text-gold-600 underline underline-offset-2">
+            <Link href={localizeHref("/schoenblick/gruppen", locale)} className="text-gold-600 underline underline-offset-2">
               {t.selector.groupLink}
             </Link>
           </p>

@@ -238,8 +238,8 @@ const booking = {
     book: "Buchen",
     moreInfoPre: "Mehr Infos zu ",
     moreInfoLink: (name: string) => `${name} ansehen →`,
-    groupPre: "Für Gruppenbuchungen mehrerer Apartments: ",
-    groupLink: "Anfrage stellen",
+    groupPre: "Ihr seid mehr als 4? Mehrere Apartments für bis zu 20 Personen: ",
+    groupLink: "Zur Gruppenbuchung →",
     headerKicker: (id: string) => `Haus Schönblick · Apartment ${id}`,
     bookTitle: (name: string) => ({ plain: `${name} `, gold: "buchen" }),
     headerMeta: (subtitle: string, maxGuests: number, priceFrom: number) =>
@@ -272,8 +272,8 @@ const booking = {
     bookH1: (name: string) => ({ plain: `${name} `, gold: "buchen" }),
     groupHint: {
       strong: "Für Gruppen:",
-      text: " Mehrere Apartments gleichzeitig buchen – ideal für Familienfeiern oder Firmenausflüge. ",
-      link: "Anfrage stellen →",
+      text: " Mehrere Apartments für bis zu 20 Personen in einer Buchung – ideal für Familienfeiern oder Firmenausflüge. ",
+      link: "Zur Gruppenbuchung →",
     },
     overview: {
       crumb: "Unterkunft wählen",
@@ -303,6 +303,62 @@ const booking = {
         { title: "Keine Gebühren", text: "Günstiger als Plattformen" },
       ],
     },
+  },
+
+  // ── Gruppenbuchung Haus Schönblick ──────────────────────────────────────────
+  group: {
+    kicker: "Haus Schönblick · Gruppenbuchung",
+    heading: "Mehrere Apartments, eine Buchung",
+    sub: "Bis zu 20 Personen in 5 Apartments unter einem Dach – ein Zeitraum, eine Zahlung, alles bestätigt.",
+    guestsLabel: "Personen",
+    guestsHint: (cap: number) => `bis zu ${cap} Personen`,
+    datesHeading: "1. Zeitraum wählen",
+    datesHint: "Angezeigt werden nur Tage, an denen genug Apartments für deine Gruppengröße frei sind.",
+    aptsHeading: "2. Apartments wählen",
+    aptsAvailable: (n: number) => `${n} Apartment${n === 1 ? "" : "s"} im Zeitraum frei`,
+    aptsNoneAvailable: "Im gewählten Zeitraum sind nicht genug Apartments frei. Bitte wähle andere Daten.",
+    recommended: "Empfohlene Kombination",
+    recommendedApplied: "Günstigste passende Kombination vorausgewählt – du kannst sie anpassen.",
+    capacity: (used: number, cap: number) => `Platz für ${cap} – ${used} Personen gewählt`,
+    capacityShort: (n: number) => `bis ${n} Pers.`,
+    tooFewCapacity: (missing: number) => `Es fehlen noch Plätze für ${missing} Person${missing === 1 ? "" : "en"} – wähle ein weiteres Apartment.`,
+    occupancyLine: (guests: number) => `${guests} ${guests === 1 ? "Gast" : "Gäste"}`,
+    perApartment: "Preis je Apartment",
+    inclCleaning: "inkl. Reinigung",
+    nightsSummary: (nights: number) => `${nights} ${nights === 1 ? "Nacht" : "Nächte"}`,
+    totalLabel: "Gesamtpreis für die Gruppe",
+    continueButton: "Weiter zur Buchung",
+    formHeading: "3. Deine Daten",
+    payHeading: "4. Zahlung",
+    summaryApartments: "Apartments",
+    benefit1: "Ein Ansprechpartner, eine Rechnung",
+    benefit2: "Keine Portalgebühren – direkt beim Gastgeber",
+    benefit3: "Alle Apartments im selben Haus",
+    confirmedHeading: "Gruppenbuchung bestätigt!",
+    confirmedText: "Alle Apartments sind für euch reserviert. Du erhältst in Kürze eine Bestätigung per E-Mail.",
+    errorBlockedApt: "Eines der gewählten Apartments wurde soeben anderweitig gebucht. Bitte wähle eine andere Kombination.",
+  },
+
+  // ── Gruppen-Landingpage (/schoenblick/gruppen) ─────────────────────────────
+  groupPage: {
+    home: "Startseite",
+    breadcrumb: "Gruppenbuchung",
+    h1: "Platz für die ganze Gruppe – unter einem Dach",
+    intro: (cap: number) =>
+      `Bis zu ${cap} Personen in fünf Ferienwohnungen im Haus Schönblick, mitten im Bayerischen Wald. Wähle Zeitraum und Apartments, zahle einmal – fertig. Ideal für Familienfeiern, Vereinsausflüge und Firmen-Retreats.`,
+    heroAlt: "Haus Schönblick – Gruppenunterkunft im Bayerischen Wald",
+    combosHeading: "Beliebte Kombinationen",
+    combosSub:
+      "Zur Orientierung – im Buchungskalender stellst du dir deine Kombination frei zusammen und siehst den tagesaktuellen Gesamtpreis.",
+    combos: [
+      { ids: ["b5", "b6"], label: "2 Familien", desc: "Zwei Apartments nebeneinander – gemeinsam anreisen, getrennt wohnen." },
+      { ids: ["b5", "b6", "b7"], label: "Freundesgruppe bis 12", desc: "Drei Apartments mit viel Gemeinschaftsfläche vor dem Haus." },
+      { ids: ["b5", "b6", "b7", "b8", "a2"], label: "Das ganze Haus", desc: "Alle fünf Apartments exklusiv – maximale Privatsphäre für dein Event." },
+    ],
+    apartmentsWord: "Apartments",
+    fromPre: "ab ",
+    perNight: " / Nacht",
+    allApartmentsHeading: "Die fünf Apartments im Überblick",
   },
 };
 

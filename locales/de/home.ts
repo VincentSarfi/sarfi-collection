@@ -97,6 +97,10 @@ const home = {
     discover: "Entdecken",
     bookHaus28: "HAUS28 jetzt buchen",
     bookSchoenblick: "Schönblick buchen",
+    groupTag: "Gruppen bis 20 Personen",
+    groupHeading: "Mit der ganzen Gruppe anreisen?",
+    groupText: "Mehrere Apartments im Haus Schönblick in einer Buchung – ein Zeitraum, eine Zahlung.",
+    groupCta: "Zur Gruppenbuchung",
   },
 };
 
