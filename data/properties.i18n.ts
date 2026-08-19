@@ -319,7 +319,7 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
         de: "Wo genau liegt HAUS28 am Büchelstein?",
         question: "Where exactly is HAUS28 at the Büchelstein?",
         answer:
-          "HAUS28 is located at Büchelstein 28 near Grattersdorf in the Bavarian Forest – right at the foot of the Büchelstein (831 m), surrounded by forest and nature. The Büchelstein summit with its panoramic views is just a few minutes away on foot.",
+          "HAUS28 is located at Büchelstein 28 near Grattersdorf in the Bavarian Forest – right at the foot of the Büchelstein (832 m), surrounded by forest and nature. The Büchelstein summit with its panoramic views is just a few minutes away on foot.",
       },
       {
         de: "Gibt es einen Whirlpool – und ist er ganzjährig nutzbar?",

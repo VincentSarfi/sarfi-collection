@@ -180,7 +180,7 @@ const property = {
     excursions: {
       eyebrow: "Direkt ab HAUS28",
       heading: "Wanderung zum Büchelstein & weitere Ausflüge",
-      text: "Die Büchelstein-Rundwanderung startet direkt vor der Haustür – über die historische Wallfahrtskapelle Rastbuche (18. Jh.) auf 831 m Höhe. Alle Ausflugstipps für die Region auf einen Blick.",
+      text: "Die Büchelstein-Rundwanderung startet direkt vor der Haustür – über die historische Wallfahrtskapelle Rastbuche (18. Jh.) auf 832 m Höhe. Alle Ausflugstipps für die Region auf einen Blick.",
       cta: "Alle Ausflugsziele",
     },
     awards: {

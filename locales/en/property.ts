@@ -180,7 +180,7 @@ const property = {
     excursions: {
       eyebrow: "Right from HAUS28",
       heading: "Hike to the Büchelstein & more day trips",
-      text: "The Büchelstein circular hike starts right outside the front door – past the historic Rastbuche pilgrimage chapel (18th century) at 831 m. All our day-trip tips for the region at a glance.",
+      text: "The Büchelstein circular hike starts right outside the front door – past the historic Rastbuche pilgrimage chapel (18th century) at 832 m. All our day-trip tips for the region at a glance.",
       cta: "All things to do",
     },
     awards: {

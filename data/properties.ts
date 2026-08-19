@@ -166,7 +166,7 @@ export const haus28: PropertyData = {
     {
       question: "Wo genau liegt HAUS28 am Büchelstein?",
       answer:
-        "HAUS28 liegt an der Adresse Büchelstein 28 bei Grattersdorf im Bayerischen Wald. Direkt am Fuße des Büchelsteins (831 m), umgeben von Wald und Natur. Der Büchelstein-Gipfel mit Panoramablick ist in wenigen Minuten zu Fuß erreichbar.",
+        "HAUS28 liegt an der Adresse Büchelstein 28 bei Grattersdorf im Bayerischen Wald. Direkt am Fuße des Büchelsteins (832 m), umgeben von Wald und Natur. Der Büchelstein-Gipfel mit Panoramablick ist in wenigen Minuten zu Fuß erreichbar.",
     },
     {
       question: "Gibt es einen Whirlpool – und ist er ganzjährig nutzbar?",
