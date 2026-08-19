@@ -205,6 +205,7 @@ const booking = {
     legendBooked: "Booked",
     ariaBooked: " (booked)",
     ariaUnavailable: " (unavailable)",
+    bookableUntil: (date: string) => `Bookable until ${date}`,
   },
 
   // ── PaymentStep (Stripe) ──────────────────────────────────────────────────

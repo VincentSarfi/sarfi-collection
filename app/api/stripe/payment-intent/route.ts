@@ -6,6 +6,7 @@ import { rateLimit, getClientIp } from '@/lib/rate-limit'
 import { sendCheckoutStartedNotification } from '@/lib/notify'
 import { findConfigBySmoobuId, computeExpectedPrice } from '@/lib/pricing'
 import { verifyTurnstile } from '@/lib/turnstile'
+import { bookingWindowEnd } from '@/lib/booking-window'
 
 
 export interface CreatePaymentIntentRequest {
@@ -83,6 +84,16 @@ export async function POST(request: NextRequest) {
   const todayBerlin = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Berlin' }).format(new Date())
   if (checkIn < todayBerlin) {
     return NextResponse.json({ error: 'Anreisedatum liegt in der Vergangenheit' }, { status: 422 })
+  }
+  // Jenseits des Buchungsfensters liefert PriceLabs keine Raten mehr; die
+  // Preisprüfung fiele auf priceFrom zurück und würde zu billige Buchungen
+  // durchlassen. Der komplette Aufenthalt muss deshalb im Fenster liegen.
+  const windowEnd = bookingWindowEnd(todayBerlin)
+  if (checkOut > windowEnd) {
+    return NextResponse.json(
+      { error: 'Buchungen sind maximal 12 Monate im Voraus möglich. Bitte wähle einen früheren Zeitraum.' },
+      { status: 422 },
+    )
   }
   if (!EMAIL_RE.test(email)) {
     return NextResponse.json({ error: 'Ungültige E-Mail-Adresse' }, { status: 422 })

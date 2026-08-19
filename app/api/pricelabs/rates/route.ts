@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getPricingMap } from '@/lib/pricelabs'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
 import { findConfigBySmoobuId } from '@/lib/pricing'
+import { bookingWindowEnd } from '@/lib/booking-window'
 
 /**
  * GET /api/pricelabs/rates?listingId=2610828&startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
@@ -29,8 +30,16 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unknown listingId' }, { status: 400 })
   }
 
+  // Jenseits des Buchungsfensters liefert PriceLabs ohnehin keine belastbaren
+  // Raten – gar nicht erst abfragen (siehe lib/booking-window).
+  const windowEnd = bookingWindowEnd()
+  const cappedEnd = endDate > windowEnd ? windowEnd : endDate
+  if (startDate > cappedEnd) {
+    return NextResponse.json({}, { status: 200 })
+  }
+
   try {
-    const map = await getPricingMap(listingId, startDate, endDate)
+    const map = await getPricingMap(listingId, startDate, cappedEnd)
     return NextResponse.json(map, {
       headers: { 'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=300' },
     })

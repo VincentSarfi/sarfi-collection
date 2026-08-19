@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { isValidDate, isValidEmail } from '@/lib/validate'
+import { bookingWindowEnd } from '@/lib/booking-window'
 import { createBooking, verifyAvailability } from '@/lib/smoobu'
 import type { BookingRequest } from '@/lib/smoobu'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
@@ -108,6 +109,13 @@ export async function POST(request: NextRequest) {
   if (req.checkIn < todayBerlin) {
     return NextResponse.json(
       { error: 'Anreisedatum liegt in der Vergangenheit' },
+      { status: 422 },
+    )
+  }
+  // Buchungsfenster (siehe lib/booking-window) – wie in /api/stripe/payment-intent
+  if (req.checkOut > bookingWindowEnd(todayBerlin)) {
+    return NextResponse.json(
+      { error: 'Buchungen sind maximal 12 Monate im Voraus möglich.' },
       { status: 422 },
     )
   }

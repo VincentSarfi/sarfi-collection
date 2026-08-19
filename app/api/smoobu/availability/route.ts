@@ -3,13 +3,14 @@ import { getAvailability } from '@/lib/smoobu'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
 import { findConfigBySmoobuId } from '@/lib/pricing'
 import { DATE_RE } from '@/lib/validate'
+import { bookingWindowEnd } from '@/lib/booking-window'
 
 /**
  * GET /api/smoobu/availability
  * Query params:
  *   propertyId  – Smoobu apartment ID
  *   startDate   – YYYY-MM-DD (defaults to today)
- *   endDate     – YYYY-MM-DD (defaults to today + 365 days)
+ *   endDate     – YYYY-MM-DD (Vorgabe und Obergrenze: Ende des Buchungsfensters)
  */
 export async function GET(request: NextRequest) {
   // Rate limit: max 60 requests per IP per minute (calendar loads multiple months)
@@ -32,13 +33,14 @@ export async function GET(request: NextRequest) {
   }
 
   const today = new Date()
-  const defaultEnd = new Date(today)
-  defaultEnd.setFullYear(defaultEnd.getFullYear() + 1)
+  const windowEnd = bookingWindowEnd()
 
   const startDate =
     searchParams.get('startDate') ?? today.toISOString().split('T')[0]
-  const endDate =
-    searchParams.get('endDate') ?? defaultEnd.toISOString().split('T')[0]
+  // Nie über das Buchungsfenster hinaus antworten – sonst zeigt der Kalender
+  // freie Tage, die die Buchungsstrecke später ohnehin ablehnt.
+  const requestedEnd = searchParams.get('endDate') ?? windowEnd
+  const endDate = requestedEnd > windowEnd ? windowEnd : requestedEnd
 
   // Format streng validieren – schützt daysBetween vor Endlos-/Riesenschleifen
   if (!DATE_RE.test(startDate) || !DATE_RE.test(endDate) || startDate >= endDate) {

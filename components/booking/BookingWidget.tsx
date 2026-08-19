@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { Turnstile } from "@marsidev/react-turnstile"
 import BookingCalendar, { toDateKey, fmtShort, fmtLong, type SelectionStep } from "./BookingCalendar"
+import { BOOKING_WINDOW_DAYS, bookingWindowEndDate } from "@/lib/booking-window"
 import PaymentStep from "./PaymentStep"
 import type { AvailabilityMap } from "@/lib/smoobu"
 import type { NightRate } from "@/lib/pricelabs"
@@ -304,7 +305,7 @@ export default function BookingWidget({
       setLoadingAvailability(true)
       const today = new Date()
       const endDate = new Date(today)
-      endDate.setFullYear(today.getFullYear() + 1)
+      endDate.setDate(today.getDate() + BOOKING_WINDOW_DAYS)
       const start = today.toISOString().split("T")[0]
       const end = endDate.toISOString().split("T")[0]
 
@@ -386,6 +387,10 @@ export default function BookingWidget({
   }, [showCalendarOverlay])
 
   // ── Derived data ──
+  // Ende des Buchungsfensters: dahinter gibt es keine dynamischen Raten mehr
+  // (siehe lib/booking-window). Der Kalender endet hier hart.
+  const maxDate = useMemo(() => bookingWindowEndDate(), [])
+
   const blockedDates = useMemo<Set<string>>(() => {
     const s = new Set<string>()
     for (const [date, day] of Object.entries(availabilityMap)) {
@@ -797,6 +802,7 @@ export default function BookingWidget({
                     onDateClick={handleDateClick}
                     onReset={handleReset}
                     priceMap={priceMap}
+                    maxDate={maxDate}
                   />
                 </div>
 
@@ -1132,6 +1138,7 @@ export default function BookingWidget({
                     onDateClick={handleDateClick}
                     onReset={handleReset}
                     priceMap={priceMap}
+                    maxDate={maxDate}
                   />
 
                   {/* Mobile controls below calendar */}

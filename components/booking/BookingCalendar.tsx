@@ -68,6 +68,8 @@ interface BookingCalendarProps {
   onReset: () => void
   /** Nightly prices map: YYYY-MM-DD → EUR (optional, for display) */
   priceMap?: Record<string, number>
+  /** Letzter buchbarer Tag (inklusive) – Ende des Buchungsfensters */
+  maxDate: Date
 }
 
 // ─── Day Classifier ───────────────────────────────────────────────────────────
@@ -82,6 +84,8 @@ type DayClass = {
   isToday: boolean
   isBlocked: boolean
   isPast: boolean
+  /** Liegt hinter dem Buchungsfenster (siehe lib/booking-window) */
+  isBeyondWindow: boolean
 }
 
 function classifyDay(
@@ -94,9 +98,11 @@ function classifyDay(
   selectionStep: SelectionStep,
   minStayMap: Record<string, number>,
   defaultMinStay: number,
+  maxDate: Date,
 ): DayClass {
   const key = toDateKey(day)
   const isPast = day < today && !sameDay(day, today)
+  const isBeyondWindow = day > maxDate
   const isBlocked = blockedDates.has(key)
   const isToday = sameDay(day, today)
   const isCheckIn = !!checkIn && sameDay(day, checkIn)
@@ -120,13 +126,15 @@ function classifyDay(
   }
 
   // Disable logic
-  let disabled = isPast || isBlocked
+  let disabled = isPast || isBlocked || isBeyondWindow
   if (selectionStep === "checkout" && checkIn && day > checkIn && !isPast) {
     const checkInKey = toDateKey(checkIn)
     const minStay = minStayMap[checkInKey] ?? defaultMinStay
     const minCheckout = addDays(checkIn, minStay)
     if (day < minCheckout) {
       disabled = true // Before minimum stay
+    } else if (isBeyondWindow) {
+      disabled = true // Abreise muss ebenfalls im Buchungsfenster liegen
     } else {
       // Als Abreisetag zählt nur, ob alle Nächte [checkIn, day) frei sind.
       // Der Tag selbst darf belegt sein: Er kann Anreisetag der Folgebuchung
@@ -144,7 +152,7 @@ function classifyDay(
     }
   }
 
-  return { disabled, isCheckIn, isCheckOut, isInRange, isRangeStart, isRangeEnd, isToday, isBlocked, isPast }
+  return { disabled, isCheckIn, isCheckOut, isInRange, isRangeStart, isRangeEnd, isToday, isBlocked, isPast, isBeyondWindow }
 }
 
 // ─── Day Styles ───────────────────────────────────────────────────────────────
@@ -189,6 +197,7 @@ interface MonthViewProps {
   blockedDates: Set<string>
   minStayMap: Record<string, number>
   defaultMinStay: number
+  maxDate: Date
   priceMap?: Record<string, number>
   onDateClick: (d: Date) => void
   onDateHover: (d: Date | null) => void
@@ -206,6 +215,7 @@ function MonthView({
   blockedDates,
   minStayMap,
   defaultMinStay,
+  maxDate,
   priceMap,
   onDateClick,
   onDateHover,
@@ -245,7 +255,7 @@ function MonthView({
 
           const cls = classifyDay(
             day, today, checkIn, checkOut, hoverDate,
-            blockedDates, selectionStep, minStayMap, defaultMinStay,
+            blockedDates, selectionStep, minStayMap, defaultMinStay, maxDate,
           )
           const highlight = getRangeHighlight(cls)
           const price = priceMap?.[toDateKey(day)]
@@ -297,6 +307,7 @@ export default function BookingCalendar({
   onDateClick,
   onReset,
   priceMap,
+  maxDate,
 }: BookingCalendarProps) {
   const today = useMemo(() => {
     const d = new Date()
@@ -306,14 +317,22 @@ export default function BookingCalendar({
   const locale = useLocale()
   const t = getDict(locale).booking.calendar
 
-  // Start showing current month
-  const [viewYear, setViewYear] = useState<number>(today.getFullYear())
-  const [viewMonth, setViewMonth] = useState<number>(today.getMonth())
+  // Sichtbarer Monat als fortlaufender Index (Jahr*12+Monat). Ein einzelner
+  // Zähler statt zweier States: so lässt sich in der Update-Funktion hart auf
+  // [aktueller Monat, letzter buchbarer Monat] klemmen – schnelle Klicks oder
+  // Swipes können nicht mehr über das Buchungsfenster hinausrutschen.
+  const monthIndex = (d: Date) => d.getFullYear() * 12 + d.getMonth()
+  const minIndex = monthIndex(today)
+  const maxIndex = monthIndex(maxDate)
+
+  const [viewIndex, setViewIndex] = useState<number>(minIndex)
   const [hoverDate, setHoverDate] = useState<Date | null>(null)
   const [slideDir, setSlideDir] = useState<1 | -1>(1)
 
-  const secondMonth = viewMonth === 11 ? 0 : viewMonth + 1
-  const secondYear = viewMonth === 11 ? viewYear + 1 : viewYear
+  const viewYear = Math.floor(viewIndex / 12)
+  const viewMonth = viewIndex % 12
+  const secondYear = Math.floor((viewIndex + 1) / 12)
+  const secondMonth = (viewIndex + 1) % 12
 
   // Mindestaufenthalt für das aktuell gewählte Anreisedatum (für den Hinweistext)
   const currentMinStay = checkIn
@@ -321,31 +340,20 @@ export default function BookingCalendar({
     : defaultMinStay
 
   const handlePrev = useCallback(() => {
-    const prevDate = new Date(viewYear, viewMonth - 1, 1)
-    if (prevDate < today) return // don't go before current month
     setSlideDir(-1)
-    if (viewMonth === 0) {
-      setViewMonth(11)
-      setViewYear((y) => y - 1)
-    } else {
-      setViewMonth((m) => m - 1)
-    }
-  }, [viewYear, viewMonth, today])
+    setViewIndex((i) => Math.max(i - 1, minIndex))
+  }, [minIndex])
 
   const handleNext = useCallback(() => {
     setSlideDir(1)
-    if (viewMonth === 11) {
-      setViewMonth(0)
-      setViewYear((y) => y + 1)
-    } else {
-      setViewMonth((m) => m + 1)
-    }
-  }, [viewMonth])
+    setViewIndex((i) => Math.min(i + 1, maxIndex))
+  }, [maxIndex])
 
-  // Prevent going back to past months
-  const canGoPrev = useMemo(() => {
-    return new Date(viewYear, viewMonth - 1, 1) >= new Date(today.getFullYear(), today.getMonth(), 1)
-  }, [viewYear, viewMonth, today])
+  // Keine Vergangenheit …
+  const canGoPrev = viewIndex > minIndex
+  // … und nicht über den letzten buchbaren Monat hinaus. Auf Desktop zeigt der
+  // zweite Monat dann bereits nur noch gesperrte Tage – gewollt.
+  const canGoNext = viewIndex < maxIndex
 
   const handleDateClick = useCallback(
     (day: Date) => {
@@ -409,7 +417,8 @@ export default function BookingCalendar({
         <button
           type="button"
           onClick={handleNext}
-          className="w-9 h-9 flex items-center justify-center rounded-full border border-cream-300 text-forest-600 hover:bg-cream-100 transition-colors"
+          disabled={!canGoNext}
+          className="w-9 h-9 flex items-center justify-center rounded-full border border-cream-300 text-forest-600 hover:bg-cream-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           aria-label={t.nextMonth}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
@@ -443,6 +452,7 @@ export default function BookingCalendar({
             blockedDates={blockedDates}
             minStayMap={minStayMap}
             defaultMinStay={defaultMinStay}
+            maxDate={maxDate}
             priceMap={priceMap}
             onDateClick={handleDateClick}
             onDateHover={setHoverDate}
@@ -460,6 +470,7 @@ export default function BookingCalendar({
               blockedDates={blockedDates}
               minStayMap={minStayMap}
               defaultMinStay={defaultMinStay}
+              maxDate={maxDate}
               priceMap={priceMap}
               onDateClick={handleDateClick}
               onDateHover={setHoverDate}
@@ -484,6 +495,7 @@ export default function BookingCalendar({
           </span>
           {t.legendBooked}
         </span>
+        <span className="ml-auto text-forest-400">{t.bookableUntil(fmtLong(maxDate, locale))}</span>
       </div>
     </div>
   )
