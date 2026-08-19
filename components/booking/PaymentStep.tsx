@@ -21,7 +21,7 @@ const numLocale = (locale: Locale): string => (locale === "en" ? "en-GB" : "de-D
 
 // ─── Stripe appearance (matches site design) ─────────────────────────────────
 
-const STRIPE_APPEARANCE = {
+export const STRIPE_APPEARANCE = {
   theme: "stripe" as const,
   variables: {
     colorPrimary: "#1e3d27",

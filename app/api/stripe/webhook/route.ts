@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe, toCents } from '@/lib/stripe'
 import { createBooking, verifyAvailability } from '@/lib/smoobu'
-import { sendBookingNotification, sendGuestConfirmationEmail, toMailLocale } from '@/lib/notify'
+import { sendBookingNotification, sendGuestConfirmationEmail, sendVoucherEmail, toMailLocale } from '@/lib/notify'
+import { voucherCardUrl, voucherValidUntil } from '@/lib/voucher'
 
 /**
  * Stripe webhook – backup handler.
@@ -36,6 +37,11 @@ export async function POST(request: NextRequest) {
   if (event.type === 'payment_intent.succeeded') {
     const pi = event.data.object
     const m  = pi.metadata
+
+    // ── Geschenkgutschein (kein Smoobu, nur Gutschein-Mail) ──
+    if (m.type === 'voucher') {
+      return handleVoucher(pi.id, m)
+    }
 
     // ── Gruppenbuchung (mehrere Apartments, ein PaymentIntent) ──
     if (m.group === '1') {
@@ -168,6 +174,70 @@ export async function POST(request: NextRequest) {
 // Duplikate. Smoobu synchronisiert jede Reservierung als Channel-Manager
 // selbst zu Airbnb/Booking; mehr ist für die Portale nicht nötig.
 type GroupApartmentMeta = { id: string; smoobuId: string; guests: number; total: number }
+
+/**
+ * Bezahlter Gutschein: Gutschein-Mail an den Käufer schicken und den PI als
+ * verschickt markieren. Idempotent über metadata.voucher_sent – Stripe stellt
+ * Webhooks erneut zu, die Mail darf trotzdem nur einmal rausgehen. Schlägt der
+ * Versand fehl, antworten wir 500, damit Stripe erneut zustellt.
+ */
+async function handleVoucher(piId: string, m: Record<string, string>) {
+  if (m.voucher_sent) {
+    console.log(`[webhook] Gutschein-Mail für PI ${piId} bereits verschickt`)
+    return NextResponse.json({ received: true })
+  }
+
+  const value = parseInt(m.voucher_value, 10)
+  const issued = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Berlin' }).format(new Date())
+  const cardUrl = voucherCardUrl({
+    code: m.voucher_code,
+    value,
+    recipient: m.recipient || undefined,
+    message: m.message || undefined,
+    issued,
+  })
+
+  const sent = await sendVoucherEmail({
+    code: m.voucher_code,
+    value,
+    buyerName: m.buyerName,
+    email: m.email,
+    recipient: m.recipient || undefined,
+    message: m.message || undefined,
+    cardUrl,
+    validUntil: voucherValidUntil(),
+    locale: toMailLocale(m.locale),
+  })
+  if (!sent) {
+    // 500 → Stripe-Retry; voucher_sent bleibt ungesetzt.
+    return NextResponse.json({ error: 'Gutschein-Mail fehlgeschlagen' }, { status: 500 })
+  }
+
+  await stripe.paymentIntents.update(piId, {
+    metadata: { ...m, voucher_sent: '1', voucher_issued: issued, redeemed: 'nein' },
+  })
+
+  // Vincent informieren (fire-and-forget wie bei Buchungs-Notifications)
+  sendBookingNotification({
+    apartmentId: 'gutschein',
+    paymentIntentId: piId,
+    propertyName: `GUTSCHEIN ${m.voucher_code}`,
+    checkIn: issued,
+    checkOut: voucherValidUntil(),
+    nights: 0,
+    guests: 1,
+    totalPrice: value,
+    depositAmount: value,
+    firstName: m.buyerName,
+    lastName: '',
+    email: m.email,
+    phone: '',
+    message: `Geschenkgutschein über ${value} € verkauft.${m.recipient ? ` Für: ${m.recipient}.` : ''} Einlösung: Code in Stripe suchen (metadata.voucher_code), nach Verrechnung redeemed=ja setzen.`,
+  }).catch((err) => console.error('[webhook] Gutschein-Notification fehlgeschlagen:', err))
+
+  console.log(`[webhook] Gutschein ${m.voucher_code} (${value} €) für PI ${piId} verschickt`)
+  return NextResponse.json({ received: true })
+}
 
 async function handleGroupBooking(piId: string, m: Record<string, string>) {
   let apartments: GroupApartmentMeta[]

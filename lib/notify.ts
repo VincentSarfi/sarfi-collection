@@ -1083,3 +1083,94 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
     console.error('[notify] Gastbestätigung Fehler:', err)
   }
 }
+
+// ─── Geschenkgutschein ────────────────────────────────────────────────────────
+
+export interface VoucherEmailData {
+  code: string
+  value: number
+  buyerName: string
+  email: string
+  recipient?: string
+  message?: string
+  cardUrl: string
+  validUntil: string
+  locale?: MailLocale
+}
+
+/** Gutschein-Mail an den Käufer (nach bezahltem Voucher-PaymentIntent). */
+export async function sendVoucherEmail(data: VoucherEmailData): Promise<boolean> {
+  const en = data.locale === 'en'
+  const t = en
+    ? {
+        subject: `Your ${data.value} € gift voucher – SARFI Collection`,
+        hello: `Hi ${escapeHtml(data.buyerName)},`,
+        intro: 'thank you for your purchase! Here is your gift voucher – ready to print or forward.',
+        codeLabel: 'Voucher code',
+        valueLabel: 'Value',
+        forLabel: 'For',
+        validLabel: 'Valid until',
+        cta: 'Open & print voucher',
+        redeem: 'How to redeem: book directly at www.sarfi-collection.de or by email and simply mention the voucher code – we deduct the value from the booking total. Partial redemption is possible; any remaining balance stays on the voucher.',
+        legal: 'The voucher is redeemable for all SARFI Collection accommodations and cannot be paid out in cash.',
+      }
+    : {
+        subject: `Dein ${data.value} €-Geschenkgutschein – SARFI Collection`,
+        hello: `Hallo ${escapeHtml(data.buyerName)},`,
+        intro: 'vielen Dank für deinen Kauf! Hier ist dein Geschenkgutschein – fertig zum Ausdrucken oder Weiterleiten.',
+        codeLabel: 'Gutscheincode',
+        valueLabel: 'Wert',
+        forLabel: 'Für',
+        validLabel: 'Gültig bis',
+        cta: 'Gutschein öffnen & drucken',
+        redeem: 'So wird er eingelöst: direkt auf www.sarfi-collection.de oder per E-Mail buchen und den Gutscheincode angeben – wir verrechnen den Wert mit dem Buchungspreis. Teileinlösung ist möglich, ein Restguthaben bleibt bestehen.',
+        legal: 'Der Gutschein gilt für alle Unterkünfte der SARFI Collection und wird nicht in bar ausgezahlt.',
+      }
+
+  const row = (label: string, value: string) => `
+    <tr>
+      <td style="padding:8px 14px;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:#8a9b8e;">${label}</td>
+      <td style="padding:8px 14px;font-size:14px;color:#0b1a10;text-align:right;font-weight:600;">${value}</td>
+    </tr>`
+
+  try {
+    const { error } = await getResend().emails.send({
+      from: 'Sarfi Collection <buchung@sarfi-collection.de>',
+      to: [data.email],
+      subject: t.subject,
+      html: `
+<div style="background:#faf7f0;padding:32px 16px;font-family:'DM Sans',system-ui,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #efe9dc;">
+    <div style="background:#12281a;padding:28px 32px;text-align:center;">
+      <p style="margin:0;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#d9b96c;">SARFI Collection</p>
+      <p style="margin:8px 0 0;font-size:24px;color:#faf7f0;font-family:Georgia,serif;">${en ? 'Gift Voucher' : 'Geschenkgutschein'}</p>
+      <p style="margin:14px 0 0;font-size:40px;color:#faf7f0;font-family:Georgia,serif;">${data.value} €</p>
+    </div>
+    <div style="padding:28px 32px;">
+      <p style="margin:0 0 6px;font-size:15px;color:#0b1a10;">${t.hello}</p>
+      <p style="margin:0 0 20px;font-size:14px;color:#4a5568;line-height:1.6;">${t.intro}</p>
+      <table style="width:100%;border-collapse:collapse;background:#faf7f0;border-radius:12px;overflow:hidden;">
+        ${row(t.codeLabel, `<span style="font-family:monospace;font-size:16px;letter-spacing:0.06em;">${escapeHtml(data.code)}</span>`)}
+        ${row(t.valueLabel, `${data.value} €`)}
+        ${data.recipient ? row(t.forLabel, escapeHtml(data.recipient)) : ''}
+        ${row(t.validLabel, data.validUntil)}
+      </table>
+      <div style="text-align:center;margin:24px 0;">
+        <a href="${data.cardUrl}" style="display:inline-block;background:#d9b96c;color:#12281a;text-decoration:none;font-size:14px;font-weight:600;padding:13px 28px;border-radius:999px;">${t.cta}</a>
+      </div>
+      <p style="margin:0 0 10px;font-size:13px;color:#4a5568;line-height:1.6;">${t.redeem}</p>
+      <p style="margin:0;font-size:12px;color:#8a9b8e;line-height:1.6;">${t.legal}</p>
+    </div>
+  </div>
+</div>`,
+    })
+    if (error) {
+      console.error('[notify] Gutschein-Mail fehlgeschlagen:', error)
+      return false
+    }
+    return true
+  } catch (err) {
+    console.error('[notify] Gutschein-Mail Fehler:', err)
+    return false
+  }
+}
