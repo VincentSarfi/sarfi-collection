@@ -36,7 +36,7 @@ export default async function GutscheinKartePage({
   const validUntil = `31.12.${Number(params.issued.slice(0, 4)) + 3}`;
 
   return (
-    <div className="min-h-screen bg-cream-100 py-10 px-4 print:bg-white print:py-0">
+    <div className="min-h-screen bg-cream-100 pt-24 pb-10 px-4 print:bg-white print:pt-0 print:pb-0">
       {/* Druck-Hinweis (nicht im Ausdruck) */}
       <div className="max-w-xl mx-auto mb-6 flex items-center justify-between print:hidden">
         <p className="font-body text-sm text-forest-600">
