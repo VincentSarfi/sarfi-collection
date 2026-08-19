@@ -1112,7 +1112,7 @@ export async function sendVoucherEmail(data: VoucherEmailData): Promise<boolean>
         validLabel: 'Valid until',
         cta: 'Open & print voucher',
         redeem: 'How to redeem: book directly at www.sarfi-collection.de or by email and simply mention the voucher code – we deduct the value from the booking total. Partial redemption is possible; any remaining balance stays on the voucher.',
-        legal: 'The voucher is redeemable for all SARFI Collection accommodations and cannot be paid out in cash.',
+        legal: 'The voucher is redeemable for all SARFI Collection accommodations and cannot be paid out in cash. As a consumer you may withdraw from this purchase within 14 days (as long as the voucher has not been redeemed) – see our <a href="https://www.sarfi-collection.de/agb#widerruf" style="color:#8a9b8e;">withdrawal policy</a>.',
       }
     : {
         subject: `Dein ${data.value} €-Geschenkgutschein – SARFI Collection`,
@@ -1124,7 +1124,7 @@ export async function sendVoucherEmail(data: VoucherEmailData): Promise<boolean>
         validLabel: 'Gültig bis',
         cta: 'Gutschein öffnen & drucken',
         redeem: 'So wird er eingelöst: direkt auf www.sarfi-collection.de oder per E-Mail buchen und den Gutscheincode angeben – wir verrechnen den Wert mit dem Buchungspreis. Teileinlösung ist möglich, ein Restguthaben bleibt bestehen.',
-        legal: 'Der Gutschein gilt für alle Unterkünfte der SARFI Collection und wird nicht in bar ausgezahlt.',
+        legal: 'Der Gutschein gilt für alle Unterkünfte der SARFI Collection und wird nicht in bar ausgezahlt. Als Verbraucher:in kannst du den Kauf innerhalb von 14 Tagen widerrufen (solange der Gutschein nicht eingelöst wurde) – siehe <a href="https://www.sarfi-collection.de/agb#widerruf" style="color:#8a9b8e;">Widerrufsbelehrung</a>.',
       }
 
   const row = (label: string, value: string) => `

@@ -329,6 +329,83 @@ export default function AgbPage() {
           </p>
         </section>
 
+        {/* § 10 Geschenkgutscheine & Widerrufsbelehrung */}
+        <section id="gutscheine">
+          <h2 className="font-display text-xl text-forest-900 mb-3">
+            § 10 Geschenkgutscheine
+          </h2>
+          <div className="font-body text-sm text-forest-700 leading-relaxed space-y-3">
+            <p>
+              Über www.sarfi-collection.de/gutschein können Wertgutscheine
+              erworben werden. Der Gutschein wird nach Zahlungseingang
+              automatisch per E-Mail zugestellt. Er ist einlösbar für alle
+              Unterkünfte der SARFI Collection, gültig bis zum 31.12. des
+              dritten Jahres nach dem Kauf (gesetzliche Verjährungsfrist,
+              §§ 195, 199 BGB) und nicht gegen Bargeld einlösbar.
+              Teileinlösung ist möglich; ein Restguthaben bleibt bis zum Ende
+              der Gültigkeit bestehen. Zur Einlösung genügt die Angabe des
+              Gutscheincodes bei der Buchung (im Buchungsformular oder per
+              E-Mail an hallo@sarfi-collection.de).
+            </p>
+          </div>
+
+          <h3 className="font-display text-lg text-forest-900 mt-6 mb-3" id="widerruf">
+            Widerrufsbelehrung für den Gutscheinkauf
+          </h3>
+          <div className="font-body text-sm text-forest-700 leading-relaxed space-y-3">
+            <p>
+              <strong>Widerrufsrecht:</strong> Sie haben das Recht, binnen
+              vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu
+              widerrufen. Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag
+              des Vertragsschlusses (Kauf des Gutscheins). Um Ihr
+              Widerrufsrecht auszuüben, müssen Sie uns (Vincent Sarfi, SARFI
+              Collection, E-Mail: hallo@sarfi-collection.de) mittels einer
+              eindeutigen Erklärung (z.&nbsp;B. per E-Mail oder Brief) über
+              Ihren Entschluss informieren, diesen Vertrag zu widerrufen. Sie
+              können dafür das unten stehende Muster-Widerrufsformular
+              verwenden, das jedoch nicht vorgeschrieben ist. Zur Wahrung der
+              Widerrufsfrist reicht es aus, dass Sie die Mitteilung über die
+              Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist
+              absenden.
+            </p>
+            <p>
+              <strong>Folgen des Widerrufs:</strong> Wenn Sie diesen Vertrag
+              widerrufen, haben wir Ihnen alle Zahlungen, die wir von Ihnen
+              erhalten haben, unverzüglich und spätestens binnen vierzehn
+              Tagen ab dem Tag zurückzuzahlen, an dem die Mitteilung über
+              Ihren Widerruf bei uns eingegangen ist. Für die Rückzahlung
+              verwenden wir dasselbe Zahlungsmittel, das Sie bei der
+              ursprünglichen Transaktion eingesetzt haben; in keinem Fall
+              werden Ihnen wegen der Rückzahlung Entgelte berechnet. Das
+              Widerrufsrecht erlischt, wenn der Gutschein vor Ablauf der
+              Widerrufsfrist vollständig eingelöst wurde und Sie dem
+              ausdrücklich zugestimmt haben.
+            </p>
+            <div className="rounded-xl border border-cream-200 bg-cream-50 p-4">
+              <p className="font-semibold mb-2">Muster-Widerrufsformular</p>
+              <p className="text-forest-600">
+                (Wenn Sie den Vertrag widerrufen wollen, füllen Sie bitte
+                dieses Formular aus und senden Sie es zurück.)
+              </p>
+              <p className="mt-2 text-forest-600 whitespace-pre-line">
+                {`An: Vincent Sarfi, SARFI Collection, hallo@sarfi-collection.de
+
+Hiermit widerrufe(n) ich/wir den von mir/uns abgeschlossenen Vertrag über den Kauf des Geschenkgutscheins (Gutscheincode: ______________)
+
+Bestellt am: ______________
+Name des/der Verbraucher(s): ______________
+Anschrift des/der Verbraucher(s): ______________
+Datum, Unterschrift (nur bei Mitteilung auf Papier)`}
+              </p>
+            </div>
+            <p className="text-forest-500">
+              Hinweis: Bei Unterkunftsbuchungen selbst besteht kein
+              gesetzliches Widerrufsrecht (§ 312g Abs. 2 Nr. 9 BGB) – es
+              gelten die Stornierungsbedingungen in § 5.
+            </p>
+          </div>
+        </section>
+
         {/* Contact CTA */}
         <div className="text-center pt-2 pb-8">
           <p className="font-body text-sm text-forest-500 mb-4">
@@ -343,7 +420,7 @@ export default function AgbPage() {
         </div>
 
         <p className="text-xs text-forest-400 pt-4 border-t border-cream-200 font-body">
-          Stand: Mai 2026
+          Stand: August 2026
         </p>
       </div>
     </div>

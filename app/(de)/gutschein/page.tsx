@@ -103,8 +103,9 @@ export default function GutscheinPage() {
         <p className="font-body text-xs text-forest-400 mt-10">
           Fragen zum Gutschein oder lieber klassisch bestellen?{" "}
           <Link href="/kontakt" className="underline hover:text-forest-600">Schreib uns</Link> – wir helfen gern.
-          Es gelten unsere <Link href="/agb" className="underline hover:text-forest-600">AGB</Link>.
-          Keine Barauszahlung; Widerruf innerhalb von 14 Tagen möglich, solange der Gutschein nicht eingelöst wurde.
+          Es gelten unsere <Link href="/agb#gutscheine" className="underline hover:text-forest-600">AGB</Link>;
+          die <Link href="/agb#widerruf" className="underline hover:text-forest-600">Widerrufsbelehrung mit Muster-Widerrufsformular</Link> findest
+          du dort. Keine Barauszahlung.
         </p>
       </div>
     </div>
