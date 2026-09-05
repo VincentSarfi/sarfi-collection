@@ -38,7 +38,7 @@ const securityHeaders = [
       // Styles: own + inline (Tailwind generates inline styles)
       "style-src 'self' 'unsafe-inline'",
       // Images: own + data URIs + Stripe
-      "img-src 'self' data: https://*.stripe.com https://images.unsplash.com",
+      "img-src 'self' data: https://*.stripe.com",
       // Fonts: own origin
       "font-src 'self'",
       // Connect: own API + Stripe + Smoobu + PriceLabs
@@ -129,6 +129,15 @@ const nextConfig: NextConfig = {
         headers: securityHeaders,
       },
       {
+        // Selbst gehostete Schrift für das Stripe-Zahlformular: das Stripe-iframe
+        // (Origin js.stripe.com) lädt die Datei cross-origin → CORS nötig.
+        source: "/fonts/:path*",
+        headers: [
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
         // Vorberechnete Bild-Varianten (scripts/optimize-images): 1 Tag Cache +
         // 7 Tage stale-while-revalidate. Kein `immutable`, weil die Dateinamen
         // nicht content-gehasht sind (Bildtausch behält die URL).
@@ -151,18 +160,9 @@ const nextConfig: NextConfig = {
     loaderFile: "./lib/imageLoader.ts",
     deviceSizes: [640, 828, 1080, 1200, 1920],
     imageSizes: [384],
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "a0.muscache.com",
-        pathname: "/**",
-      },
-    ],
+    // Keine externen Bild-Hosts: alle Bilder liegen unter /public (kein
+    // Drittanbieter-Aufruf beim Seitenbesuch).
+    remotePatterns: [],
     formats: ["image/avif", "image/webp"],
   },
   // i18n prepared – activate when ready

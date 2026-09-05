@@ -53,10 +53,10 @@ export default function ImpressumPage() {
 
           <section>
             <h2 className="font-display text-xl text-forest-900 mb-3">
-              EU-Streitschlichtung
+              Verbraucherstreitbeilegung
             </h2>
             <p className="text-sm leading-relaxed">
-              Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
+              Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen (§ 36 VSBG). Die frühere Online-Streitbeilegungsplattform der EU-Kommission wurde zum 20. Juli 2025 eingestellt.
             </p>
           </section>
 
@@ -64,7 +64,7 @@ export default function ImpressumPage() {
             <h2 className="font-display text-xl text-forest-900 mb-3">Haftungsausschluss</h2>
             <h3 className="font-body font-semibold text-forest-800 mb-2">Haftung für Inhalte</h3>
             <p className="text-sm leading-relaxed">
-              Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
+              Als Diensteanbieter sind wir für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Für fremde Informationen gelten die Haftungsprivilegien der Art. 4 bis 6 der Verordnung (EU) 2022/2065 (Digital Services Act); eine allgemeine Pflicht zur Überwachung übermittelter oder gespeicherter fremder Informationen besteht nach Art. 8 dieser Verordnung nicht. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt.
             </p>
             <h3 className="font-body font-semibold text-forest-800 mb-2 mt-4">Haftung für Links</h3>
             <p className="text-sm leading-relaxed">

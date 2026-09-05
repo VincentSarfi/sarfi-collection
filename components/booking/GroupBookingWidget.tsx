@@ -7,6 +7,7 @@
 // /api/stripe/group-payment-intent mit identischen Funktionen nach.
 
 import { useState, useEffect, useMemo, useRef, useCallback } from "react"
+import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { Turnstile } from "@marsidev/react-turnstile"
 import BookingCalendar, { toDateKey, fmtLong, type SelectionStep } from "./BookingCalendar"
@@ -23,7 +24,7 @@ import {
 import { PROPERTY_CONFIGS, resolveSmoobuId } from "@/config/properties.config"
 import type { AvailabilityMap } from "@/lib/smoobu"
 import type { NightRate } from "@/lib/pricelabs"
-import { getDict } from "@/lib/i18n"
+import { getDict, localizeHref } from "@/lib/i18n"
 import { useLocale } from "@/lib/i18n/LocaleProvider"
 import { IconUsers, IconArrowRight } from "@/components/ui/Icons"
 
@@ -465,6 +466,17 @@ export default function GroupBookingWidget() {
               )}
 
               {errorMsg && <p className="font-body text-sm text-red-600">{errorMsg}</p>}
+
+              {/* Rechtshinweis: AGB-Einbeziehung (§ 305 Abs. 2 BGB) + Datenschutz-Info */}
+              <p className="text-xs font-body text-forest-400 leading-relaxed">
+                {dict.form.legalFull.pre}
+                <Link href={localizeHref("/agb", locale)} className="underline hover:text-forest-700">{dict.form.legalFull.terms}</Link>
+                {dict.form.legalFull.mid}
+                <Link href={localizeHref("/agb#stornierung", locale)} className="underline hover:text-forest-700">{dict.form.legalFull.cancellation}</Link>
+                {dict.form.legalFull.post}
+                <Link href={localizeHref("/datenschutz", locale)} className="underline hover:text-forest-700">{dict.form.legalFull.privacy}</Link>
+                {dict.form.legalFull.end}
+              </p>
 
               <Turnstile
                 siteKey={TURNSTILE_SITE_KEY}

@@ -297,10 +297,16 @@ export default function PaymentStep({
           clientSecret,
           appearance: STRIPE_APPEARANCE,
           locale,
+          // Schrift selbst gehostet (public/fonts) statt Google-Fonts-CSS:
+          // Das Stripe-iframe würde sonst die IP des Gastes ohne Einwilligung
+          // an Google übertragen (LG München I, 3 O 17493/20). Die Datei wird
+          // per CORS-Header (next.config.ts) für js.stripe.com freigegeben.
           fonts: [
             {
-              cssSrc:
-                "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap",
+              family: "DM Sans",
+              src: `url(${typeof window !== "undefined" ? window.location.origin : "https://www.sarfi-collection.de"}/fonts/dm-sans-latin.woff2)`,
+              weight: "400 600",
+              display: "swap",
             },
           ],
         }}

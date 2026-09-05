@@ -96,6 +96,17 @@ export default function AgbPage() {
               begründeten Ausnahmefällen abzulehnen; bereits geleistete
               Zahlungen werden in diesem Fall vollständig erstattet.
             </p>
+            <p>
+              Vor dem Absenden der Buchung werden alle Angaben (Reisezeitraum,
+              Unterkunft, Personenzahl, Preis) in einer Übersicht angezeigt;
+              Eingabefehler können bis dahin jederzeit über die
+              Zurück-Schaltfläche korrigiert werden. Der Vertragstext wird vom
+              Vermieter nicht gesondert gespeichert; die wesentlichen
+              Vertragsdaten erhält der Gast mit der Buchungsbestätigung per
+              E-Mail, die jeweils gültigen AGB sind unter
+              sarfi-collection.de/agb abrufbar. Vertragssprache ist Deutsch;
+              die englische Fassung der Website dient der Information.
+            </p>
           </div>
         </section>
 
@@ -111,9 +122,11 @@ export default function AgbPage() {
               sofern nicht gesondert ausgewiesen.
             </p>
             <p>
-              Die Zahlung erfolgt online per Stripe (Kreditkarte, Debitkarte,
-              Apple Pay oder Google Pay). Der Gast kann bei der Buchung
-              zwischen Vollzahlung und Zahlung in zwei Raten wählen:
+              Die Zahlung erfolgt online über den Zahlungsdienstleister Stripe
+              (Kredit-/Debitkarte, Apple Pay, Google Pay, Klarna sowie
+              weitere im Zahlungsformular angebotene Zahlarten, z.&nbsp;B.
+              PayPal). Der Gast kann bei der Buchung zwischen Vollzahlung und
+              Zahlung in zwei Raten wählen:
             </p>
             <div className="space-y-2">
               <div className="flex items-start gap-3 rounded-xl border border-cream-200 bg-white px-4 py-3.5">
@@ -133,7 +146,24 @@ export default function AgbPage() {
             </div>
             <p>
               Bei Buchungen, die weniger als 14 Tage vor der Anreise erfolgen,
-              ist der Gesamtbetrag sofort in voller Höhe fällig.
+              ist der Gesamtbetrag sofort in voller Höhe fällig. Für die
+              Restzahlung erhält der Gast rechtzeitig einen Zahlungslink per
+              E-Mail. Geht die Restzahlung trotz Erinnerung nicht bis zur
+              Fälligkeit ein, kann der Vermieter nach Setzen einer angemessenen
+              Nachfrist vom Vertrag zurücktreten; die Stornierungsbedingungen
+              nach § 5 gelten entsprechend.
+            </p>
+            <p>
+              Ein etwaiger kommunaler Gästebeitrag (Kurtaxe) ist, sofern die
+              Gemeinde einen solchen erhebt und er nicht bereits im
+              Buchungspreis enthalten ist, vor Ort zu entrichten.
+            </p>
+            <p>
+              Zusatzleistungen während des Aufenthalts (z.&nbsp;B. Late
+              Checkout oder die Verlängerung des Aufenthalts) können über die
+              dafür bereitgestellte Seite gebucht werden. Der Preis wird vor
+              der Zahlung angezeigt und ist sofort fällig; die Leistung ist
+              mit der Zahlung verbindlich gebucht.
             </p>
           </div>
         </section>
@@ -273,10 +303,20 @@ export default function AgbPage() {
           </h2>
           <div className="font-body text-sm text-forest-700 leading-relaxed space-y-3">
             <p>
-              Der Vermieter haftet nicht für Schäden, die durch höhere Gewalt,
-              unvorhersehbare Ereignisse oder Umstände entstehen, die außerhalb
-              seines Einflussbereichs liegen (z. B. Unwetter, Stromausfälle,
-              Bauarbeiten in der Umgebung).
+              Der Vermieter haftet unbeschränkt für Schäden aus der Verletzung
+              des Lebens, des Körpers oder der Gesundheit sowie für Schäden,
+              die auf Vorsatz oder grober Fahrlässigkeit beruhen. Bei leicht
+              fahrlässiger Verletzung wesentlicher Vertragspflichten
+              (Pflichten, deren Erfüllung die ordnungsgemäße Durchführung des
+              Vertrages überhaupt erst ermöglicht) ist die Haftung auf den
+              vorhersehbaren, vertragstypischen Schaden begrenzt. Im Übrigen
+              ist die Haftung für leichte Fahrlässigkeit ausgeschlossen.
+            </p>
+            <p>
+              Der Vermieter haftet insbesondere nicht für Beeinträchtigungen
+              durch höhere Gewalt oder Umstände außerhalb seines
+              Einflussbereichs (z.&nbsp;B. Unwetter, Stromausfälle, Bauarbeiten
+              in der Umgebung), soweit ihn daran kein Verschulden trifft.
             </p>
             <p>
               Der Gast haftet für alle schuldhaft verursachten Schäden an der
@@ -284,10 +324,9 @@ export default function AgbPage() {
               Vermieter unverzüglich zu melden.
             </p>
             <p>
-              Eine Haftung des Vermieters für Wertgegenstände, die in der
-              Unterkunft zurückgelassen oder abhandengekommen sind, ist
-              ausgeschlossen, sofern kein Vorsatz oder grobe Fahrlässigkeit
-              vorliegt.
+              Für Wertgegenstände, die in der Unterkunft zurückgelassen wurden
+              oder abhandengekommen sind, haftet der Vermieter nur nach
+              Maßgabe des vorstehenden Absatzes.
             </p>
           </div>
         </section>
@@ -299,13 +338,18 @@ export default function AgbPage() {
           </h2>
           <div className="font-body text-sm text-forest-700 leading-relaxed space-y-3">
             <p>
-              Es gilt ausschließlich das Recht der Bundesrepublik Deutschland
-              unter Ausschluss des UN-Kaufrechts (CISG).
+              Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss
+              des UN-Kaufrechts (CISG). Gegenüber Verbrauchern mit gewöhnlichem
+              Aufenthalt in einem anderen Staat gilt diese Rechtswahl nur,
+              soweit ihnen dadurch nicht der Schutz zwingender Vorschriften
+              des Rechts ihres Aufenthaltsstaates entzogen wird.
             </p>
             <p>
-              Für Streitigkeiten aus dem Mietverhältnis ist, sofern gesetzlich
-              zulässig, der Sitz des Vermieters (Grattersdorf) als
-              Gerichtsstand vereinbart.
+              Für Verbraucher gilt der gesetzliche Gerichtsstand. Ist der Gast
+              Kaufmann, juristische Person des öffentlichen Rechts oder
+              öffentlich-rechtliches Sondervermögen oder hat er keinen
+              allgemeinen Gerichtsstand in Deutschland, ist Gerichtsstand der
+              Sitz des Vermieters (Grattersdorf, Amtsgericht Deggendorf).
             </p>
             <p>
               Wir sind nicht bereit oder verpflichtet, an
@@ -420,7 +464,7 @@ Datum, Unterschrift (nur bei Mitteilung auf Papier)`}
         </div>
 
         <p className="text-xs text-forest-400 pt-4 border-t border-cream-200 font-body">
-          Stand: August 2026
+          Stand: September 2026
         </p>
       </div>
     </div>

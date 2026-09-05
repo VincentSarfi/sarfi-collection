@@ -1035,10 +1035,12 @@ export default function BookingWidget({
                   )}
                   <p className="text-xs font-body text-forest-400 leading-relaxed">
                     {t.form.legalSidebar.pre}
-                    <Link href={localizeHref("/datenschutz", locale)} className="underline">{t.form.legalSidebar.privacy}</Link>
+                    <Link href={localizeHref("/agb", locale)} className="underline">{t.form.legalSidebar.terms}</Link>
                     {t.form.legalSidebar.mid}
-                    <Link href={localizeHref("/stornierung", locale)} className="underline">{t.form.legalSidebar.cancellation}</Link>
+                    <Link href={localizeHref("/agb#stornierung", locale)} className="underline">{t.form.legalSidebar.cancellation}</Link>
                     {t.form.legalSidebar.post}
+                    <Link href={localizeHref("/datenschutz", locale)} className="underline">{t.form.legalSidebar.privacy}</Link>
+                    {t.form.legalSidebar.end}
                   </p>
                   <Turnstile
                     siteKey={TURNSTILE_SITE_KEY}
@@ -1429,14 +1431,18 @@ export default function BookingWidget({
                     {/* DSGVO note */}
                     <p className="text-xs font-body text-forest-400 leading-relaxed">
                       {t.form.legalFull.pre}
-                      <Link href={localizeHref("/datenschutz", locale)} className="underline hover:text-forest-700">
-                        {t.form.legalFull.privacy}
+                      <Link href={localizeHref("/agb", locale)} className="underline hover:text-forest-700">
+                        {t.form.legalFull.terms}
                       </Link>
                       {t.form.legalFull.mid}
-                      <Link href={localizeHref("/stornierung", locale)} className="underline hover:text-forest-700">
+                      <Link href={localizeHref("/agb#stornierung", locale)} className="underline hover:text-forest-700">
                         {t.form.legalFull.cancellation}
                       </Link>
                       {t.form.legalFull.post}
+                      <Link href={localizeHref("/datenschutz", locale)} className="underline hover:text-forest-700">
+                        {t.form.legalFull.privacy}
+                      </Link>
+                      {t.form.legalFull.end}
                     </p>
 
                     {/* Bot-Schutz (Cloudflare Turnstile) – unsichtbar, sofern keine Interaktion nötig */}

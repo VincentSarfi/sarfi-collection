@@ -91,6 +91,9 @@ export default function DatenschutzPage() {
             <p>
               Wir setzen keine Analyse-, Tracking- oder Marketing-Cookies und keine Webanalyse-Dienste ein. Es kommen ausschließlich technisch notwendige Cookies bzw. vergleichbare Speichertechnologien (z.&nbsp;B. localStorage für den Buchungsvorgang) zum Einsatz, für die nach § 25 Abs. 2 TDDDG keine Einwilligung erforderlich ist. Aus diesem Grund verzichten wir auch auf ein Cookie-Banner.
             </p>
+            <p className="mt-3">
+              Erst wenn Sie im Buchungs- oder Gutscheinvorgang den Zahlungsschritt erreichen, wird das Zahlungsformular unseres Zahlungsdienstleisters Stripe geladen (siehe Abschnitt 7). Stripe setzt dabei eigene Cookies, die ausschließlich der Zahlungsabwicklung und Betrugsprävention dienen und damit für die von Ihnen ausdrücklich gewünschte Zahlung erforderlich sind (§ 25 Abs. 2 Nr. 2 TDDDG). Beim bloßen Besuch der Website werden keine Stripe-Skripte geladen.
+            </p>
           </section>
 
           {/* 5 */}
@@ -103,10 +106,10 @@ export default function DatenschutzPage() {
               <li>Name</li>
               <li>E-Mail-Adresse</li>
               <li>Telefonnummer (optional)</li>
-              <li>Nachrichteninhalt</li>
+              <li>Betreff und Nachrichteninhalt</li>
             </ul>
             <p className="mb-3">
-              Im Zeitpunkt der Absendung der Nachricht werden zudem folgende Daten gespeichert: IP-Adresse des Nutzers sowie Datum und Uhrzeit der Kontaktaufnahme.
+              Beim Absenden wird zudem Ihre IP-Adresse kurzzeitig verarbeitet, um Missbrauch (z.&nbsp;B. massenhaftes Absenden) zu verhindern; sie wird nicht dauerhaft gespeichert und nicht mit der Nachricht verknüpft. Die Nachricht selbst wird uns per E-Mail zugestellt; Datum und Uhrzeit ergeben sich aus dem E-Mail-Eingang.
             </p>
             <p className="mb-3">
               Für die Verarbeitung der Daten wird im Rahmen des Absendevorgangs Ihre Einwilligung eingeholt und auf diese Datenschutzerklärung verwiesen. Alternativ ist eine Kontaktaufnahme über die bereitgestellte E-Mail-Adresse möglich. In diesem Fall werden die mit der E-Mail übermittelten personenbezogenen Daten des Nutzers gespeichert.
@@ -117,12 +120,12 @@ export default function DatenschutzPage() {
 
             <h3 className="font-semibold text-forest-800 mb-2">Bot-Schutz: Cloudflare Turnstile</h3>
             <p className="mb-3">
-              Zum Schutz unseres Kontaktformulars und unserer Buchungsstrecke vor Missbrauch durch Bots setzen wir den Dienst Cloudflare Turnstile der Cloudflare, Inc., 101 Townsend St., San Francisco, CA 94107, USA ein. Turnstile prüft, ob Eingaben von einem Menschen stammen, und verarbeitet dazu technische Informationen (z. B. IP-Adresse, Browser-Merkmale, Interaktionsdaten). Dabei kann eine Übertragung von Daten in die USA stattfinden. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am Schutz unserer Website vor Spam, Missbrauch und automatisierten Angriffen). Weitere Informationen: <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">cloudflare.com/privacypolicy</a>
+              Zum Schutz unseres Kontaktformulars, unserer Buchungsstrecke und der Newsletter-Anmeldung vor Missbrauch durch Bots setzen wir den Dienst Cloudflare Turnstile der Cloudflare, Inc., 101 Townsend St., San Francisco, CA 94107, USA ein. Turnstile prüft, ob Eingaben von einem Menschen stammen, und verarbeitet dazu technische Informationen (z. B. IP-Adresse, Browser-Merkmale, Interaktionsdaten). Das Turnstile-Skript wird erst geladen, wenn Sie mit dem jeweiligen Formular interagieren. Dabei kann eine Übertragung von Daten in die USA stattfinden; Cloudflare ist nach dem EU-US Data Privacy Framework zertifiziert (Art. 45 DSGVO), ergänzend gelten die EU-Standardvertragsklauseln. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am Schutz unserer Website vor Spam, Missbrauch und automatisierten Angriffen). Weitere Informationen: <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">cloudflare.com/privacypolicy</a>
             </p>
 
             <h3 className="font-semibold text-forest-800 mb-2">E-Mail-Versand: Resend</h3>
             <p>
-              Für den technischen Versand von E-Mails (Benachrichtigungen aus dem Kontaktformular sowie Buchungsbestätigungen, siehe Abschnitt 6) nutzen wir den Dienst Resend (Resend, Inc., USA). Dabei werden die zur Zustellung erforderlichen Daten – insbesondere Name, E-Mail-Adresse, Telefonnummer und Nachrichteninhalt – serverseitig an Resend übermittelt. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem zuverlässigen E-Mail-Versand). Resend verarbeitet die Daten als Auftragsverarbeiter gemäß Art. 28 DSGVO. Eine Übermittlung in die USA wird durch den Abschluss der EU-Standardvertragsklauseln abgesichert. Weitere Informationen: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">resend.com/legal/privacy-policy</a>
+              Für den technischen Versand von E-Mails (Benachrichtigungen aus dem Kontaktformular, Buchungsbestätigungen, Zahlungserinnerungen und Gutschein-Mails nach Abschnitt 6 sowie den Newsletter nach Abschnitt 9) nutzen wir den Dienst Resend (Resend, Inc., 2261 Market Street #5039, San Francisco, CA 94114, USA). Dabei werden die zur Zustellung erforderlichen Daten – insbesondere Name, E-Mail-Adresse, Telefonnummer und Nachrichteninhalt – serverseitig an Resend übermittelt. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem zuverlässigen E-Mail-Versand). Resend verarbeitet die Daten als Auftragsverarbeiter gemäß Art. 28 DSGVO. Eine Übermittlung in die USA wird durch den Abschluss der EU-Standardvertragsklauseln abgesichert. Weitere Informationen: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">resend.com/legal/privacy-policy</a>
             </p>
           </section>
 
@@ -136,11 +139,31 @@ export default function DatenschutzPage() {
               <li>Vor- und Nachname</li>
               <li>E-Mail-Adresse</li>
               <li>Telefonnummer</li>
-              <li>Reisedaten (An- und Abreisedatum, Personenzahl)</li>
+              <li>Reisedaten (An- und Abreisedatum, Personenzahl, gewählte Unterkunft)</li>
+              <li>optionale Nachricht (besondere Wünsche, Anreisezeit)</li>
+              <li>gewählte Sprache der Website (für Bestätigungs- und Erinnerungsmails)</li>
               <li>Zahlungsinformationen (verarbeitet durch Stripe – siehe Abschnitt 7)</li>
             </ul>
             <p className="mb-3">
-              Rechtsgrundlage für die Verarbeitung ist Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung bzw. vorvertragliche Maßnahmen).
+              Diese Daten verwenden wir zur Abwicklung der Buchung, für die Buchungsbestätigung, für Erinnerungen an eine offene Restzahlung sowie für die Kommunikation rund um Ihren Aufenthalt (z.&nbsp;B. Anreiseinformationen). Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung bzw. vorvertragliche Maßnahmen).
+            </p>
+            <p className="mb-3">
+              Buchungs- und Zahlungsdaten bewahren wir nach Ende des Aufenthalts auf, solange gesetzliche Aufbewahrungspflichten bestehen (steuer- und handelsrechtlich in der Regel 8 bzw. 10 Jahre, § 147 AO, § 14b UStG) oder Ansprüche aus dem Vertrag geltend gemacht werden können (Art. 6 Abs. 1 lit. c und f DSGVO). Anschließend werden sie gelöscht.
+            </p>
+
+            <h3 className="font-semibold text-forest-800 mb-2">Melderechtliche Pflichten und Gästebeitrag</h3>
+            <p className="mb-3">
+              Gäste ohne deutsche Staatsangehörigkeit müssen bei der Anreise einen Meldeschein nach §§ 29, 30 Bundesmeldegesetz (BMG) ausfüllen und unterschreiben; wir sind verpflichtet, den Ausweis einzusehen. Meldescheine bewahren wir ein Jahr ab Anreise auf und vernichten sie danach innerhalb von drei Monaten (§ 30 Abs. 4 BMG). Soweit die Gemeinde einen Gästebeitrag (Kurtaxe) erhebt, übermitteln wir die dafür erforderlichen Angaben (Aufenthaltsdauer, Personenzahl) an die Gemeinde. Rechtsgrundlage ist jeweils Art. 6 Abs. 1 lit. c DSGVO.
+            </p>
+
+            <h3 className="font-semibold text-forest-800 mb-2">Geschenkgutscheine</h3>
+            <p className="mb-3">
+              Beim Kauf eines Gutscheins über unsere Website verarbeiten wir Ihre E-Mail-Adresse (Zustellung des Gutscheins und des Zahlungsbelegs), den gewählten Betrag sowie optional den Namen der beschenkten Person und eine persönliche Nachricht, die auf dem Gutschein abgedruckt werden. Diese Angaben werden zusammen mit dem Gutscheincode bei unserem Zahlungsdienstleister Stripe (Abschnitt 7) als Zahlungsvorgang gespeichert; ein gesondertes Gutscheinregister führen wir nicht. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO. Die Daten werden bis zum Ablauf der Gutscheingültigkeit und darüber hinaus für die Dauer der gesetzlichen Aufbewahrungsfristen gespeichert.
+            </p>
+
+            <h3 className="font-semibold text-forest-800 mb-2">Rechnungsanforderung und Zusatzleistungen (Late Checkout, Verlängerung)</h3>
+            <p className="mb-3">
+              Über die Seite /rechnung können Sie zu einer Buchung eine Rechnung anfordern. Dazu verarbeiten wir die von Ihnen eingegebenen Rechnungsdaten (Firma, Umsatzsteuer-Identifikationsnummer, Anschrift, E-Mail-Adresse) und stellen die Rechnung als PDF per E-Mail zu. Über die während des Aufenthalts bereitgestellte Seite /late-checkout können Sie einen späteren Check-out oder eine Verlängerung buchen; der Zugriff erfolgt über einen persönlichen Zugangscode Ihrer Buchung. Beide Funktionen werden von unserem eigenen Verwaltungssystem (dashboard.sarfi.group) bereitgestellt, das wie diese Website bei Sliplane auf Servern der Hetzner Online GmbH in Deutschland betrieben wird. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO; für Rechnungsdaten zusätzlich Art. 6 Abs. 1 lit. c DSGVO (§ 14 UStG).
             </p>
 
             <h3 className="font-semibold text-forest-800 mb-2">Channel-Management: Smoobu</h3>
@@ -173,9 +196,13 @@ export default function DatenschutzPage() {
               <li>Zahlungsinformationen (Kartendaten oder Wallet-Daten)</li>
               <li>Buchungsbetrag und Währung</li>
               <li>IP-Adresse und Browser-Informationen</li>
+              <li>bei Buchungen: Buchungskennung, Unterkunft und Reisezeitraum als Verwendungszweck</li>
             </ul>
             <p className="mb-3">
-              Rechtsgrundlage für die Datenübermittlung ist Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung). Stripe verarbeitet Daten ggf. in den USA und ist nach dem EU-US Data Privacy Framework zertifiziert. Weitere Informationen finden Sie unter: <a href="https://stripe.com/de/privacy" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">stripe.com/de/privacy</a>
+              Das Zahlungsformular wird als Stripe-Element direkt in unsere Seite eingebettet; bei Zusatzleistungen (Late Checkout, Verlängerung) werden Sie auf eine von Stripe gehostete Zahlungsseite weitergeleitet. Welche Zahlarten angeboten werden, hängt von Ihrem Gerät und Land ab; neben den nachfolgend beschriebenen Zahlarten können dies z.&nbsp;B. Amazon Pay, EPS, Bancontact, BLIK oder Stripe Link (Speicherung Ihrer Zahlungsdaten bei Stripe für spätere Zahlungen, nur auf Ihren ausdrücklichen Wunsch) sein. Die Schrift des Zahlungsformulars laden wir von unserem eigenen Server; es findet keine Verbindung zu Google Fonts statt.
+            </p>
+            <p className="mb-3">
+              Rechtsgrundlage für die Datenübermittlung ist Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung) sowie Art. 6 Abs. 1 lit. f DSGVO (Betrugsprävention). Stripe verarbeitet Daten ggf. in den USA und ist nach dem EU-US Data Privacy Framework zertifiziert. Weitere Informationen finden Sie unter: <a href="https://stripe.com/de/privacy" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">stripe.com/de/privacy</a>
             </p>
 
             <h3 className="font-semibold text-forest-800 mb-2">Apple Pay</h3>
@@ -223,6 +250,9 @@ export default function DatenschutzPage() {
             <p className="mb-3">
               Daneben verlinken wir für die Routenplanung auf Google Maps (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland). Beim bloßen Besuch unserer Website werden keine Daten an Google übertragen — erst wenn Sie den Link aktiv anklicken, gelten die Datenschutzbestimmungen von Google: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">policies.google.com/privacy</a>
             </p>
+            <p className="mb-3">
+              Gleiches gilt für unsere Links zu WhatsApp (WhatsApp Ireland Ltd.), Instagram (Meta Platforms Ireland Ltd.) und Airbnb (Airbnb Ireland UC): Es handelt sich um einfache Verlinkungen ohne eingebettete Inhalte oder Plugins. Daten werden erst übertragen, wenn Sie den jeweiligen Link anklicken und die Seite des Anbieters aufrufen.
+            </p>
             <p>
               Mehr Informationen zum Umgang mit Nutzerdaten finden Sie in der Datenschutzerklärung der OpenStreetMap Foundation: <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">wiki.osmfoundation.org/wiki/Privacy_Policy</a>
             </p>
@@ -230,15 +260,29 @@ export default function DatenschutzPage() {
 
           {/* 9 */}
           <section>
-            <h2 className="font-display text-xl text-forest-900 mb-3">9. SSL- bzw. TLS-Verschlüsselung</h2>
+            <h2 className="font-display text-xl text-forest-900 mb-3">9. Newsletter</h2>
+            <p className="mb-3">
+              Sie können sich auf unserer Website für unseren Newsletter anmelden. Dazu verarbeiten wir Ihre E-Mail-Adresse sowie den Zeitpunkt der Anmeldung und der Bestätigung. Die Anmeldung erfolgt im Double-Opt-in-Verfahren: Nach Eingabe Ihrer Adresse erhalten Sie eine E-Mail mit einem Bestätigungslink; erst mit Klick auf diesen Link wird Ihre Adresse in unsere Empfängerliste aufgenommen. Ohne Bestätigung wird die Adresse nicht gespeichert. Beim Absenden wird Ihre IP-Adresse kurzzeitig zur Missbrauchsabwehr verarbeitet (siehe Bot-Schutz in Abschnitt 5).
+            </p>
+            <p className="mb-3">
+              Rechtsgrundlage ist Ihre Einwilligung (Art. 6 Abs. 1 lit. a DSGVO, § 7 Abs. 2 Nr. 2 UWG). Sie können den Newsletter jederzeit abbestellen – über den Abmeldelink in jeder Newsletter-E-Mail oder per E-Mail an hallo@sarfi-collection.de. Mit der Abmeldung wird Ihre Adresse aus der Empfängerliste entfernt; die Rechtmäßigkeit der bis dahin erfolgten Verarbeitung bleibt unberührt.
+            </p>
             <p>
-              Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte, wie zum Beispiel Buchungsanfragen oder Anfragen, die Sie an uns als Seitenbetreiber senden, eine SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile des Browsers von „http://" auf „https://" wechselt und an dem Schloss-Symbol in Ihrer Browserzeile. Wenn die SSL- bzw. TLS-Verschlüsselung aktiviert ist, können die Daten, die Sie an uns übermitteln, nicht von Dritten mitgelesen werden.
+              Die Empfängerliste wird bei unserem E-Mail-Dienstleister Resend geführt, der den Newsletter in unserem Auftrag versendet (Auftragsverarbeitung nach Art. 28 DSGVO, siehe Abschnitt 5). Eine Auswertung des Öffnungs- oder Klickverhaltens findet nicht statt.
             </p>
           </section>
 
           {/* 10 */}
           <section>
-            <h2 className="font-display text-xl text-forest-900 mb-3">10. Rechte der betroffenen Person</h2>
+            <h2 className="font-display text-xl text-forest-900 mb-3">10. SSL- bzw. TLS-Verschlüsselung</h2>
+            <p>
+              Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte, wie zum Beispiel Buchungsanfragen oder Anfragen, die Sie an uns als Seitenbetreiber senden, eine SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile des Browsers von „http://" auf „https://" wechselt und an dem Schloss-Symbol in Ihrer Browserzeile. Wenn die SSL- bzw. TLS-Verschlüsselung aktiviert ist, können die Daten, die Sie an uns übermitteln, nicht von Dritten mitgelesen werden.
+            </p>
+          </section>
+
+          {/* 11 */}
+          <section>
+            <h2 className="font-display text-xl text-forest-900 mb-3">11. Rechte der betroffenen Person</h2>
             <p className="mb-3">Werden personenbezogene Daten von Ihnen verarbeitet, sind Sie Betroffener i. S. d. DSGVO und es stehen Ihnen folgende Rechte gegenüber dem Verantwortlichen zu:</p>
 
             <h3 className="font-semibold text-forest-800 mb-1">Auskunftsrecht (Art. 15 DSGVO)</h3>
@@ -272,16 +316,16 @@ export default function DatenschutzPage() {
             </p>
           </section>
 
-          {/* 11 */}
+          {/* 12 */}
           <section>
-            <h2 className="font-display text-xl text-forest-900 mb-3">11. Aktualität und Änderung dieser Datenschutzerklärung</h2>
+            <h2 className="font-display text-xl text-forest-900 mb-3">12. Aktualität und Änderung dieser Datenschutzerklärung</h2>
             <p>
-              Diese Datenschutzerklärung ist aktuell gültig und hat den Stand Juli 2026. Durch die Weiterentwicklung unserer Website und Angebote oder aufgrund geänderter gesetzlicher beziehungsweise behördlicher Vorgaben kann es notwendig werden, diese Datenschutzerklärung zu ändern. Die jeweils aktuelle Datenschutzerklärung kann jederzeit auf der Website unter <strong>www.sarfi-collection.de/datenschutz</strong> von Ihnen abgerufen und ausgedruckt werden.
+              Diese Datenschutzerklärung ist aktuell gültig und hat den Stand September 2026. Durch die Weiterentwicklung unserer Website und Angebote oder aufgrund geänderter gesetzlicher beziehungsweise behördlicher Vorgaben kann es notwendig werden, diese Datenschutzerklärung zu ändern. Die jeweils aktuelle Datenschutzerklärung kann jederzeit auf der Website unter <strong>www.sarfi-collection.de/datenschutz</strong> von Ihnen abgerufen und ausgedruckt werden.
             </p>
           </section>
 
           <p className="text-xs text-forest-400 pt-4 border-t border-cream-200">
-            Stand: Juli 2026
+            Stand: September 2026
           </p>
 
         </div>
