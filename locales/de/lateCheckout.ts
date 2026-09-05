@@ -73,8 +73,8 @@ const lateCheckout = {
     neueAbreise: (datum: string) => `neue Abreise ${datum}`,
     knopf: "Verlängern & bezahlen",
     zahlungsHinweis:
-      "Tagesaktuelle Nachtpreise, inkl. MwSt. · Sichere Zahlung über Stripe. Direkt nach der " +
-      "Zahlung ist deine Verlängerung fest im Kalender eingetragen.",
+      "Tagesaktuelle Nachtpreise, inkl. MwSt. · Sichere Zahlung per Karte, Apple Pay oder " +
+      "Google Pay über Stripe. Direkt nach der Zahlung ist deine Verlängerung fest im Kalender eingetragen.",
   },
 
   zahlungBegonnen: (naechte: number | null) =>

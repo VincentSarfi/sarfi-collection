@@ -73,8 +73,8 @@ const lateCheckout = {
     neueAbreise: (datum: string) => `new departure ${datum}`,
     knopf: "Extend & pay",
     zahlungsHinweis:
-      "Current nightly rates, incl. VAT · Secure payment via Stripe. Your extension is locked " +
-      "into the calendar right after payment.",
+      "Current nightly rates, incl. VAT · Secure payment by card, Apple Pay or Google Pay via " +
+      "Stripe. Your extension is locked into the calendar right after payment.",
   },
 
   zahlungBegonnen: (naechte: number | null) =>
