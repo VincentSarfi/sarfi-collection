@@ -25,6 +25,11 @@ const lateCheckout = {
     erneut: "Erneut versuchen",
   },
 
+  // Objektbewusstes Unterkunftswort: HAUS28 ist ein Haus, alles andere eine
+  // Ferienwohnung — „Zimmer" gibt es bei uns nicht. Das Widget wählt die Form
+  // und schreibt sie am Satzanfang groß.
+  unterkunft: { haus: "das Haus", wohnung: "deine Wohnung" },
+
   lc: {
     gebuchtTitel: "Late Checkout bestätigt",
     gebuchtLabel: "Dein Checkout",
@@ -32,7 +37,8 @@ const lateCheckout = {
     gebuchtText: "Alles erledigt — unser Team ist informiert. Lass dir Zeit und genieße den Morgen.",
     gebuchtHinweis: "Diese Seite gilt als deine Bestätigung — über den QR-Code jederzeit erneut aufrufbar.",
 
-    angebotTitel: "Gute Nachricht — dein Zimmer wird am Abreisetag nicht direkt wieder gebraucht.",
+    angebotTitel: (unterkunft: string) =>
+      `Gute Nachricht — ${unterkunft} wird am Abreisetag nicht direkt wieder gebraucht.`,
     angebotText: (datum: string) =>
       `Verlängere deinen Abreisetag${datum ? ` am ${datum}` : ""} ganz entspannt:`,
     label: "Late Checkout",
@@ -45,8 +51,8 @@ const lateCheckout = {
 
     nichtTitel: "Late Checkout — heute nicht möglich",
     folgebelegung:
-      "An deinem Abreisetag reist bereits der nächste Gast an — das Housekeeping braucht das " +
-      "Zimmer pünktlich. Wir bitten um Verständnis.",
+      "An deinem Abreisetag reist bereits der nächste Gast an — das Housekeeping braucht die " +
+      "Zeit dazwischen. Wir bitten um Verständnis.",
     zuFrueh: (datum: string) =>
       `Ein Late Checkout lässt sich ab dem Vortag deiner Abreise buchen` +
       `${datum ? ` (deine Abreise: ${datum})` : ""}. Schau einfach dann noch einmal vorbei.`,
@@ -62,8 +68,8 @@ const lateCheckout = {
     gebuchtText: "Deine Verlängerung ist fest eingetragen — bleib einfach, alles Weitere übernehmen wir.",
 
     angebotTitel: "Oder gleich ein paar Nächte länger bleiben?",
-    angebotText: (frei: number) =>
-      `Deine Unterkunft ist nach der Abreise noch frei${frei > 1 ? ` — bis zu ${frei} Nächte` : ""}.`,
+    angebotText: (unterkunftGross: string, frei: number) =>
+      `${unterkunftGross} ist nach der Abreise noch frei${frei > 1 ? ` — bis zu ${frei} Nächte` : ""}.`,
     label: "Verlängerung",
     minusAria: "Eine Nacht weniger",
     plusAria: "Eine Nacht mehr",

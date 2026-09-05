@@ -225,6 +225,12 @@ export default function LateCheckoutWidget() {
 
   // ── Karte 1: Late Checkout ──────────────────────────────────────────────
 
+  // HAUS28 ist ein Haus, alles andere eine Ferienwohnung — „Zimmer" gibt es
+  // bei uns nicht. Großform für den Satzanfang.
+  const istHaus = (daten.einheit || '').toUpperCase().includes('HAUS28')
+  const unterkunft = istHaus ? t.unterkunft.haus : t.unterkunft.wohnung
+  const unterkunftGross = unterkunft.charAt(0).toUpperCase() + unterkunft.slice(1)
+
   const lc = (() => {
     if (daten.status === 'bereits_gebucht') {
       return (
@@ -245,7 +251,7 @@ export default function LateCheckoutWidget() {
       return (
         <div className={karte}>
           <Einheit name={daten.einheit} />
-          <h2 className="font-display text-2xl sm:text-3xl text-forest-900 text-balance">{t.lc.angebotTitel}</h2>
+          <h2 className="font-display text-2xl sm:text-3xl text-forest-900 text-balance">{t.lc.angebotTitel(unterkunft)}</h2>
           <p className="font-body text-sm text-forest-600 mt-3">
             {t.lc.angebotText(schoenesDatum(daten.abreise))}
           </p>
@@ -315,7 +321,7 @@ export default function LateCheckoutWidget() {
       <div className={karte}>
         <Einheit name={daten.einheit} />
         <h2 className="font-display text-2xl sm:text-3xl text-forest-900 text-balance">{t.vl.angebotTitel}</h2>
-        <p className="font-body text-sm text-forest-600 mt-3">{t.vl.angebotText(frei)}</p>
+        <p className="font-body text-sm text-forest-600 mt-3">{t.vl.angebotText(unterkunftGross, frei)}</p>
         <div className={preisbox}>
           <p className={label}>{t.vl.label}</p>
           <div className="mt-3 flex items-center justify-center gap-5">

@@ -25,6 +25,11 @@ const lateCheckout = {
     erneut: "Try again",
   },
 
+  // Property-aware wording: HAUS28 is a house, everything else a holiday
+  // apartment — we don't rent "rooms". The widget picks the form and
+  // capitalises it at sentence start.
+  unterkunft: { haus: "the house", wohnung: "your apartment" },
+
   lc: {
     gebuchtTitel: "Late checkout confirmed",
     gebuchtLabel: "Your checkout",
@@ -32,7 +37,8 @@ const lateCheckout = {
     gebuchtText: "All set — our team has been notified. Take your time and enjoy the morning.",
     gebuchtHinweis: "This page serves as your confirmation — reopen it anytime via the QR code.",
 
-    angebotTitel: "Good news — your room isn't needed right away on departure day.",
+    angebotTitel: (unterkunft: string) =>
+      `Good news — ${unterkunft} isn't needed right away on departure day.`,
     angebotText: (datum: string) =>
       `Extend your departure${datum ? ` on ${datum}` : ""} and take it easy:`,
     label: "Late checkout",
@@ -45,7 +51,7 @@ const lateCheckout = {
 
     nichtTitel: "Late checkout — not available today",
     folgebelegung:
-      "The next guest arrives on your departure day — housekeeping needs the room on time. " +
+      "The next guest arrives on your departure day — housekeeping needs the time in between. " +
       "Thank you for understanding.",
     zuFrueh: (datum: string) =>
       `Late checkout can be booked from the day before your departure` +
@@ -62,8 +68,8 @@ const lateCheckout = {
     gebuchtText: "Your extension is locked in — just stay put, we'll take care of the rest.",
 
     angebotTitel: "Or simply stay a few nights longer?",
-    angebotText: (frei: number) =>
-      `Your accommodation is still free after departure${frei > 1 ? ` — up to ${frei} nights` : ""}.`,
+    angebotText: (unterkunftGross: string, frei: number) =>
+      `${unterkunftGross} is still free after departure${frei > 1 ? ` — up to ${frei} nights` : ""}.`,
     label: "Extension",
     minusAria: "One night less",
     plusAria: "One night more",
