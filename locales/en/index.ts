@@ -3,6 +3,7 @@ import booking from "./booking";
 import common from "./common";
 import home from "./home";
 import kontakt from "./kontakt";
+import lateCheckout from "./lateCheckout";
 import property from "./property";
 
 const en = {
@@ -11,6 +12,7 @@ const en = {
   common,
   home,
   kontakt,
+  lateCheckout,
   property,
 };
 

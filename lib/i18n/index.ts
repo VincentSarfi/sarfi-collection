@@ -39,6 +39,11 @@ const translatedRoutes = new Set([
   "/buchen",
   "/kontakt",
   "/ueber-uns",
+  // Late-Checkout-Widget (QR-Zielseite): Der Header-Umschalter verliert den
+  // QR-Token (?u=…) — dafür hat das Widget einen eigenen Sprachlink, der ihn
+  // mitnimmt. Der Eintrag hier sorgt, dass der Header wenigstens auf der
+  // richtigen Seite landet statt auf der Startseite.
+  "/late-checkout",
 ]);
 
 export function hasEnglishVersion(path: string): boolean {
