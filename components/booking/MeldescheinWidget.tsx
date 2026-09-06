@@ -3,9 +3,11 @@
 // Digitaler Meldeschein (§ 29 Abs. 5 BMG). Ablauf:
 //   1. Status laden (Token b = Buchungslink, u = QR-Code in der Einheit)
 //   2. Frage: deutsche Staatsangehörigkeit? → ja: fertig (kein Meldeschein nötig)
-//   3. Formular: Pflichtangaben nach § 30 BMG + Ausweisfoto (clientseitig verkleinert)
-//   4. Bestätigung: Stripe SetupIntent mit 3-D Secure (keine Abbuchung) ersetzt
-//      die Unterschrift; das Dashboard prüft das Ergebnis serverseitig.
+//   3. Scan: Pass/Ausweis fotografieren → Dashboard liest die MRZ (OCR) → Formular vorausgefüllt
+//   4. Formular: Pflichtangaben nach § 30 BMG prüfen/ergänzen
+//   5. Bestätigung (nur ab Anreisetag): Apple Pay / Google Pay / Karte mit 3-D Secure
+//      (Stripe SetupIntent, keine Abbuchung) ersetzt die Unterschrift; das Dashboard
+//      prüft das Ergebnis serverseitig.
 // Alle Daten gehen über den Proxy /api/meldeschein ins Dashboard.
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -27,10 +29,16 @@ type StatusData = {
   personen?: number
   gast?: { vorname: string; familienname: string } | null
   stripe?: boolean
+  bestaetigungAb?: string
+  bestaetigungErlaubt?: boolean
   error?: string
 }
 
 type Mitreisender = { name: string; geburtsdatum: string; staat: string }
+type OcrFelder = Partial<{
+  ausweisArt: string; familienname: string; vorname: string; geburtsdatum: string | null
+  staatsangehoerigkeit: string | null; ausstellendesLand: string | null; passnummer: string
+}>
 
 const LAENDER = [
   'AT', 'CH', 'NL', 'BE', 'LU', 'FR', 'IT', 'ES', 'PT', 'GB', 'IE', 'DK', 'SE', 'NO', 'FI', 'IS',
@@ -45,7 +53,7 @@ const cta =
   'px-6 py-4 font-body text-sm font-semibold uppercase tracking-wider text-forest-900 disabled:opacity-60'
 const sekundaer =
   'inline-block w-full rounded-full border border-forest-200 bg-white hover:bg-cream-100 transition-colors ' +
-  'px-6 py-4 font-body text-sm font-semibold uppercase tracking-wider text-forest-800'
+  'px-6 py-4 font-body text-sm font-semibold uppercase tracking-wider text-forest-800 disabled:opacity-60'
 const feld = 'w-full rounded-xl border border-cream-300 bg-white px-4 py-3 font-body text-sm text-forest-900 focus:outline-none focus:ring-2 focus:ring-gold-400'
 const feldFehler = 'border-red-400 ring-2 ring-red-100'
 const lbl = 'block font-body text-xs font-semibold uppercase tracking-wider text-forest-600 mb-1.5'
@@ -59,10 +67,10 @@ function landName(code: string, locale: string): string {
   }
 }
 
-/** Foto clientseitig auf max. 1600 px verkleinern und als JPEG-data-URL liefern. */
+/** Foto clientseitig auf max. 1800 px verkleinern und als JPEG-data-URL liefern. */
 async function fotoVerkleinern(file: File): Promise<string> {
   const bitmap = await createImageBitmap(file)
-  const max = 1600
+  const max = 1800
   const scale = Math.min(1, max / Math.max(bitmap.width, bitmap.height))
   const canvas = document.createElement('canvas')
   canvas.width = Math.round(bitmap.width * scale)
@@ -70,7 +78,12 @@ async function fotoVerkleinern(file: File): Promise<string> {
   const ctx = canvas.getContext('2d')
   if (!ctx) throw new Error('canvas')
   ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
-  return canvas.toDataURL('image/jpeg', 0.85)
+  return canvas.toDataURL('image/jpeg', 0.88)
+}
+
+const LEER = {
+  familienname: '', vorname: '', geburtsdatum: '', staatsangehoerigkeit: '', anschrift: '',
+  ausweisArt: 'Reisepass', passnummer: '', ausstellendesLand: '',
 }
 
 export default function MeldescheinWidget() {
@@ -89,18 +102,20 @@ export default function MeldescheinWidget() {
   }, [b, u])
 
   const [daten, setDaten] = useState<StatusData | null>(null)
-  const [phase, setPhase] = useState<'laden' | 'frage' | 'formular' | 'karte' | 'fertig' | 'fehler'>('laden')
+  const [phase, setPhase] = useState<'laden' | 'frage' | 'scan' | 'formular' | 'karte' | 'fertig' | 'fehler'>('laden')
   const [fehlerText, setFehlerText] = useState('')
   const [sendet, setSendet] = useState(false)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [setupIntentId, setSetupIntentId] = useState<string | null>(null)
   const [karteFehler, setKarteFehler] = useState('')
 
+  // Scan
+  const [scanLaeuft, setScanLaeuft] = useState(false)
+  const [scanHinweis, setScanHinweis] = useState<'' | 'erkannt' | 'unsicher' | 'nichtErkannt'>('')
+  const [fotoVorhanden, setFotoVorhanden] = useState(false)
+
   // Formular
-  const [f, setF] = useState({
-    familienname: '', vorname: '', geburtsdatum: '', staatsangehoerigkeit: '', anschrift: '',
-    ausweisArt: 'Reisepass', passnummer: '', ausstellendesLand: '',
-  })
+  const [f, setF] = useState({ ...LEER })
   const [mitreisende, setMitreisende] = useState<Mitreisender[]>([])
   const [foto, setFoto] = useState<string | null>(null)
   const [fotoName, setFotoName] = useState('')
@@ -131,7 +146,7 @@ export default function MeldescheinWidget() {
       }
       setDaten(d)
       if (d.gast) setF((x) => ({ ...x, familienname: x.familienname || d.gast!.familienname, vorname: x.vorname || d.gast!.vorname }))
-      setPhase(d.status === 'offen' || d.status === 'eingereicht' ? 'frage' : 'fertig')
+      setPhase(d.status === 'offen' ? 'frage' : 'fertig')
     } catch {
       setFehlerText(t.fehler.standard)
       setPhase('fehler')
@@ -160,12 +175,48 @@ export default function MeldescheinWidget() {
     setSendet(false)
   }
 
+  // ── Scan: Foto → OCR → Vorausfüllen ─────────────────────────────────────
+  const scannen = async (file: File | null) => {
+    if (!file || scanLaeuft) return
+    setScanLaeuft(true)
+    setScanHinweis('')
+    try {
+      const dataUrl = await fotoVerkleinern(file)
+      const { d } = await post('ausweis-lesen', { ausweisFoto: dataUrl })
+      if (!d.ok) { setScanHinweis('nichtErkannt'); setScanLaeuft(false); return }
+      setFotoVorhanden(true)
+      setFoto(dataUrl)
+      setFotoName(file.name)
+      if (d.gefunden && d.felder) {
+        const o = d.felder as OcrFelder
+        setF((x) => ({
+          ...x,
+          familienname: o.familienname || x.familienname,
+          vorname: o.vorname || x.vorname,
+          geburtsdatum: o.geburtsdatum || x.geburtsdatum,
+          staatsangehoerigkeit: o.staatsangehoerigkeit && o.staatsangehoerigkeit !== 'DE' ? o.staatsangehoerigkeit : x.staatsangehoerigkeit,
+          ausstellendesLand: o.ausstellendesLand || x.ausstellendesLand,
+          passnummer: o.passnummer || x.passnummer,
+          ausweisArt: o.ausweisArt || x.ausweisArt,
+        }))
+        setScanHinweis(d.sicher ? 'erkannt' : 'unsicher')
+      } else {
+        setScanHinweis('nichtErkannt')
+      }
+      setPhase('formular')
+    } catch {
+      setScanHinweis('nichtErkannt')
+    }
+    setScanLaeuft(false)
+  }
+
   const fotoWaehlen = async (file: File | null) => {
     if (!file) return
     setFotoFehler(false)
     try {
       setFoto(await fotoVerkleinern(file))
       setFotoName(file.name)
+      setFotoVorhanden(false) // neues Foto → wird mit dem Formular geschickt
     } catch {
       setFoto(null); setFotoName(''); setFotoFehler(true)
     }
@@ -181,28 +232,45 @@ export default function MeldescheinWidget() {
     if (!f.staatsangehoerigkeit || f.staatsangehoerigkeit === 'DE') lokal.push('staatsangehoerigkeit')
     if (f.anschrift.trim().length < 8) lokal.push('anschrift')
     if (f.passnummer.trim().length < 4) lokal.push('passnummer')
-    if (!foto) lokal.push('ausweisFoto')
+    if (!foto && !fotoVorhanden) lokal.push('ausweisFoto')
     setFehlerFelder(lokal)
     if (lokal.length || !einwilligung) return
     setSendet(true)
     try {
-      const { d } = await post('einreichen', { ...f, mitreisende: mitreisende.filter((m) => m.name.trim()), ausweisFoto: foto })
+      const body: Record<string, unknown> = { ...f, mitreisende: mitreisende.filter((m) => m.name.trim()) }
+      if (foto && !fotoVorhanden) body.ausweisFoto = foto
+      const { d } = await post('einreichen', body)
       if (!d.ok) {
         if (Array.isArray(d.fehler) && d.fehler.length) setFehlerFelder(d.fehler)
         else { setFehlerText(d.error || t.fehler.standard); setPhase('fehler') }
         setSendet(false)
         return
       }
+      setDaten((x) => (x ? { ...x, status: 'eingereicht', bestaetigungErlaubt: !d.zuFrueh, bestaetigungAb: d.ab || x.bestaetigungAb, stripe: d.stripe ?? x.stripe } : x))
       if (d.clientSecret) {
         setClientSecret(d.clientSecret)
         setSetupIntentId(d.setupIntentId)
         setPhase('karte')
       } else {
-        // Ohne Stripe bleibt es bei „eingereicht": Angaben liegen vor, Unterschrift auf Papier.
-        setDaten((x) => (x ? { ...x, status: 'eingereicht' } : x))
+        // Vor dem Anreisetag (oder ohne Stripe): Angaben liegen vor, Bestätigung später.
         setPhase('fertig')
       }
     } catch { setFehlerText(t.fehler.standard); setPhase('fehler') }
+    setSendet(false)
+  }
+
+  const bestaetigungStarten = async () => {
+    setSendet(true)
+    try {
+      const { d } = await post('bestaetigung-starten')
+      if (d.ok && d.clientSecret) {
+        setClientSecret(d.clientSecret); setSetupIntentId(d.setupIntentId); setKarteFehler(''); setPhase('karte')
+      } else if (d.code === 'zu_frueh') {
+        setDaten((x) => (x ? { ...x, bestaetigungErlaubt: false, bestaetigungAb: d.ab || x.bestaetigungAb } : x))
+      } else {
+        setKarteFehler(t.karte.fehlgeschlagen)
+      }
+    } catch { setKarteFehler(t.karte.fehlgeschlagen) }
     setSendet(false)
   }
 
@@ -234,13 +302,14 @@ export default function MeldescheinWidget() {
     </div>
   )
   const fuss = <p className={`${klein} mx-auto mt-6 max-w-xl text-center`}>{t.fuss}</p>
+  const spinner = <div className="mx-auto my-6 h-9 w-9 animate-spin rounded-full border-[3px] border-cream-200 border-t-gold-500" />
 
   if (phase === 'laden') {
     return (
       <>
         {kopf}
         <div className={`${karte} mx-auto max-w-xl text-center`}>
-          <div className="mx-auto my-6 h-9 w-9 animate-spin rounded-full border-[3px] border-cream-200 border-t-gold-500" />
+          {spinner}
           <p className="font-body text-sm text-forest-600">{t.laden}</p>
         </div>
       </>
@@ -262,8 +331,14 @@ export default function MeldescheinWidget() {
 
   if (phase === 'fertig') {
     const s = daten.status
-    const titel = s === 'entfaellt' ? t.fertig.entfaelltTitel : s === 'eingereicht' ? t.fertig.eingereichtTitel : t.fertig.erhaltenTitel
-    const text = s === 'entfaellt' ? t.fertig.entfaelltText : s === 'eingereicht' ? (daten.stripe ? t.fertig.eingereichtText : t.karte.ohneStripe) : t.fertig.erhaltenText
+    const eingereicht = s === 'eingereicht'
+    const titel = s === 'entfaellt' ? t.fertig.entfaelltTitel : eingereicht ? t.fertig.eingereichtTitel : t.fertig.erhaltenTitel
+    let text = s === 'entfaellt' ? t.fertig.entfaelltText : t.fertig.erhaltenText
+    if (eingereicht) {
+      text = !daten.stripe ? t.karte.ohneStripe
+        : daten.bestaetigungErlaubt ? t.fertig.eingereichtText
+          : t.karte.zuFrueh(schoenesDatum(daten.bestaetigungAb || daten.arrival))
+    }
     return (
       <>
         {kopf}
@@ -271,9 +346,10 @@ export default function MeldescheinWidget() {
           <span className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-forest-100 text-2xl">✓</span>
           <h2 className="font-display text-2xl text-forest-900 mb-2">{titel}</h2>
           <p className="font-body text-sm text-forest-600 leading-relaxed">{text}</p>
-          {s === 'eingereicht' && daten.stripe && (
-            <button className={`${sekundaer} mt-6`} onClick={() => setPhase('formular')}>{t.fertig.nochmal}</button>
+          {eingereicht && daten.stripe && daten.bestaetigungErlaubt && (
+            <button className={`${cta} mt-6`} disabled={sendet} onClick={bestaetigungStarten}>{t.fertig.nochmal}</button>
           )}
+          {karteFehler && <p className="font-body text-sm text-red-600 mt-3">{karteFehler}</p>}
         </div>
         {fuss}
       </>
@@ -290,8 +366,34 @@ export default function MeldescheinWidget() {
           {daten.personen && daten.personen > 1 && <p className={`${klein} mt-3`}>{t.frage.hinweisPersonen(daten.personen)}</p>}
           <div className="mt-6 flex flex-col gap-3">
             <button className={cta} disabled={sendet} onClick={deutsch}>{t.frage.ja}</button>
-            <button className={sekundaer} disabled={sendet} onClick={() => setPhase('formular')}>{t.frage.nein}</button>
+            <button className={sekundaer} disabled={sendet} onClick={() => setPhase('scan')}>{t.frage.nein}</button>
           </div>
+        </div>
+        {fuss}
+      </>
+    )
+  }
+
+  if (phase === 'scan') {
+    return (
+      <>
+        {kopf}
+        <div className={`${karte} mx-auto max-w-xl text-center`}>
+          <h2 className="font-display text-2xl text-forest-900 mb-3">{t.scan.titel}</h2>
+          <p className="font-body text-sm text-forest-600 leading-relaxed">{t.scan.text}</p>
+          <p className={`${klein} mt-2`}>{t.scan.tipp}</p>
+          {scanLaeuft ? (
+            <>{spinner}<p className="font-body text-sm text-forest-600">{t.scan.liest}</p></>
+          ) : (
+            <div className="mt-6 flex flex-col gap-3">
+              <label className={`${cta} cursor-pointer text-center`}>
+                {t.scan.knopf}
+                <input type="file" accept="image/*" capture="environment" className="sr-only" onChange={(e) => scannen(e.target.files?.[0] ?? null)} />
+              </label>
+              {scanHinweis === 'nichtErkannt' && <p className="font-body text-sm text-red-600">{t.scan.nichtErkannt}</p>}
+              <button className={sekundaer} onClick={() => setPhase('formular')}>{t.scan.manuell}</button>
+            </div>
+          )}
         </div>
         {fuss}
       </>
@@ -322,6 +424,7 @@ export default function MeldescheinWidget() {
               onErfolg={bestaetigt}
             />
           </Elements>
+          <p className={`${klein} mt-5 text-center`}>{t.karte.papier}</p>
         </div>
         {fuss}
       </>
@@ -346,6 +449,8 @@ export default function MeldescheinWidget() {
         <div>
           <h2 className="font-display text-2xl text-forest-900 mb-2">{t.formular.titel}</h2>
           <p className="font-body text-sm text-forest-600 leading-relaxed">{t.formular.intro}</p>
+          {scanHinweis === 'erkannt' && <p className="font-body text-sm text-forest-800 mt-2">✓ {t.scan.erkannt}</p>}
+          {scanHinweis === 'unsicher' && <p className="font-body text-sm text-amber-700 mt-2">{t.scan.unsicher}</p>}
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -394,7 +499,7 @@ export default function MeldescheinWidget() {
           <label className={lbl}>{t.formular.foto}</label>
           <p className={`${klein} mb-2`}>{t.formular.fotoHinweis}</p>
           <label className={`${sekundaer} cursor-pointer text-center ${hat('ausweisFoto') || fotoFehler ? 'border-red-400' : ''}`}>
-            {foto ? `✓ ${t.formular.fotoOk}${fotoName ? ` · ${fotoName}` : ''}` : t.formular.fotoWaehlen}
+            {foto || fotoVorhanden ? `✓ ${t.formular.fotoOk}${fotoName ? ` · ${fotoName}` : ''}` : t.formular.fotoWaehlen}
             <input type="file" accept="image/*" capture="environment" className="sr-only" onChange={(e) => fotoWaehlen(e.target.files?.[0] ?? null)} />
           </label>
           {fotoFehler && <p className="font-body text-xs text-red-600 mt-2">{t.formular.fotoFehler}</p>}
@@ -431,7 +536,7 @@ export default function MeldescheinWidget() {
           <input type="checkbox" className="mt-1 h-4 w-4 accent-gold-500" checked={einwilligung} onChange={(e) => setEinwilligung(e.target.checked)} />
           <span className={klein}>
             {t.formular.einwilligung}{' '}
-            <Link href={locale === 'de' ? '/datenschutz' : '/datenschutz'} target="_blank" className="underline">{t.formular.datenschutz}</Link>
+            <Link href="/datenschutz" target="_blank" className="underline">{t.formular.datenschutz}</Link>
           </span>
         </label>
 
@@ -481,11 +586,12 @@ function KartenBestaetigung({ name, t, fehler, onFehler, onErfolg }: {
 
   return (
     <div className="space-y-4">
+      {/* Wallets (Apple Pay / Google Pay) zeigt das Payment Element von sich aus oben an, wenn das Gerät sie hat. */}
+      <PaymentElement options={{ fields: { billingDetails: { name: 'never' } }, wallets: { applePay: 'auto', googlePay: 'auto' } }} />
       <div>
         <label className={lbl}>{t.karte.name}</label>
         <input className={feld} value={karteName} onChange={(e) => setKarteName(e.target.value)} autoComplete="cc-name" />
       </div>
-      <PaymentElement options={{ fields: { billingDetails: { name: 'never' } } }} />
       {fehler && <p className="font-body text-sm text-red-600">{fehler}</p>}
       <button className={cta} disabled={!stripe || laeuft} onClick={bestaetigen}>{laeuft ? t.karte.wartet : t.karte.knopf}</button>
     </div>

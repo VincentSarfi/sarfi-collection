@@ -29,6 +29,20 @@ const meldeschein = {
     hinweisPersonen: (n: number) => n > 1 ? `Die Angabe gilt für die buchende Person. Mitreisende trägst du im Formular ein (${n} Personen gebucht).` : "",
   },
 
+  scan: {
+    titel: "Pass oder Ausweis fotografieren",
+    text:
+      "Fotografiere die Datenseite deines Reisepasses (die Seite mit Foto und den zwei Zeilen Code unten) oder die Rückseite deiner ID-Karte. " +
+      "Wir lesen die Angaben automatisch aus – du prüfst sie danach nur noch.",
+    tipp: "Gerade halten, gutes Licht, die Codezeilen vollständig im Bild.",
+    knopf: "Foto aufnehmen oder auswählen",
+    liest: "Wird gelesen …",
+    erkannt: "Angaben erkannt – bitte prüfen.",
+    unsicher: "Angaben erkannt, aber nicht alle Prüfziffern stimmen – bitte sorgfältig prüfen.",
+    nichtErkannt: "Der Code konnte nicht gelesen werden. Du kannst das Formular auch von Hand ausfüllen.",
+    manuell: "Ohne Foto-Erkennung weiter",
+  },
+
   formular: {
     titel: "Meldeschein",
     intro:
@@ -72,16 +86,19 @@ const meldeschein = {
   },
 
   karte: {
-    titel: "Angaben bestätigen",
+    titel: "Angaben bestätigen – statt Unterschrift",
     text:
-      "Zum Abschluss bestätigst du deine Angaben mit deiner Bank- oder Kreditkarte. Dabei prüft deine Bank deine Identität (3-D Secure). " +
-      "Es wird nichts abgebucht und keine Karte gespeichert – die Prüfung ersetzt nur die Unterschrift.",
+      "Das Gesetz erlaubt statt der Unterschrift eine Bestätigung über eine Kartenprüfung mit starker Kundenauthentifizierung (§ 29 Abs. 5 BMG). " +
+      "Am einfachsten geht das mit Apple Pay oder Google Pay: ein Tipp, Face ID oder Fingerabdruck, fertig – ohne Kartendaten einzutippen. " +
+      "Es wird nichts abgebucht und nichts gespeichert.",
+    zuFrueh: (datum: string) => `Deine Angaben sind gespeichert. Die Bestätigung ist erst am Anreisetag (${datum}) möglich – wir erinnern dich dann per Nachricht. Diese Seite kannst du jederzeit wieder öffnen.`,
     name: "Name des Karteninhabers",
     knopf: "Kostenlos bestätigen",
     wartet: "Wird bestätigt …",
     fehlgeschlagen: "Die Bestätigung ist nicht durchgegangen. Bitte versuche es noch einmal oder nutze das Papierformular in deiner Unterkunft.",
     keineSca: "Deine Bank hat keine Identitätsprüfung durchgeführt. Bitte versuche es mit einer anderen Karte – oder fülle das Papierformular in deiner Unterkunft aus.",
     ohneStripe: "Deine Angaben sind gespeichert. Bitte unterschreibe zusätzlich das Papierformular in deiner Unterkunft.",
+    papier: "Keine Karte zur Hand? Dann unterschreibe bitte das Papierformular in deiner Unterkunft – deine Angaben hier bleiben gespeichert.",
   },
 
   fertig: {
@@ -90,8 +107,8 @@ const meldeschein = {
     erhaltenTitel: "Vielen Dank – Meldeschein erledigt",
     erhaltenText: "Deine Angaben sind bestätigt und sicher gespeichert. Ein Papierformular ist nicht mehr nötig. Schönen Aufenthalt!",
     eingereichtTitel: "Angaben gespeichert",
-    eingereichtText: "Deine Angaben liegen vor, die Kartenbestätigung fehlt noch. Du kannst das Formular erneut absenden und dann bestätigen.",
-    nochmal: "Formular erneut ausfüllen",
+    eingereichtText: "Deine Angaben liegen vor, die Bestätigung fehlt noch.",
+    nochmal: "Jetzt bestätigen",
   },
 
   fuss: "Verantwortlich: Vincent Sarfi, SARFI Collection · Angaben nach §§ 29, 30 BMG · Speicherung ein Jahr ab Abreise, danach Löschung.",

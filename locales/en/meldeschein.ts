@@ -29,6 +29,20 @@ const meldeschein = {
     hinweisPersonen: (n: number) => n > 1 ? `This applies to the person who booked. Accompanying persons are listed in the form (${n} guests booked).` : "",
   },
 
+  scan: {
+    titel: "Take a photo of your passport or ID",
+    text:
+      "Photograph the data page of your passport (the page with your photo and the two lines of code at the bottom) or the back of your ID card. " +
+      "We read the details automatically – you only check them afterwards.",
+    tipp: "Hold it straight, good light, the code lines fully visible.",
+    knopf: "Take or choose a photo",
+    liest: "Reading …",
+    erkannt: "Details recognised – please check them.",
+    unsicher: "Details recognised, but not all check digits match – please check carefully.",
+    nichtErkannt: "The code could not be read. You can also fill in the form by hand.",
+    manuell: "Continue without photo recognition",
+  },
+
   formular: {
     titel: "Registration form",
     intro:
@@ -72,16 +86,19 @@ const meldeschein = {
   },
 
   karte: {
-    titel: "Confirm your details",
+    titel: "Confirm your details – instead of a signature",
     text:
-      "Finally, confirm your details with your debit or credit card. Your bank verifies your identity (3-D Secure). " +
-      "Nothing is charged and no card is stored – the check only replaces the signature.",
+      "German law allows a card check with strong customer authentication to replace the signature (Sec. 29 (5) BMG). " +
+      "Easiest with Apple Pay or Google Pay: one tap, Face ID or fingerprint, done – no card details to type. " +
+      "Nothing is charged and nothing is stored.",
+    zuFrueh: (datum: string) => `Your details are saved. The confirmation is only possible on your day of arrival (${datum}) – we will remind you by message. You can reopen this page at any time.`,
     name: "Cardholder name",
     knopf: "Confirm (free of charge)",
     wartet: "Confirming …",
     fehlgeschlagen: "The confirmation did not go through. Please try again or use the paper form in your accommodation.",
     keineSca: "Your bank did not perform an identity check. Please try another card – or fill in the paper form in your accommodation.",
     ohneStripe: "Your details are saved. Please also sign the paper form in your accommodation.",
+    papier: "No card at hand? Then please sign the paper form in your accommodation – your details here remain saved.",
   },
 
   fertig: {
@@ -90,8 +107,8 @@ const meldeschein = {
     erhaltenTitel: "Thank you – registration complete",
     erhaltenText: "Your details are confirmed and stored securely. No paper form is needed. Enjoy your stay!",
     eingereichtTitel: "Details saved",
-    eingereichtText: "Your details are on file, but the card confirmation is still missing. You can submit the form again and then confirm.",
-    nochmal: "Fill in the form again",
+    eingereichtText: "Your details are on file, but the confirmation is still missing.",
+    nochmal: "Confirm now",
   },
 
   fuss: "Responsible: Vincent Sarfi, SARFI Collection · Details under Secs. 29, 30 BMG · stored for one year from departure, then deleted.",

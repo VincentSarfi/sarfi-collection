@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
   try {
     const raw = await request.json()
     const action = str(raw.action, 20)
-    if (action !== 'deutsch' && action !== 'einreichen' && action !== 'bestaetigen') {
+    if (!['deutsch', 'ausweis-lesen', 'einreichen', 'bestaetigung-starten', 'bestaetigen'].includes(action)) {
       return NextResponse.json({ ok: false, error: 'Unbekannte Aktion.' }, { status: 422 })
     }
     const t = tokenParams(raw)
@@ -77,8 +77,9 @@ export async function POST(request: NextRequest) {
             return { name: str(x.name, 120), geburtsdatum: str(x.geburtsdatum, 10), staat: str(x.staat, 2) }
           })
         : []
-      body.ausweisFoto = str(raw.ausweisFoto, 8 * 1024 * 1024)
+      if (typeof raw.ausweisFoto === 'string' && raw.ausweisFoto) body.ausweisFoto = str(raw.ausweisFoto, 8 * 1024 * 1024)
     }
+    if (action === 'ausweis-lesen') body.ausweisFoto = str(raw.ausweisFoto, 8 * 1024 * 1024)
     if (action === 'bestaetigen') body.setupIntentId = str(raw.setupIntentId, 80)
 
     const r = await fetch(`${BASE}/${action}`, {
