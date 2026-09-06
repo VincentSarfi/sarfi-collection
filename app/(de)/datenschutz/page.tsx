@@ -153,7 +153,7 @@ export default function DatenschutzPage() {
 
             <h3 className="font-semibold text-forest-800 mb-2">Melderechtliche Pflichten und Gästebeitrag</h3>
             <p className="mb-3">
-              Gäste ohne deutsche Staatsangehörigkeit müssen bei der Anreise einen Meldeschein nach §§ 29, 30 Bundesmeldegesetz (BMG) ausfüllen und unterschreiben; wir sind verpflichtet, den Ausweis einzusehen. Meldescheine bewahren wir ein Jahr ab Anreise auf und vernichten sie danach innerhalb von drei Monaten (§ 30 Abs. 4 BMG). Soweit die Gemeinde einen Gästebeitrag (Kurtaxe) erhebt, übermitteln wir die dafür erforderlichen Angaben (Aufenthaltsdauer, Personenzahl) an die Gemeinde. Rechtsgrundlage ist jeweils Art. 6 Abs. 1 lit. c DSGVO.
+              Gäste ohne deutsche Staatsangehörigkeit müssen bei der Anreise einen Meldeschein nach §§ 29, 30 Bundesmeldegesetz (BMG) ausfüllen und unterschreiben; wir sind verpflichtet, den Ausweis einzusehen. Meldescheine bewahren wir ein Jahr ab Abreise auf und vernichten sie danach innerhalb von drei Monaten (§ 30 Abs. 4 BMG). Soweit die Gemeinde einen Gästebeitrag (Kurtaxe) erhebt, übermitteln wir die dafür erforderlichen Angaben (Aufenthaltsdauer, Personenzahl) an die Gemeinde. Rechtsgrundlage ist jeweils Art. 6 Abs. 1 lit. c DSGVO.
             </p>
 
             <h3 className="font-semibold text-forest-800 mb-2">Geschenkgutscheine</h3>
