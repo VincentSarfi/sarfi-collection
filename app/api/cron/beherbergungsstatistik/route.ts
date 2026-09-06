@@ -33,10 +33,15 @@ import { escapeHtml } from '@/lib/escape'
  * geht bewusst an Vincent und nicht direkt ans Rathaus – kurz prüfen, dann
  * weiterleiten (oder STATISTIK_MAIL_TO auf die Gemeinde-Adresse setzen).
  *
+ * Aufenthalte desselben Gastes, die im selben Apartment nahtlos aneinander
+ * anschließen (z. B. wochenweise gebuchte Monteure), werden zu EINEM
+ * Aufenthalt verschmolzen – sonst zählt jede Verlängerung als neue Ankunft.
+ *
  * Manuelle / Test-Aufrufe (zusätzlich zum Bearer-Header):
- *   ?month=YYYY-MM   → Berichtsmonat (Standard: Vormonat)
- *   ?to=<email>      → Empfänger überschreiben
- *   ?dry=1           → nichts senden, nur JSON mit den Zahlen
+ *   ?month=YYYY-MM              → Berichtsmonat (Standard: Vormonat)
+ *   ?from=YYYY-MM&to=YYYY-MM    → Nachmeldung: Monatstabelle über den Zeitraum
+ *   ?mailto=<email>             → Empfänger überschreiben
+ *   ?dry=1                      → nichts senden, nur JSON mit den Zahlen
  */
 
 export const dynamic = 'force-dynamic'
@@ -60,6 +65,8 @@ type SmoobuBooking = {
   adults?: number
   children?: number
   phone?: string | null
+  email?: string | null
+  'guest-name'?: string | null
   language?: string | null
   'is-blocked-booking'?: boolean
 }
@@ -67,11 +74,16 @@ type SmoobuBooking = {
 type Group = 'schoenblick' | 'haus28' | 'other'
 
 type Stats = {
+  /** Aufenthalte, die im Monat begonnen haben (nach Verschmelzen) */
+  bookings: number
+  /** angereiste Personen (amtliche Zählweise) */
   arrivals: number
+  /** Personen × Nächte im Monat */
   nights: number
+  /** Aufenthalte, die den Monat berühren */
+  stays: number
   byApartment: Record<string, { arrivals: number; nights: number }>
   byCountry: Record<string, { arrivals: number; nights: number }>
-  bookings: number
 }
 
 // ─── Hilfsfunktionen ─────────────────────────────────────────────────────────
@@ -189,7 +201,7 @@ function countryLabel(code: string): string {
 }
 
 function emptyStats(): Stats {
-  return { arrivals: 0, nights: 0, byApartment: {}, byCountry: {}, bookings: 0 }
+  return { bookings: 0, arrivals: 0, nights: 0, stays: 0, byApartment: {}, byCountry: {} }
 }
 
 function bump(map: Record<string, { arrivals: number; nights: number }>, key: string, arrivals: number, nights: number) {
@@ -224,47 +236,111 @@ async function fetchBookings(from: string, to: string): Promise<SmoobuBooking[]>
 
 type Excluded = { id: number; apartment: string; arrival: string; departure: string; channel: string; reason: string }
 
-function evaluate(bookings: SmoobuBooking[], month: string) {
-  const { start, endExclusive } = monthRange(month)
-  const stats: Record<Group, Stats> = { schoenblick: emptyStats(), haus28: emptyStats(), other: emptyStats() }
+type Stay = {
+  ids: number[]
+  group: Group
+  label: string
+  arrival: string
+  departure: string
+  persons: number
+  country: string
+  channel: string
+}
+
+function guestKey(b: SmoobuBooking): string {
+  const mail = (b.email ?? '').trim().toLowerCase()
+  if (mail) return mail
+  return (b['guest-name'] ?? '').trim().toLowerCase().replace(/\s+/g, ' ')
+}
+
+/**
+ * Buchungen → Aufenthalte: Stornos raus, Blockierungen raus, nahtlos
+ * anschließende Buchungen desselben Gastes im selben Apartment verschmelzen.
+ */
+function toStays(bookings: SmoobuBooking[]): { stays: Stay[]; excluded: Excluded[] } {
   const excluded: Excluded[] = []
   const seen = new Set<number>()
+  const raw: Array<Stay & { key: string }> = []
 
   for (const b of bookings) {
     if (seen.has(b.id)) continue
     seen.add(b.id)
-    if (!b.arrival || !b.departure) continue
-
+    if (!b.arrival || !b.departure || b.departure <= b.arrival) continue
     const { group, label } = classifyApartment(b.apartment?.id, b.apartment?.name)
-    const base = { id: b.id, apartment: label, arrival: b.arrival, departure: b.departure, channel: b.channel?.name ?? '–' }
-
     // Stornierungen kommen als eigener Typ. (Die Airbnb-Preisdetails enthalten bei
     // JEDER Buchung Zeilen wie „Cancellation Host Fee" – das ist kein Storno-Indiz.)
     if (b.type === 'cancellation') continue
-    if (b['is-blocked-booking']) { excluded.push({ ...base, reason: 'Blockierung (keine Gästebuchung)' }); continue }
-
-    // Nächte im Berichtsmonat: Anreise (inkl.) bis Abreise (exkl.)
-    let nightsInMonth = 0
-    for (let d = b.arrival; d < b.departure; d = addDaysUtc(d, 1)) {
-      if (d >= start && d < endExclusive) nightsInMonth++
+    if (b['is-blocked-booking']) {
+      excluded.push({ id: b.id, apartment: label, arrival: b.arrival, departure: b.departure, channel: b.channel?.name ?? '–', reason: 'Blockierung (keine Gästebuchung)' })
+      continue
     }
-    const arrivedInMonth = b.arrival >= start && b.arrival < endExclusive
-    if (nightsInMonth === 0 && !arrivedInMonth) continue // berührt den Monat nicht
-
-    const persons = Math.max(1, (b.adults ?? 0) + (b.children ?? 0))
-    const arrivals = arrivedInMonth ? persons : 0
-    const nights = persons * nightsInMonth
-    const country = countryFromPhone(b.phone) ?? 'unbekannt'
-
-    const s = stats[group]
-    s.bookings++
-    s.arrivals += arrivals
-    s.nights += nights
-    bump(s.byApartment, label, arrivals, nights)
-    bump(s.byCountry, country, arrivals, nights)
+    raw.push({
+      ids: [b.id], group, label, arrival: b.arrival, departure: b.departure,
+      persons: Math.max(1, (b.adults ?? 0) + (b.children ?? 0)),
+      country: countryFromPhone(b.phone) ?? 'unbekannt',
+      channel: b.channel?.name ?? '–',
+      key: `${label}|${guestKey(b)}`,
+    })
   }
 
-  return { stats, excluded }
+  raw.sort((a, b) => a.key.localeCompare(b.key) || a.arrival.localeCompare(b.arrival))
+  const merged: Array<Stay & { key: string }> = []
+  for (const cur of raw) {
+    const prev = merged[merged.length - 1]
+    const hasGuest = cur.key.split('|')[1] !== ''
+    if (prev && hasGuest && prev.key === cur.key && prev.departure === cur.arrival) {
+      prev.departure = cur.departure
+      prev.persons = Math.max(prev.persons, cur.persons)
+      prev.ids.push(...cur.ids)
+      continue
+    }
+    merged.push({ ...cur, ids: [...cur.ids] })
+  }
+  const stays: Stay[] = merged.map(m => {
+    const { key, ...stay } = m
+    void key
+    return stay
+  })
+  return { stays, excluded }
+}
+
+function evaluateMonth(stays: Stay[], month: string): Record<Group, Stats> {
+  const { start, endExclusive } = monthRange(month)
+  const stats: Record<Group, Stats> = { schoenblick: emptyStats(), haus28: emptyStats(), other: emptyStats() }
+
+  for (const st of stays) {
+    let nightsInMonth = 0
+    for (let d = st.arrival; d < st.departure; d = addDaysUtc(d, 1)) {
+      if (d >= start && d < endExclusive) nightsInMonth++
+    }
+    const arrivedInMonth = st.arrival >= start && st.arrival < endExclusive
+    if (nightsInMonth === 0 && !arrivedInMonth) continue
+
+    const arrivals = arrivedInMonth ? st.persons : 0
+    const nights = st.persons * nightsInMonth
+    const s = stats[st.group]
+    s.stays++
+    if (arrivedInMonth) s.bookings++
+    s.arrivals += arrivals
+    s.nights += nights
+    bump(s.byApartment, st.label, arrivals, nights)
+    bump(s.byCountry, st.country, arrivals, nights)
+  }
+  return stats
+}
+
+/** Liste der Monate YYYY-MM von from bis to (inklusive). */
+function monthsBetween(from: string, to: string): string[] {
+  const out: string[] = []
+  let [y, m] = from.split('-').map(Number)
+  const [ty, tm] = to.split('-').map(Number)
+  while (y < ty || (y === ty && m <= tm)) {
+    out.push(`${y}-${String(m).padStart(2, '0')}`)
+    m++
+    if (m > 12) { m = 1; y++ }
+    if (out.length > 36) break
+  }
+  return out
 }
 
 // ─── Mail ────────────────────────────────────────────────────────────────────
@@ -284,16 +360,17 @@ function sortedRows(map: Record<string, { arrivals: number; nights: number }>, l
 }
 
 function section(title: string, subtitle: string, s: Stats, beds: number, days: number): string {
-  if (s.bookings === 0) {
+  if (s.stays === 0) {
     return `<h2 style="font-size:17px;margin:24px 0 4px;color:#1a2e1a;">${title}</h2><p style="font-size:13px;color:#666;margin:0 0 12px;">${subtitle}</p><p style="font-size:13px;">Keine Aufenthalte im Berichtsmonat.</p>`
   }
   return `
     <h2 style="font-size:17px;margin:24px 0 4px;color:#1a2e1a;">${title}</h2>
     <p style="font-size:13px;color:#666;margin:0 0 12px;">${subtitle}</p>
     <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:14px;margin:0 0 12px;">
-      <tr><td style="padding:4px 16px 4px 0;color:#666;">Ankünfte</td><td style="font-weight:600;">${s.arrivals}</td></tr>
-      <tr><td style="padding:4px 16px 4px 0;color:#666;">Übernachtungen</td><td style="font-weight:600;">${s.nights}</td></tr>
-      <tr><td style="padding:4px 16px 4px 0;color:#666;">Buchungen im Monat</td><td>${s.bookings}</td></tr>
+      <tr><td style="padding:4px 16px 4px 0;color:#666;">Ankünfte (Personen)</td><td style="font-weight:600;">${s.arrivals}</td></tr>
+      <tr><td style="padding:4px 16px 4px 0;color:#666;">Übernachtungen (Personen × Nächte)</td><td style="font-weight:600;">${s.nights}</td></tr>
+      <tr><td style="padding:4px 16px 4px 0;color:#666;">Aufenthalte mit Anreise im Monat</td><td>${s.bookings}</td></tr>
+      <tr><td style="padding:4px 16px 4px 0;color:#666;">Aufenthalte, die den Monat berühren</td><td>${s.stays}</td></tr>
       ${beds ? `<tr><td style="padding:4px 16px 4px 0;color:#666;">Angebotene Schlafgelegenheiten</td><td>${beds}</td></tr>` : ''}
       <tr><td style="padding:4px 16px 4px 0;color:#666;">Öffnungstage</td><td>${days}</td></tr>
     </table>
@@ -310,7 +387,7 @@ function buildMail(month: string, stats: Record<Group, Stats>, excluded: Exclude
 
 anbei wie besprochen unsere Monatszahlen für das Haus Schönblick (Schöfweg) für ${label}:
 
-Ankünfte: ${sb.arrivals}
+Ankünfte: ${sb.arrivals} Personen (${sb.bookings} Aufenthalte)
 Übernachtungen: ${sb.nights}
 
 Mit freundlichen Grüßen
@@ -341,7 +418,7 @@ Vincent Sarfi`
 
     ${section('HAUS28 (Grattersdorf)', 'Zur Info – für Grattersdorf gilt die dortige Regelung; unter 10 Schlafgelegenheiten, keine BeherbStatG-Meldung', stats.haus28, haus28Beds, days)}
 
-    ${stats.other.bookings ? section('Nicht zugeordnete Apartments', 'In Smoobu vorhanden, aber nicht in der Website-Konfiguration – bitte prüfen', stats.other, 0, days) : ''}
+    ${stats.other.stays ? section('Nicht zugeordnete Apartments', 'In Smoobu vorhanden, aber nicht in der Website-Konfiguration – bitte prüfen', stats.other, 0, days) : ''}
 
     ${excludedHtml}
   </td></tr>
@@ -351,6 +428,74 @@ Vincent Sarfi`
 </table></td></tr></table></body></html>`
 
   return { subject: `Beherbergungsstatistik ${label} – Schönblick: ${sb.arrivals} Ankünfte, ${sb.nights} Übernachtungen`, html, gemeindeText }
+}
+
+function rangeTable(rows: Array<{ month: string; s: Stats }>): string {
+  const tr = rows.map(({ month, s }) =>
+    `<tr><td style="padding:6px 10px;border-bottom:1px solid #eee;">${monthLabel(month)}</td>` +
+    `<td style="padding:6px 10px;border-bottom:1px solid #eee;text-align:right;">${s.bookings}</td>` +
+    `<td style="padding:6px 10px;border-bottom:1px solid #eee;text-align:right;">${s.arrivals}</td>` +
+    `<td style="padding:6px 10px;border-bottom:1px solid #eee;text-align:right;">${s.nights}</td></tr>`).join('')
+  const sum = rows.reduce((a, r) => ({ b: a.b + r.s.bookings, ar: a.ar + r.s.arrivals, n: a.n + r.s.nights }), { b: 0, ar: 0, n: 0 })
+  return `<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:13px;margin:8px 0 16px;">
+    <tr style="background:#f5f0e8;"><th style="text-align:left;padding:6px 10px;">Monat</th><th style="text-align:right;padding:6px 10px;">Aufenthalte</th><th style="text-align:right;padding:6px 10px;">Ankünfte (Personen)</th><th style="text-align:right;padding:6px 10px;">Übernachtungen</th></tr>
+    ${tr}
+    <tr style="font-weight:600;"><td style="padding:6px 10px;">Summe</td><td style="padding:6px 10px;text-align:right;">${sum.b}</td><td style="padding:6px 10px;text-align:right;">${sum.ar}</td><td style="padding:6px 10px;text-align:right;">${sum.n}</td></tr>
+  </table>`
+}
+
+function plainRangeText(rows: Array<{ month: string; s: Stats }>): string {
+  return rows.map(({ month, s }) => `${monthLabel(month)}: ${s.arrivals} Ankünfte, ${s.nights} Übernachtungen (${s.bookings} Aufenthalte)`).join('\n')
+}
+
+function buildRangeMail(from: string, to: string, perMonth: Array<{ month: string; stats: Record<Group, Stats> }>, excluded: Excluded[]) {
+  const sb = perMonth.map(m => ({ month: m.month, s: m.stats.schoenblick }))
+  const h28 = perMonth.map(m => ({ month: m.month, s: m.stats.haus28 }))
+  const title = `${monthLabel(from)} – ${monthLabel(to)}`
+
+  const gemeindeText = `Sehr geehrte Frau Zitzelsperger,
+
+wie angekündigt erhalten Sie hiermit die Monatszahlen für das Haus Schönblick (Schöfweg) seit Betriebsbeginn, diesmal direkt im Text der E-Mail:
+
+${plainRangeText(sb)}
+
+Zählweise wie in der Beherbergungsstatistik: Ankünfte = angereiste Personen, Übernachtungen = Personen × Nächte im jeweiligen Monat.
+
+Ab jetzt erhalten Sie die Zahlen automatisch zu Beginn jedes Monats.
+
+Mit freundlichen Grüßen
+Vincent Sarfi`
+
+  const excludedHtml = excluded.length
+    ? `<h2 style="font-size:15px;margin:24px 0 8px;color:#1a2e1a;">Nicht gezählt</h2>
+       <ul style="font-size:12px;color:#555;padding-left:18px;margin:0;">${excluded.map(e =>
+         `<li>#${e.id} · ${escapeHtml(e.apartment)} · ${e.arrival} – ${e.departure} · ${escapeHtml(e.channel)} – ${escapeHtml(e.reason)}</li>`).join('')}</ul>`
+    : ''
+
+  const html = `<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f5f0e8;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#1a2e1a;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;padding:32px 16px;"><tr><td align="center">
+<table width="640" cellpadding="0" cellspacing="0" style="max-width:640px;width:100%;background:#fff;border-radius:12px;overflow:hidden;">
+  <tr><td style="background:#1a2e1a;padding:24px 32px;">
+    <p style="margin:0;color:#c9a84c;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600;">SARFI Collection · Backoffice</p>
+    <h1 style="margin:6px 0 0;color:#f5f0e8;font-size:20px;font-weight:600;">Beherbergungsstatistik ${title}</h1>
+  </td></tr>
+  <tr><td style="padding:24px 32px;">
+    <p style="font-size:13px;line-height:1.6;margin:0 0 8px;">Nachmeldung über mehrere Monate. Ankünfte = angereiste Personen, Übernachtungen = Personen × Nächte im Monat, Aufenthalte = Anreisen (nahtlos verlängerte Aufenthalte desselben Gastes einmal gezählt). Quelle: Smoobu.</p>
+    <h2 style="font-size:17px;margin:24px 0 4px;color:#1a2e1a;">Haus Schönblick (Schöfweg)</h2>
+    ${rangeTable(sb)}
+    <h3 style="font-size:14px;margin:8px 0 6px;">Vorlage für die Mail an die Gemeinde</h3>
+    <pre style="white-space:pre-wrap;font-family:inherit;font-size:13px;background:#f5f0e8;border-radius:8px;padding:12px 14px;margin:0 0 8px;">${escapeHtml(gemeindeText)}</pre>
+    <h2 style="font-size:17px;margin:24px 0 4px;color:#1a2e1a;">HAUS28 (Grattersdorf)</h2>
+    ${rangeTable(h28)}
+    ${excludedHtml}
+  </td></tr>
+  <tr><td style="background:#f5f0e8;padding:14px 32px;border-top:1px solid #e8e2d6;">
+    <p style="margin:0;font-size:11px;color:#888;">Automatisch erzeugt von sarfi-collection.de · /api/cron/beherbergungsstatistik?from=${from}&amp;to=${to}</p>
+  </td></tr>
+</table></td></tr></table></body></html>`
+
+  return { subject: `Beherbergungsstatistik ${title} (Nachmeldung)`, html, gemeindeText }
 }
 
 // ─── Route ───────────────────────────────────────────────────────────────────
@@ -367,28 +512,42 @@ export async function GET(request: NextRequest) {
   }
 
   const { searchParams } = new URL(request.url)
-  const monthParam = searchParams.get('month')
-  const month = monthParam && /^\d{4}-(0[1-9]|1[0-2])$/.test(monthParam) ? monthParam : previousMonth()
-  const to = searchParams.get('to') || process.env.STATISTIK_MAIL_TO || DEFAULT_TO
+  const MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/
+  const pick = (k: string) => { const v = searchParams.get(k); return v && MONTH_RE.test(v) ? v : null }
+  const fromParam = pick('from')
+  const toParam = pick('to')
+  const isRange = Boolean(fromParam && toParam && fromParam <= toParam)
+  const month = pick('month') ?? previousMonth()
+  const to = searchParams.get('mailto') || process.env.STATISTIK_MAIL_TO || DEFAULT_TO
   const dryRun = searchParams.get('dry') === '1'
 
-  const { start, endExclusive } = monthRange(month)
+  const months = isRange ? monthsBetween(fromParam!, toParam!) : [month]
+  const { start } = monthRange(months[0])
+  const { endExclusive } = monthRange(months[months.length - 1])
 
   try {
     // 60 Tage Vorlauf: fängt lange Aufenthalte und die from/to-Schwäche von Smoobu ab
     const bookings = await fetchBookings(addDaysUtc(start, -60), endExclusive)
-    const { stats, excluded } = evaluate(bookings, month)
+    const { stays, excluded } = toStays(bookings)
+    const perMonth = months.map(m => ({ month: m, stats: evaluateMonth(stays, m) }))
 
     const schoenblickBeds = Object.values(PROPERTY_CONFIGS).filter(c => c.id !== 'haus28').reduce((n, c) => n + c.maxGuests, 0)
     const haus28Beds = PROPERTY_CONFIGS.haus28?.maxGuests ?? 0
-    const mail = buildMail(month, stats, excluded, schoenblickBeds, haus28Beds)
+
+    const mail = isRange
+      ? buildRangeMail(months[0], months[months.length - 1], perMonth, excluded)
+      : buildMail(month, perMonth[0].stats, excluded, schoenblickBeds, haus28Beds)
 
     const summary = {
-      month,
+      months,
       fetched: bookings.length,
-      schoenblick: stats.schoenblick,
-      haus28: stats.haus28,
-      other: stats.other,
+      stays: stays.length,
+      perMonth: perMonth.map(m => ({
+        month: m.month,
+        schoenblick: m.stats.schoenblick,
+        haus28: m.stats.haus28,
+        other: m.stats.other,
+      })),
       excluded,
       gemeindeText: mail.gemeindeText,
       to,
