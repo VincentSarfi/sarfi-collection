@@ -44,6 +44,9 @@ const translatedRoutes = new Set([
   // mitnimmt. Der Eintrag hier sorgt, dass der Header wenigstens auf der
   // richtigen Seite landet statt auf der Startseite.
   "/late-checkout",
+  // Digitaler Meldeschein: Gastlinks tragen ?b=… bzw. ?u=…, der Widget-eigene
+  // Sprachlink nimmt den Token mit (der Header-Umschalter nicht).
+  "/meldeschein",
 ]);
 
 export function hasEnglishVersion(path: string): boolean {

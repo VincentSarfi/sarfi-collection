@@ -4,6 +4,7 @@ import common from "./common";
 import home from "./home";
 import kontakt from "./kontakt";
 import lateCheckout from "./lateCheckout";
+import meldeschein from "./meldeschein";
 import property from "./property";
 
 const de = {
@@ -13,6 +14,7 @@ const de = {
   home,
   kontakt,
   lateCheckout,
+  meldeschein,
   property,
 };
 
