@@ -8,6 +8,21 @@
 
 const PRICELABS_BASE = 'https://api.pricelabs.co/v1'
 
+/**
+ * Direktbuchungs-Faktor auf den PriceLabs-Basispreis.
+ *
+ * PriceLabs liefert den Smoobu-Basispreis B. Airbnb und Booking.com bekommen
+ * von Smoobu +15 % Kanalaufschlag, FeWo-direkt +6 %. Die Website verkauft mit
+ * diesem Faktor: Der Gast zahlt weiterhin deutlich weniger als auf den
+ * Portalen (1,05 vs. 1,15), uns bleibt netto aber mehr als auf jedem Portal
+ * (Airbnb netto ≈ 0,97·B, Booking ≈ 0,97·B, Website ≈ 1,03·B nach Stripe).
+ * Überschreibbar per Env DIRECT_PRICE_FACTOR (z. B. "1.00" für Basispreis).
+ */
+export const DIRECT_PRICE_FACTOR = (() => {
+  const raw = Number.parseFloat(process.env.DIRECT_PRICE_FACTOR ?? '')
+  return Number.isFinite(raw) && raw >= 0.5 && raw <= 1.5 ? raw : 1.05
+})()
+
 function getHeaders() {
   return {
     'X-API-Key': process.env.PRICELABS_API_KEY ?? '',
@@ -76,8 +91,9 @@ export async function getPricingMap(
   for (const day of listing.data) {
     if (!day.date) continue
     // Use user_price if manually set, otherwise PriceLabs dynamic price
-    const price = day.user_price > 0 ? day.user_price : day.price
-    if (price <= 0) continue
+    const basePrice = day.user_price > 0 ? day.user_price : day.price
+    if (basePrice <= 0) continue
+    const price = Math.round(basePrice * DIRECT_PRICE_FACTOR)
     map[day.date] = {
       date: day.date,
       price,
