@@ -6,6 +6,7 @@
 import { smoobuHeaders } from './smoobu-auth'
 
 const SMOOBU_BASE = 'https://login.smoobu.com/api'
+const DIRECT_CHANNEL_ID = 4393833 // "Direct booking"-Kanal dieses Smoobu-Kontos
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -193,7 +194,7 @@ export async function createBooking(req: BookingRequest): Promise<BookingResult>
     apartmentId: parseInt(req.apartmentId, 10),
     arrivalDate: req.checkIn,
     departureDate: req.checkOut,
-    channelId: 4393833, // "Direct booking" channel for this Smoobu account
+    channelId: DIRECT_CHANNEL_ID, // "Direct booking" channel for this Smoobu account
     firstName: req.firstName,
     lastName: req.lastName,
     email: req.email,
@@ -213,10 +214,13 @@ export async function createBooking(req: BookingRequest): Promise<BookingResult>
   // weicht der BODY_HASH in der Signatur vom tatsächlich übertragenen Body ab.
   const url = `${SMOOBU_BASE}/reservations`
   const payload = JSON.stringify(body)
+  // Timeout: bleibt Smoobu hängen, soll der Webhook noch Zeit haben, per
+  // findExistingBooking nachzusehen, ob die Buchung trotzdem angelegt wurde.
   const res = await fetch(url, {
     method: 'POST',
     headers: smoobuHeaders('POST', url, payload),
     body: payload,
+    signal: AbortSignal.timeout(12_000),
   })
 
   if (!res.ok) {
@@ -226,4 +230,64 @@ export async function createBooking(req: BookingRequest): Promise<BookingResult>
 
   const json = await res.json() as { id?: number; referenceId?: string }
   return { id: json.id ?? 0, referenceId: json.referenceId }
+}
+
+// ─── Find Existing Booking ────────────────────────────────────────────────────
+
+/**
+ * Sucht eine bereits angelegte Direktbuchung für genau diesen Aufenthalt.
+ *
+ * Anlass (16.09.2026): Smoobu hat die Reservierung angelegt, dem Webhook aber
+ * keine Erfolgsantwort geliefert. Jeder Stripe-Retry scheiterte danach mit
+ * „Failed validation" (Zeitraum durch die eigene Buchung belegt) — die
+ * Buchungsbestätigung an den Gast und die Meldung an uns gingen nie raus.
+ * Mit dieser Suche übernimmt der Webhook die vorhandene Buchung, statt
+ * sie ein zweites Mal anlegen zu wollen.
+ *
+ * Nie gecacht: die Antwort muss den Stand von JETZT zeigen.
+ */
+export async function findExistingBooking(req: {
+  apartmentId: string
+  checkIn: string
+  checkOut: string
+  email?: string
+  lastName?: string
+}): Promise<BookingResult | null> {
+  const url =
+    `${SMOOBU_BASE}/reservations` +
+    `?apartmentId=${encodeURIComponent(req.apartmentId)}` +
+    `&from=${req.checkIn}&to=${req.checkOut}&pageSize=100`
+  const res = await fetch(url, {
+    headers: smoobuHeaders('GET', url),
+    cache: 'no-store',
+    signal: AbortSignal.timeout(8_000),
+  })
+  if (!res.ok) throw new Error(`Smoobu reservations lookup failed: ${res.status}`)
+
+  const json = await res.json() as {
+    bookings?: Array<{
+      id?: number
+      'reference-id'?: string | null
+      arrival?: string
+      departure?: string
+      type?: string
+      email?: string | null
+      'guest-name'?: string | null
+      channel?: { id?: number; name?: string }
+    }>
+  }
+
+  const email = (req.email ?? '').trim().toLowerCase()
+  const lastName = (req.lastName ?? '').trim().toLowerCase()
+
+  const hit = (json.bookings ?? []).find((b) => {
+    if (!b.id || b.type === 'cancellation') return false
+    if (b.arrival !== req.checkIn || b.departure !== req.checkOut) return false
+    if (b.channel?.id !== DIRECT_CHANNEL_ID) return false
+    const sameMail = !!email && (b.email ?? '').trim().toLowerCase() === email
+    const sameName = !!lastName && (b['guest-name'] ?? '').toLowerCase().includes(lastName)
+    return sameMail || sameName
+  })
+
+  return hit?.id ? { id: hit.id, referenceId: hit['reference-id'] ?? undefined } : null
 }

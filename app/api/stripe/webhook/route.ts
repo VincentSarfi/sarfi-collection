@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe, toCents } from '@/lib/stripe'
-import { createBooking, verifyAvailability } from '@/lib/smoobu'
+import { createBooking, findExistingBooking, verifyAvailability } from '@/lib/smoobu'
+import type { BookingRequest, BookingResult } from '@/lib/smoobu'
 import { sendBookingNotification, sendGuestConfirmationEmail, sendVoucherEmail, toMailLocale } from '@/lib/notify'
 import { voucherCardUrl, voucherValidUntil } from '@/lib/voucher'
 
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
     const guestLocale = toMailLocale(m.locale)
 
     try {
-      const result = await createBooking({
+      const result = await createOrAdoptBooking({
         apartmentId: m.apartmentId,
         checkIn:     m.checkIn,
         checkOut:    m.checkOut,
@@ -157,13 +158,68 @@ export async function POST(request: NextRequest) {
 
     } catch (err) {
       console.error('[webhook] Smoobu booking creation failed:', err)
-      // Return 500 so Stripe retries (up to ~18h). Duplicate protection:
-      // on retry, smoobu_booking_id check above skips if already created.
+      // Geld ist geflossen, Buchung fehlt: EINMAL Alarm an uns (Flag im PI),
+      // nicht bei jedem der bis zu ~3 Tage dauernden Stripe-Retries.
+      if (!m.booking_alert_sent) {
+        await sendBookingNotification({
+          propertyName:  `⚠️ BEZAHLT, ABER KEINE SMOOBU-BUCHUNG – ${m.propertyName}`,
+          apartmentId:   m.apartmentId,
+          checkIn:       m.checkIn,
+          checkOut:      m.checkOut,
+          nights:        0,
+          guests:        parseInt(m.guests, 10),
+          totalPrice:    parseFloat(m.totalPrice),
+          depositAmount: parseFloat(m.depositAmount),
+          paymentOption: (m.paymentOption as "50" | "100") ?? "50",
+          firstName:     m.firstName,
+          lastName:      m.lastName,
+          email:         m.email,
+          phone:         m.phone,
+          message:       `Smoobu-Fehler: ${err instanceof Error ? err.message : String(err)}. Stripe versucht es automatisch erneut – Kalender prüfen und Zeitraum ggf. von Hand blocken! PI: ${pi.id}`,
+          paymentIntentId: pi.id,
+        }).catch(() => {})
+        await stripe.paymentIntents.update(pi.id, { metadata: { booking_alert_sent: '1' } }).catch(() => {})
+      }
+      // Return 500 so Stripe retries. Duplicate protection: smoobu_booking_id
+      // check above, plus createOrAdoptBooking finds a booking Smoobu created
+      // without answering.
       return NextResponse.json({ error: 'Booking creation failed – will retry' }, { status: 500 })
     }
   }
 
   return NextResponse.json({ received: true })
+}
+
+/**
+ * Legt die Smoobu-Buchung an – oder übernimmt eine, die es schon gibt.
+ *
+ * Am 16.09.2026 hat Smoobu eine Reservierung angelegt, ohne dem Webhook
+ * erfolgreich zu antworten. Alle Stripe-Retries scheiterten danach an
+ * „Failed validation" (Zeitraum durch die eigene Buchung belegt), und
+ * Gast wie Inhaber bekamen nie eine Mail. Deshalb: vorher nachsehen, und
+ * nach einem Fehler noch einmal.
+ */
+async function createOrAdoptBooking(req: BookingRequest): Promise<BookingResult> {
+  const lookup = () => findExistingBooking(req).catch((e) => {
+    console.warn('[webhook] Suche nach vorhandener Buchung fehlgeschlagen:', e)
+    return null
+  })
+
+  const vorher = await lookup()
+  if (vorher) {
+    console.log(`[webhook] Vorhandene Smoobu-Buchung #${vorher.id} übernommen`)
+    return vorher
+  }
+  try {
+    return await createBooking(req)
+  } catch (err) {
+    const nachher = await lookup()
+    if (nachher) {
+      console.warn(`[webhook] Smoobu meldete Fehler, Buchung #${nachher.id} existiert aber – übernommen`)
+      return nachher
+    }
+    throw err
+  }
 }
 
 // ─── Gruppenbuchung: je Apartment eine Smoobu-Reservierung ────────────────────
@@ -274,6 +330,32 @@ async function handleGroupBooking(piId: string, m: Record<string, string>) {
       continue // bereits angelegt (früherer Versuch / Client-Backup)
     }
 
+    const groupReq: BookingRequest = {
+      apartmentId: apt.smoobuId,
+      checkIn: m.checkIn,
+      checkOut: m.checkOut,
+      guests: apt.guests,
+      firstName: m.firstName,
+      lastName: m.lastName,
+      email: m.email,
+      phone: m.phone,
+      message: m.message,
+      totalPrice: apt.total,
+      // Anzahlung anteilig am Apartment-Preis, damit Smoobu-Salden stimmen
+      depositAmount: Math.round(apt.total * (parseFloat(m.depositAmount) / parseFloat(m.totalPrice))),
+      language: guestLocale,
+    }
+
+    // Schon angelegt, aber nicht vermerkt (Smoobu hat nicht geantwortet)?
+    const vorhanden = await findExistingBooking(groupReq).catch(() => null)
+    if (vorhanden) {
+      createdIds.push(vorhanden.id)
+      meta[metaKey] = String(vorhanden.id)
+      await stripe.paymentIntents.update(piId, { metadata: { [metaKey]: String(vorhanden.id) } })
+      console.log(`[webhook] Gruppen-Buchung ${apt.id} → vorhandene Smoobu #${vorhanden.id} übernommen`)
+      continue
+    }
+
     // Doppelbuchungs-Schutz: unmittelbar vor dem Anlegen nochmal prüfen.
     try {
       const blocked = await verifyAvailability(apt.smoobuId, m.checkIn, m.checkOut)
@@ -286,21 +368,7 @@ async function handleGroupBooking(piId: string, m: Record<string, string>) {
     }
 
     try {
-      const result = await createBooking({
-        apartmentId: apt.smoobuId,
-        checkIn: m.checkIn,
-        checkOut: m.checkOut,
-        guests: apt.guests,
-        firstName: m.firstName,
-        lastName: m.lastName,
-        email: m.email,
-        phone: m.phone,
-        message: m.message,
-        totalPrice: apt.total,
-        // Anzahlung anteilig am Apartment-Preis, damit Smoobu-Salden stimmen
-        depositAmount: Math.round(apt.total * (parseFloat(m.depositAmount) / parseFloat(m.totalPrice))),
-        language: guestLocale,
-      })
+      const result = await createOrAdoptBooking(groupReq)
       createdIds.push(result.id)
       meta[metaKey] = String(result.id)
       // Sofort persistieren – Schutz gegen Doppelanlage beim Retry
