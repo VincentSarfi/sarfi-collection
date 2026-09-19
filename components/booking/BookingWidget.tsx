@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { Turnstile } from "@marsidev/react-turnstile"
 import BookingCalendar, { toDateKey, fmtShort, fmtLong, type SelectionStep } from "./BookingCalendar"
-import { BOOKING_WINDOW_DAYS, bookingWindowEndDate } from "@/lib/booking-window"
+import { BOOKING_WINDOW_DAYS, bookingWindowEndDate, depositAllowed, DEPOSIT_MIN_LEAD_DAYS } from "@/lib/booking-window"
 import PaymentStep from "./PaymentStep"
 import type { AvailabilityMap } from "@/lib/smoobu"
 import type { NightRate } from "@/lib/pricelabs"
@@ -290,6 +290,13 @@ export default function BookingWidget({
   // Formular-State weg, dann muss der Gast wieder bei den Daten starten.
   const [errorRetryStep, setErrorRetryStep] = useState<Step>("form")
   const [paymentOption, setPaymentOption] = useState<PaymentOption>("50")
+  // 50-%-Anzahlung nur mit genug Vorlauf: der Restbetrag ist „bis 14 Tage vor
+  // Anreise" fällig, bei kurzfristigen Buchungen ist dieser Termin schon vorbei.
+  // Der Server erzwingt dieselbe Regel (app/api/stripe/payment-intent).
+  const anzahlungMoeglich = checkIn ? depositAllowed(toDateKey(checkIn)) : true
+  useEffect(() => {
+    if (!anzahlungMoeglich && paymentOption !== "100") setPaymentOption("100")
+  }, [anzahlungMoeglich, paymentOption])
   // Gast kam per Redirect-Zahlart (PayPal, Klarna …) zurück → Formular-State
   // ist nach dem Seiten-Reload leer, Bestätigung generisch rendern.
   const [redirectReturn, setRedirectReturn] = useState(false)
@@ -1016,9 +1023,9 @@ export default function BookingWidget({
                       <p className="font-body text-xs font-medium text-forest-700 uppercase tracking-wider mb-2">{t.form.paymentHeading}</p>
                       <div className="space-y-2">
                         {([
-                          { value: "50" as PaymentOption, label: t.form.deposit50Label, sub: t.form.subNow(Math.round(priceBreakdown.total * 0.5).toLocaleString(nf)) },
+                          ...(anzahlungMoeglich ? [{ value: "50" as PaymentOption, label: t.form.deposit50Label, sub: t.form.subNow(Math.round(priceBreakdown.total * 0.5).toLocaleString(nf)) }] : []),
                           { value: "100" as PaymentOption, label: t.form.full100Label, sub: t.form.subNow(priceBreakdown.total.toLocaleString(nf)) },
-                        ] as const).map((opt) => (
+                        ]).map((opt) => (
                           <button key={opt.value} type="button" onClick={() => setPaymentOption(opt.value)}
                             className={["flex items-center gap-3 w-full rounded-xl border px-3 py-2.5 text-left transition-colors", paymentOption === opt.value ? "border-forest-700 bg-forest-50" : "border-cream-300"].join(" ")}>
                             <span className={["w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center", paymentOption === opt.value ? "border-forest-700" : "border-cream-400"].join(" ")}>
@@ -1386,17 +1393,19 @@ export default function BookingWidget({
                         </p>
                         <div className="grid grid-cols-1 gap-2">
                           {([
-                            {
+                            ...(anzahlungMoeglich ? [{
                               value: "50" as PaymentOption,
                               label: t.form.deposit50Label,
                               sub: t.form.subDeposit(Math.round(priceBreakdown.total * 0.5).toLocaleString(nf)),
-                            },
+                            }] : []),
                             {
                               value: "100" as PaymentOption,
                               label: t.form.full100Label,
-                              sub: t.form.subFull(priceBreakdown.total.toLocaleString(nf)),
+                              sub: anzahlungMoeglich
+                                ? t.form.subFull(priceBreakdown.total.toLocaleString(nf))
+                                : t.form.subFullShortNotice(priceBreakdown.total.toLocaleString(nf), DEPOSIT_MIN_LEAD_DAYS),
                             },
-                          ] as const).map((opt) => (
+                          ]).map((opt) => (
                             <button
                               key={opt.value}
                               type="button"

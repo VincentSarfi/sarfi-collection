@@ -147,6 +147,10 @@ const booking = {
     subNow: (amount: string) => `${amount} € jetzt`,
     subDeposit: (amount: string) => `${amount} € jetzt · Rest 14 Tage vor Anreise`,
     subFull: (amount: string) => `${amount} € jetzt · Keine weiteren Zahlungen`,
+    // Kurzfristige Buchung: die Anzahlung entfällt, weil der Restbetrag
+    // (14 Tage vor Anreise) sonst schon bei der Buchung überfällig wäre.
+    subFullShortNotice: (amount: string, tage: number) =>
+      `${amount} € jetzt · Bei weniger als ${tage} Tagen bis zur Anreise buchen wir direkt den Gesamtbetrag ab`,
     legalSidebar: {
       pre: "Mit deiner Buchung akzeptierst du unsere ",
       terms: "AGB",

@@ -155,6 +155,10 @@ const booking = {
     subNow: (amount: string) => `${amount} € now`,
     subDeposit: (amount: string) => `${amount} € now · balance due 14 days before arrival`,
     subFull: (amount: string) => `${amount} € now · no further payments`,
+    // Short-notice booking: the deposit is dropped because the balance
+    // (due 14 days before arrival) would already be overdue at booking time.
+    subFullShortNotice: (amount: string, days: number) =>
+      `${amount} € now · with fewer than ${days} days until arrival we charge the full amount`,
     legalSidebar: {
       pre: "By booking you accept our ",
       terms: "terms & conditions",

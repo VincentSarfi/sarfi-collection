@@ -6,7 +6,7 @@ import { rateLimit, getClientIp } from '@/lib/rate-limit'
 import { sendCheckoutStartedNotification } from '@/lib/notify'
 import { findConfigBySmoobuId, computeExpectedPrice } from '@/lib/pricing'
 import { verifyTurnstile } from '@/lib/turnstile'
-import { bookingWindowEnd } from '@/lib/booking-window'
+import { bookingWindowEnd, depositAllowed } from '@/lib/booking-window'
 
 
 export interface CreatePaymentIntentRequest {
@@ -147,7 +147,11 @@ export async function POST(request: NextRequest) {
   const serverTotal = priceCheck.usedDynamicRates
     ? Math.max(totalPrice, priceCheck.expectedTotal)
     : totalPrice
-  const fraction    = paymentOption === "100" ? 1 : DEPOSIT_FRACTION
+  // Anzahlung nur mit genug Vorlauf — sonst wäre der Restbetrag laut eigener
+  // Mail („bis 14 Tage vor Anreise") schon bei der Buchung überfällig.
+  // Serverseitig erzwungen, nicht nur im Formular ausgeblendet.
+  const anzahlungErlaubt = depositAllowed(checkIn)
+  const fraction    = (paymentOption === "100" || !anzahlungErlaubt) ? 1 : DEPOSIT_FRACTION
   const depositEur  = Math.round(serverTotal * fraction)
 
   try {
@@ -159,7 +163,7 @@ export async function POST(request: NextRequest) {
       // der Webhook legt die Smoobu-Buchung erst bei payment_intent.succeeded an.
       automatic_payment_methods: { enabled: true },
       receipt_email: email,
-      description: `${paymentOption === "100" ? "100% Vollzahlung" : "50% Anzahlung"} – ${propertyName} · ${checkIn} bis ${checkOut}`,
+      description: `${fraction === 1 ? "100% Vollzahlung" : "50% Anzahlung"} – ${propertyName} · ${checkIn} bis ${checkOut}`,
       metadata: {
         // Store all booking data so webhook can create the Smoobu booking
         apartmentId,
@@ -174,7 +178,7 @@ export async function POST(request: NextRequest) {
         message: message ?? '',
         totalPrice: String(serverTotal),
         depositAmount: String(depositEur),
-        paymentOption: paymentOption ?? "50",
+        paymentOption: anzahlungErlaubt ? (paymentOption ?? "50") : "100",
         locale,
       },
     })
@@ -192,7 +196,7 @@ export async function POST(request: NextRequest) {
       guests,
       totalPrice: serverTotal,
       depositAmount:   depositEur,
-      paymentOption:   paymentOption ?? "50",
+      paymentOption:   anzahlungErlaubt ? (paymentOption ?? "50") : "100",
       firstName,
       lastName,
       email,

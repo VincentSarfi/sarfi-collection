@@ -34,6 +34,30 @@ export function isWithinBookingWindow(date: string): boolean {
 }
 
 /**
+ * Anzahlung (50 %) gibt es nur mit genug Vorlauf.
+ *
+ * Der Restbetrag ist laut Bestätigungsmail und Erinnerung „bis 14 Tage vor
+ * Anreise" fällig. Bei kurzfristigen Buchungen ist dieser Termin schon
+ * vorbei, bevor der Gast überhaupt gebucht hat — dann wäre die Anzahlung ein
+ * Versprechen, das die eigene Mail im selben Moment widerlegt. Ab hier gilt
+ * deshalb: weniger als 15 Tage Vorlauf → nur Vollzahlung.
+ */
+export const DEPOSIT_MIN_LEAD_DAYS = 15
+
+/** Tage zwischen heute (Berlin) und dem Anreisedatum. */
+export function daysUntilArrival(checkIn: string, from: string = todayBerlin()): number {
+  const a = Date.parse(`${checkIn}T00:00:00Z`)
+  const b = Date.parse(`${from}T00:00:00Z`)
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return 0
+  return Math.round((a - b) / 86_400_000)
+}
+
+/** Darf für diese Anreise eine 50-%-Anzahlung angeboten werden? */
+export function depositAllowed(checkIn: string, from: string = todayBerlin()): boolean {
+  return daysUntilArrival(checkIn, from) >= DEPOSIT_MIN_LEAD_DAYS
+}
+
+/**
  * Client-Variante für den Kalender: letzter buchbarer Tag als lokales Date
  * (Mitternacht), passend zu den lokalen Date-Objekten im BookingCalendar.
  */

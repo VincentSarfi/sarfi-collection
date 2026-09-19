@@ -7,6 +7,10 @@ import { smoobuHeaders } from './smoobu-auth'
 
 const SMOOBU_BASE = 'https://login.smoobu.com/api'
 const DIRECT_CHANNEL_ID = 4393833 // "Direct booking"-Kanal dieses Smoobu-Kontos
+// Hauszeiten für alle Einheiten (data/properties.ts, AGB, JSON-LD). Smoobu
+// erwartet "HH:ii"; fehlen sie, bleiben die Zeitfelder der Buchung leer.
+const CHECK_IN_TIME = '16:00'
+const CHECK_OUT_TIME = '10:00'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -194,6 +198,12 @@ export async function createBooking(req: BookingRequest): Promise<BookingResult>
     apartmentId: parseInt(req.apartmentId, 10),
     arrivalDate: req.checkIn,
     departureDate: req.checkOut,
+    // Ohne diese beiden Felder legt Smoobu die Buchung ohne Zeiten an, und die
+    // Gästevorlagen rendern dann "Anreise: 25.10.26 ab" bzw. "Check-out bis
+    // 00:00". Die Zeiten sind die Hauszeiten aus data/properties.ts (Check-in
+    // ab 16:00, Check-out bis 10:00) und gelten für alle Einheiten.
+    arrivalTime: CHECK_IN_TIME,
+    departureTime: CHECK_OUT_TIME,
     channelId: DIRECT_CHANNEL_ID, // "Direct booking" channel for this Smoobu account
     firstName: req.firstName,
     lastName: req.lastName,
