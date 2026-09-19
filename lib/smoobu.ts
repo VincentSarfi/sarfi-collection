@@ -6,7 +6,14 @@
 import { smoobuHeaders } from './smoobu-auth'
 
 const SMOOBU_BASE = 'https://login.smoobu.com/api'
-const DIRECT_CHANNEL_ID = 4393833 // "Direct booking"-Kanal dieses Smoobu-Kontos
+// Website-Buchungen laufen auf den Kanal „Webseite", NICHT auf „Direktbuchung".
+// Grund ist die Buchungsbestätigung: Smoobu-Vorlagen lassen sich nur je Kanal
+// schalten, und der Website-Gast bekommt bereits die eigene, gestaltete Mail aus
+// lib/notify.ts. „Direktbuchung" bleibt damit frei für telefonisch/von Hand in
+// Smoobu eingetragene Buchungen — die bekommen die Smoobu-Vorlage, sonst gar
+// nichts. Fachlich sind beide Kanäle dasselbe; das Dashboard behandelt sie in
+// backend/invoices/mapping.js (istDirekt) gemeinsam als Direktvertrieb.
+const DIRECT_CHANNEL_ID = 4393853 // „Webseite"-Kanal dieses Smoobu-Kontos
 // Hauszeiten für alle Einheiten (data/properties.ts, AGB, JSON-LD). Smoobu
 // erwartet "HH:ii"; fehlen sie, bleiben die Zeitfelder der Buchung leer.
 const CHECK_IN_TIME = '16:00'
@@ -204,7 +211,7 @@ export async function createBooking(req: BookingRequest): Promise<BookingResult>
     // ab 16:00, Check-out bis 10:00) und gelten für alle Einheiten.
     arrivalTime: CHECK_IN_TIME,
     departureTime: CHECK_OUT_TIME,
-    channelId: DIRECT_CHANNEL_ID, // "Direct booking" channel for this Smoobu account
+    channelId: DIRECT_CHANNEL_ID, // Kanal „Webseite" — Begründung oben an der Konstante
     firstName: req.firstName,
     lastName: req.lastName,
     email: req.email,
