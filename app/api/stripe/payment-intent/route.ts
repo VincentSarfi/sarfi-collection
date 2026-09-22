@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { DATE_RE, EMAIL_RE } from '@/lib/validate'
+import { DATE_RE, EMAIL_RE, metadataText } from '@/lib/validate'
 import { stripe, DEPOSIT_FRACTION, toCents } from '@/lib/stripe'
 import { verifyAvailability } from '@/lib/smoobu'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
@@ -7,6 +7,7 @@ import { sendCheckoutStartedNotification } from '@/lib/notify'
 import { findConfigBySmoobuId, computeExpectedPrice } from '@/lib/pricing'
 import { verifyTurnstile } from '@/lib/turnstile'
 import { bookingWindowEnd, depositAllowed } from '@/lib/booking-window'
+import { firmenangabenAus } from '@/lib/firmenblock'
 
 
 export interface CreatePaymentIntentRequest {
@@ -24,6 +25,15 @@ export interface CreatePaymentIntentRequest {
   paymentOption?: "50" | "100"  // default: "50"
   turnstileToken?: string  // Cloudflare Turnstile bot-check token
   locale?: string          // Buchungssprache des Gasts ("de" | "en"), steuert Gast-Mails & Smoobu
+  // „Firmenbuchung / Rechnung gewünscht" — gehen über die Metadata an den Webhook
+  // und von dort als Firmenblock in die Smoobu-Notiz (lib/firmenblock.ts).
+  isBusinessBooking?: boolean
+  company?: string
+  vatId?: string
+  street?: string
+  zip?: string
+  city?: string
+  country?: string
 }
 
 export interface CreatePaymentIntentResponse {
@@ -57,6 +67,10 @@ export async function POST(request: NextRequest) {
 
   // Buchungssprache: alles außer "en" fällt auf "de" zurück (Alt-Clients senden nichts)
   const locale = body.locale === 'en' ? 'en' : 'de'
+
+  // Firmenangaben nur bei „Firmenbuchung" und mit Firmennamen, gekürzt und ohne
+  // Zeilenumbrüche. Die Rechnung geht dann an die Firma, nicht an die Person.
+  const firma = firmenangabenAus(body as Record<string, unknown>)
 
   if (!apartmentId || !checkIn || !checkOut || !firstName || !lastName ||
       !email || !phone || !guests || !totalPrice) {
@@ -175,11 +189,23 @@ export async function POST(request: NextRequest) {
         lastName,
         email,
         phone,
-        message: message ?? '',
+        // Stripe nimmt je Metadata-Wert höchstens 500 Zeichen — eine längere
+        // Gastnachricht liess sonst die ganze Zahlung scheitern. Gekürzt nach
+        // Codepunkten, damit kein Emoji zerschnitten wird.
+        message: metadataText(message),
         totalPrice: String(serverTotal),
         depositAmount: String(depositEur),
         paymentOption: anzahlungErlaubt ? (paymentOption ?? "50") : "100",
         locale,
+        ...(firma ? {
+          invoiceWish: '1',
+          company: firma.company,
+          vatId: firma.vatId ?? '',
+          billStreet: firma.street ?? '',
+          billZip: firma.zip ?? '',
+          billCity: firma.city ?? '',
+          billCountry: firma.country ?? '',
+        } : {}),
       },
     })
 

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { DATE_RE, EMAIL_RE } from '@/lib/validate'
+import { DATE_RE, EMAIL_RE, metadataText } from '@/lib/validate'
 import { stripe, DEPOSIT_FRACTION, toCents } from '@/lib/stripe'
 import { verifyAvailability } from '@/lib/smoobu'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
@@ -221,7 +221,7 @@ export async function POST(request: NextRequest) {
         lastName,
         email,
         phone,
-        message: message ?? '',
+        message: metadataText(message), // Stripe: höchstens 500 Zeichen je Wert
         totalPrice: String(serverTotal),
         depositAmount: String(depositEur),
         paymentOption,

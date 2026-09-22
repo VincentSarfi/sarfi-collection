@@ -7,11 +7,22 @@ type Prefill = {
   ok: boolean
   error?: string
   bereitsVersendet?: boolean
+  // Es gibt schon einen Beleg (verschickt oder nur erstellt). Das Formular bleibt
+  // offen: wer andere Daten einträgt, stellt einen Korrekturwunsch.
+  bereitsErstellt?: boolean
+  rechnungsNummer?: string | null
+  rechnungAn?: string | null
   propertyName?: string
   guestName?: string
   arrival?: string
   departure?: string
   betrag?: number
+  // Firma, die die Buchung selbst schon nennt — vorausgefüllt, änderbar.
+  firma?: string
+  ustId?: string
+  strasse?: string
+  plz?: string
+  ort?: string
 }
 
 function deDate(iso?: string) {
@@ -43,7 +54,15 @@ export default function RechnungForm() {
     }
     fetch(`/api/rechnung?res=${encodeURIComponent(res)}&t=${encodeURIComponent(t)}`)
       .then(r => r.json())
-      .then((d: Prefill) => setPrefill(d))
+      .then((d: Prefill) => {
+        setPrefill(d)
+        if (d.ok) {
+          setForm(f => ({
+            ...f,
+            firma: d.firma ?? '', ustId: d.ustId ?? '', strasse: d.strasse ?? '', plz: d.plz ?? '', ort: d.ort ?? '',
+          }))
+        }
+      })
       .catch(() => setPrefill({ ok: false, error: 'Buchung konnte nicht geladen werden.' }))
   }, [res, t])
 
@@ -60,6 +79,9 @@ export default function RechnungForm() {
       if (d.ok) {
         setStatus('done')
         setMessage(d.invoiceNumber ? `Rechnung ${d.invoiceNumber} wurde an ${form.email} gesendet.` : 'Ihre Rechnung wurde versendet.')
+      } else if (d.korrekturAngefragt) {
+        // Kein Fehler: der Beleg existiert schon, die Umstellung übernehmen wir.
+        setStatus('done'); setMessage(d.error)
       } else {
         setStatus('error'); setMessage(d.error || 'Es ist ein Fehler aufgetreten.')
       }
@@ -78,7 +100,7 @@ export default function RechnungForm() {
   if (!prefill.ok) {
     return <div className={card}><h1 className="text-xl font-bold text-[#1a2e1a] mb-2">Rechnung anfordern</h1><p className="text-[#b91c1c]">{prefill.error}</p></div>
   }
-  if (prefill.bereitsVersendet || status === 'done') {
+  if ((prefill.bereitsVersendet && !prefill.bereitsErstellt) || status === 'done') {
     return (
       <div className={card}>
         <h1 className="text-xl font-bold text-[#1a2e1a] mb-3">Vielen Dank!</h1>
@@ -98,10 +120,19 @@ export default function RechnungForm() {
         <p>Gast: {prefill.guestName}</p>
       </div>
 
+      {prefill.bereitsErstellt && (
+        <div className="border border-[#e8e2d6] rounded-md p-4 mb-6 text-sm text-[#4a5568]">
+          Für diese Buchung gibt es bereits die Rechnung {prefill.rechnungsNummer ?? ''}
+          {prefill.rechnungAn ? <> an <strong className="text-[#1a2e1a]">{prefill.rechnungAn}</strong></> : null}.
+          Stimmen die Daten nicht, tragen Sie unten die richtigen ein – wir stellen die Rechnung um und senden sie Ihnen zu.
+        </div>
+      )}
+
       <form onSubmit={submit} className="space-y-4">
         <div>
           <label className={label}>Firma <span className="text-[#aaa] font-normal">(optional)</span></label>
-          <input className={input} value={form.firma} onChange={e => setForm({ ...form, firma: e.target.value })} autoComplete="organization" />
+          <input className={input} value={form.firma} onChange={e => setForm({ ...form, firma: e.target.value })} autoComplete="organization" placeholder="z. B. Musterfirma GmbH" />
+          <p className="text-xs text-[#888] mt-1">Nur der Firmenname, ohne Ansprechpartner – ist eine Firma eingetragen, steht nur sie auf der Rechnung.</p>
         </div>
         <div>
           <label className={label}>USt-IdNr. <span className="text-[#aaa] font-normal">(optional)</span></label>
@@ -133,7 +164,7 @@ export default function RechnungForm() {
           disabled={status === 'sending'}
           className="w-full bg-[#1a2e1a] text-[#f5f0e8] font-semibold py-3 rounded-md hover:bg-[#24412a] disabled:opacity-60 transition-colors"
         >
-          {status === 'sending' ? 'Wird gesendet …' : 'Rechnung anfordern'}
+          {status === 'sending' ? 'Wird gesendet …' : (prefill.bereitsErstellt ? 'Rechnungsdaten senden' : 'Rechnung anfordern')}
         </button>
       </form>
     </div>

@@ -72,6 +72,11 @@ export async function POST(request: NextRequest) {
         totalPrice:  parseFloat(m.totalPrice),
         depositAmount: m.depositAmount ? parseFloat(m.depositAmount) : undefined,
         language:    guestLocale,
+        // Firmenbuchung → Firmenblock in der Smoobu-Notiz → Rechnung an die Firma.
+        business: (m.company || m.invoiceWish === '1') ? {
+          company: m.company, vatId: m.vatId, street: m.billStreet,
+          zip: m.billZip, city: m.billCity, country: m.billCountry,
+        } : undefined,
       })
 
       // Tag the payment intent with the booking ID

@@ -13,3 +13,11 @@ export function isValidEmail(s: string) {
 export function isValidDate(s: string) {
   return DATE_RE.test(s) && !isNaN(Date.parse(s))
 }
+
+/** Text für einen Stripe-Metadata-Wert: Stripe nimmt höchstens 500 Zeichen je
+ *  Wert, darüber scheitert der ganze PaymentIntent. Gekürzt nach Codepunkten,
+ *  damit kein Emoji zerschnitten wird. */
+export function metadataText(text: string | undefined, max = 500): string {
+  const zeichen = Array.from(text ?? '')
+  return zeichen.length > max ? zeichen.slice(0, max - 1).join('') + '…' : zeichen.join('')
+}

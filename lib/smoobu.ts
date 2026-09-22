@@ -4,6 +4,7 @@
  */
 
 import { smoobuHeaders } from './smoobu-auth'
+import { firmenblock, type Firmenangaben } from './firmenblock'
 
 const SMOOBU_BASE = 'https://login.smoobu.com/api'
 // Website-Buchungen laufen auf den Kanal „Webseite", NICHT auf „Direktbuchung".
@@ -45,6 +46,8 @@ export type BookingRequest = {
   depositAmount?: number
   /** Sprache des Gasts für Smoobu-Gastkommunikation (Default: de). */
   language?: 'de' | 'en'
+  /** „Firmenbuchung / Rechnung gewünscht": landet als Firmenblock in der Notiz. */
+  business?: Firmenangaben
 }
 
 export type BookingResult = {
@@ -223,6 +226,8 @@ export async function createBooking(req: BookingRequest): Promise<BookingResult>
     deposit: req.depositAmount ?? req.totalPrice,
     language: req.language ?? 'de',
     guestAppMessage: req.message ?? '',
+    // Firmenangaben für die Rechnungs-Engine des Dashboards (lib/firmenblock.ts).
+    ...(req.business ? { notice: firmenblock(req.business) } : {}),
     country: 'DE',
     address: { street: 'k.A.', zip: '00000', city: 'Deutschland', country: 'DE' },
   }

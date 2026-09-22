@@ -1016,7 +1016,7 @@ export default function BookingWidget({
                   )}
                   <div>
                     <label className="block font-body text-xs font-medium text-forest-700 mb-1">{t.form.messageShort} <span className="text-forest-400 font-normal">{t.form.optional}</span></label>
-                    <textarea name="message" value={form.message} onChange={handleFormChange} rows={2} placeholder={t.form.phMessageShort} className="w-full rounded-xl border border-cream-300 px-3.5 py-2.5 font-body text-sm text-forest-900 bg-white placeholder:text-forest-300 focus:outline-none focus:ring-2 focus:ring-forest-500 resize-none" />
+                    <textarea name="message" value={form.message} onChange={handleFormChange} rows={2} maxLength={500} placeholder={t.form.phMessageShort} className="w-full rounded-xl border border-cream-300 px-3.5 py-2.5 font-body text-sm text-forest-900 bg-white placeholder:text-forest-300 focus:outline-none focus:ring-2 focus:ring-forest-500 resize-none" />
                   </div>
                   {priceBreakdown && (
                     <div>
@@ -1376,6 +1376,7 @@ export default function BookingWidget({
                         <span className="text-forest-400 font-normal">{t.form.optional}</span>
                       </label>
                       <textarea
+                        maxLength={500}
                         name="message"
                         value={form.message}
                         onChange={handleFormChange}

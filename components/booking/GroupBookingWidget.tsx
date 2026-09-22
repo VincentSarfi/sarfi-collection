@@ -426,7 +426,7 @@ export default function GroupBookingWidget() {
               </div>
               <div>
                 <label className={labelCls} htmlFor="g-message">{dict.form.messageFull} {dict.form.optional}</label>
-                <textarea id="g-message" rows={3} value={message} onChange={(e) => setMessage(e.target.value)} placeholder={dict.form.phMessageFull} className={inputCls} />
+                <textarea id="g-message" rows={3} maxLength={500} value={message} onChange={(e) => setMessage(e.target.value)} placeholder={dict.form.phMessageFull} className={inputCls} />
               </div>
 
               {/* Zahlungsoption */}
