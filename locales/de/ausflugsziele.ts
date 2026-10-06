@@ -1,5 +1,9 @@
 // Ausflugsziele-Seite (components/pages/AusflugszielePageContent.tsx).
 // Nur Texte – Farben, Emojis und Links liegen in der Komponente.
+// Fakten geprüft am 06.10.2026 (Betreiber-Websites, Nationalpark-Steckbrief,
+// Tourenportal Landkreis Deggendorf); Fahrzeiten aus data/surroundings.ts.
+import { ca, driveMinutes as m } from "@/data/surroundings";
+
 const ausflugsziele = {
   breadcrumbHome: "Startseite",
   breadcrumbCurrent: "Ausflugsziele",
@@ -7,7 +11,7 @@ const ausflugsziele = {
     eyebrow: "Region Bayerischer Wald",
     h1: "Ausflugsziele & Freizeitangebote",
     intro:
-      "Rund um HAUS28 und Haus Schönblick wartet der Bayerische Wald mit einer Fülle an Erlebnissen – von wilder Natur über Westernflair bis zu modernsten Golfsimulationen. Hier findest du unsere persönlichen Empfehlungen für deinen Urlaub.",
+      "Rund um HAUS28 und Haus Schönblick wartet der Bayerische Wald mit einer Fülle an Erlebnissen – von wilder Natur über Westernflair bis zum Golfsimulator für Regentage. Hier findest du unsere persönlichen Empfehlungen für deinen Urlaub.",
     pillHaus28: "HAUS28 · Grattersdorf",
     pillSchoenblick: "Haus Schönblick · Schöfweg",
   },
@@ -48,7 +52,7 @@ const ausflugsziele = {
         items: [
           { text: "Baumwipfelpfad: barrierearmer Holzsteg, kinderwagentauglich", anchor: "baumwipfelpfad" },
           { text: "Nationalpark-Besucherzentren mit Ausstellungen", anchor: "nationalpark" },
-          { text: "Wellness im Thermalbad Regen" },
+          { text: "Hallenbad & Saunawelt im elypso Deggendorf" },
         ],
       },
       {
@@ -56,7 +60,7 @@ const ausflugsziele = {
         items: [
           { text: "Indoor-Golf in der Rusel-Arena", anchor: "indoor-golf" },
           { text: "Ausstellungen im Hans-Eisenmann-Haus", anchor: "nationalpark" },
-          { text: "Thermalbad Regen" },
+          { text: "Erlebnisbad elypso in Deggendorf" },
         ],
       },
       {
@@ -77,25 +81,25 @@ const ausflugsziele = {
       tag: "Familie & Unterhaltung",
       name: "Pullman City",
       schemaName: "Pullman City – Westernstadt Eging am See",
-      subtitle: "Europas größte Westernstadt",
-      distance: "~15 min von Haus Schönblick · ~20 min von HAUS28",
-      fromHaus28: "~20 min",
-      fromSchoenblick: "~15 min",
+      subtitle: "Westernstadt in Eging am See – seit 1997",
+      distance: `${ca(m.pullmanCity.haus28)} von HAUS28 & Haus Schönblick`,
+      fromHaus28: ca(m.pullmanCity.haus28),
+      fromSchoenblick: ca(m.pullmanCity.schoenblick),
       description:
-        "Mitten im Bayerischen Wald taucht die Westernstadt Pullman City in Eging am See auf – Europas größtes Western-Erlebnisdorf. Auf über 80.000 m² warten Westernshows, Ponyreiten, Goldwaschen, ein Wasserspielplatz mit Rutsche, ein Streichelgehege und authentische Western-Gastronomie. Ein echtes Highlight für Familien und alle, die den Wilden Westen erleben wollen – ohne die USA zu verlassen.",
+        "Am Südrand des Bayerischen Waldes liegt in Eging am See die Westernstadt Pullman City – seit 1997 auf rund 200.000 m². Hier warten Westernshows, Ponyreiten, Goldwaschen, der Wasserspielplatz „El Dorado“ mit Rutsche, ein Kleintiergehege und Western-Gastronomie. Ein echtes Highlight für Familien und alle, die den Wilden Westen erleben wollen – ohne die USA zu verlassen.",
       schemaDescription:
-        "Europas größtes Western-Erlebnisdorf mit Westernshows, Ponyreiten, Goldwaschen und Wasserspielplatz.",
+        "Westernstadt auf rund 200.000 m² mit Westernshows, Ponyreiten, Goldwaschen und Wasserspielplatz.",
       highlights: [
-        "Täglich wechselndes Showprogramm",
-        "Wasserspielplatz El Dorado mit Rutsche",
+        "Wechselndes Showprogramm",
+        "Wasserspielplatz „El Dorado“ mit Rutsche",
         "Pferdeshow & Ponyreiten",
         "Goldwaschen für Kinder",
         "Übernachtung in Hotels, Blockhütten oder Tipis möglich",
       ],
       practicalInfo: [
-        { label: "Saison", value: "Mai – Oktober" },
-        { label: "Anfahrt", value: "B85 Richtung Eging am See" },
-        { label: "Tipp", value: "Kombi mit Baumwipfelpfad (gleiche Region)" },
+        { label: "Saison", value: "ab März, im Winter mit Weihnachtsprogramm – nicht täglich geöffnet, Kalender auf pullmancity.de" },
+        { label: "Adresse", value: "Ruberting 30, 94535 Eging am See" },
+        { label: "Tipp", value: "Einen ganzen Tag einplanen und die Showzeiten vorab im Tagesprogramm nachsehen" },
       ],
     },
     {
@@ -103,25 +107,25 @@ const ausflugsziele = {
       tag: "Natur & Erlebnis",
       name: "Baumwipfelpfad Neuschönau",
       schemaName: "Baumwipfelpfad Neuschönau",
-      subtitle: "Europas längster Baumwipfelpfad",
-      distance: "~25 min von Haus Schönblick · ~30 min von HAUS28",
-      fromHaus28: "~30 min",
-      fromSchoenblick: "~25 min",
+      subtitle: "Einer der längsten Baumwipfelpfade Europas",
+      distance: `${ca(m.nationalparkLusen.schoenblick)} von Haus Schönblick · ${ca(m.nationalparkLusen.haus28)} von HAUS28`,
+      fromHaus28: ca(m.nationalparkLusen.haus28),
+      fromSchoenblick: ca(m.nationalparkLusen.schoenblick),
       description:
-        "Der Baumwipfelpfad Neuschönau im Nationalpark Bayerischer Wald ist der längste seiner Art in Europa. 1.300 m barrierearmer Holzsteg führt durch die Baumkronen des Urwalds – bis zu 44 m über dem Boden. Am Ende erwartet ein 44 m hoher Aussichtsturm mit 360°-Panoramablick über den Nationalpark. Für Kinder gibt es spannende Erlebnisinseln und interaktive Stationen entlang des Weges.",
+        "Der Baumwipfelpfad in Neuschönau im Nationalpark Bayerischer Wald gehört mit 1.300 m zu den längsten Europas. Der barrierearme Holzsteg (höchstens 6 % Steigung) führt in 8 bis 25 m Höhe durch die Baumkronen. Höhepunkt ist der 44 m hohe Aussichtsturm, das „Baumei“, mit Rundumblick über den Nationalpark. Für Kinder gibt es Erlebnisstationen entlang des Weges.",
       schemaDescription:
-        "Europas längster Baumwipfelpfad mit 1.300 m Länge und atemberaubenden Blicken über den Nationalpark Bayerischer Wald.",
+        "Einer der längsten Baumwipfelpfade Europas: 1.300 m Holzsteg in 8–25 m Höhe und ein 44 m hoher Aussichtsturm im Nationalpark Bayerischer Wald.",
       highlights: [
-        "1.300 m Holzsteg in den Baumkronen",
-        "44 m hoher Aussichtsturm",
-        "Barrierefrei & kinderwagentauglich",
-        "Interaktive Erlebnisstationen",
-        "Direkt am Nationalpark-Tierfreigehege",
+        "1.300 m Holzsteg in 8–25 m Höhe",
+        "44 m hoher Aussichtsturm „Baumei“",
+        "Barrierearm, mit Kinderwagen & Rollstuhl befahrbar",
+        "Erlebnisstationen für Kinder",
+        "Direkt am Tier-Freigelände des Nationalparks",
       ],
       practicalInfo: [
-        { label: "Öffnung", value: "täglich, ganzjährig" },
-        { label: "Eintritt", value: "Erwachsene ca. 11 €, Kinder ca. 8 €" },
-        { label: "Tipp", value: "Kombi mit Tierfreigehege (nebenan, kostenlos)" },
+        { label: "Öffnung", value: "ganzjährig, im Winter nicht täglich – Zeiten auf treetop-walks.com" },
+        { label: "Eintritt", value: "Erwachsene 13 €, Kinder 6–14 J. 11 €, unter 6 frei, Familie 31 € (Stand 2026)" },
+        { label: "Tipp", value: "Kombi mit dem Tier-Freigelände (nebenan, kostenlos)" },
       ],
     },
     {
@@ -130,50 +134,50 @@ const ausflugsziele = {
       name: "Nationalpark Bayerischer Wald",
       schemaName: "Nationalpark Bayerischer Wald",
       subtitle: "Deutschlands ältester Nationalpark",
-      distance: "~20 km von Haus Schönblick · ~25 km von HAUS28",
-      fromHaus28: "~25 km",
-      fromSchoenblick: "~20 km",
+      distance: `${ca(m.nationalparkLusen.schoenblick)} von Haus Schönblick · ${ca(m.nationalparkLusen.haus28)} von HAUS28 (Nationalparkzentrum Lusen)`,
+      fromHaus28: ca(m.nationalparkLusen.haus28),
+      fromSchoenblick: ca(m.nationalparkLusen.schoenblick),
       description:
-        "Seit 1970 ist der Bayerische Wald Deutschlands erster Nationalpark – 24.250 ha wilder, unberührter Natur, in der die Natur sich selbst überlassen bleibt. Das Besucherzentrum Hans-Eisenmann-Haus in Neuschönau und das Haus zur Wildnis in Ludwigsthal bieten spannende Ausstellungen. Im großen Tierfreigehege leben Luchse, Wölfe, Bären, Wisente und Hirsche in naturnahen Gehegen – kostenloser Eintritt.",
+        "Seit 1970 ist der Bayerische Wald Deutschlands erster Nationalpark – heute 24.945 ha, auf denen die Natur sich selbst überlassen bleibt. Das Besucherzentrum Hans-Eisenmann-Haus in Neuschönau und das Haus zur Wildnis in Ludwigsthal bieten spannende Ausstellungen. Im Tier-Freigelände leben Luchse, Wölfe, Bären, Wisente und Fischotter in naturnahen Gehegen – der Eintritt ist frei.",
       schemaDescription:
-        "Deutschlands ältester Nationalpark – 24.250 ha unberührte Natur mit Tierfreigehegen, Besucherzentrum und 300 km Wanderwegen.",
+        "Deutschlands ältester Nationalpark – 24.945 ha Wildnis mit Tier-Freigelände, Besucherzentren und rund 350 km Wanderwegen.",
       highlights: [
-        "Tierfreigehege: Luchs, Wolf, Bär, Bison (kostenlos)",
-        "300 km markierte Wanderwege",
+        "Tier-Freigelände: Luchs, Wolf, Bär, Wisent (kostenlos)",
+        "Rund 350 km markierte Wanderwege",
         "Ranger-Führungen & Naturprogramme",
         "Besucherzentrum mit interaktiven Ausstellungen",
         "Urwald – Natur ohne menschliche Eingriffe",
       ],
       practicalInfo: [
-        { label: "Eintritt", value: "Tierfreigehege kostenlos" },
-        { label: "Saison", value: "ganzjährig geöffnet" },
+        { label: "Eintritt", value: "Tier-Freigelände kostenlos, Parkplatz gebührenpflichtig" },
+        { label: "Saison", value: "ganzjährig zugänglich, Besucherzentrum im Spätherbst einige Wochen geschlossen" },
         { label: "Tipp", value: "Morgendliche Wanderungen für Wildtierbeobachtung" },
       ],
     },
     {
       id: "skigebiet-sonnenwald",
       tag: "Winter & Sport",
-      name: "Skigebiet Sonnenwald / Steinberglift",
-      schemaName: "Skigebiet Sonnenwald / Steinberglift",
-      subtitle: "Familienski am Brotjacklriegel (1.011 m)",
-      distance: "direkt bei Haus Schönblick in Langfurth · ~10 min von HAUS28",
-      fromHaus28: "~10 min",
+      name: "Steinberglift Langfurth",
+      schemaName: "Steinberglift Langfurth (Schöfweg)",
+      subtitle: "Familien-Skilift direkt am Haus Schönblick",
+      distance: `direkt bei Haus Schönblick in Langfurth · ${ca(m.steinberglift.haus28)} von HAUS28`,
+      fromHaus28: ca(m.steinberglift.haus28),
       fromSchoenblick: "direkt vor Ort",
       description:
-        "Das Skigebiet Sonnenwald rund um den Steinberglift in Langfurth / Schöfweg liegt buchstäblich vor der Haustür von Haus Schönblick. Der Brotjacklriegel mit 1.011 m bietet familienfreundliche Abfahrten, einen beleuchteten Naturrodelhang und gut präparierte Langlaufloipen. Eine Live-Webcam zeigt den aktuellen Schneezustand – ideal zur Planung direkt aus der Unterkunft.",
+        "Der Steinberglift in Langfurth bei Schöfweg liegt buchstäblich vor der Haustür von Haus Schönblick: eine 400 m lange Hauptpiste, dazu ein Kinderland mit Anfängerlift, Förderband und Übungshang sowie ein Rodelhang. Weitere Lifte gibt es am nahen Brotjacklriegel (1.011 m) – in Schöfweg sind es insgesamt sieben Liftanlagen – und rund 23 km gespurte Loipen in Schöfweg und Umgebung. Eine Live-Webcam zeigt den aktuellen Schneezustand – ideal zur Planung direkt aus der Unterkunft.",
       schemaDescription:
-        "Familienfreundliches Skigebiet mit 4 Liften am Brotjacklriegel (1.011 m), Langlaufloipen und Live-Webcam.",
+        "Familienfreundlicher Skilift in Langfurth bei Schöfweg mit 400-m-Piste, Kinderland, Rodelhang und Live-Webcam.",
       highlights: [
-        "Steinberglift & Brotjacklriegellift",
-        "Beleuchteter Naturrodelhang",
-        "Langlaufloipen direkt nebenan",
+        "Hauptpiste 400 m & Kinderland",
+        "Rodelhang",
+        "Rund 23 km Loipen in Schöfweg und Umgebung",
         "Live-Webcam für Schneekontrolle",
         "Familien- & anfängerfreundlich",
       ],
       practicalInfo: [
-        { label: "Saison", value: "Dezember – März (schneeabhängig)" },
+        { label: "Saison", value: "Winter, schneeabhängig (mit Beschneiung)" },
         { label: "Livecam", value: "steinberglift.de" },
-        { label: "Einkehr", value: "Stoaberg Alm direkt am Lift (neu seit 2026)" },
+        { label: "Einkehr", value: "Stoaberg Alm direkt am Lift (neu seit September 2026)" },
         { label: "Tipp", value: "Schlittschuhlaufen in Grafenau als Alternative" },
       ],
     },
@@ -183,16 +187,16 @@ const ausflugsziele = {
       name: "Rusel-Arena Indoor Golf",
       schemaName: "Rusel-Arena Indoor Golf",
       subtitle: "6 TrackMan-Simulatoren am Golfplatz Rusel",
-      distance: "~25 min von HAUS28 & Haus Schönblick",
-      fromHaus28: "~25 min",
-      fromSchoenblick: "~25 min",
+      distance: `${ca(m.ruselArena.haus28)} von HAUS28 & Haus Schönblick`,
+      fromHaus28: ca(m.ruselArena.haus28),
+      fromSchoenblick: ca(m.ruselArena.schoenblick),
       description:
-        "Die brandneue Rusel-Arena am Golfplatz Deggendorf-Rusel ist das modernste Indoor-Golf-Erlebnis im Bayerischen Wald. Auf 370 m² stehen 6 TrackMan-Simulationsstationen bereit – mit präziser Schlaganalyse und virtuellen Golferlebnissen auf über 100 weltberühmten Plätzen. Anfänger, Fortgeschrittene und Profis sind gleichermaßen willkommen, witterungsunabhängig das ganze Jahr.",
+        "Seit Ende 2024 gibt es am Golfplatz Deggendorf-Rusel die Rusel-Arena: Auf 370 m² stehen 6 TrackMan-Simulatoren bereit – mit präziser Schlaganalyse und über 200 internationalen Golfplätzen zur Auswahl. Anfänger, Fortgeschrittene und Profis sind gleichermaßen willkommen, witterungsunabhängig das ganze Jahr.",
       schemaDescription: "370 m² Indoor-Golfsimulator mit 6 TrackMan-Stationen am Golfplatz Rusel bei Deggendorf.",
       highlights: [
         "6 TrackMan-Simulationsstationen",
         "370 m² Indoor-Anlage",
-        "Über 100 virtuelle Golfplätze weltweit",
+        "Über 200 internationale Golfplätze",
         "Präzise Schlaganalyse & Auswertung",
         "Ganzjährig & wetterunabhängig",
       ],
@@ -225,7 +229,7 @@ const ausflugsziele = {
       {
         season: "Winter",
         months: "Dezember – Februar",
-        activities: ["Skifahren am Steinberglift", "Rodeln & Langlaufen", "Weihnachtsmärkte", "Wellness & Thermalbad Regen"],
+        activities: ["Skifahren am Steinberglift", "Rodeln & Langlaufen", "Weihnachtsmärkte", "Hallenbad & Sauna im elypso Deggendorf"],
       },
     ],
   },
@@ -235,43 +239,44 @@ const ausflugsziele = {
     tableName: "Büchelstein-Rundwanderung",
     schemaName: "Büchelstein Wanderroute ab HAUS28",
     schemaDescription:
-      "Rundwanderung vom HAUS28 über die Wallfahrtskapelle Rastbuche (18. Jh.) bei Grattersdorf, Kleiner Büchelstein zum Großen Büchelstein (831 m) und zurück – mit Blicken ins Donautal.",
+      "Rundweg Nr. 54 „Büchelsteiner-Runde“ ab Kerschbaum, wenige Gehminuten von HAUS28: Großer Büchelstein (831 m), Kleiner Büchelstein und Wallfahrtskapelle Rastbuche (18. Jh.) – ca. 7 km, mit Blicken ins Donautal.",
     intro:
-      "Die schönste Wanderung ab HAUS28 führt direkt vom Haus auf den Großen Büchelstein (831 m) – vorbei an der historischen Wallfahrtskapelle Rastbuche, dem Kleinen Büchelstein und durch dichten Bayerwald-Forst. Die Rundtour ist gut markiert, für geübte Familien geeignet und belohnt mit einem herrlichen Panoramablick über den Bayerischen Wald bis ins Donautal.",
+      "Die schönste Wanderung ab HAUS28 führt auf den Großen Büchelstein (831 m) – über den Kleinen Büchelstein, vorbei an der historischen Wallfahrtskapelle Rastbuche und durch dichten Bayerwald-Forst. Der Rundweg Nr. 54 ist rot markiert, für geübte Familien geeignet und belohnt mit einem Panoramablick über den Bayerischen Wald bis ins Donautal.",
     stats: [
-      { label: "Startpunkt", value: "HAUS28, Büchelstein 28" },
+      { label: "Start", value: "HAUS28, Einstieg Kerschbaum (ca. 450 m)" },
+      { label: "Strecke", value: "ca. 7 km · 2–2,5 h · ca. 300 Hm" },
       { label: "Gipfel", value: "831 m (Großer Büchelstein)" },
-      { label: "Charakter", value: "Rundweg, gut markiert" },
-      { label: "Schwierigkeit", value: "Mittel – Familien geeignet" },
+      { label: "Markierung", value: "Nr. 54 „Büchelsteiner-Runde“ (rot)" },
+      { label: "Schwierigkeit", value: "Mittel – feste Wanderschuhe empfohlen" },
     ],
     waypoints: [
       {
         name: "Start: HAUS28",
-        detail: "Büchelstein 28, Grattersdorf – direkt am Haus beginnt der Wanderweg in den Wald.",
-      },
-      {
-        name: "Wallfahrtskapelle Rastbuche",
-        detail:
-          "Die malerische Wallfahrtskapelle Rastbuche bei Grattersdorf stammt aus dem 18. Jahrhundert und liegt idyllisch nahe dem Büchelstein. Sie ist ein bekanntes Ziel auf regionalen Wanderwegen – darunter die \"Rastbuchen-Runde\" (Nr. 52) – und bietet bei klarer Sicht beeindruckende Ausblicke ins Donautal.",
-      },
-      {
-        name: "Kleiner Büchelstein",
-        detail: "Der erste Gipfelpunkt der Tour. Schöner Ausblick ins Tal und in die bewaldeten Hügel des Bayerischen Waldes.",
+        detail: "Vom Haus sind es rund 450 m zu Fuß bis zum Wanderparkplatz am Skilift Kerschbaum. Dort beginnt der rot markierte Rundweg Nr. 54.",
       },
       {
         name: "Großer Büchelstein (831 m)",
         detail:
-          "Der Hauptgipfel und Höhepunkt der Tour. Auf 831 m Höhe erwartet dich bei klarem Wetter ein herrliches Panorama über den Bayerischen Wald – manchmal bis zu den Alpen.",
+          "Der Hauptgipfel und Höhepunkt der Tour. Bei klarem Wetter reicht das Panorama über den Bayerischen Wald bis ins Donautal – bei Föhn sogar bis zu den Alpen. Moosige Felsplatten am Gipfel: feste Schuhe lohnen sich.",
+      },
+      {
+        name: "Kleiner Büchelstein",
+        detail: "Der zweite Gipfel der Runde, mit schönem Blick ins Tal und über die bewaldeten Hügel des Bayerischen Waldes.",
+      },
+      {
+        name: "Wallfahrtskapelle Rastbuche",
+        detail:
+          "Die Wallfahrtskapelle Rastbuche bei Grattersdorf stammt aus dem 18. Jahrhundert und steht unter Denkmalschutz. Von hier geht der Blick bei klarer Sicht weit ins Donautal.",
       },
       {
         name: "Rückweg zu HAUS28",
         detail:
-          "Der Abstieg führt auf einem anderen Pfad zurück zum Ausgangspunkt – die Schleife macht die Tour abwechslungsreich ohne Streckenwiederholung.",
+          "Über Kerschbaum geht es zurück zum Ausgangspunkt – als Schleife, ohne dieselbe Strecke zweimal zu gehen.",
       },
     ],
     mapStrong: "Wanderkarte & GPS:",
     mapText:
-      " Die Tour ist auf Komoot und AllTrails unter dem Suchbegriff „Büchelstein Grattersdorf\" verfügbar. Alternativ einfach der Wanderweg-Beschilderung ab HAUS28 folgen – oder die Rastbuchen-Runde (Nr. 52) nutzen.",
+      " Die Runde findest du auf Outdooractive, Komoot und AllTrails unter „Büchelstein Grattersdorf“. Vor Ort einfach der roten Markierung Nr. 54 „Büchelsteiner-Runde“ folgen.",
     cta: "HAUS28 – direkt am Büchelstein buchen",
   },
   cta: {

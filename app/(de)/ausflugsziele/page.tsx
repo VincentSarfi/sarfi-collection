@@ -8,17 +8,17 @@ export const metadata: Metadata = {
     locale: "de",
     title: "Ausflugsziele im Bayerischen Wald",
     description:
-      "Pullman City, Büchelstein-Wanderung, Skigebiet Sonnenwald, Rusel-Arena, Baumwipfelpfad & Nationalpark: die besten Ausflugsziele im Bayerischen Wald.",
+      "Pullman City, Büchelstein-Wanderung, Steinberglift, Rusel-Arena, Baumwipfelpfad & Nationalpark: die besten Ausflugsziele im Bayerischen Wald.",
     ogTitle: "Ausflugsziele Bayerischer Wald – Tipps von SARFI Collection",
     ogDescription:
-      "Pullman City, Büchelstein-Wanderung, Skigebiet Sonnenwald, Indoor Golf & mehr – die besten Ausflüge rund um HAUS28 und Haus Schönblick.",
+      "Pullman City, Büchelstein-Wanderung, Steinberglift, Indoor Golf & mehr – die besten Ausflüge rund um HAUS28 und Haus Schönblick.",
     image: { url: "/images/shared/region-bayerischer-wald.jpg", alt: "Bayerischer Wald" },
   }),
   keywords: [
     "Ausflugsziele Bayerischer Wald",
     "Pullman City Eging am See",
     "Büchelstein Wanderung",
-    "Skigebiet Sonnenwald",
+    "Skilift Steinberg Schöfweg",
     "Indoor Golf Rusel",
     "Baumwipfelpfad Neuschönau",
     "Nationalpark Bayerischer Wald",

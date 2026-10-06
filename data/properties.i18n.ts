@@ -12,7 +12,7 @@
 // Anything without a translation falls back to the German original.
 
 import type { Locale } from "@/lib/i18n";
-import { arrival, PET_FEE_PER_NIGHT, PET_MAX, restaurantsAnswer } from "./surroundings";
+import { arrival, driveMinutes as m, PET_FEE_PER_NIGHT, PET_MAX, restaurantsAnswer } from "./surroundings";
 import type { ApartmentData, PropertyData } from "./properties";
 
 // ---------------------------------------------------------------------------
@@ -312,13 +312,13 @@ const schoenblickFaqsEn: FaqTranslation[] = [
     de: "Wie weit ist es zur Pullman City?",
     question: "How far is it to Pullman City?",
     answer:
-      "The Pullman City western town is only around 15 minutes by car from Haus Schönblick in Schöfweg – an ideal day trip for the whole family.",
+      `The Pullman City western town in Eging am See is about ${m.pullmanCity.schoenblick} minutes by car from Haus Schönblick in Schöfweg – an ideal day trip for the whole family.`,
   },
   {
     de: "Welche Ausflugsziele gibt es in der Nähe?",
     question: "What is there to see and do nearby?",
     answer:
-      "There's plenty waiting for you around Schöfweg in the Bavarian Forest: Pullman City (~15 min), the Neuschönau treetop walk (~25 min), the Bavarian Forest National Park (~20 km), Grafenau (~15 min), the thermal baths in Regen (~30 min) and the Großer Arber ski area (~45 min).",
+      `There's plenty waiting for you around Schöfweg in the Bavarian Forest – the Steinberg ski lift is right by the house, plus (driving time): Grafenau (~${m.grafenau.schoenblick} min), Pullman City (~${m.pullmanCity.schoenblick} min), the elypso leisure pool in Deggendorf (~${m.elypso.schoenblick} min), the national park with the treetop walk in Neuschönau (~${m.nationalparkLusen.schoenblick} min) and the Großer Arber ski area (~${m.arber.schoenblick} min).`,
   },
   {
     de: "Wie sind die Stornierungsbedingungen?",
@@ -344,7 +344,7 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
         de: "Wo genau liegt HAUS28 am Büchelstein?",
         question: "Where exactly is HAUS28 at the Büchelstein?",
         answer:
-          "HAUS28 is located at Büchelstein 28 near Grattersdorf in the Bavarian Forest – right at the foot of the Büchelstein (831 m), surrounded by forest and nature. The Büchelstein summit with its panoramic views is just a few minutes away on foot.",
+          "HAUS28 is located at Büchelstein 28 near Grattersdorf in the Bavarian Forest – right at the foot of the Büchelstein (831 m), surrounded by forest and nature. The Büchelstein summit with its panoramic views is about a 30-minute walk away.",
       },
       {
         de: "Gibt es einen Whirlpool – und ist er ganzjährig nutzbar?",
@@ -411,7 +411,7 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
         de: "Wie weit ist es vom Büchelstein zum nächsten Ort?",
         question: "How far is it from the Büchelstein to the nearest town?",
         answer:
-          "From HAUS28 at the Büchelstein, Grattersdorf is just a few minutes away, and Deggendorf (shopping, restaurants) is around 20 minutes by car. Hiking trails to the Büchelstein summit and through the Bavarian Forest start right outside the front door.",
+          `From HAUS28 at the Büchelstein, Grattersdorf is about 5 minutes away by car. For shopping, Hengersberg is about ${m.hengersberg.haus28} minutes and Deggendorf (shops, restaurants) about ${m.deggendorf.haus28} minutes away. The circular trail up to the Büchelstein summit starts a few minutes' walk from the house.`,
       },
       {
         de: "Wie lange ist der Mindestaufenthalt?",
@@ -423,13 +423,13 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
         de: "Wie weit ist es zur Pullman City?",
         question: "How far is it to Pullman City?",
         answer:
-          "The Pullman City western town in Eging am See is around 20 minutes by car from HAUS28 at the Büchelstein – a perfect day trip for families with kids!",
+          `The Pullman City western town in Eging am See is about ${m.pullmanCity.haus28} minutes by car from HAUS28 at the Büchelstein – a perfect day trip for families with kids!`,
       },
       {
         de: "Welche Ausflugsziele gibt es im Bayerischen Wald?",
         question: "What is there to see and do in the Bavarian Forest?",
         answer:
-          "There's plenty to discover near HAUS28: Pullman City (~20 min), the Bavarian Forest National Park (~25 km), the Neuschönau treetop walk (~30 min), the thermal baths in Regen (~35 min), the Großer Arber ski area (~50 min) – and of course the Büchelstein summit right on your doorstep.",
+          `There's plenty to discover near HAUS28 (driving time): the Steinberg ski lift (~${m.steinberglift.haus28} min), Pullman City (~${m.pullmanCity.haus28} min), the elypso leisure pool in Deggendorf (~${m.elypso.haus28} min), the national park with the treetop walk in Neuschönau (~${m.nationalparkLusen.haus28} min), the Großer Arber ski area (~${m.arber.haus28} min) – and of course the Büchelstein hike straight from the house.`,
       },
     ],
   },

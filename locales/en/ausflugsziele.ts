@@ -1,4 +1,5 @@
 import type de from "../de/ausflugsziele";
+import { ca, driveMinutes as m } from "@/data/surroundings";
 
 // Things to do page (components/pages/AusflugszielePageContent.tsx).
 const ausflugsziele: typeof de = {
@@ -8,7 +9,7 @@ const ausflugsziele: typeof de = {
     eyebrow: "Bavarian Forest region",
     h1: "Things to Do in the Bavarian Forest",
     intro:
-      "Around HAUS28 and Haus Schönblick, the Bavarian Forest is full of things to experience – from wild nature and Wild West flair to state-of-the-art golf simulators. Here are our personal recommendations for your stay.",
+      "Around HAUS28 and Haus Schönblick, the Bavarian Forest is full of things to experience – from wild nature and Wild West flair to golf simulators for rainy days. Here are our personal recommendations for your stay.",
     pillHaus28: "HAUS28 · Grattersdorf",
     pillSchoenblick: "Haus Schönblick · Schöfweg",
   },
@@ -49,7 +50,7 @@ const ausflugsziele: typeof de = {
         items: [
           { text: "Treetop Walk: low-barrier boardwalk, pram-friendly", anchor: "baumwipfelpfad" },
           { text: "National park visitor centres with exhibitions", anchor: "nationalpark" },
-          { text: "Wellness at the thermal baths in Regen" },
+          { text: "Indoor pool & sauna world at elypso in Deggendorf" },
         ],
       },
       {
@@ -57,7 +58,7 @@ const ausflugsziele: typeof de = {
         items: [
           { text: "Indoor golf at the Rusel-Arena", anchor: "indoor-golf" },
           { text: "Exhibitions at the Hans-Eisenmann-Haus", anchor: "nationalpark" },
-          { text: "Thermal baths in Regen" },
+          { text: "elypso leisure pool in Deggendorf" },
         ],
       },
       {
@@ -78,25 +79,25 @@ const ausflugsziele: typeof de = {
       tag: "Family & fun",
       name: "Pullman City",
       schemaName: "Pullman City – Western town in Eging am See",
-      subtitle: "Europe's largest Western town",
-      distance: "~15 min from Haus Schönblick · ~20 min from HAUS28",
-      fromHaus28: "~20 min",
-      fromSchoenblick: "~15 min",
+      subtitle: "Western town in Eging am See – since 1997",
+      distance: `${ca(m.pullmanCity.haus28)} from HAUS28 & Haus Schönblick`,
+      fromHaus28: ca(m.pullmanCity.haus28),
+      fromSchoenblick: ca(m.pullmanCity.schoenblick),
       description:
-        "In the middle of the Bavarian Forest, the Western town of Pullman City in Eging am See awaits – Europe's largest Western theme village. Across more than 80,000 m² there are Western shows, pony rides, gold panning, a water playground with a slide, a petting zoo and authentic Western food. A real highlight for families and anyone who wants to experience the Wild West without leaving Europe.",
+        "On the southern edge of the Bavarian Forest, the Western town of Pullman City in Eging am See has been open since 1997 and covers around 200,000 m². There are Western shows, pony rides, gold panning, the El Dorado water playground with a slide, a small-animal enclosure and Western food. A real highlight for families and anyone who wants to experience the Wild West without leaving Europe.",
       schemaDescription:
-        "Europe's largest Western theme village with Western shows, pony rides, gold panning and a water playground.",
+        "Western town of around 200,000 m² with Western shows, pony rides, gold panning and a water playground.",
       highlights: [
-        "Show programme changing daily",
+        "Changing show programme",
         "El Dorado water playground with slide",
         "Horse show & pony rides",
         "Gold panning for kids",
         "Overnight stays in hotels, log cabins or tipis",
       ],
       practicalInfo: [
-        { label: "Season", value: "May – October" },
-        { label: "Getting there", value: "B85 towards Eging am See" },
-        { label: "Tip", value: "Combine with the Treetop Walk (same area)" },
+        { label: "Season", value: "from March, Christmas programme in winter – not open every day, see the calendar at pullmancity.de" },
+        { label: "Address", value: "Ruberting 30, 94535 Eging am See" },
+        { label: "Tip", value: "Plan a whole day and check the show times in the daily programme" },
       ],
     },
     {
@@ -104,24 +105,24 @@ const ausflugsziele: typeof de = {
       tag: "Nature & adventure",
       name: "Treetop Walk Neuschönau",
       schemaName: "Treetop Walk Neuschönau (Baumwipfelpfad)",
-      subtitle: "Europe's longest treetop walk",
-      distance: "~25 min from Haus Schönblick · ~30 min from HAUS28",
-      fromHaus28: "~30 min",
-      fromSchoenblick: "~25 min",
+      subtitle: "One of the longest treetop walks in Europe",
+      distance: `${ca(m.nationalparkLusen.schoenblick)} from Haus Schönblick · ${ca(m.nationalparkLusen.haus28)} from HAUS28`,
+      fromHaus28: ca(m.nationalparkLusen.haus28),
+      fromSchoenblick: ca(m.nationalparkLusen.schoenblick),
       description:
-        "The Treetop Walk in Neuschönau, inside the Bavarian Forest National Park, is the longest of its kind in Europe. A 1,300 m low-barrier wooden boardwalk leads through the crowns of the ancient forest – up to 44 m above the ground. At the end, a 44 m observation tower offers 360° views across the national park. Along the way, children will find adventure stations and interactive exhibits.",
+        "At 1,300 m, the Treetop Walk in Neuschönau, inside the Bavarian Forest National Park, is one of the longest in Europe. The low-barrier wooden boardwalk (max. 6% gradient) runs 8 to 25 m above the ground through the treetops. The highlight is the 44 m observation tower, the \"Baumei\" (tree egg), with all-round views across the national park. Along the way, children will find adventure stations.",
       schemaDescription:
-        "Europe's longest treetop walk – 1,300 m long, with breathtaking views over the Bavarian Forest National Park.",
+        "One of the longest treetop walks in Europe: a 1,300 m boardwalk 8–25 m above the ground and a 44 m observation tower in the Bavarian Forest National Park.",
       highlights: [
-        "1,300 m boardwalk through the treetops",
-        "44 m observation tower",
-        "Step-free & pram-friendly",
-        "Interactive adventure stations",
+        "1,300 m boardwalk, 8–25 m above the ground",
+        "44 m \"Baumei\" observation tower",
+        "Low-barrier, suitable for prams & wheelchairs",
+        "Adventure stations for kids",
         "Right next to the national park animal enclosure",
       ],
       practicalInfo: [
-        { label: "Opening", value: "daily, all year round" },
-        { label: "Admission", value: "adults approx. €11, children approx. €8" },
+        { label: "Opening", value: "all year round, not every day in winter – times at treetop-walks.com" },
+        { label: "Admission", value: "adults €13, children 6–14 €11, under 6 free, family €31 (2026)" },
         { label: "Tip", value: "Combine with the animal enclosure (next door, free)" },
       ],
     },
@@ -131,50 +132,50 @@ const ausflugsziele: typeof de = {
       name: "Bavarian Forest National Park",
       schemaName: "Bavarian Forest National Park",
       subtitle: "Germany's oldest national park",
-      distance: "~20 km from Haus Schönblick · ~25 km from HAUS28",
-      fromHaus28: "~25 km",
-      fromSchoenblick: "~20 km",
+      distance: `${ca(m.nationalparkLusen.schoenblick)} from Haus Schönblick · ${ca(m.nationalparkLusen.haus28)} from HAUS28 (Lusen National Park Centre)`,
+      fromHaus28: ca(m.nationalparkLusen.haus28),
+      fromSchoenblick: ca(m.nationalparkLusen.schoenblick),
       description:
-        "Since 1970, the Bavarian Forest has been Germany's first national park – 24,250 hectares of wild, untouched nature left to its own devices. The Hans-Eisenmann-Haus visitor centre in Neuschönau and the Haus zur Wildnis in Ludwigsthal offer fascinating exhibitions. In the large animal enclosure, lynx, wolves, bears, bison and deer live in near-natural surroundings – free admission.",
+        "Since 1970, the Bavarian Forest has been Germany's first national park – today 24,945 hectares where nature is left to its own devices. The Hans-Eisenmann-Haus visitor centre in Neuschönau and the Haus zur Wildnis in Ludwigsthal offer fascinating exhibitions. In the animal enclosure, lynx, wolves, bears, European bison and otters live in near-natural surroundings – admission is free.",
       schemaDescription:
-        "Germany's oldest national park – 24,250 ha of untouched nature with animal enclosures, a visitor centre and 300 km of hiking trails.",
+        "Germany's oldest national park – 24,945 ha of wilderness with an animal enclosure, visitor centres and around 350 km of hiking trails.",
       highlights: [
-        "Animal enclosure: lynx, wolf, bear, bison (free)",
-        "300 km of marked hiking trails",
+        "Animal enclosure: lynx, wolf, bear, European bison (free)",
+        "Around 350 km of marked hiking trails",
         "Ranger tours & nature programmes",
         "Visitor centre with interactive exhibitions",
         "Primeval forest – nature without human intervention",
       ],
       practicalInfo: [
-        { label: "Admission", value: "animal enclosure free" },
-        { label: "Season", value: "open all year round" },
+        { label: "Admission", value: "animal enclosure free, paid parking" },
+        { label: "Season", value: "open all year; the visitor centre closes for a few weeks in late autumn" },
         { label: "Tip", value: "Early-morning hikes for spotting wildlife" },
       ],
     },
     {
       id: "skigebiet-sonnenwald",
       tag: "Winter & sport",
-      name: "Sonnenwald ski area / Steinberglift",
-      schemaName: "Sonnenwald ski area / Steinberglift",
-      subtitle: "Family skiing on the Brotjacklriegel (1,011 m)",
-      distance: "right at Haus Schönblick in Langfurth · ~10 min from HAUS28",
-      fromHaus28: "~10 min",
+      name: "Steinberglift Langfurth",
+      schemaName: "Steinberglift Langfurth (Schöfweg)",
+      subtitle: "Family ski lift right by Haus Schönblick",
+      distance: `right at Haus Schönblick in Langfurth · ${ca(m.steinberglift.haus28)} from HAUS28`,
+      fromHaus28: ca(m.steinberglift.haus28),
       fromSchoenblick: "right on site",
       description:
-        "The Sonnenwald ski area around the Steinberglift in Langfurth / Schöfweg is literally on Haus Schönblick's doorstep. The Brotjacklriegel (1,011 m) offers family-friendly slopes, a floodlit natural toboggan run and well-groomed cross-country trails. A live webcam shows the current snow conditions – perfect for planning your day from the apartment.",
+        "The Steinberglift in Langfurth near Schöfweg is literally on Haus Schönblick's doorstep: a 400 m main slope plus a kids' area with a beginner lift, a magic carpet and a practice slope, and a toboggan hill. There are more lifts on the nearby Brotjacklriegel (1,011 m) – seven lift facilities in Schöfweg altogether – and around 23 km of groomed cross-country trails in and around Schöfweg. A live webcam shows the current snow conditions – perfect for planning your day from the apartment.",
       schemaDescription:
-        "Family-friendly ski area with 4 lifts on the Brotjacklriegel (1,011 m), cross-country trails and a live webcam.",
+        "Family-friendly ski lift in Langfurth near Schöfweg with a 400 m slope, kids' area, toboggan hill and live webcam.",
       highlights: [
-        "Steinberglift & Brotjacklriegel lift",
-        "Floodlit natural toboggan run",
-        "Cross-country trails right next door",
+        "400 m main slope & kids' area",
+        "Toboggan hill",
+        "Around 23 km of cross-country trails nearby",
         "Live webcam to check the snow",
         "Great for families & beginners",
       ],
       practicalInfo: [
-        { label: "Season", value: "December – March (snow permitting)" },
+        { label: "Season", value: "winter, snow permitting (with snowmaking)" },
         { label: "Live cam", value: "steinberglift.de" },
-        { label: "Food", value: "Stoaberg Alm right at the lift (new in 2026)" },
+        { label: "Food", value: "Stoaberg Alm right at the lift (new since September 2026)" },
         { label: "Tip", value: "Ice skating in Grafenau as an alternative" },
       ],
     },
@@ -184,16 +185,16 @@ const ausflugsziele: typeof de = {
       name: "Rusel-Arena indoor golf",
       schemaName: "Rusel-Arena indoor golf",
       subtitle: "6 TrackMan simulators at Rusel golf course",
-      distance: "~25 min from HAUS28 & Haus Schönblick",
-      fromHaus28: "~25 min",
-      fromSchoenblick: "~25 min",
+      distance: `${ca(m.ruselArena.haus28)} from HAUS28 & Haus Schönblick`,
+      fromHaus28: ca(m.ruselArena.haus28),
+      fromSchoenblick: ca(m.ruselArena.schoenblick),
       description:
-        "The brand-new Rusel-Arena at the Deggendorf-Rusel golf course is the most modern indoor golf experience in the Bavarian Forest. Six TrackMan simulator bays across 370 m² offer precise shot analysis and virtual rounds on more than 100 world-famous courses. Beginners, improvers and pros are all welcome – whatever the weather, all year round.",
+        "Since late 2024, the Rusel-Arena at the Deggendorf-Rusel golf course has offered six TrackMan simulator bays across 370 m², with precise shot analysis and more than 200 international courses to choose from. Beginners, improvers and pros are all welcome – whatever the weather, all year round.",
       schemaDescription: "370 m² indoor golf simulator with 6 TrackMan bays at the Rusel golf course near Deggendorf.",
       highlights: [
         "6 TrackMan simulator bays",
         "370 m² indoor facility",
-        "More than 100 virtual courses worldwide",
+        "More than 200 international courses",
         "Precise shot analysis",
         "All year round, whatever the weather",
       ],
@@ -226,7 +227,7 @@ const ausflugsziele: typeof de = {
       {
         season: "Winter",
         months: "December – February",
-        activities: ["Skiing at the Steinberglift", "Tobogganing & cross-country skiing", "Christmas markets", "Wellness & the thermal baths in Regen"],
+        activities: ["Skiing at the Steinberglift", "Tobogganing & cross-country skiing", "Christmas markets", "Indoor pool & sauna at elypso Deggendorf"],
       },
     ],
   },
@@ -236,43 +237,44 @@ const ausflugsziele: typeof de = {
     tableName: "Büchelstein circular hike",
     schemaName: "Büchelstein hiking route from HAUS28",
     schemaDescription:
-      "Circular hike from HAUS28 via the 18th-century Rastbuche pilgrimage chapel near Grattersdorf and the Kleiner Büchelstein to the Großer Büchelstein (831 m) and back – with views into the Danube valley.",
+      "Circular trail no. 54 \"Büchelsteiner-Runde\" from Kerschbaum, a few minutes' walk from HAUS28: Großer Büchelstein (831 m), Kleiner Büchelstein and the 18th-century Rastbuche pilgrimage chapel – approx. 7 km, with views into the Danube valley.",
     intro:
-      "The most beautiful hike from HAUS28 leads straight from the house up to the Großer Büchelstein (831 m) – past the historic Rastbuche pilgrimage chapel, the Kleiner Büchelstein and through dense Bavarian forest. The circular route is well signposted, suitable for active families and rewards you with sweeping views over the Bavarian Forest all the way to the Danube valley.",
+      "The most beautiful hike from HAUS28 leads up to the Großer Büchelstein (831 m) – over the Kleiner Büchelstein, past the historic Rastbuche pilgrimage chapel and through dense Bavarian forest. Circular trail no. 54 is waymarked in red, suitable for active families and rewards you with sweeping views over the Bavarian Forest all the way to the Danube valley.",
     stats: [
-      { label: "Start", value: "HAUS28, Büchelstein 28" },
+      { label: "Start", value: "HAUS28, trailhead Kerschbaum (approx. 450 m)" },
+      { label: "Route", value: "approx. 7 km · 2–2.5 h · approx. 300 m ascent" },
       { label: "Summit", value: "831 m (Großer Büchelstein)" },
-      { label: "Type", value: "Circular route, well signposted" },
-      { label: "Difficulty", value: "Moderate – suitable for families" },
+      { label: "Waymark", value: "No. 54 \"Büchelsteiner-Runde\" (red)" },
+      { label: "Difficulty", value: "Moderate – sturdy hiking boots recommended" },
     ],
     waypoints: [
       {
         name: "Start: HAUS28",
-        detail: "Büchelstein 28, Grattersdorf – the trail into the forest starts right at the house.",
-      },
-      {
-        name: "Rastbuche pilgrimage chapel",
-        detail:
-          "The picturesque Rastbuche pilgrimage chapel near Grattersdorf dates from the 18th century and sits idyllically close to the Büchelstein. It is a well-known stop on regional trails – including the \"Rastbuchen-Runde\" (no. 52) – and on clear days offers impressive views into the Danube valley.",
-      },
-      {
-        name: "Kleiner Büchelstein",
-        detail: "The first summit of the hike, with lovely views into the valley and across the wooded hills of the Bavarian Forest.",
+        detail: "From the house it's about 450 m on foot to the hikers' car park at the Kerschbaum ski lift, where the red-waymarked circular trail no. 54 begins.",
       },
       {
         name: "Großer Büchelstein (831 m)",
         detail:
-          "The main summit and highlight of the hike. At 831 m, on a clear day you'll enjoy a superb panorama over the Bavarian Forest – sometimes all the way to the Alps.",
+          "The main summit and highlight of the hike. On a clear day the panorama stretches across the Bavarian Forest to the Danube valley – and when the föhn blows, all the way to the Alps. The rock slabs at the top can be mossy, so sturdy shoes are worth it.",
+      },
+      {
+        name: "Kleiner Büchelstein",
+        detail: "The second summit of the loop, with lovely views into the valley and across the wooded hills of the Bavarian Forest.",
+      },
+      {
+        name: "Rastbuche pilgrimage chapel",
+        detail:
+          "The Rastbuche pilgrimage chapel near Grattersdorf dates from the 18th century and is a listed monument. On clear days the view reaches far into the Danube valley.",
       },
       {
         name: "Back to HAUS28",
         detail:
-          "The descent follows a different path back to the start – the loop keeps the hike varied without retracing your steps.",
+          "The loop returns via Kerschbaum to the start – no stretch walked twice.",
       },
     ],
     mapStrong: "Map & GPS:",
     mapText:
-      " You'll find the route on Komoot and AllTrails by searching for \"Büchelstein Grattersdorf\". Alternatively, simply follow the trail signs from HAUS28 – or take the Rastbuchen-Runde (no. 52).",
+      " You'll find the loop on Outdooractive, Komoot and AllTrails by searching for \"Büchelstein Grattersdorf\". On the ground, simply follow the red waymark no. 54 \"Büchelsteiner-Runde\".",
     cta: "Book HAUS28 – right at the Büchelstein",
   },
   cta: {

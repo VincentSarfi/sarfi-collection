@@ -80,7 +80,7 @@ const home = {
       wildlife: { label: "Wildlife", text: "Red deer, roe deer & unspoilt nature" },
       culture: { label: "Culture", text: "Monasteries, museums & Bavarian traditions" },
       lakes: { label: "Lakes", text: "Crystal-clear swimming lakes nearby" },
-      wellness: { label: "Wellness", text: "Thermal spas & saunas across the region" },
+      wellness: { label: "Wellness", text: "Leisure pools, saunas & the HotTub at HAUS28" },
     },
     imageAlt: "Bavarian Forest – sunrise above a sea of fog",
     parkSince: "National park since",

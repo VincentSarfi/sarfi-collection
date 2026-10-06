@@ -1,5 +1,5 @@
 import { getAggregateReviewStats, haus28, schoenblick, type PropertyData } from "@/data/properties";
-import { arrival, PET_FEE_PER_NIGHT, PET_MAX, restaurants } from "@/data/surroundings";
+import { arrival, driveMinutes, PET_FEE_PER_NIGHT, PET_MAX, restaurants } from "@/data/surroundings";
 import { getAllPosts } from "@/lib/blog";
 import { SITE_URL } from "@/lib/seo";
 
@@ -8,6 +8,7 @@ import { SITE_URL } from "@/lib/seo";
 export const dynamic = "force-static";
 
 const decimal = (n: number) => n.toFixed(2).replace(".", ",");
+const minuten = (n: number) => (n === 0 ? "zu Fuß" : `ca. ${n} min`);
 
 function platforms(p: PropertyData): string {
   return [
@@ -60,6 +61,13 @@ Anreise: ${arrival.de}
 
 Gasthäuser in der Nähe:
 ${restaurants.map((r) => `- ${r.name} (${r.place}): ${r.de} ${r.url}`).join("\n")}
+
+Fahrzeiten mit dem Auto (gerundet, ab HAUS28 / ab Haus Schönblick):
+${Object.values(driveMinutes).map((d) => `- ${d.name}: ${minuten(d.haus28)} / ${minuten(d.schoenblick)}`).join("\n")}
+
+Wanderung ab HAUS28: Rundweg Nr. 54 „Büchelsteiner-Runde“ (rot markiert), Einstieg am Wanderparkplatz
+Skilift Kerschbaum rund 450 m vom Haus. Ca. 7 km, 2–2,5 Stunden, ca. 300 Höhenmeter, mittel.
+Über den Großen Büchelstein (831 m) und den Kleinen Büchelstein zur Wallfahrtskapelle Rastbuche (18. Jh.).
 
 ## Seiten
 

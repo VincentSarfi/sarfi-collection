@@ -1,7 +1,18 @@
 // Property pages (HAUS28, Haus Schönblick, apartments): UI copy for the property components.
 // Data copy (descriptions, FAQs, amenities, alt texts) comes from data/properties.i18n.ts.
 
-import { PET_FEE_PER_NIGHT } from "@/data/surroundings";
+import { PET_FEE_PER_NIGHT, ca, driveMinutes as m } from "@/data/surroundings";
+
+// Surroundings of Haus Schönblick – same list on the house and the apartment pages.
+const schoenblickAttractions = [
+  { name: "Hiking trail from the doorstep", distance: "0 m" },
+  { name: "Steinberg ski lift", distance: "~600 m" },
+  { name: "Grafenau town centre", distance: ca(m.grafenau.schoenblick) },
+  { name: "Pullman City (western town)", distance: ca(m.pullmanCity.schoenblick) },
+  { name: "National park & treetop walk (Neuschönau)", distance: ca(m.nationalparkLusen.schoenblick) },
+  { name: "elypso leisure pool, Deggendorf", distance: ca(m.elypso.schoenblick) },
+  { name: "Arber ski area", distance: ca(m.arber.schoenblick) },
+];
 
 const property = {
   // components/property/PropertyHero.tsx
@@ -48,10 +59,10 @@ const property = {
     mapTitlePre: "Map: ",
     mapAriaPre: "OpenStreetMap map of ",
     defaultAttractions: [
-      { name: "Bavarian Forest National Park", distance: "~20 km" },
-      { name: "Deggendorf (shopping)", distance: "~20 min" },
-      { name: "Regen thermal baths", distance: "~30 min" },
-      { name: "Frauenau Glass Museum", distance: "~25 min" },
+      { name: "Lusen National Park Centre", distance: "~40–45 min" },
+      { name: "Deggendorf (shopping)", distance: ca(m.deggendorf.haus28) },
+      { name: "elypso leisure pool, Deggendorf", distance: ca(m.elypso.haus28) },
+      { name: "Frauenau Glass Museum", distance: "~35–40 min" },
     ],
   },
   // components/property/AmenitiesGrid.tsx
@@ -161,7 +172,7 @@ const property = {
       },
       {
         title: "Beautiful setting – in the heart of the Bavarian Forest",
-        text: "Hiking trails to the Büchelstein summit start right outside the front door. Pullman City and the national park are 20–25 minutes away.",
+        text: `The circular trail up to the Büchelstein summit starts a few minutes' walk from the house. Pullman City is about ${m.pullmanCity.haus28} minutes away.`,
       },
       {
         title: "Self check-in with a key box",
@@ -174,19 +185,20 @@ const property = {
     ],
     amenitiesHeading: "What this place offers",
     locationDescription:
-      "HAUS28 sits at the Büchelstein near Grattersdorf, idyllically placed on the edge of the Bavarian Forest. Hiking trails to the Büchelstein summit start right outside the front door. The Pullman City western town is only 20 minutes away – perfect for families. Deggendorf, with its shops and restaurants, is also around 20 minutes away.",
+      `HAUS28 sits at the Büchelstein near Grattersdorf, idyllically placed on the edge of the Bavarian Forest. The circular trail up to the Büchelstein summit starts a few minutes' walk from the house. The Pullman City western town is about ${m.pullmanCity.haus28} minutes away – perfect for families. For shopping, Hengersberg is about ${m.hengersberg.haus28} minutes away and Deggendorf, with its shops and restaurants, about ${m.deggendorf.haus28}.`,
     attractions: [
-      { name: "Büchelstein summit (hike)", distance: "~15 min on foot" },
-      { name: "Pullman City (western town)", distance: "~20 min" },
-      { name: "Bavarian Forest National Park", distance: "~25 km" },
-      { name: "Deggendorf town centre", distance: "~20 min" },
-      { name: "Regen thermal baths", distance: "~35 min" },
-      { name: "Arber (ski area)", distance: "~50 min" },
+      { name: "Büchelstein summit (hike)", distance: "~30 min on foot" },
+      { name: "Hengersberg (shopping)", distance: ca(m.hengersberg.haus28) },
+      { name: "Pullman City (western town)", distance: ca(m.pullmanCity.haus28) },
+      { name: "Deggendorf town centre", distance: ca(m.deggendorf.haus28) },
+      { name: "National park & treetop walk (Neuschönau)", distance: ca(m.nationalparkLusen.haus28) },
+      { name: "elypso leisure pool, Deggendorf", distance: ca(m.elypso.haus28) },
+      { name: "Arber (ski area)", distance: ca(m.arber.haus28) },
     ],
     excursions: {
       eyebrow: "Right from HAUS28",
       heading: "Hike to the Büchelstein & more day trips",
-      text: "The Büchelstein circular hike starts right outside the front door – past the historic Rastbuche pilgrimage chapel (18th century) at 831 m. All our day-trip tips for the region at a glance.",
+      text: "The Büchelstein circular hike starts a few minutes' walk from the house and leads up to the summit (831 m) and to the historic Rastbuche pilgrimage chapel (18th century). All our day-trip tips for the region at a glance.",
       cta: "All things to do",
     },
     awards: {
@@ -233,7 +245,7 @@ const property = {
       },
       {
         title: "A dream setting in the Bavarian Forest",
-        text: "Hiking trails start right outside the front door. Surrounded by nature, close to Grafenau.",
+        text: "Hiking trails start right outside the front door. Surrounded by nature, right by the Steinberg ski lift.",
       },
       {
         title: "Book direct – up to 20% cheaper",
@@ -243,16 +255,8 @@ const property = {
     aboutHeading: "About this place",
     amenitiesHeading: "What this place offers",
     locationDescription:
-      "Schöfweg lies in the heart of the Bavarian Forest. Hiking trails start right outside the house, and shops and sights are just a few minutes away.",
-    attractions: [
-      { name: "Hiking trail from the doorstep", distance: "0 m" },
-      { name: "Grafenau town centre", distance: "~15 min" },
-      { name: "Pullman City", distance: "~15 min" },
-      { name: "Bavarian Forest National Park", distance: "~20 km" },
-      { name: "Neuschönau treetop walk", distance: "~25 min" },
-      { name: "Regen thermal baths", distance: "~30 min" },
-      { name: "Arber ski area", distance: "~45 min" },
-    ],
+      `Haus Schönblick sits in Langfurth near Schöfweg, right by the Steinberg ski lift in the Bavarian Forest. Hiking trails start right outside the house, and two inns are just a few minutes away. Grafenau is about ${m.grafenau.schoenblick} minutes and the national park about ${m.nationalparkLusen.schoenblick} minutes by car.`,
+    attractions: schoenblickAttractions,
     rulePets: `Dogs on request (€${PET_FEE_PER_NIGHT} per night)`,
     cancellationTitle: "Cancellation & access",
     cancellationTextPre: "Free cancellation up to 30 days before arrival. After that, our ",
@@ -269,7 +273,7 @@ const property = {
   schoenblickPage: {
     aboutHeading: "About Haus Schönblick",
     aboutLocation:
-      "Haus Schönblick sits in Langfurth near Schöfweg, right by the Steinberg ski lift. The five holiday apartments are spread across house numbers 18 and 20: B5 and B6 on the ground floor with a terrace, B7 and B8 on the first floor with a panoramic balcony, plus the cabin-style apartment A2 in house no. 20. All guests share a large panoramic terrace with seating and a small garden; parking is free right in front of the building. The Pullman City Western town is about 15 minutes away by car.",
+      `Haus Schönblick sits in Langfurth near Schöfweg, right by the Steinberg ski lift. The five holiday apartments are spread across house numbers 18 and 20: B5 and B6 on the ground floor with a terrace, B7 and B8 on the first floor with a panoramic balcony, plus the cabin-style apartment A2 in house no. 20. All guests share a large panoramic terrace with seating and a small garden; parking is free right in front of the building. The Pullman City Western town is about ${m.pullmanCity.schoenblick} minutes away by car.`,
     apartmentsEyebrow: "5 holiday apartments",
     apartmentsHeading: "Choose your apartment",
     apartmentsIntro:
@@ -296,16 +300,8 @@ const property = {
       price: "From",
     },
     locationDescription:
-      "Haus Schönblick is located in Langfurth near Schöfweg, in the heart of the Bavarian Forest. Hiking trails begin right outside the front door. The popular Pullman City western town is only 15 minutes away – ideal for families with kids. The region offers unspoilt nature, crisp air and true relaxation in every season.",
-    attractions: [
-      { name: "Hiking trail from the doorstep", distance: "0 m" },
-      { name: "Pullman City (western town)", distance: "~15 min" },
-      { name: "Grafenau town centre", distance: "~15 min" },
-      { name: "Bavarian Forest National Park", distance: "~20 km" },
-      { name: "Neuschönau treetop walk", distance: "~25 min" },
-      { name: "Regen thermal baths", distance: "~30 min" },
-      { name: "Arber ski area", distance: "~45 min" },
-    ],
+      `Haus Schönblick is located in Langfurth near Schöfweg, in the heart of the Bavarian Forest. Hiking trails begin right outside the front door. The Pullman City western town is about ${m.pullmanCity.schoenblick} minutes away – ideal for families with kids. The region offers unspoilt nature, crisp air and true relaxation in every season.`,
+    attractions: schoenblickAttractions,
     relatedTitle: "You might also like",
     relatedHaus28Subtitle: "A modern A-frame in the woods",
   },

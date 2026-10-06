@@ -19,14 +19,14 @@ const ATTRACTION_STYLE: Record<
     tagColor: "bg-green-100 text-green-800",
     bgColor: "bg-emerald-50",
     borderColor: "border-emerald-200",
-    link: "https://www.baumwipfelpfad.de",
+    link: "https://treetop-walks.com/bayerischer-wald/",
   },
   nationalpark: {
     emoji: "🦌",
     tagColor: "bg-forest-100 text-forest-800",
     bgColor: "bg-slate-50",
     borderColor: "border-slate-200",
-    link: "https://www.nationalpark-bayerischer-wald.de",
+    link: "https://www.nationalpark-bayerischer-wald.bayern.de/",
   },
   "skigebiet-sonnenwald": {
     emoji: "⛷️",
@@ -48,7 +48,7 @@ const ATTRACTION_STYLE: Record<
 const ATTRACTION_SCHEMA: Record<string, { type: string; locality: string }> = {
   "pullman-city": { type: "TouristAttraction", locality: "Eging am See" },
   baumwipfelpfad: { type: "TouristAttraction", locality: "Neuschönau" },
-  nationalpark: { type: "Park", locality: "Grafenau" },
+  nationalpark: { type: "Park", locality: "Neuschönau" },
   "skigebiet-sonnenwald": { type: "SportsActivityLocation", locality: "Langfurth / Schöfweg" },
   "indoor-golf": { type: "SportsActivityLocation", locality: "Deggendorf" },
 };
@@ -96,7 +96,8 @@ const SEASON_STYLE = [
   { emoji: "❄️", color: "bg-blue-50 border-blue-200" },
 ];
 
-const WAYPOINT_ICONS = ["🏠", "⛪", "⛰️", "🏔️", "🏠"];
+// Reihenfolge wie hike.waypoints: Start, Großer Büchelstein, Kleiner Büchelstein, Rastbuche, Rückweg
+const WAYPOINT_ICONS = ["🏠", "🏔️", "⛰️", "⛪", "🏠"];
 const WAYPOINT_HIGHLIGHT = 3; // Großer Büchelstein
 
 /** Ausflugsziele-Seite (Inhalt) – von app/(de)/ausflugsziele und app/(en)/en/ausflugsziele gerendert. */

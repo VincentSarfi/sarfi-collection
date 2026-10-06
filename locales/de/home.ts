@@ -80,7 +80,7 @@ const home = {
       wildlife: { label: "Wildtiere", text: "Hirsche, Rehe & einzigartige Natur" },
       culture: { label: "Kultur", text: "Klöster, Museen & bayerische Lebensart" },
       lakes: { label: "Seen", text: "Kristallklare Badeseen in der Umgebung" },
-      wellness: { label: "Wellness", text: "Thermalbäder & Saunen in der Region" },
+      wellness: { label: "Wellness", text: "Erlebnisbäder, Saunen & HotTub am HAUS28" },
     },
     imageAlt: "Bayerischer Wald – Sonnenaufgang über dem Nebelmeer",
     parkSince: "Nationalpark seit",

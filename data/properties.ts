@@ -1,7 +1,7 @@
 // Central data file for all property content.
 // Edit values here – all pages pull from this file.
 
-import { arrival, PET_FEE_PER_NIGHT, PET_MAX, restaurantsAnswer } from "./surroundings";
+import { arrival, driveMinutes as m, PET_FEE_PER_NIGHT, PET_MAX, restaurantsAnswer } from "./surroundings";
 
 export type Amenity = {
   icon: string;
@@ -177,7 +177,7 @@ export const haus28: PropertyData = {
     {
       question: "Wo genau liegt HAUS28 am Büchelstein?",
       answer:
-        "HAUS28 liegt an der Adresse Büchelstein 28 bei Grattersdorf im Bayerischen Wald. Direkt am Fuße des Büchelsteins (831 m), umgeben von Wald und Natur. Der Büchelstein-Gipfel mit Panoramablick ist in wenigen Minuten zu Fuß erreichbar.",
+        "HAUS28 liegt an der Adresse Büchelstein 28 bei Grattersdorf im Bayerischen Wald. Direkt am Fuße des Büchelsteins (831 m), umgeben von Wald und Natur. Zum Büchelstein-Gipfel mit Panoramablick sind es rund 30 Minuten zu Fuß.",
     },
     {
       question: "Gibt es einen Whirlpool – und ist er ganzjährig nutzbar?",
@@ -233,7 +233,7 @@ export const haus28: PropertyData = {
     {
       question: "Wie weit ist es vom Büchelstein zum nächsten Ort?",
       answer:
-        "Vom HAUS28 am Büchelstein ist Grattersdorf in wenigen Minuten erreichbar, Deggendorf (Einkaufen, Restaurants) ca. 20 Minuten entfernt. Wanderwege zum Büchelstein-Gipfel und durch den Bayerischen Wald starten direkt vor der Haustür.",
+        `Vom HAUS28 am Büchelstein ist Grattersdorf in rund 5 Minuten erreichbar. Zum Einkaufen fährst du rund ${m.hengersberg.haus28} Minuten nach Hengersberg oder ${m.deggendorf.haus28} Minuten nach Deggendorf (Geschäfte, Restaurants). Der Rundweg auf den Büchelstein-Gipfel beginnt wenige Gehminuten vom Haus.`,
     },
     {
       question: "Wie lange ist der Mindestaufenthalt?",
@@ -242,12 +242,12 @@ export const haus28: PropertyData = {
     {
       question: "Wie weit ist es zur Pullman City?",
       answer:
-        "Die Westernstadt Pullman City in Eging am See ist vom HAUS28 am Büchelstein in ca. 20 Minuten mit dem Auto erreichbar. Ein perfekter Tagesausflug für Familien mit Kindern!",
+        `Die Westernstadt Pullman City in Eging am See ist vom HAUS28 am Büchelstein in rund ${m.pullmanCity.haus28} Minuten mit dem Auto erreichbar. Ein perfekter Tagesausflug für Familien mit Kindern!`,
     },
     {
       question: "Welche Ausflugsziele gibt es im Bayerischen Wald?",
       answer:
-        "In der Nähe vom HAUS28 findest du zahlreiche Highlights: Pullman City (~20 min), Nationalpark Bayerischer Wald (~25 km), Baumwipfelpfad Neuschönau (~30 min), Thermalbad Regen (~35 min), Großer Arber Skigebiet (~50 min) und natürlich den Büchelstein-Gipfel direkt vor der Haustür.",
+        `In der Nähe vom HAUS28 findest du zahlreiche Highlights (Fahrzeit mit dem Auto): Skilift Steinberg (~${m.steinberglift.haus28} min), Pullman City (~${m.pullmanCity.haus28} min), Erlebnisbad elypso in Deggendorf (~${m.elypso.haus28} min), Nationalpark mit Baumwipfelpfad in Neuschönau (~${m.nationalparkLusen.haus28} min), Skigebiet am Großen Arber (~${m.arber.haus28} min) und natürlich die Wanderung auf den Büchelstein direkt ab Haus.`,
     },
   ],
 };
@@ -322,12 +322,12 @@ const schoenblickFaqs = [
   {
     question: "Wie weit ist es zur Pullman City?",
     answer:
-      "Die Westernstadt Pullman City ist vom Haus Schönblick in Schöfweg in nur ca. 15 Minuten mit dem Auto erreichbar – ein idealer Tagesausflug für die ganze Familie.",
+      `Die Westernstadt Pullman City in Eging am See ist vom Haus Schönblick in Schöfweg in rund ${m.pullmanCity.schoenblick} Minuten mit dem Auto erreichbar – ein idealer Tagesausflug für die ganze Familie.`,
   },
   {
     question: "Welche Ausflugsziele gibt es in der Nähe?",
     answer:
-      "Rund um Schöfweg im Bayerischen Wald erwartet dich viel: Pullman City (~15 min), Baumwipfelpfad Neuschönau (~25 min), Nationalpark Bayerischer Wald (~20 km), Grafenau (~15 min), Thermalbad Regen (~30 min) und das Skigebiet am Großen Arber (~45 min).",
+      `Rund um Schöfweg im Bayerischen Wald erwartet dich viel – der Skilift Steinberg liegt direkt am Haus, dazu (Fahrzeit mit dem Auto): Grafenau (~${m.grafenau.schoenblick} min), Pullman City (~${m.pullmanCity.schoenblick} min), Erlebnisbad elypso in Deggendorf (~${m.elypso.schoenblick} min), Nationalpark mit Baumwipfelpfad in Neuschönau (~${m.nationalparkLusen.schoenblick} min) und das Skigebiet am Großen Arber (~${m.arber.schoenblick} min).`,
   },
   {
     question: "Wie sind die Stornierungsbedingungen?",

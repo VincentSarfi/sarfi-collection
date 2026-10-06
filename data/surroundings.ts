@@ -2,6 +2,30 @@
 // Gruppenseite und llms.txt. Recherchiert am 06.10.2026 (Websites der
 // Betriebe, DB, Wikipedia); Fahrzeiten sind gerundete Schätzungen.
 
+/**
+ * Fahrzeiten mit dem Auto in Minuten – einzige Quelle für alle Seiten.
+ * OSRM-Routing ab Hausadresse plus 15 % Puffer, auf 5 min gerundet
+ * (geprüft 06.10.2026). Früher standen hier geschätzte Werte, die bis zu
+ * 15 min zu knapp waren (z. B. Pullman City „15 min“ ab Schönblick).
+ */
+export const driveMinutes = {
+  pullmanCity: { name: "Westernstadt Pullman City (Eging am See)", haus28: 30, schoenblick: 30 },
+  /** Baumwipfelpfad, Tier-Freigelände und Hans-Eisenmann-Haus liegen zusammen in Neuschönau. */
+  nationalparkLusen: { name: "Nationalparkzentrum Lusen mit Baumwipfelpfad und Tier-Freigelände (Neuschönau)", haus28: 45, schoenblick: 40 },
+  /** 0 = zu Fuß erreichbar (ca. 600 m vom Haus Schönblick). */
+  steinberglift: { name: "Skilift Steinberg (Langfurth)", haus28: 10, schoenblick: 0 },
+  ruselArena: { name: "Rusel-Arena Indoor-Golf (Deggendorf-Rusel)", haus28: 25, schoenblick: 25 },
+  grafenau: { name: "Grafenau Zentrum", haus28: 30, schoenblick: 25 },
+  deggendorf: { name: "Deggendorf Zentrum", haus28: 30, schoenblick: 30 },
+  hengersberg: { name: "Hengersberg (Einkaufen, A3)", haus28: 20, schoenblick: 20 },
+  elypso: { name: "Erlebnisbad elypso mit Saunawelt (Deggendorf)", haus28: 35, schoenblick: 35 },
+  glasmuseumFrauenau: { name: "Glasmuseum Frauenau", haus28: 40, schoenblick: 35 },
+  arber: { name: "Großer Arber, Talstation Bergbahn", haus28: 60, schoenblick: 60 },
+} as const;
+
+/** „~30 min“ – Schreibweise für Tabellen und Listen (DE und EN gleich). */
+export const ca = (minutes: number) => `~${minutes} min`;
+
 /** Aufpreis pro Hund und Nacht im Haus Schönblick (HAUS28: keine Haustiere). */
 export const PET_FEE_PER_NIGHT = 15;
 export const PET_MAX = 2;

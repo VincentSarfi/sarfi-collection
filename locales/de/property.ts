@@ -1,7 +1,18 @@
 // Objektseiten (HAUS28, Haus Schönblick, Apartments): UI-Texte der Property-Komponenten.
 // Daten-Texte (Beschreibungen, FAQs, Amenities, alt-Texte) kommen aus data/properties.i18n.ts.
 
-import { PET_FEE_PER_NIGHT } from "@/data/surroundings";
+import { PET_FEE_PER_NIGHT, ca, driveMinutes as m } from "@/data/surroundings";
+
+// Umgebung von Haus Schönblick – gleiche Liste auf der Haus- und den Apartmentseiten.
+const schoenblickAttractions = [
+  { name: "Wanderweg ab Haustür", distance: "0 m" },
+  { name: "Skilift Steinberg", distance: "~600 m" },
+  { name: "Grafenau Zentrum", distance: ca(m.grafenau.schoenblick) },
+  { name: "Pullman City (Westernstadt)", distance: ca(m.pullmanCity.schoenblick) },
+  { name: "Nationalpark & Baumwipfelpfad (Neuschönau)", distance: ca(m.nationalparkLusen.schoenblick) },
+  { name: "Erlebnisbad elypso Deggendorf", distance: ca(m.elypso.schoenblick) },
+  { name: "Skigebiet Arber", distance: ca(m.arber.schoenblick) },
+];
 
 const property = {
   // components/property/PropertyHero.tsx
@@ -48,10 +59,10 @@ const property = {
     mapTitlePre: "Karte: ",
     mapAriaPre: "OpenStreetMap Karte für ",
     defaultAttractions: [
-      { name: "Nationalpark Bayerischer Wald", distance: "~20 km" },
-      { name: "Deggendorf (Einkaufen)", distance: "~20 min" },
-      { name: "Thermalbad Regen", distance: "~30 min" },
-      { name: "Glasmuseum Frauenau", distance: "~25 min" },
+      { name: "Nationalparkzentrum Lusen", distance: "~40–45 min" },
+      { name: "Deggendorf (Einkaufen)", distance: ca(m.deggendorf.haus28) },
+      { name: "Erlebnisbad elypso Deggendorf", distance: ca(m.elypso.haus28) },
+      { name: "Glasmuseum Frauenau", distance: "~35–40 min" },
     ],
   },
   // components/property/AmenitiesGrid.tsx
@@ -161,7 +172,7 @@ const property = {
       },
       {
         title: "Schöne Lage – mitten im Bayerischen Wald",
-        text: "Wanderwege zum Büchelstein-Gipfel starten direkt vor der Haustür. Pullman City und Nationalpark in 20–25 Minuten.",
+        text: `Der Rundweg auf den Büchelstein-Gipfel beginnt wenige Gehminuten vom Haus. Pullman City erreichst du in rund ${m.pullmanCity.haus28} Minuten.`,
       },
       {
         title: "Eigenständiger Check-in per Schlüsselbox",
@@ -174,19 +185,20 @@ const property = {
     ],
     amenitiesHeading: "Das bietet dir diese Unterkunft",
     locationDescription:
-      "HAUS28 liegt am Büchelstein bei Grattersdorf, idyllisch am Rand des Bayerischen Waldes. Wanderwege zum Büchelstein-Gipfel starten direkt vor der Haustür. Die Westernstadt Pullman City ist in nur 20 Minuten erreichbar – perfekt für Familien. Deggendorf mit Einkaufsmöglichkeiten und Restaurants liegt ebenfalls ca. 20 Minuten entfernt.",
+      `HAUS28 liegt am Büchelstein bei Grattersdorf, idyllisch am Rand des Bayerischen Waldes. Der Rundweg auf den Büchelstein-Gipfel beginnt wenige Gehminuten vom Haus. Die Westernstadt Pullman City erreichst du in rund ${m.pullmanCity.haus28} Minuten – perfekt für Familien. Zum Einkaufen sind es nach Hengersberg rund ${m.hengersberg.haus28}, nach Deggendorf mit Geschäften und Restaurants rund ${m.deggendorf.haus28} Minuten.`,
     attractions: [
-      { name: "Büchelstein-Gipfel (Wanderung)", distance: "~15 min zu Fuß" },
-      { name: "Pullman City (Westernstadt)", distance: "~20 min" },
-      { name: "Nationalpark Bayerischer Wald", distance: "~25 km" },
-      { name: "Deggendorf Zentrum", distance: "~20 min" },
-      { name: "Thermalbad Regen", distance: "~35 min" },
-      { name: "Arber (Skigebiet)", distance: "~50 min" },
+      { name: "Büchelstein-Gipfel (Wanderung)", distance: "~30 min zu Fuß" },
+      { name: "Hengersberg (Einkaufen)", distance: ca(m.hengersberg.haus28) },
+      { name: "Pullman City (Westernstadt)", distance: ca(m.pullmanCity.haus28) },
+      { name: "Deggendorf Zentrum", distance: ca(m.deggendorf.haus28) },
+      { name: "Nationalpark & Baumwipfelpfad (Neuschönau)", distance: ca(m.nationalparkLusen.haus28) },
+      { name: "Erlebnisbad elypso Deggendorf", distance: ca(m.elypso.haus28) },
+      { name: "Arber (Skigebiet)", distance: ca(m.arber.haus28) },
     ],
     excursions: {
       eyebrow: "Direkt ab HAUS28",
       heading: "Wanderung zum Büchelstein & weitere Ausflüge",
-      text: "Die Büchelstein-Rundwanderung startet direkt vor der Haustür – über die historische Wallfahrtskapelle Rastbuche (18. Jh.) auf 831 m Höhe. Alle Ausflugstipps für die Region auf einen Blick.",
+      text: "Die Büchelstein-Rundwanderung beginnt wenige Gehminuten vom Haus und führt auf den Gipfel (831 m) und zur historischen Wallfahrtskapelle Rastbuche (18. Jh.). Alle Ausflugstipps für die Region auf einen Blick.",
       cta: "Alle Ausflugsziele",
     },
     awards: {
@@ -233,7 +245,7 @@ const property = {
       },
       {
         title: "Traumhafte Lage im Bayerischen Wald",
-        text: "Wanderwege beginnen direkt vor der Haustür. Mitten in der Natur, nah an Grafenau.",
+        text: "Wanderwege beginnen direkt vor der Haustür. Mitten in der Natur, direkt am Skilift Steinberg.",
       },
       {
         title: "Direktbuchung – bis zu 20 % günstiger",
@@ -243,16 +255,8 @@ const property = {
     aboutHeading: "Über diese Unterkunft",
     amenitiesHeading: "Was diese Unterkunft bietet",
     locationDescription:
-      "Schöfweg liegt im Herzen des Bayerischen Waldes. Wanderwege starten direkt vor dem Haus. Einkaufsmöglichkeiten und Sehenswürdigkeiten sind in wenigen Minuten erreichbar.",
-    attractions: [
-      { name: "Wanderweg ab Haustür", distance: "0 m" },
-      { name: "Grafenau Zentrum", distance: "~15 min" },
-      { name: "Pullman City", distance: "~15 min" },
-      { name: "Nationalpark Bayerischer Wald", distance: "~20 km" },
-      { name: "Baumwipfelpfad Neuschönau", distance: "~25 min" },
-      { name: "Thermalbad Regen", distance: "~30 min" },
-      { name: "Skigebiet Arber", distance: "~45 min" },
-    ],
+      `Haus Schönblick liegt in Langfurth bei Schöfweg, direkt am Skilift Steinberg im Bayerischen Wald. Wanderwege starten direkt vor dem Haus, zwei Gasthäuser erreichst du in wenigen Minuten. Nach Grafenau sind es rund ${m.grafenau.schoenblick}, zum Nationalpark rund ${m.nationalparkLusen.schoenblick} Minuten.`,
+    attractions: schoenblickAttractions,
     rulePets: `Hunde auf Anfrage (${PET_FEE_PER_NIGHT} € pro Nacht)`,
     cancellationTitle: "Stornierung & Zugang",
     cancellationTextPre: "Kostenlose Stornierung bis 30 Tage vor Anreise. Danach gelten unsere ",
@@ -269,7 +273,7 @@ const property = {
   schoenblickPage: {
     aboutHeading: "Über Haus Schönblick",
     aboutLocation:
-      "Haus Schönblick liegt im Ortsteil Langfurth bei Schöfweg, direkt am Skilift Steinberg. Die fünf Ferienwohnungen verteilen sich auf die Hausnummern 18 und 20: B5 und B6 im Erdgeschoss mit Terrasse, B7 und B8 im ersten Stock mit Panoramabalkon, dazu die Hüttenwohnung A2 in Hausnummer 20. Alle Gäste teilen sich eine große Panoramaterrasse mit Sitzplätzen und einen kleinen Garten; geparkt wird kostenlos direkt vor dem Gebäude. Bis zur Westernstadt Pullman City sind es rund 15 Minuten mit dem Auto.",
+      `Haus Schönblick liegt im Ortsteil Langfurth bei Schöfweg, direkt am Skilift Steinberg. Die fünf Ferienwohnungen verteilen sich auf die Hausnummern 18 und 20: B5 und B6 im Erdgeschoss mit Terrasse, B7 und B8 im ersten Stock mit Panoramabalkon, dazu die Hüttenwohnung A2 in Hausnummer 20. Alle Gäste teilen sich eine große Panoramaterrasse mit Sitzplätzen und einen kleinen Garten; geparkt wird kostenlos direkt vor dem Gebäude. Bis zur Westernstadt Pullman City sind es rund ${m.pullmanCity.schoenblick} Minuten mit dem Auto.`,
     apartmentsEyebrow: "5 Ferienwohnungen",
     apartmentsHeading: "Wähle dein Apartment",
     apartmentsIntro:
@@ -296,16 +300,8 @@ const property = {
       price: "Preis ab",
     },
     locationDescription:
-      "Haus Schönblick liegt im Ortsteil Langfurth bei Schöfweg, mitten im Bayerischen Wald. Wanderwege beginnen direkt vor der Haustür. Die beliebte Westernstadt Pullman City ist nur 15 Minuten entfernt – ideal für Familien mit Kindern. Die Region bietet Natur pur, klare Luft und echte Erholung zu jeder Jahreszeit.",
-    attractions: [
-      { name: "Wanderweg ab Haustür", distance: "0 m" },
-      { name: "Pullman City (Westernstadt)", distance: "~15 min" },
-      { name: "Grafenau Zentrum", distance: "~15 min" },
-      { name: "Nationalpark Bayerischer Wald", distance: "~20 km" },
-      { name: "Baumwipfelpfad Neuschönau", distance: "~25 min" },
-      { name: "Thermalbad Regen", distance: "~30 min" },
-      { name: "Skigebiet Arber", distance: "~45 min" },
-    ],
+      `Haus Schönblick liegt im Ortsteil Langfurth bei Schöfweg, mitten im Bayerischen Wald. Wanderwege beginnen direkt vor der Haustür. Die Westernstadt Pullman City erreichst du in rund ${m.pullmanCity.schoenblick} Minuten – ideal für Familien mit Kindern. Die Region bietet Natur pur, klare Luft und echte Erholung zu jeder Jahreszeit.`,
+    attractions: schoenblickAttractions,
     relatedTitle: "Auch interessant",
     relatedHaus28Subtitle: "Modernes A-Frame im Wald",
   },
