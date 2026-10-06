@@ -144,6 +144,7 @@ const property = {
   // components/property/Haus28ClientPage.tsx
   haus28: {
     // Second H1 line – deliberately identical to the <title> so Google reads title & H1 as the same page.
+    hotTubPost: "New at HAUS28: the premium hot tub – all details on our blog (in German)",
     h1Suffix: "– A-Frame with Hot Tub in the Bavarian Forest",
     typePre: "A-frame holiday home · ",
     guestFavorite: "Guest favourite",

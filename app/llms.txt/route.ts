@@ -66,7 +66,7 @@ ${restaurants.map((r) => `- ${r.name} (${r.place}): ${r.de} ${r.url}`).join("\n"
 - [Startseite](${SITE_URL}): Übersicht beider Unterkünfte
 - [HAUS28](${SITE_URL}/haus28): A-Frame Ferienhaus mit Whirlpool am Büchelstein
 - [Haus Schönblick](${SITE_URL}/schoenblick): Panorama-Apartments in Schöfweg
-${apartments.map((a) => `- [${a.name}](${SITE_URL}/schoenblick/${a.id}): ${a.subtitle}`).join("\n")}
+${apartments.map((a) => `- [${a.name}](${SITE_URL}/schoenblick/${a.id}): ${a.subtitle} – ${a.location}, ${a.outdoor}, ${a.sqm} m², ab ${a.priceFrom} €`).join("\n")}
 - [Gruppenunterkunft](${SITE_URL}/schoenblick/gruppen): mehrere Apartments in einer Buchung, bis ${groupMax} Personen
 - [Ausflugsziele](${SITE_URL}/ausflugsziele): Sehenswürdigkeiten und Wanderungen im Bayerischen Wald
 - [Blog](${SITE_URL}/blog): Neuigkeiten und Tipps der Gastgeber

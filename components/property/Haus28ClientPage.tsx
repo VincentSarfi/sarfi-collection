@@ -337,6 +337,13 @@ export default function Haus28ClientPage({ hostingYears }: { hostingYears: numbe
                     <IconArrowRight size={13} className={desc.expanded ? "rotate-90" : ""} />
                   </button>
                 )}
+                <Link
+                  href="/blog/premium-hottub-haus28"
+                  className="mt-4 inline-flex items-center gap-1.5 font-body text-sm text-forest-700 underline underline-offset-2 hover:text-gold-700 transition-colors"
+                >
+                  {t.haus28.hotTubPost}
+                  <IconArrowRight size={13} />
+                </Link>
               </div>
 
               {/* Wo du schlafen wirst */}

@@ -36,6 +36,15 @@ export default function BlogPage() {
           <p className="font-body text-lg text-cream-50/70 max-w-xl leading-relaxed">
             Wanderrouten, Ausflugstipps und Inspiration für deinen Urlaub im Bayerischen Wald – direkt von uns.
           </p>
+          <p className="font-body text-base text-cream-50/70 max-w-2xl leading-relaxed mt-4">
+            Wir sind Vincent und Elena, die Gastgeber vom{" "}
+            <Link href="/haus28" className="underline underline-offset-2 hover:text-cream-50">HAUS28</Link> am Büchelstein und
+            vom{" "}
+            <Link href="/schoenblick" className="underline underline-offset-2 hover:text-cream-50">Haus Schönblick</Link> in
+            Schöfweg. Hier schreiben wir über Neues aus unseren Häusern und über Ausflüge, die wir dir rund um
+            Grattersdorf und Schöfweg empfehlen – noch mehr Ideen findest du bei unseren{" "}
+            <Link href="/ausflugsziele" className="underline underline-offset-2 hover:text-cream-50">Ausflugszielen</Link>.
+          </p>
         </div>
       </div>
 

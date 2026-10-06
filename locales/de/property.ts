@@ -144,6 +144,7 @@ const property = {
   // components/property/Haus28ClientPage.tsx
   haus28: {
     // Zweite H1-Zeile – bewusst identisch zum <title>, damit Google Titel & H1 als dieselbe Seite liest.
+    hotTubPost: "Neu am HAUS28: der Premium-HotTub – alle Details im Blog",
     h1Suffix: "– A-Frame mit Whirlpool im Bayerischen Wald",
     typePre: "A-Frame Ferienhaus · ",
     guestFavorite: "Gäste-Favorit",
