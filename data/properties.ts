@@ -110,14 +110,17 @@ export const haus28: PropertyData = {
   guestFavorite: true,
   airbnbUrl: "https://www.airbnb.de/rooms/1375439439358638425",
   googleMapsUrl: "https://www.google.com/maps?cid=18249145745632813741",
+  // Stand 06.10.2026, abgelesen auf den Plattformen. FeWo-direkt zeigt 9,4/10
+  // aus 18 – eine irrtümliche 4/10, die FeWo nicht löscht, zählt hier nicht
+  // mit (laut Vincent); ohne sie ≈ 9,7/10 = 4,85/5 aus 17.
   airbnbRating: 5.0,
-  airbnbReviewCount: 22,
-  bookingRating: 9.9,
-  bookingReviewCount: 12,
-  fewoRating: 5.0,
+  airbnbReviewCount: 25,
+  bookingRating: 9.7,
+  bookingReviewCount: 15,
+  fewoRating: 4.85,
   fewoReviewCount: 17,
-  googleRating: 5.0,
-  googleReviewCount: 9,
+  googleRating: 4.8,
+  googleReviewCount: 11,
   smoobuPropertyId: "2610828",
   smoobuEmbedUrl: "https://login.smoobu.com/de/booking-tool/iframe/2610828",
   shortDescription:
@@ -347,8 +350,17 @@ export const schoenblick: PropertyData = {
   },
   priceFrom: 59,
   googleMapsUrl: "https://www.google.com/maps?cid=18059770108920997880",
-  airbnbRating: 4.97,
-  airbnbReviewCount: 95,
+  // Stand 06.10.2026, nur Bewertungen seit der Übernahme im September 2025.
+  // Airbnb: Summe der Wohnungs-Inserate (B5, B6, B8 je 5,0 aus 3; A2 4,5 aus 2).
+  // Booking: aktuelles Inserat 8,8 aus 8; eine 3/10 zählt laut Vincent nicht
+  // mit, ohne sie 9,6 aus 7. Die alten Booking-Inserate des Vorbesitzers sind
+  // geschlossen. Google: nur die 2 sicher eurer Zeit zuzuordnenden Rezensionen.
+  airbnbRating: 4.91,
+  airbnbReviewCount: 11,
+  bookingRating: 9.6,
+  bookingReviewCount: 7,
+  googleRating: 5.0,
+  googleReviewCount: 2,
   smoobuPropertyId: "2934161",
   shortDescription:
     "Fünf geschmackvolle Ferienwohnungen mit Panoramablick über den Bayerischen Wald – ideal für Paare, Familien und Gruppen.",
@@ -381,8 +393,8 @@ export const schoenblick: PropertyData = {
       name: "Apartment B5",
       subtitle: "Helles Apartment mit Waldblick & Terrasse",
       airbnbUrl: "https://www.airbnb.de/rooms/1542179745378169386",
-      airbnbRating: 4.97,
-      airbnbReviewCount: 22,
+      airbnbRating: 5.0,
+      airbnbReviewCount: 3,
       smoobuPropertyId: "3025621",
       maxGuests: 4,
       bedrooms: 2,
@@ -440,8 +452,8 @@ export const schoenblick: PropertyData = {
       name: "Apartment B6",
       subtitle: "Lichtdurchflutete Wohnung mit Panoramablick",
       airbnbUrl: "https://www.airbnb.de/rooms/1511581373647900244",
-      airbnbRating: 4.97,
-      airbnbReviewCount: 19,
+      airbnbRating: 5.0,
+      airbnbReviewCount: 3,
       smoobuPropertyId: "2934141",
       maxGuests: 4,
       bedrooms: 2,
@@ -489,8 +501,8 @@ export const schoenblick: PropertyData = {
       name: "Apartment B8",
       subtitle: "Großzügige Ferienwohnung für Familien",
       airbnbUrl: "https://www.airbnb.de/rooms/1525349872389165473",
-      airbnbRating: 4.97,
-      airbnbReviewCount: 28,
+      airbnbRating: 5.0,
+      airbnbReviewCount: 3,
       smoobuPropertyId: "3025606",
       maxGuests: 4,
       bedrooms: 2,
@@ -608,8 +620,8 @@ export const schoenblick: PropertyData = {
       name: "Apartment A2",
       subtitle: "Hüttenwohnung mit Bauernmöbeln & Balkonblick",
       airbnbUrl: "https://www.airbnb.de/rooms/1512149022196493833",
-      airbnbRating: 5.0,
-      airbnbReviewCount: 26,
+      airbnbRating: 4.5,
+      airbnbReviewCount: 2,
       smoobuPropertyId: "2934161",
       maxGuests: 4,
       bedrooms: 2,
@@ -688,6 +700,11 @@ function collectPlatformReviews(p: PropertyData): { rating: number; count: numbe
     entries.push({ rating: p.googleRating, count: p.googleReviewCount });
   }
   return entries;
+}
+
+/** Note mit einer Nachkommastelle in der Schreibweise der Sprache: 9,7 / 9.7 */
+export function formatScore(value: number, locale: "de" | "en"): string {
+  return value.toLocaleString(locale === "en" ? "en-GB" : "de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 }
 
 export function getAggregateReviewStats(

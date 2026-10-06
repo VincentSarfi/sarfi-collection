@@ -208,7 +208,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
                     <>
                       <span className="flex items-center gap-1 font-semibold text-forest-900">
                         <IconStar size={14} filled className="text-forest-900 fill-forest-900" />
-                        {apartment.airbnbRating}
+                        {apartment.airbnbRating.toLocaleString(locale === "en" ? "en-GB" : "de-DE")}
                       </span>
                       <span className="text-forest-300">·</span>
                       <a href="#bewertungen" className="underline underline-offset-2 hover:text-forest-900 transition-colors">

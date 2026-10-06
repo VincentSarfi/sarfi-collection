@@ -48,7 +48,7 @@ function ReviewCard({ review }: { review: Review }) {
       {/* Stars */}
       <div className="flex gap-0.5 text-gold-500">
         {[1, 2, 3, 4, 5].map((i) => (
-          <IconStar key={i} size={14} filled={i <= review.rating} />
+          <IconStar key={i} size={14} filled={i <= Math.round(review.rating)} />
         ))}
       </div>
 
@@ -176,7 +176,7 @@ export default function PropertyReviews({
                 ))}
               </div>
               <span className="font-body text-lg font-semibold text-forest-800">
-                {averageRating}
+                {averageRating.toLocaleString(locale === "en" ? "en-GB" : "de-DE")}
               </span>
               <span className="font-body text-sm text-forest-500">
                 · {totalCount}{t.reviewsOnAirbnbPost}

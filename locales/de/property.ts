@@ -203,10 +203,8 @@ const property = {
     },
     awards: {
       heading: "Auszeichnungen",
-      airbnbScore: "5,0",
       guestFavorite: "Gäste-Favorit",
       top5: "Oberste 5 % der Inserate auf Airbnb",
-      bookingScore: "9,9/10",
     },
     hostProfile: {
       heading: "Lerne deine:n Gastgeber:in kennen",

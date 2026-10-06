@@ -107,7 +107,7 @@ export default function PropertyHero({
               {[1,2,3,4,5].map(i => <IconStar key={i} size={14} filled />)}
             </div>
             <span className="font-body text-sm text-cream-50/80">
-              {airbnbRating} · {airbnbReviewCount}{t.reviewsOnAirbnbPost}
+              {airbnbRating.toLocaleString(locale === "en" ? "en-GB" : "de-DE")} · {airbnbReviewCount}{t.reviewsOnAirbnbPost}
             </span>
             {guestFavorite && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gold-300/20 border border-gold-300/40 font-body text-xs text-gold-300">

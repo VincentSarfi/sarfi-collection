@@ -1,4 +1,5 @@
-// Guest reviews – sourced from Airbnb.
+// Gästebewertungen von Airbnb, Booking.com und FeWo-direkt (Texte wörtlich,
+// bei Booking nur der positive Teil; Booking-Noten auf 5er-Skala: 9/10 = 4,5).
 
 export type Review = {
   id: string;
@@ -14,6 +15,36 @@ export type Review = {
 
 export const reviews: Review[] = [
   // ─── HAUS28 Reviews (echte Airbnb-Bewertungen) ───────────────────────────
+  {
+    id: "h28-23",
+    propertyId: "haus28",
+    author: "Ines",
+    location: "Airbnb",
+    date: "September 2026",
+    rating: 5,
+    text: "Hatten ein super entspanntes Wochenende, alles war wie auf den Fotos und noch viel schöner! Wir würden jederzeit wieder buchen😊👍🏻",
+    avatarInitials: "IN",
+  },
+  {
+    id: "h28-24",
+    propertyId: "haus28",
+    author: "Matthias",
+    location: "Airbnb",
+    date: "September 2026",
+    rating: 5,
+    text: "Wir hatten einen wunderschönen Aufenthalt. Die Buchung, Zahlung und die Zugangsmodalitäten (Code) waren sehr schnell abgewickelt. Die Lage an dem direkt angrenzenden Wald ist sehr ruhig und im Hot Tube bzw. an der Feuerschale kann man die Abende ruhig ausklingen lassen. Das Haus ist sehr schön und modern eingerichtet bzw. ausgestattet. Des Weiteren ist die unmittelbare Nähe zu den Bergen und dem Nationalpark im bayrischen Wald hervorzuheben. Wir waren begeistert…",
+    avatarInitials: "MA",
+  },
+  {
+    id: "h28-25",
+    propertyId: "haus28",
+    author: "Jelle Henk",
+    location: "Airbnb",
+    date: "August 2026",
+    rating: 5,
+    text: "Schön renoviertes Haus im Wald. Wenn du Ruhe, Wandern, Hügel und Wälder liebst, ist es empfehlenswert. Und im Winter gibt es eine Skipiste in unmittelbarer Nähe. Das Haus ist sehr geräumig, sauber und schön eingerichtet. Wir haben uns sofort wie zu Hause und wohl gefühlt. Alles in allem empfohlen.",
+    avatarInitials: "JH",
+  },
   {
     id: "h28-20",
     propertyId: "haus28",
@@ -236,6 +267,16 @@ export const reviews: Review[] = [
   },
   // ─── HAUS28 Reviews (Booking.com) ────────────────────────────────────────
   {
+    id: "h28-b10",
+    propertyId: "haus28",
+    author: "Manja",
+    location: "Booking.com",
+    date: "August 2026",
+    rating: 5,
+    text: "Wir hatten einen wunderschönen Urlaub im Haus 28. Das Haus ist super ausgestattet und auch gut gelegen. Man kommt in nur wenigen Minuten ins nächste Dorf. 2 große Bäder bieten einen super Komfort wenn man mit einer größeren Familie unterwegs ist. Auch die große Terrasse läd zum verweilen ein.",
+    avatarInitials: "MA",
+  },
+  {
     id: "h28-b8",
     propertyId: "haus28",
     author: "Vitus",
@@ -251,7 +292,7 @@ export const reviews: Review[] = [
     author: "Rainer",
     location: "Booking.com",
     date: "Mai 2026",
-    rating: 5,
+    rating: 4.5,
     text: "Sehr ruhige Lage. Die Ausstattung gibt alles her um ein Paar schöne Tage zu verbringen.",
     avatarInitials: "RA",
   },
@@ -467,6 +508,17 @@ export const reviews: Review[] = [
     avatarInitials: "MN",
   },
   // ─── Schönblick Reviews (echte Airbnb-Bewertungen) ─────────────────────
+  {
+    id: "sb-b5-3",
+    propertyId: "schoenblick",
+    apartmentId: "b5",
+    author: "Alexander",
+    location: "Airbnb",
+    date: "Mai 2026",
+    rating: 5,
+    text: "Super Kommunikation. Vincent ist ein sehr netter Gastgeber",
+    avatarInitials: "AL",
+  },
   // B5
   {
     id: "sb-b5-1",
@@ -492,6 +544,17 @@ export const reviews: Review[] = [
   },
   // B6
   {
+    id: "sb-b6-3",
+    propertyId: "schoenblick",
+    apartmentId: "b6",
+    author: "Patrik",
+    location: "Airbnb",
+    date: "April 2026",
+    rating: 5,
+    text: "Sehr angenehmer Aufenthalt – die Unterkunft war sauber, komfortabel und gut ausgestattet. Alles verlief reibungslos und die Kommunikation mit dem Gastgeber war großartig. Ich würde die Unterkunft weiterempfehlen.",
+    avatarInitials: "PA",
+  },
+  {
     id: "sb-b6-1",
     propertyId: "schoenblick",
     apartmentId: "b6",
@@ -514,6 +577,17 @@ export const reviews: Review[] = [
     avatarInitials: "MA",
   },
   // B8
+  {
+    id: "sb-b8-3",
+    propertyId: "schoenblick",
+    apartmentId: "b8",
+    author: "Anja",
+    location: "Airbnb",
+    date: "Juli 2026",
+    rating: 5,
+    text: "Schöne Wohnung, alles hat super geklappt!",
+    avatarInitials: "AN",
+  },
   {
     id: "sb-b8-1",
     propertyId: "schoenblick",
@@ -558,6 +632,47 @@ export const reviews: Review[] = [
     rating: 5,
     text: "Alles war perfekt.",
     avatarInitials: "A",
+  },
+  // ─── Schönblick Reviews (Booking.com, Inserat seit der Übernahme) ───────
+  {
+    id: "sb-bk-1",
+    propertyId: "schoenblick",
+    author: "Dalibor",
+    location: "Booking.com",
+    date: "August 2026",
+    rating: 5,
+    text: "Ich komme wieder gerne. Ich war zufrieden mit der ganze Wohnung.",
+    avatarInitials: "DA",
+  },
+  {
+    id: "sb-bk-2",
+    propertyId: "schoenblick",
+    author: "Natalie",
+    location: "Booking.com",
+    date: "August 2026",
+    rating: 4.5,
+    text: "Es hat uns alles gefallen, die Wohnung ist schön, geräumig und sauber, wer Ruhe sucht ist genau hier richtig, atemberaubende Natur, und der Ausblick aus dem Balkon ist wunderschön, die Vermieter sind nett und hilfsbereit, reagieren sehr schnell auf irgendwelche Fragen, wir sind zufrieden geblieben!",
+    avatarInitials: "NA",
+  },
+  {
+    id: "sb-bk-3",
+    propertyId: "schoenblick",
+    author: "Susanne",
+    location: "Booking.com",
+    date: "April 2026",
+    rating: 4.5,
+    text: "Die Wohnungen sind mit allem ausgestattet, was man für den Aufenthalt braucht, besonders die Küche. Man hat einen traumhaften Ausblick in den Bayerischen Wald von Balkon oder Terrasse. Die Vermieter sind sehr nett, hilfsbereit und zuvorkommend. Unsere Gruppe war gemischt, von Oma bis Enkel, und alle haben sich wohlgefühlt. Je nach Stimmung konnte man sich zurückziehen oder zusammensetzen. Es gibt leicht erreichbare, gute Wirtschaften. Bäckerei, die auch am Sonntag geöffnet hat und Wanderungen sind ab der Haustür möglich.",
+    avatarInitials: "SU",
+  },
+  {
+    id: "sb-bk-4",
+    propertyId: "schoenblick",
+    author: "Iaroslav",
+    location: "Booking.com",
+    date: "März 2026",
+    rating: 5,
+    text: "Zweifellos eine der besten Unterkünfte, in denen ich in letzter Zeit gewohnt habe. Die Kommunikation mit dem Gastgeber war hervorragend. Wer einen schönen Urlaub verbringen möchte, kann sich nichts Besseres wünschen. Bequemes Bett, tolle Lage der Zimmer. Die Wohnung bietet alles, was man zum Leben braucht. Und falls doch einmal etwas fehlt, kümmert sich der Gastgeber umgehend darum.",
+    avatarInitials: "IA",
   },
   // ─── B7 Reviews (Airbnb) ─────────────────────────────────────────────────
   {

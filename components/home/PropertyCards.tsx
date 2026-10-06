@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconStar, IconUsers, IconArrowRight, IconMapPin } from "@/components/ui/Icons";
-import { haus28, schoenblick } from "@/data/properties";
+import { getAggregateReviewStats, haus28, schoenblick } from "@/data/properties";
 import { localizeProperty } from "@/data/properties.i18n";
 import { getDict, localizeHref } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
@@ -14,6 +14,7 @@ import { useLocale } from "@/lib/i18n/LocaleProvider";
 const baseProperties = [
   {
     ...haus28,
+    reviewStats: getAggregateReviewStats([haus28]),
     href: "/haus28",
     bookHref: "/haus28",
     mood: "dark" as const,
@@ -21,6 +22,7 @@ const baseProperties = [
   },
   {
     ...schoenblick,
+    reviewStats: getAggregateReviewStats([schoenblick]),
     href: "/schoenblick",
     bookHref: "/schoenblick/buchen",
     mood: "light" as const,
@@ -34,11 +36,7 @@ function PropertyCard({
   subtitle,
   address,
   priceFrom,
-  airbnbRating,
-  airbnbReviewCount,
-  bookingReviewCount,
-  fewoReviewCount,
-  googleReviewCount,
+  reviewStats,
   maxGuests,
   images,
   href,
@@ -49,11 +47,9 @@ function PropertyCard({
 }: (typeof baseProperties)[number] & { tag: string; index: number }) {
   const locale = useLocale();
   const t = getDict(locale).home.properties;
-  const totalReviews =
-    (airbnbReviewCount ?? 0) +
-    (bookingReviewCount ?? 0) +
-    (fewoReviewCount ?? 0) +
-    (googleReviewCount ?? 0);
+  // Note und Anzahl über alle Plattformen – vorher stand hier die Airbnb-Note
+  // neben der Summe aller Plattformen.
+  const rating = reviewStats.ratingValue.toLocaleString(locale === "en" ? "en-GB" : "de-DE", { minimumFractionDigits: 2 });
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.15 });
 
   return (
@@ -86,10 +82,10 @@ function PropertyCard({
         <div className="absolute top-4 right-4 flex items-center gap-1.5 px-2.5 py-1 bg-cream-50/10 backdrop-blur-sm border border-cream-50/20 rounded-full">
           <IconStar size={12} className="text-gold-300 fill-gold-300" filled />
           <span className="font-body text-xs font-semibold text-cream-50">
-            {airbnbRating}
+            {rating}
           </span>
           <span className="font-body text-xs text-cream-50/60">
-            ({totalReviews})
+            ({reviewStats.reviewCount})
           </span>
         </div>
 

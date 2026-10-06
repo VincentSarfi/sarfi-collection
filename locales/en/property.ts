@@ -203,10 +203,8 @@ const property = {
     },
     awards: {
       heading: "Awards",
-      airbnbScore: "5.0",
       guestFavorite: "Guest favourite",
       top5: "Top 5% of listings on Airbnb",
-      bookingScore: "9.9/10",
     },
     hostProfile: {
       heading: "Meet your hosts",

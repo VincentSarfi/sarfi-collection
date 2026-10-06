@@ -12,7 +12,7 @@ import PropertyReviews from "@/components/property/PropertyReviews"
 import BookingWidget from "@/components/booking/BookingWidget"
 import FaqAccordion from "@/components/property/FaqAccordion"
 import RelatedProperties from "@/components/property/RelatedProperties"
-import { haus28, schoenblick, getAggregateReviewStats } from "@/data/properties"
+import { haus28, schoenblick, getAggregateReviewStats, formatScore } from "@/data/properties"
 import { localizeProperty } from "@/data/properties.i18n"
 import { haus28Reviews } from "@/data/reviews"
 import { PROPERTY_CONFIGS, resolveSmoobuId } from "@/config/properties.config"
@@ -467,7 +467,7 @@ export default function Haus28ClientPage({ hostingYears }: { hostingYears: numbe
                 <div className="flex items-center gap-0 mb-1">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/images/awards/laurel-left.svg" alt="" width={56} height={84} className="h-24 w-auto object-contain -mr-4" />
-                  <span className="font-display text-7xl text-cream-50 tracking-tight -mt-8">{t.haus28.awards.airbnbScore}</span>
+                  <span className="font-display text-7xl text-cream-50 tracking-tight -mt-8">{formatScore(haus.airbnbRating, locale)}</span>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/images/awards/laurel-right.svg" alt="" width={56} height={84} className="h-24 w-auto object-contain -ml-4" />
                 </div>
@@ -479,7 +479,7 @@ export default function Haus28ClientPage({ hostingYears }: { hostingYears: numbe
                   ))}
                 </div>
                 <p className="font-body text-sm text-cream-50/60">
-                  {t.haus28.awards.airbnbScore} · {haus.airbnbReviewCount}{t.listing.reviewsPost}
+                  {formatScore(haus.airbnbRating, locale)} · {haus.airbnbReviewCount}{t.listing.reviewsPost}
                 </p>
                 <p className="font-body text-xs text-cream-50/60 max-w-[180px] mt-1">
                   {t.haus28.awards.top5}
@@ -496,7 +496,7 @@ export default function Haus28ClientPage({ hostingYears }: { hostingYears: numbe
                   className="h-32 w-auto object-contain"
                 />
                 <p className="font-body text-sm text-cream-50/60">
-                  {t.haus28.awards.bookingScore} · {haus.bookingReviewCount}{t.listing.reviewsPost}
+                  {formatScore(haus.bookingRating ?? 0, locale)}/10 · {haus.bookingReviewCount}{t.listing.reviewsPost}
                 </p>
                 <p className="font-body text-xs text-cream-50/60 max-w-[180px]">
                   Traveller Review Awards 2026

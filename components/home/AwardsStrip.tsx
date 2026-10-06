@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { IconStar } from "@/components/ui/Icons";
-import { haus28 } from "@/data/properties";
+import { formatScore, haus28 } from "@/data/properties";
 import { getDict, type Locale } from "@/lib/i18n";
 
 /**
@@ -25,7 +25,7 @@ export default function AwardsStrip({ locale = "de" }: { locale?: Locale }) {
             <div className="flex items-center gap-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/awards/laurel-left.svg" alt="" width={42} height={64} className="h-16 w-auto object-contain -mr-3" />
-              <span className="font-display text-5xl text-cream-50 tracking-tight -mt-4">{t.airbnbScore}</span>
+              <span className="font-display text-5xl text-cream-50 tracking-tight -mt-4">{formatScore(haus28.airbnbRating, locale)}</span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/awards/laurel-right.svg" alt="" width={42} height={64} className="h-16 w-auto object-contain -ml-3" />
             </div>
@@ -48,7 +48,7 @@ export default function AwardsStrip({ locale = "de" }: { locale?: Locale }) {
               <div className="flex gap-0.5 text-gold-300">
                 {[1, 2, 3, 4, 5].map((i) => <IconStar key={i} size={12} filled />)}
               </div>
-              <span className="font-display text-xl text-cream-50">{t.bookingScore}</span>
+              <span className="font-display text-xl text-cream-50">{formatScore(haus28.bookingRating ?? 0, locale)}/10</span>
             </div>
             <p className="font-body text-xs text-cream-50/50">
               {t.bookingNote} · {haus28.bookingReviewCount} {t.reviewsSuffix}

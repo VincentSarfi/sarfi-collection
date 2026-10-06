@@ -61,11 +61,9 @@ const home = {
   },
   awards: {
     heading: "Award-winning hosts · HAUS28",
-    airbnbScore: "5.0",
     airbnbTitle: "Airbnb Guest Favorite",
     airbnbNote: "Top 5% of listings",
     bookingAlt: "Booking.com Traveller Review Award 2026 for HAUS28",
-    bookingScore: "9.9/10",
     bookingNote: "Booking.com Traveller Review Award 2026",
     reviewsSuffix: "reviews",
   },

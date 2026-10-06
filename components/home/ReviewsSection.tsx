@@ -30,7 +30,7 @@ function ReviewCard({ review, index }: { review: (typeof reviews)[number]; index
       {/* Stars */}
       <div className="flex gap-0.5 text-gold-500">
         {[1, 2, 3, 4, 5].map((i) => (
-          <IconStar key={i} size={14} filled={i <= review.rating} />
+          <IconStar key={i} size={14} filled={i <= Math.round(review.rating)} />
         ))}
       </div>
 

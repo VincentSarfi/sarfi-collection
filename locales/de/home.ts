@@ -61,11 +61,9 @@ const home = {
   },
   awards: {
     heading: "Ausgezeichnete Gastgeber · HAUS28",
-    airbnbScore: "5,0",
     airbnbTitle: "Airbnb Gäste-Favorit",
     airbnbNote: "Oberste 5 % der Inserate",
     bookingAlt: "Booking.com Traveller Review Award 2026 für HAUS28",
-    bookingScore: "9,9/10",
     bookingNote: "Booking.com Traveller Review Award 2026",
     reviewsSuffix: "Bewertungen",
   },

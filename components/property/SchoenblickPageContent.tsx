@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { schoenblick } from "@/data/properties";
+import { getAggregateReviewStats, schoenblick } from "@/data/properties";
 import { localizeProperty } from "@/data/properties.i18n";
 import { schoenblickReviews } from "@/data/reviews";
 import PropertyHero from "@/components/property/PropertyHero";
@@ -17,6 +17,7 @@ import { getDict, localizeHref, type Locale } from "@/lib/i18n";
 export default function SchoenblickPageContent({ locale }: { locale: Locale }) {
   const t = getDict(locale).property.schoenblickPage;
   const haus = localizeProperty(schoenblick, locale);
+  const reviewStats = getAggregateReviewStats([schoenblick]);
   const apartments = Object.values(haus.apartments ?? {});
 
   const relatedHaus28 = [
@@ -47,11 +48,11 @@ export default function SchoenblickPageContent({ locale }: { locale: Locale }) {
         bookHref={localizeHref("/schoenblick/buchen", locale)}
       />
 
-      {/* Quick Facts – aggregate */}
+      {/* Quick Facts – Bewertung über alle Plattformen */}
       <QuickFacts
         maxGuests={20}
-        airbnbRating={haus.airbnbRating}
-        airbnbReviewCount={haus.airbnbReviewCount}
+        airbnbRating={reviewStats.ratingValue}
+        airbnbReviewCount={reviewStats.reviewCount}
         address={haus.address}
       />
 
