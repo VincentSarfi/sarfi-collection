@@ -259,7 +259,7 @@ const schoenblickFaqsEn: FaqTranslation[] = [
     de: "Können mehrere Apartments gleichzeitig gebucht werden?",
     question: "Can several apartments be booked at the same time?",
     answer:
-      "Yes! Haus Schönblick is ideal for groups or families who'd like to book several apartments side by side. Get in touch with us for group enquiries.",
+      "Yes! With our group booking you can book several apartments for up to 20 guests in one go – one date range, one payment. All details at sarfi-collection.de/en/schoenblick/gruppen.",
   },
   {
     de: "Sind Haustiere erlaubt?",
@@ -361,7 +361,7 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
           "From HAUS28 at the Büchelstein, Grattersdorf is just a few minutes away, and Deggendorf (shopping, restaurants) is around 20 minutes by car. Hiking trails to the Büchelstein summit and through the Bavarian Forest start right outside the front door.",
       },
       {
-        de: "Gibt es eine Mindeststay-Regelung?",
+        de: "Wie lange ist der Mindestaufenthalt?",
         question: "Is there a minimum stay?",
         answer:
           "The minimum stay is 2 nights. It may be longer in high season – you'll see the details during booking.",
@@ -412,7 +412,7 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
       b7: {
         subtitle: "Our most beautiful apartment – herringbone parquet, mountain views & balcony",
         shortDescription:
-          "The premium apartment at Haus Schönblick – newly renovated with modern herringbone parquet, a natural stone washbasin, a balcony and dreamy views of the Bavarian Forest.",
+          "Premium apartment at Haus Schönblick: newly renovated, herringbone parquet, natural stone washbasin, balcony and forest views.",
         description:
           "Apartment B7 is the newest and most beautiful apartment at Haus Schönblick – and you can tell at first glance. Modern herringbone parquet throughout, a thoughtful layout and high-quality details make B7 a place you won't want to leave.\n\nThe first bedroom features a generous king-size bed set against an elegant dark blue accent wall with a brass lamp – calm, stylish, unforgettable. The second bedroom offers a pull-out single bed that converts into two separate 90 cm beds when needed – ideal for children or guests who like to stay flexible.\n\nThe bathroom impresses with a unique natural stone washbasin on a solid wood countertop, an illuminated mirror, a wooden ceiling and a modern shower. The fully equipped kitchen under the sloping roof is full of charm: a Bosch oven, an induction hob, a sink and a vintage mug shelf on the wall.\n\nIn the living room, a light-coloured sofa in front of a whitewashed brick wall invites you to unwind – with direct access to the balcony and an open view of the Bavarian Forest. This is where holiday mode truly kicks in.\n\nBedroom 1: king-size bed (180×200 cm) · Bedroom 2: pull-out single bed (2× 90×200 cm when needed) · Balcony with forest views · Smart TV · Fully equipped kitchen · Natural stone washbasin",
         faqs: schoenblickFaqsEn,

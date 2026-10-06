@@ -1,19 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import GutscheinWidget from "@/components/pages/GutscheinWidget";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/gutschein",
+  locale: "de",
   title: "Geschenkgutschein kaufen – sofort per E-Mail",
   description:
-    "Verschenke eine Auszeit im Bayerischen Wald: Geschenkgutschein für HAUS28 und Haus Schönblick online kaufen – Wert frei wählbar, Zahlung per Karte, PayPal oder Klarna, Gutschein sofort per E-Mail.",
-  alternates: { canonical: "https://www.sarfi-collection.de/gutschein" },
-  openGraph: {
-    title: "Geschenkgutschein – SARFI Collection",
-    description:
-      "Verschenke eine Auszeit im Bayerischen Wald – Wert frei wählbar, sofort per E-Mail, einlösbar für alle Unterkünfte.",
-    url: "https://www.sarfi-collection.de/gutschein",
-  },
-};
+    "Verschenke eine Auszeit im Bayerischen Wald: Gutschein für HAUS28 und Haus Schönblick, Wert frei wählbar, Zahlung per Karte, PayPal oder Klarna.",
+  ogTitle: "Geschenkgutschein – SARFI Collection",
+  ogDescription:
+    "Verschenke eine Auszeit im Bayerischen Wald – Wert frei wählbar, sofort per E-Mail, einlösbar für alle Unterkünfte.",
+});
 
 const faqs = [
   {

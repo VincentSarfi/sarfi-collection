@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { IconMail, IconMapPin, IconPhone, IconChevronDown } from "@/components/ui/Icons";
 import { getDict, localizeHref, type Locale } from "@/lib/i18n";
@@ -14,7 +14,7 @@ function FaqAnswer({ a, locale }: { a: Faq["a"]; locale: Locale }) {
   return (
     <>
       {a.beforeLink}{" "}
-      <Link href={localizeHref("/stornierung", locale)} className="text-gold-600 underline underline-offset-2">
+      <Link href={localizeHref("/agb#stornierung", locale)} className="text-gold-600 underline underline-offset-2">
         {a.linkLabel}
       </Link>
       {a.afterLink}
@@ -22,40 +22,20 @@ function FaqAnswer({ a, locale }: { a: Faq["a"]; locale: Locale }) {
   );
 }
 
-function FaqItem({ faq, index, locale }: { faq: Faq; index: number; locale: Locale }) {
-  const [open, setOpen] = useState(false);
+// Native <details>/<summary>: Antworten stehen immer im ausgelieferten HTML.
+function FaqItem({ faq, locale }: { faq: Faq; locale: Locale }) {
   return (
-    <div className="border-b border-cream-200 last:border-0" id={index === 0 ? "faq" : undefined}>
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex items-center justify-between w-full py-4 text-left gap-4"
-        aria-expanded={open}
-      >
-        <span className="font-body text-sm font-medium text-forest-800">{faq.q}</span>
-        <motion.span
-          animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-          className="text-forest-400 shrink-0"
-        >
+    <details className="group border-b border-cream-200 last:border-0">
+      <summary className="flex items-center justify-between w-full py-4 text-left gap-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+        <h3 className="font-body text-sm font-medium text-forest-800">{faq.q}</h3>
+        <span className="text-forest-400 shrink-0 transition-transform duration-200 group-open:rotate-180">
           <IconChevronDown size={18} />
-        </motion.span>
-      </button>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            style={{ overflow: "hidden" }}
-          >
-            <p className="font-body text-sm text-forest-500 pb-4 leading-relaxed">
-              <FaqAnswer a={faq.a} locale={locale} />
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+        </span>
+      </summary>
+      <p className="font-body text-sm text-forest-500 pb-4 leading-relaxed">
+        <FaqAnswer a={faq.a} locale={locale} />
+      </p>
+    </details>
   );
 }
 
@@ -368,8 +348,8 @@ export default function KontaktPageContent() {
             {t.faq.heading}
           </h2>
           <div className="bg-white rounded-2xl border border-cream-200 shadow-card px-6 max-w-2xl">
-            {t.faq.items.map((faq, i) => (
-              <FaqItem key={faq.q} faq={faq} index={i} locale={locale} />
+            {t.faq.items.map((faq) => (
+              <FaqItem key={faq.q} faq={faq} locale={locale} />
             ))}
           </div>
         </div>

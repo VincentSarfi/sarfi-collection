@@ -41,6 +41,7 @@ const property = {
     surroundings: "The area",
     nearby: "Nearby",
     gps: "GPS coordinates",
+    openInGoogleMaps: "View on Google Maps",
     mapTitlePre: "Map: ",
     mapAriaPre: "OpenStreetMap map of ",
     defaultAttractions: [
@@ -76,7 +77,8 @@ const property = {
   // components/property/PropertyReviews.tsx
   reviews: {
     heading: "Guest reviews",
-    reviewsPost: " reviews",
+    // The reviews section always shows the Airbnb figures
+    reviewsOnAirbnbPost: " reviews on Airbnb",
     prevAria: "Previous reviews",
     nextAria: "Next reviews",
     allOnAirbnb: "All on Airbnb",
@@ -275,6 +277,15 @@ const property = {
     groupText:
       " Book several apartments for up to 20 guests directly online – one date range, one payment. Ideal for family get-togethers, birthdays or company retreats.",
     groupCta: "Start a group booking →",
+    compareHeading: "The apartments at a glance",
+    compareCols: {
+      apartment: "Apartment",
+      size: "Size",
+      bedrooms: "Bedrooms",
+      beds: "Beds",
+      guests: "Guests",
+      price: "From",
+    },
     locationDescription:
       "Haus Schönblick is located in Langfurth near Schöfweg, in the heart of the Bavarian Forest. Hiking trails begin right outside the front door. The popular Pullman City western town is only 15 minutes away – ideal for families with kids. The region offers unspoilt nature, crisp air and true relaxation in every season.",
     attractions: [

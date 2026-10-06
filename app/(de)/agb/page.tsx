@@ -1,14 +1,14 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "AGB – SARFI Collection",
+export const metadata: Metadata = pageMetadata({
+  path: "/agb",
+  locale: "de",
+  title: "AGB & Stornierungsbedingungen",
   description:
     "Allgemeine Geschäftsbedingungen für Direktbuchungen bei SARFI Collection – Kurzzeitvermietung von Ferienwohnungen im Bayerischen Wald.",
-  alternates: {
-    canonical: "https://www.sarfi-collection.de/agb",
-  },
-}
+})
 
 export default function AgbPage() {
   return (

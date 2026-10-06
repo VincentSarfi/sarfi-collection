@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import BuchenOverviewContent from "@/components/pages/BuchenOverviewContent";
-import { alternatesFor } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Unterkunft wählen – Sarfi Collection | Bayerischer Wald",
+export const metadata: Metadata = pageMetadata({
+  path: "/buchen",
+  locale: "de",
+  title: "Unterkunft wählen – Bayerischer Wald",
   description:
     "Wähle deine Unterkunft: HAUS28 A-Frame oder eines der Panorama-Apartments im Haus Schönblick. Direkt buchen, bis zu 20 % günstiger.",
-  robots: { index: true, follow: true },
-  alternates: alternatesFor("/buchen", "de"),
-};
+  // Dünne Auswahlseite, konkurriert mit der Startseite → nicht in den Suchindex
+  noindex: true,
+});
 
 export default function BuchenOverviewPage() {
   return <BuchenOverviewContent locale="de" />;

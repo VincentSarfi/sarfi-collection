@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Impressum – SARFI Collection",
+  title: "Impressum",
   robots: { index: false },
   alternates: {
     canonical: "https://www.sarfi-collection.de/impressum",

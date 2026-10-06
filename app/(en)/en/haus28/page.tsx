@@ -2,22 +2,20 @@ import type { Metadata } from "next";
 import { haus28, getAggregateReviewStats } from "@/data/properties";
 import { localizeProperty } from "@/data/properties.i18n";
 import Haus28ClientPage from "@/components/property/Haus28ClientPage";
-import { alternatesFor } from "@/lib/i18n";
+import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
 const haus28En = localizeProperty(haus28, "en");
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/haus28",
+  locale: "en",
   title: "HAUS28 – A-Frame with Hot Tub in the Bavarian Forest",
   description:
     "Private outdoor hot tub, 4 bedrooms, sleeps 8 – a modern A-frame in Grattersdorf. Book direct with your host, without platform fees.",
-  openGraph: {
-    title: "HAUS28 – A-Frame with Hot Tub in the Bavarian Forest",
-    description:
-      "Private outdoor hot tub, open all year, 4 bedrooms, room for 8 guests: a modern A-frame at the Büchelstein in the Bavarian Forest. Book direct & save.",
-    images: [{ url: haus28.images.hero, alt: "HAUS28 – A-frame holiday home with hot tub at the Büchelstein, Grattersdorf" }],
-  },
-  alternates: alternatesFor("/haus28", "en"),
-};
+  ogDescription:
+    "Private outdoor hot tub, open all year, 4 bedrooms, room for 8 guests: a modern A-frame at the Büchelstein in the Bavarian Forest. Book direct & save.",
+  image: { url: haus28.images.hero, alt: "HAUS28 – A-frame holiday home with hot tub at the Büchelstein, Grattersdorf" },
+});
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -46,7 +44,7 @@ const jsonLd = {
   name: "HAUS28",
   description: haus28En.description,
   url: "https://www.sarfi-collection.de/en/haus28",
-  image: haus28.images.gallery.map((g) => g.src),
+  image: haus28.images.gallery.map((g) => absoluteUrl(g.src)),
   address: {
     "@type": "PostalAddress",
     streetAddress: "Büchelstein 28",
@@ -117,9 +115,10 @@ const jsonLd = {
   checkoutTime: "T10:00",
   petsAllowed: false,
   priceRange: `from ${haus28.priceFrom}€ / night`,
+  hasMap: haus28.googleMapsUrl,
   sameAs: [
     haus28.airbnbUrl,
-    "https://maps.app.goo.gl/uXtDYxT6oLuCGWm58",
+    haus28.googleMapsUrl,
     "https://www.buechelstein.com",
     "https://www.haus28.com",
   ],

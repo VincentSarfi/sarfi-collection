@@ -55,7 +55,7 @@ const kontakt = {
       },
       {
         q: "Kann ich mehrere Apartments gleichzeitig buchen?",
-        a: "Ja! Schreibe uns einfach eine Nachricht und wir helfen dir beim Buchen mehrerer Apartments im Haus Schönblick.",
+        a: "Ja! Über die Gruppenbuchung buchst du mehrere Apartments im Haus Schönblick für bis zu 20 Personen in einem Schritt – ein Zeitraum, eine Zahlung. Alle Infos unter sarfi-collection.de/schoenblick/gruppen.",
       },
       {
         q: "Wie läuft der Check-in ab?",

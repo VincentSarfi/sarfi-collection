@@ -113,6 +113,12 @@ const nextConfig: NextConfig = {
         permanent: true,
         has: [{ type: "host", value: "www.ferienhaus-schoenblick.de" }],
       },
+      // Alter, überlanger Blog-Slug (Umlaute verstümmelt) → kurzer Slug
+      {
+        source: "/blog/premium-hottub-rechtzeitig-fur-die-wintersaison-2627-wir-machen-nagel-mit-kopfen",
+        destination: "/blog/premium-hottub-haus28",
+        permanent: true,
+      },
       // /stornierung → /agb#stornierung (301)
       {
         source: "/stornierung",

@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { IconArrowRight, IconMapPin, IconMountain } from "@/components/ui/Icons";
+import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Ausflugsziele Bayerischer Wald – Tipps rund um HAUS28 & Haus Schönblick",
-  description:
-    "Die besten Ausflugsziele im Bayerischen Wald: Pullman City, Büchelstein-Wanderung ab HAUS28, Skigebiet Sonnenwald, Indoor Golf Rusel-Arena, Baumwipfelpfad & Nationalpark. Alle Infos auf einen Blick.",
+  ...pageMetadata({
+    path: "/ausflugsziele",
+    locale: "de",
+    title: "Ausflugsziele im Bayerischen Wald",
+    description:
+      "Pullman City, Büchelstein-Wanderung, Skigebiet Sonnenwald, Rusel-Arena, Baumwipfelpfad & Nationalpark: die besten Ausflugsziele im Bayerischen Wald.",
+    ogTitle: "Ausflugsziele Bayerischer Wald – Tipps von SARFI Collection",
+    ogDescription:
+      "Pullman City, Büchelstein-Wanderung, Skigebiet Sonnenwald, Indoor Golf & mehr – die besten Ausflüge rund um HAUS28 und Haus Schönblick.",
+    image: { url: "/images/shared/region-bayerischer-wald.jpg", alt: "Bayerischer Wald" },
+  }),
   keywords: [
     "Ausflugsziele Bayerischer Wald",
     "Pullman City Eging am See",
@@ -18,15 +27,6 @@ export const metadata: Metadata = {
     "Ausflüge Schöfweg",
     "Freizeitangebote Bayerischer Wald",
   ],
-  openGraph: {
-    title: "Ausflugsziele Bayerischer Wald – Tipps von SARFI Collection",
-    description:
-      "Pullman City, Büchelstein-Wanderung, Skigebiet Sonnenwald, Indoor Golf & mehr – die besten Ausflüge rund um HAUS28 und Haus Schönblick.",
-    images: [{ url: "/images/shared/region-bayerischer-wald.jpg", alt: "Bayerischer Wald" }],
-  },
-  alternates: {
-    canonical: "https://www.sarfi-collection.de/ausflugsziele",
-  },
 };
 
 const jsonLd = {
@@ -112,6 +112,8 @@ const attractions = [
     name: "Pullman City",
     subtitle: "Europas größte Westernstadt",
     distance: "~15 min von Haus Schönblick · ~20 min von HAUS28",
+    fromHaus28: "~20 min",
+    fromSchoenblick: "~15 min",
     description:
       "Mitten im Bayerischen Wald taucht die Westernstadt Pullman City in Eging am See auf – Europas größtes Western-Erlebnisdorf. Auf über 80.000 m² warten täglich mehr als 30 Live-Shows, Ponyreiten, Wildwasserbahn, Goldwaschen, Indianerlager und authentische Western-Gastronomie. Ein echtes Highlight für Familien und alle, die den Wilden Westen erleben wollen – ohne die USA zu verlassen.",
     highlights: [
@@ -138,6 +140,8 @@ const attractions = [
     name: "Baumwipfelpfad Neuschönau",
     subtitle: "Europas längster Baumwipfelpfad",
     distance: "~25 min von Haus Schönblick · ~30 min von HAUS28",
+    fromHaus28: "~30 min",
+    fromSchoenblick: "~25 min",
     description:
       "Der Baumwipfelpfad Neuschönau im Nationalpark Bayerischer Wald ist der längste seiner Art in Europa. 1.300 m barrierearmer Holzsteg führt durch die Baumkronen des Urwalds – bis zu 44 m über dem Boden. Am Ende erwartet ein 44 m hoher Aussichtsturm mit 360°-Panoramablick über den Nationalpark. Für Kinder gibt es spannende Erlebnisinseln und interaktive Stationen entlang des Weges.",
     highlights: [
@@ -164,6 +168,8 @@ const attractions = [
     name: "Nationalpark Bayerischer Wald",
     subtitle: "Deutschlands ältester Nationalpark",
     distance: "~20 km von Haus Schönblick · ~25 km von HAUS28",
+    fromHaus28: "~25 km",
+    fromSchoenblick: "~20 km",
     description:
       "Seit 1970 ist der Bayerische Wald Deutschlands erster Nationalpark – 24.250 ha wilder, unberührter Natur, in der die Natur sich selbst überlassen bleibt. Das Besucherzentrum Hans-Eisenmann-Haus in Neuschönau und das Haus zur Wildnis in Ludwigsthal bieten spannende Ausstellungen. Im großen Tierfreigehege leben Luchse, Wölfe, Bären, Wisente und Hirsche in naturnahen Gehegen – kostenloser Eintritt.",
     highlights: [
@@ -190,6 +196,8 @@ const attractions = [
     name: "Skigebiet Sonnenwald / Steinberglift",
     subtitle: "Familienski am Brotjacklriegel (1.011 m)",
     distance: "direkt bei Haus Schönblick in Langfurth · ~10 min von HAUS28",
+    fromHaus28: "~10 min",
+    fromSchoenblick: "direkt vor Ort",
     description:
       "Das Skigebiet Sonnenwald rund um den Steinberglift in Langfurth / Schöfweg liegt buchstäblich vor der Haustür von Haus Schönblick. Der Brotjacklriegel mit 1.011 m bietet familienfreundliche Abfahrten, einen beleuchteten Naturrodelhang und gut präparierte Langlaufloipen. Eine Live-Webcam zeigt den aktuellen Schneezustand – ideal zur Planung direkt aus der Unterkunft.",
     highlights: [
@@ -216,6 +224,8 @@ const attractions = [
     name: "Rusel-Arena Indoor Golf",
     subtitle: "6 TrackMan-Simulatoren am Golfplatz Rusel",
     distance: "~25 min von HAUS28 & Haus Schönblick",
+    fromHaus28: "~25 min",
+    fromSchoenblick: "~25 min",
     description:
       "Die brandneue Rusel-Arena am Golfplatz Deggendorf-Rusel ist das modernste Indoor-Golf-Erlebnis im Bayerischen Wald. Auf 370 m² stehen 6 TrackMan-Simulationsstationen bereit – mit präziser Schlaganalyse und virtuellen Golferlebnissen auf über 100 weltberühmten Plätzen. Anfänger, Fortgeschrittene und Profis sind gleichermaßen willkommen, witterungsunabhängig das ganze Jahr.",
     highlights: [
@@ -276,6 +286,12 @@ export default function AusflugszielePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema([["Startseite", "/"], ["Ausflugsziele", "/ausflugsziele"]])),
+        }}
       />
 
       {/* Hero */}
@@ -360,6 +376,35 @@ export default function AusflugszielePage() {
             <p className="font-body text-lg text-forest-600 max-w-2xl leading-relaxed">
               Von Westernflair über Ski bis Indoor-Golf – hier ist für jedes Wetter und jede Reisegruppe etwas dabei.
             </p>
+          </div>
+
+          {/* Entfernungstabelle – als echte <table> für Featured Snippets & KI-Antworten */}
+          <h3 id="entfernungen-heading" className="font-display text-2xl text-forest-900 mb-4">
+            Entfernungen mit dem Auto
+          </h3>
+          <div className="mb-12 overflow-x-auto rounded-2xl border border-cream-200 bg-white">
+            <table aria-labelledby="entfernungen-heading" className="w-full font-body text-sm text-left">
+              <thead className="bg-cream-100 text-forest-700">
+                <tr>
+                  <th scope="col" className="px-3 sm:px-4 py-3 font-semibold">Ausflugsziel</th>
+                  <th scope="col" className="px-3 sm:px-4 py-3 font-semibold">ab HAUS28</th>
+                  <th scope="col" className="px-3 sm:px-4 py-3 font-semibold">ab Haus Schönblick</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-cream-200 text-forest-700">
+                {attractions.map((attr) => (
+                  <tr key={attr.id}>
+                    <th scope="row" className="px-3 sm:px-4 py-3 font-semibold text-forest-900">
+                      <a href={`#${attr.id}`} className="underline underline-offset-2 hover:text-gold-700">
+                        {attr.name}
+                      </a>
+                    </th>
+                    <td className="px-3 sm:px-4 py-3">{attr.fromHaus28}</td>
+                    <td className="px-3 sm:px-4 py-3">{attr.fromSchoenblick}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
           <div className="flex flex-col gap-8">

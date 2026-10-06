@@ -4,7 +4,7 @@ import { cormorant, dmSans } from "../fonts";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { LocaleProvider } from "@/lib/i18n/LocaleProvider";
-import { organizationSchema } from "@/lib/seo";
+import { defaultOgImages, organizationSchema, websiteSchema } from "@/lib/seo";
 
 // ─── Root Metadata (Deutsch) ────────────────────────────────────────────────
 export const metadata: Metadata = {
@@ -35,16 +35,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "de_DE",
-    url: "https://www.sarfi-collection.de",
     siteName: "SARFI Collection",
+    // Keine url hier: sonst erben Seiten ohne eigenes openGraph die Startseiten-URL.
+    images: defaultOgImages,
     title: "SARFI Collection – Exklusive Ferienunterkünfte im Bayerischen Wald",
     description:
       "Zwei einzigartige Ferienunterkünfte mitten im Bayerischen Wald. Buche direkt und spare.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SARFI Collection – Exklusive Ferienunterkünfte im Bayerischen Wald",
-    description: "Zwei einzigartige Ferienunterkünfte mitten im Bayerischen Wald.",
   },
   robots: {
     index: true,
@@ -74,6 +73,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema("de")) }}
         />
         <LocaleProvider locale="de">
           <Header />

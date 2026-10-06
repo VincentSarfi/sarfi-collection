@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { alternatesFor, getDict } from "@/lib/i18n";
+import { getDict } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  // Kurzform: Das Root-Layout-Template ergänzt "| SARFI Collection".
+export const metadata: Metadata = pageMetadata({
+  path: "/kontakt",
+  locale: "en",
   title: "Contact & FAQ",
   description:
     "Get in touch with SARFI Collection or browse our frequently asked questions. We're happy to help with bookings, check-in, group enquiries and more.",
-  alternates: alternatesFor("/kontakt", "en"),
-};
+});
 
 // FAQ-JSON-LD aus dem englischen Dictionary – bleibt so automatisch synchron
 // mit den sichtbaren FAQ-Texten der Seite.

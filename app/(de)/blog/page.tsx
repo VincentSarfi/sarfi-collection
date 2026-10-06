@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getAllPosts, formatDate } from "@/lib/blog";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Blog – Tipps & Inspiration für den Bayerischen Wald",
+export const metadata: Metadata = pageMetadata({
+  path: "/blog",
+  locale: "de",
+  title: "Blog – Tipps für den Bayerischen Wald",
   description:
     "Wanderrouten, Ausflugstipps und Reisetipps für deinen Urlaub im Bayerischen Wald – direkt von den Gastgebern der SARFI Collection.",
-  alternates: { canonical: "https://www.sarfi-collection.de/blog" },
-};
+});
 
 const CATEGORY_COLORS: Record<string, string> = {
   Ausflugstipps:    "bg-forest-100 text-forest-700",

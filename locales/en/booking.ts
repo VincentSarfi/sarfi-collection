@@ -301,7 +301,7 @@ const booking = {
       guestsN: (n: number) => `${n} guests`,
       bedroomsN: (n: number) => `${n} bedrooms`,
       bedroomsShort: "BR",
-      features: ["Panoramic window", "Sauna", "Fireplace", "Self check-in"],
+      features: ["Panoramic window", "Private hot tub", "Fire pit", "Self check-in"],
       viewAndBook: "View & book →",
       schoenblickSectionTitle: "Haus Schönblick · Panorama apartments",
       newBadge: "New",

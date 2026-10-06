@@ -3,22 +3,21 @@ import ApartmentPage from "@/components/property/ApartmentPage";
 import { schoenblick } from "@/data/properties";
 import { localizeProperty } from "@/data/properties.i18n";
 import { PROPERTY_CONFIGS } from "@/config/properties.config";
-import { alternatesFor } from "@/lib/i18n";
+import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
 const apt = schoenblick.apartments!.b7;
 const aptEn = localizeProperty(apt, "en");
 const config = PROPERTY_CONFIGS.b7;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/schoenblick/b7",
+  locale: "en",
   title: `${apt.name} – Haus Schönblick, Schöfweg`,
-  description: aptEn.shortDescription + " From " + apt.priceFrom + "€ / night. Book direct now!",
-  openGraph: {
-    title: `${apt.name} – The most beautiful apartment at Haus Schönblick`,
-    description: aptEn.shortDescription,
-    images: [{ url: apt.images.hero, alt: apt.name }],
-  },
-  alternates: alternatesFor("/schoenblick/b7", "en"),
-};
+  description: `${aptEn.shortDescription} From ${apt.priceFrom} € / night.`,
+  ogTitle: `${apt.name} – The most beautiful apartment at Haus Schönblick`,
+  ogDescription: aptEn.shortDescription,
+  image: { url: apt.images.hero, alt: apt.name },
+});
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -53,7 +52,7 @@ const jsonLd = {
   name: apt.name,
   description: aptEn.description,
   url: "https://www.sarfi-collection.de/en/schoenblick/b7",
-  image: apt.images.gallery.map((g) => g.src),
+  image: apt.images.gallery.map((g) => absoluteUrl(g.src)),
   address: {
     "@type": "PostalAddress",
     streetAddress: "Hochwaldstraße 18/20",

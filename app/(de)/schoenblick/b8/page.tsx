@@ -3,21 +3,20 @@ import ApartmentPage from "@/components/property/ApartmentPage";
 import { schoenblick } from "@/data/properties";
 import { localizeProperty } from "@/data/properties.i18n";
 import { PROPERTY_CONFIGS } from "@/config/properties.config";
-import { alternatesFor } from "@/lib/i18n";
+import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
 const apt = schoenblick.apartments!.b8;
 const config = PROPERTY_CONFIGS.b8;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/schoenblick/b8",
+  locale: "de",
   title: `${apt.name} – Haus Schönblick, Schöfweg`,
-  description: apt.shortDescription + " Ab " + apt.priceFrom + "€ / Nacht. Jetzt direkt buchen!",
-  openGraph: {
-    title: `${apt.name} – Haus Schönblick im Bayerischen Wald`,
-    description: apt.shortDescription,
-    images: [{ url: apt.images.hero, alt: apt.name }],
-  },
-  alternates: alternatesFor("/schoenblick/b8", "de"),
-};
+  description: `${apt.shortDescription} Ab ${apt.priceFrom} € / Nacht.`,
+  ogTitle: `${apt.name} – Haus Schönblick im Bayerischen Wald`,
+  ogDescription: apt.shortDescription,
+  image: { url: apt.images.hero, alt: apt.name },
+});
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -52,7 +51,7 @@ const jsonLd = {
   name: apt.name,
   description: apt.description,
   url: "https://www.sarfi-collection.de/schoenblick/b8",
-  image: apt.images.gallery.map((g) => g.src),
+  image: apt.images.gallery.map((g) => absoluteUrl(g.src)),
   address: {
     "@type": "PostalAddress",
     streetAddress: "Hochwaldstraße 18/20",
@@ -75,7 +74,7 @@ const jsonLd = {
   checkinTime: "T16:00",
   checkoutTime: "T10:00",
   priceRange: `ab ${apt.priceFrom}€ / Nacht`,
-  sameAs: [apt.airbnbUrl],
+  sameAs: [apt.airbnbUrl].filter(Boolean),
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: apt.airbnbRating,

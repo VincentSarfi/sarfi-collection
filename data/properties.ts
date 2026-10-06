@@ -74,6 +74,8 @@ export type PropertyData = {
   bathrooms?: number;
   sqm?: number;
   airbnbUrl?: string;
+  /** Google-Unternehmensprofil (stabile CID-URL) */
+  googleMapsUrl?: string;
   superhost?: boolean;
   guestFavorite?: boolean;
   apartments?: Record<string, ApartmentData>;
@@ -99,6 +101,7 @@ export const haus28: PropertyData = {
   superhost: true,
   guestFavorite: true,
   airbnbUrl: "https://www.airbnb.de/rooms/1375439439358638425",
+  googleMapsUrl: "https://www.google.com/maps?cid=18249145745632813741",
   airbnbRating: 5.0,
   airbnbReviewCount: 22,
   bookingRating: 9.9,
@@ -202,7 +205,7 @@ export const haus28: PropertyData = {
         "Vom HAUS28 am Büchelstein ist Grattersdorf in wenigen Minuten erreichbar, Deggendorf (Einkaufen, Restaurants) ca. 20 Minuten entfernt. Wanderwege zum Büchelstein-Gipfel und durch den Bayerischen Wald starten direkt vor der Haustür.",
     },
     {
-      question: "Gibt es eine Mindeststay-Regelung?",
+      question: "Wie lange ist der Mindestaufenthalt?",
       answer: "Der Mindestaufenthalt beträgt 2 Nächte. In der Hauptsaison ggf. mehr – Details beim Buchungsvorgang.",
     },
     {
@@ -248,7 +251,7 @@ const schoenblickFaqs = [
   {
     question: "Können mehrere Apartments gleichzeitig gebucht werden?",
     answer:
-      "Ja! Haus Schönblick eignet sich ideal für Gruppen oder Familien, die mehrere Wohnungen nebeneinander buchen möchten. Kontaktiere uns für Gruppen-Anfragen.",
+      "Ja! Über die Gruppenbuchung buchst du mehrere Apartments für bis zu 20 Personen in einem Schritt – ein Zeitraum, eine Zahlung. Alle Infos unter sarfi-collection.de/schoenblick/gruppen.",
   },
   {
     question: "Sind Haustiere erlaubt?",
@@ -295,6 +298,7 @@ export const schoenblick: PropertyData = {
     lng: 13.202348503081259,
   },
   priceFrom: 59,
+  googleMapsUrl: "https://www.google.com/maps?cid=18059770108920997880",
   airbnbRating: 4.97,
   airbnbReviewCount: 95,
   smoobuPropertyId: "2934161",
@@ -498,7 +502,7 @@ export const schoenblick: PropertyData = {
       sqm: 55,
       priceFrom: 100,
       shortDescription:
-        "Das premium Apartment im Haus Schönblick – neu renoviert mit modernem Fischgrätparkett, Naturstein-Waschbecken, Balkon und traumhaftem Blick auf den Bayerischen Wald.",
+        "Premium-Apartment im Haus Schönblick: neu renoviert, mit Fischgrätparkett, Naturstein-Waschbecken, Balkon und Waldblick.",
       description:
         "Apartment B7 ist das neueste und schönste Apartment im Haus Schönblick – und das sieht man auf den ersten Blick. Durchgängiger moderner Fischgrätparkett, eine durchdachte Raumaufteilung und hochwertige Details machen B7 zu einem echten Wohlfühlort.\n\nIm ersten Schlafzimmer wartet ein großzügiges Kingsize-Bett vor einer eleganten dunkelblauen Akzentwand mit Messinglampe – ruhig, stilvoll, unvergesslich. Das zweite Schlafzimmer bietet ein ausziehbares Einzelbett, das sich bei Bedarf in zwei separate 90-cm-Betten verwandeln lässt – ideal für Kinder oder flexibel reisende Gäste.\n\nDas Badezimmer überzeugt mit einem einzigartigen Naturstein-Waschbecken auf einer Massivholzplatte, einem beleuchteten Spiegel, Holzdecke und moderner Dusche. Die vollausgestattete Küche unter der Dachschräge hat Charme: Bosch-Herd, Induktionskochfeld, Spüle und ein Vintage-Tassenregal an der Wand.\n\nIm Wohnzimmer lädt eine helle Sofacouch vor einer weiß verputzten Backsteinwand zum Entspannen ein – mit direktem Zugang zum Balkon und freiem Blick auf den Bayerischen Wald. Hier kommt echte Urlaubsstimmung auf.\n\nSchlafzimmer 1: Kingsize-Bett (180×200 cm) · Schlafzimmer 2: Ausziehbares Einzelbett (2× 90×200 cm bei Bedarf) · Balkon mit Waldblick · Smart TV · Vollausgestattete Küche · Naturstein-Waschbecken",
       amenities: [

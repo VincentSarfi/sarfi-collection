@@ -54,7 +54,7 @@ const kontakt = {
       },
       {
         q: "Can I book several apartments at once?",
-        a: "Yes! Just send us a message and we'll be happy to help you book multiple apartments at Haus Schönblick.",
+        a: "Yes! With our group booking you can book several apartments at Haus Schönblick for up to 20 guests in one go – one date range, one payment. All details at sarfi-collection.de/en/schoenblick/gruppen.",
       },
       {
         q: "How does check-in work?",

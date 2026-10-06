@@ -2,21 +2,20 @@ import type { Metadata } from "next";
 import { schoenblick } from "@/data/properties";
 import { localizeProperty } from "@/data/properties.i18n";
 import SchoenblickPageContent from "@/components/property/SchoenblickPageContent";
-import { alternatesFor } from "@/lib/i18n";
+import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
 const schoenblickEn = localizeProperty(schoenblick, "en");
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/schoenblick",
+  locale: "en",
   title: "Haus Schönblick – Panorama Holiday Apartments in Schöfweg",
-  description: `5 holiday apartments with breathtaking panoramic views in the Bavarian Forest. Ideal for families and groups. From ${schoenblick.priceFrom}€ / night. Book direct now!`,
-  openGraph: {
-    title: "Haus Schönblick – Panorama Apartments in the Bavarian Forest",
-    description:
-      "5 holiday apartments with panoramic views in Schöfweg. For couples, families and groups. Book direct and save.",
-    images: [{ url: schoenblick.images.hero, alt: "Haus Schönblick" }],
-  },
-  alternates: alternatesFor("/schoenblick", "en"),
-};
+  description: `5 holiday apartments with panoramic views in the Bavarian Forest. Ideal for families and groups. From ${schoenblick.priceFrom} € / night. Book direct now!`,
+  ogTitle: "Haus Schönblick – Panorama Apartments in the Bavarian Forest",
+  ogDescription:
+    "5 holiday apartments with panoramic views in Schöfweg. For couples, families and groups. Book direct and save.",
+  image: { url: schoenblick.images.hero, alt: "Haus Schönblick" },
+});
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -43,7 +42,7 @@ const jsonLd = {
   name: "Haus Schönblick",
   description: schoenblickEn.description,
   url: "https://www.sarfi-collection.de/en/schoenblick",
-  image: schoenblick.images.gallery.map((g) => g.src),
+  image: schoenblick.images.gallery.map((g) => absoluteUrl(g.src)),
   address: {
     "@type": "PostalAddress",
     streetAddress: "Hochwaldstraße 18/20",
@@ -58,8 +57,9 @@ const jsonLd = {
   },
   checkinTime: "T16:00",
   checkoutTime: "T10:00",
+  hasMap: schoenblick.googleMapsUrl,
   sameAs: [
-    "https://maps.app.goo.gl/y3CiwE29n7m17LJs9",
+    schoenblick.googleMapsUrl,
   ],
   priceRange: `from ${schoenblick.priceFrom}€ / night`,
   aggregateRating: {

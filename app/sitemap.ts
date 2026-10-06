@@ -25,10 +25,13 @@ function entries(path: string, changeFrequency: Freq, priority: number): Metadat
   ];
 }
 
+// Nur indexierbare Seiten: /buchen, /impressum und /datenschutz tragen noindex.
+// lastModified bewusst nur bei Blogbeiträgen – ein Build-Datum für alle Seiten
+// wäre ein falsches Signal, das Google ignoriert.
 export default function sitemap(): MetadataRoute.Sitemap {
   const blogPosts = getAllPosts().map((post) => ({
     url: `${BASE_URL}/blog/${post.slug}`,
-    lastModified: new Date(post.publishedAt),
+    lastModified: new Date(post.updatedAt ?? post.publishedAt),
     changeFrequency: "monthly" as const,
     priority: 0.6,
   }));
@@ -37,7 +40,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...entries("/", "weekly", 1),
     ...entries("/haus28", "weekly", 0.9),
     ...entries("/schoenblick", "weekly", 0.9),
-    ...entries("/buchen", "weekly", 0.8),
     ...entries("/schoenblick/gruppen", "weekly", 0.8),
     ...entries("/schoenblick/b5", "weekly", 0.8),
     ...entries("/schoenblick/b6", "weekly", 0.8),
@@ -49,8 +51,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...entries("/gutschein", "yearly", 0.5),
     ...entries("/ueber-uns", "monthly", 0.5),
     ...entries("/kontakt", "monthly", 0.5),
-    ...entries("/impressum", "yearly", 0.2),
-    ...entries("/datenschutz", "yearly", 0.2),
     ...entries("/agb", "yearly", 0.2),
     ...blogPosts,
   ];

@@ -8,6 +8,8 @@ export type BlogPost = {
   content: string;
   category: string;
   publishedAt: string;
+  /** Datum der letzten inhaltlichen Überarbeitung (YYYY-MM-DD) */
+  updatedAt?: string;
   readingTime: number;
   image: string;
   tags: string[];

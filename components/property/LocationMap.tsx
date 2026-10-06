@@ -10,6 +10,8 @@ import { useLocale } from "@/lib/i18n/LocaleProvider";
 interface LocationMapProps {
   address: string;
   coordinates: Coordinates;
+  /** Google-Unternehmensprofil; ohne Angabe wird nach der Adresse gesucht */
+  mapsUrl?: string;
   description?: string;
   nearbyAttractions?: { name: string; distance: string }[];
 }
@@ -17,6 +19,7 @@ interface LocationMapProps {
 export default function LocationMap({
   address,
   coordinates,
+  mapsUrl,
   description,
   nearbyAttractions,
 }: LocationMapProps) {
@@ -31,7 +34,8 @@ export default function LocationMap({
     `https://www.openstreetmap.org/export/embed.html` +
     `?bbox=${coordinates.lng - bbox},${coordinates.lat - bbox},${coordinates.lng + bbox},${coordinates.lat + bbox}` +
     `&layer=mapnik&marker=${coordinates.lat},${coordinates.lng}`;
-  const mapsDirectUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+  const mapsDirectUrl =
+    mapsUrl ?? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 
   return (
     <section
@@ -122,6 +126,16 @@ export default function LocationMap({
                 {coordinates.lat.toFixed(4)}°N, {coordinates.lng.toFixed(4)}°E
               </p>
             </div>
+
+            <a
+              href={mapsDirectUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 font-body text-sm font-semibold text-forest-900 underline underline-offset-2 hover:text-gold-700 transition-colors"
+            >
+              <IconMapPin size={14} />
+              {t.openInGoogleMaps}
+            </a>
           </motion.div>
         </div>
       </div>

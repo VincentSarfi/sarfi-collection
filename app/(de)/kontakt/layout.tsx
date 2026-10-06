@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { alternatesFor } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Kontakt & FAQ – SARFI Collection",
+export const metadata: Metadata = pageMetadata({
+  path: "/kontakt",
+  locale: "de",
+  title: "Kontakt & FAQ",
   description:
     "Kontaktiere SARFI Collection oder lies unsere häufig gestellten Fragen. Wir helfen dir bei Buchungen, Check-in, Gruppenanfragen und mehr.",
-  alternates: alternatesFor("/kontakt", "de"),
-};
+});
 
 const faqSchema = {
   "@context": "https://schema.org",

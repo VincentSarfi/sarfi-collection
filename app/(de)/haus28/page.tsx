@@ -1,20 +1,18 @@
 import type { Metadata } from "next";
 import { haus28, getAggregateReviewStats } from "@/data/properties";
 import Haus28ClientPage from "@/components/property/Haus28ClientPage";
-import { alternatesFor } from "@/lib/i18n";
+import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/haus28",
+  locale: "de",
   title: "HAUS28 – A-Frame mit Whirlpool im Bayerischen Wald",
   description:
     "Privater Outdoor-Whirlpool, 4 Schlafzimmer, 8 Gäste – modernes A-Frame in Grattersdorf. Direkt beim Gastgeber buchen, ohne Portalgebühren.",
-  openGraph: {
-    title: "HAUS28 – A-Frame mit Whirlpool im Bayerischen Wald",
-    description:
-      "Privater Outdoor-Whirlpool, ganzjährig nutzbar, 4 Schlafzimmer, Platz für 8 Gäste: modernes A-Frame am Büchelstein im Bayerischen Wald. Direkt buchen & sparen.",
-    images: [{ url: haus28.images.hero, alt: "HAUS28 – A-Frame Ferienhaus mit Whirlpool am Büchelstein, Grattersdorf" }],
-  },
-  alternates: alternatesFor("/haus28", "de"),
-};
+  ogDescription:
+    "Privater Outdoor-Whirlpool, ganzjährig nutzbar, 4 Schlafzimmer, Platz für 8 Gäste: modernes A-Frame am Büchelstein im Bayerischen Wald. Direkt buchen & sparen.",
+  image: { url: haus28.images.hero, alt: "HAUS28 – A-Frame Ferienhaus mit Whirlpool am Büchelstein, Grattersdorf" },
+});
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -43,7 +41,7 @@ const jsonLd = {
   name: "HAUS28",
   description: haus28.description,
   url: "https://www.sarfi-collection.de/haus28",
-  image: haus28.images.gallery.map((g) => g.src),
+  image: haus28.images.gallery.map((g) => absoluteUrl(g.src)),
   address: {
     "@type": "PostalAddress",
     streetAddress: "Büchelstein 28",
@@ -114,9 +112,10 @@ const jsonLd = {
   checkoutTime: "T10:00",
   petsAllowed: false,
   priceRange: `ab ${haus28.priceFrom}€ / Nacht`,
+  hasMap: haus28.googleMapsUrl,
   sameAs: [
     haus28.airbnbUrl,
-    "https://maps.app.goo.gl/uXtDYxT6oLuCGWm58",
+    haus28.googleMapsUrl,
     "https://www.buechelstein.com",
     "https://www.haus28.com",
   ],

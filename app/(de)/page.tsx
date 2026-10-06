@@ -6,54 +6,30 @@ import ReviewsSection from "@/components/home/ReviewsSection";
 import AwardsStrip from "@/components/home/AwardsStrip";
 import RegionSection from "@/components/home/RegionSection";
 import CtaSection from "@/components/home/CtaSection";
-import { getAggregateReviewStats } from "@/data/properties";
-import { alternatesFor } from "@/lib/i18n";
+import { localizedUrl } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "SARFI Collection – Exklusive Ferienunterkünfte im Bayerischen Wald",
+export const metadata: Metadata = pageMetadata({
+  path: "/",
+  locale: "de",
+  title: { absolute: "SARFI Collection – Exklusive Ferienunterkünfte im Bayerischen Wald" },
   description:
-    "HAUS28 – modernes A-Frame am Büchelstein bei Grattersdorf. Haus Schönblick – Panorama-Apartments in Schöfweg. Zwei einzigartige Ferienunterkünfte im Bayerischen Wald. Direkt buchen & sparen.",
-  openGraph: {
-    title: "SARFI Collection – Dein Rückzugsort im Bayerischen Wald",
-    description:
-      "Zwei exklusive Ferienunterkünfte mitten im Bayerischen Wald. Direkt buchen und bis zu 20 % sparen.",
-    url: "https://www.sarfi-collection.de",
-    // og:image wird von der Datei-Konvention app/opengraph-image.tsx (1200×630) geliefert
-  },
-  alternates: alternatesFor("/", "de"),
-};
+    "HAUS28 – A-Frame mit Whirlpool am Büchelstein. Haus Schönblick – Panorama-Apartments in Schöfweg. Ferienunterkünfte im Bayerischen Wald, direkt buchen.",
+  ogTitle: "SARFI Collection – Dein Rückzugsort im Bayerischen Wald",
+  ogDescription:
+    "Zwei exklusive Ferienunterkünfte mitten im Bayerischen Wald. Direkt buchen und bis zu 20 % sparen.",
+});
 
-// Aggregierte Bewertungen dynamisch aus data/properties.ts
-const reviewStats = getAggregateReviewStats();
-
-// JSON-LD structured data
+// Die Startseite stellt zwei Häuser an zwei Orten vor: ausgezeichnet als Liste
+// der Unterkünfte. Adresse, Geo und Bewertungen tragen die Detailseiten – ein
+// LodgingBusiness mit Phantom-Adresse und Sammel-Bewertung wäre irreführend.
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "LodgingBusiness",
-  name: "SARFI Collection",
-  description:
-    "Exklusive Ferienunterkünfte im Bayerischen Wald – HAUS28 und Haus Schönblick",
-  url: "https://www.sarfi-collection.de",
-  address: {
-    "@type": "PostalAddress",
-    addressRegion: "Bayern",
-    addressCountry: "DE",
-  },
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: "48.85",
-    longitude: "13.2",
-  },
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: String(reviewStats.ratingValue),
-    reviewCount: String(reviewStats.reviewCount),
-    bestRating: "5",
-    worstRating: "1",
-  },
-  amenityFeature: [
-    { "@type": "LocationFeatureSpecification", name: "WLAN", value: true },
-    { "@type": "LocationFeatureSpecification", name: "Parkplatz", value: true },
+  "@type": "ItemList",
+  name: "SARFI Collection – Ferienunterkünfte im Bayerischen Wald",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "HAUS28 – A-Frame Ferienhaus in Grattersdorf", url: localizedUrl("/haus28", "de") },
+    { "@type": "ListItem", position: 2, name: "Haus Schönblick – Panorama-Apartments in Schöfweg", url: localizedUrl("/schoenblick", "de") },
   ],
 };
 

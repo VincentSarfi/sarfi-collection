@@ -7,25 +7,24 @@ import { IconStar, IconChevronRight } from "@/components/ui/Icons";
 import type { Review } from "@/data/reviews";
 import { getDict } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { useLineClamp } from "@/lib/useLineClamp";
 
 interface PropertyReviewsProps {
   reviews: Review[];
+  /** Airbnb-Werte – die Sektion beschriftet sie als „auf Airbnb“ */
   averageRating: number;
   totalCount: number;
   airbnbUrl?: string;
 }
 
-const REVIEW_TRUNCATE = 150;
+// Ab dieser Länge erscheint „Mehr anzeigen“ schon im Server-HTML (gemessen wird danach).
+const REVIEW_LIKELY_LONG = 150;
 
 /* ── Single review card ─────────────────────────────────────────────────── */
 function ReviewCard({ review }: { review: Review }) {
   const locale = useLocale();
   const t = getDict(locale).property.reviews;
-  const [expanded, setExpanded] = useState(false);
-  const isLong = review.text.length > REVIEW_TRUNCATE;
-  const displayText = isLong && !expanded
-    ? review.text.slice(0, REVIEW_TRUNCATE).trimEnd() + "…"
-    : review.text;
+  const text = useLineClamp<HTMLParagraphElement>(review.text.length > REVIEW_LIKELY_LONG);
 
   return (
     <div className="flex flex-col gap-3 p-5 rounded-2xl bg-white border border-cream-200 shadow-card">
@@ -55,15 +54,18 @@ function ReviewCard({ review }: { review: Review }) {
 
       {/* Text */}
       <div>
-        <p className="font-body text-sm text-forest-700 leading-relaxed">
-          &ldquo;{displayText}&rdquo;
+        <p
+          ref={text.ref}
+          className={`font-body text-sm text-forest-700 leading-relaxed ${text.expanded ? "" : "line-clamp-4"}`}
+        >
+          &ldquo;{review.text}&rdquo;
         </p>
-        {isLong && (
+        {text.showToggle && (
           <button
-            onClick={() => setExpanded(!expanded)}
+            onClick={text.toggle}
             className="mt-1 font-body text-xs font-semibold text-forest-900 underline underline-offset-2 hover:text-gold-700 transition-colors"
           >
-            {expanded ? t.showLess : t.showMore}
+            {text.expanded ? t.showLess : t.showMore}
           </button>
         )}
       </div>
@@ -177,7 +179,7 @@ export default function PropertyReviews({
                 {averageRating}
               </span>
               <span className="font-body text-sm text-forest-500">
-                · {totalCount}{t.reviewsPost}
+                · {totalCount}{t.reviewsOnAirbnbPost}
               </span>
             </div>
           </div>

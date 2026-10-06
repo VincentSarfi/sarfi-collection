@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import UeberUnsPageContent from "@/components/pages/UeberUnsPageContent";
-import { alternatesFor } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  // Kurzform: Das Root-Layout-Template ergänzt "| SARFI Collection".
-  title: "About us",
+export const metadata: Metadata = pageMetadata({
+  path: "/ueber-uns",
+  locale: "en",
+  title: "About us – your hosts Vincent & Elena Sarfi",
   description:
     "Meet the hosts behind SARFI Collection. We love the Bavarian Forest and share that love with our guests.",
-  alternates: alternatesFor("/ueber-uns", "en"),
-};
+});
 
 export default function EnglishUeberUnsPage() {
   return <UeberUnsPageContent locale="en" />;

@@ -24,6 +24,7 @@ import type { ApartmentData } from "@/data/properties"
 import { type PropertyBookingConfig, resolveSmoobuId } from "@/config/properties.config"
 import { getDict, localizeHref } from "@/lib/i18n"
 import { useLocale } from "@/lib/i18n/LocaleProvider"
+import { useLineClamp } from "@/lib/useLineClamp"
 import { IconStar, IconMapPin, IconArrowRight, IconExpand, IconX, AmenityIcon } from "@/components/ui/Icons"
 
 interface ApartmentPageProps {
@@ -38,7 +39,6 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
   const smoobuId = resolveSmoobuId(config)
   const [lightboxIndex, setLightboxIndex] = useState(-1)
   const [galleryOpen, setGalleryOpen] = useState(false)
-  const [descExpanded, setDescExpanded] = useState(false)
   const [amenitiesExpanded, setAmenitiesExpanded] = useState(false)
   const [showMobileBooking, setShowMobileBooking] = useState(false)
   const [mobilePhotoIndex, setMobilePhotoIndex] = useState(0)
@@ -60,10 +60,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
     setLightboxIndex(i)
   }
 
-  const isLongDesc = apartment.description.length > 350
-  const displayDesc = !isLongDesc || descExpanded
-    ? apartment.description
-    : apartment.description.slice(0, 350) + "…"
+  const desc = useLineClamp<HTMLParagraphElement>(apartment.description.length > 350)
 
   const allAmenities = apartment.amenities
   const visibleAmenities = amenitiesExpanded ? allAmenities : allAmenities.slice(0, 10)
@@ -288,16 +285,19 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
               {/* Description */}
               <div className="py-7 border-b border-cream-200">
                 <h2 className="font-display text-xl text-forest-900 mb-4">{t.apartment.aboutHeading}</h2>
-                <p className="font-body text-base text-forest-700 leading-relaxed whitespace-pre-line">
-                  {displayDesc}
+                <p
+                  ref={desc.ref}
+                  className={`font-body text-base text-forest-700 leading-relaxed whitespace-pre-line ${desc.expanded ? "" : "line-clamp-5"}`}
+                >
+                  {apartment.description}
                 </p>
-                {isLongDesc && (
+                {desc.showToggle && (
                   <button
-                    onClick={() => setDescExpanded(!descExpanded)}
+                    onClick={desc.toggle}
                     className="mt-4 flex items-center gap-1.5 font-body text-sm font-semibold text-forest-900 underline underline-offset-2 hover:text-gold-700 transition-colors"
                   >
-                    {descExpanded ? t.listing.showLess : t.listing.showMore}
-                    <IconArrowRight size={13} className={descExpanded ? "rotate-90" : ""} />
+                    {desc.expanded ? t.listing.showLess : t.listing.showMore}
+                    <IconArrowRight size={13} className={desc.expanded ? "rotate-90" : ""} />
                   </button>
                 )}
               </div>
@@ -358,6 +358,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
                 <LocationMap
                   address={schoenblick.address}
                   coordinates={schoenblick.coordinates}
+                  mapsUrl={schoenblick.googleMapsUrl}
                   description={t.apartment.locationDescription}
                   nearbyAttractions={t.apartment.attractions}
                 />
@@ -426,7 +427,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
                 </div>
                 <p className="font-body text-sm text-forest-600 mb-2">
                   {t.apartment.cancellationTextPre}
-                  <Link href={localizeHref("/stornierung", locale)} className="font-semibold text-forest-900 underline underline-offset-2 hover:text-gold-700 transition-colors">
+                  <Link href={localizeHref("/agb#stornierung", locale)} className="font-semibold text-forest-900 underline underline-offset-2 hover:text-gold-700 transition-colors">
                     {t.apartment.cancellationLink}
                   </Link>
                   {t.apartment.cancellationTextPost}

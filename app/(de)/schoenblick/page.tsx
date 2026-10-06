@@ -1,19 +1,18 @@
 import type { Metadata } from "next";
 import { schoenblick } from "@/data/properties";
 import SchoenblickPageContent from "@/components/property/SchoenblickPageContent";
-import { alternatesFor } from "@/lib/i18n";
+import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/schoenblick",
+  locale: "de",
   title: "Haus Schönblick – Panorama-Ferienwohnungen in Schöfweg",
-  description: `5 Ferienwohnungen mit atemberaubendem Panoramablick im Bayerischen Wald. Ideal für Familien und Gruppen. Ab ${schoenblick.priceFrom}€ / Nacht. Jetzt direkt buchen!`,
-  openGraph: {
-    title: "Haus Schönblick – Panorama-Apartments im Bayerischen Wald",
-    description:
-      "5 Ferienwohnungen mit Panoramablick in Schöfweg. Für Paare, Familien und Gruppen. Direkt buchen und sparen.",
-    images: [{ url: schoenblick.images.hero, alt: "Haus Schönblick" }],
-  },
-  alternates: alternatesFor("/schoenblick", "de"),
-};
+  description: `5 Ferienwohnungen mit Panoramablick im Bayerischen Wald. Ideal für Familien und Gruppen. Ab ${schoenblick.priceFrom} € / Nacht. Jetzt direkt buchen!`,
+  ogTitle: "Haus Schönblick – Panorama-Apartments im Bayerischen Wald",
+  ogDescription:
+    "5 Ferienwohnungen mit Panoramablick in Schöfweg. Für Paare, Familien und Gruppen. Direkt buchen und sparen.",
+  image: { url: schoenblick.images.hero, alt: "Haus Schönblick" },
+});
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -40,7 +39,7 @@ const jsonLd = {
   name: "Haus Schönblick",
   description: schoenblick.description,
   url: "https://www.sarfi-collection.de/schoenblick",
-  image: schoenblick.images.gallery.map((g) => g.src),
+  image: schoenblick.images.gallery.map((g) => absoluteUrl(g.src)),
   address: {
     "@type": "PostalAddress",
     streetAddress: "Hochwaldstraße 18/20",
@@ -55,8 +54,9 @@ const jsonLd = {
   },
   checkinTime: "T16:00",
   checkoutTime: "T10:00",
+  hasMap: schoenblick.googleMapsUrl,
   sameAs: [
-    "https://maps.app.goo.gl/y3CiwE29n7m17LJs9",
+    schoenblick.googleMapsUrl,
   ],
   priceRange: `ab ${schoenblick.priceFrom}€ / Nacht`,
   aggregateRating: {

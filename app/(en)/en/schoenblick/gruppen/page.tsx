@@ -1,20 +1,25 @@
 import type { Metadata } from "next";
 import GruppenPageContent from "@/components/pages/GruppenPageContent";
-import { alternatesFor } from "@/lib/i18n";
+import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Group Accommodation for up to 20 Guests – Haus Schönblick",
+export const metadata: Metadata = pageMetadata({
+  path: "/schoenblick/gruppen",
+  locale: "en",
+  title: { absolute: "Group Accommodation for 20 Guests – Haus Schönblick" },
   description:
     "Several apartments, one booking: Haus Schönblick in Schöfweg sleeps up to 20 guests in 5 holiday apartments under one roof. Book direct, no platform fees.",
-  openGraph: {
-    title: "Group Accommodation for up to 20 Guests – Haus Schönblick",
-    description:
-      "5 apartments under one roof, one date range, one payment. Ideal for family celebrations, club trips and company retreats in the Bavarian Forest.",
-    images: [{ url: "/images/schoenblick/aussen/hero.webp", alt: "Haus Schönblick – group accommodation in the Bavarian Forest" }],
-  },
-  alternates: alternatesFor("/schoenblick/gruppen", "en"),
-};
+  ogDescription:
+    "5 apartments under one roof, one date range, one payment. Ideal for family celebrations, club trips and company retreats in the Bavarian Forest.",
+  image: { url: "/images/schoenblick/aussen/hero.webp", alt: "Haus Schönblick – group accommodation in the Bavarian Forest" },
+});
+
+const breadcrumbJsonLd = breadcrumbSchema([["Home", "/en"], ["Haus Schönblick", "/en/schoenblick"], ["Groups", "/en/schoenblick/gruppen"]]);
 
 export default function GroupPageEn() {
-  return <GruppenPageContent locale="en" />;
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <GruppenPageContent locale="en" />
+    </>
+  );
 }

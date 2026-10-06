@@ -26,7 +26,7 @@ export default function Footer({ locale = "de" }: { locale?: Locale }) {
       { label: t.links.blog, href: "/blog" },
       { label: t.links.ausflugsziele, href: "/ausflugsziele" },
       { label: t.links.gutschein, href: "/gutschein" },
-      { label: t.links.stornierung, href: "/stornierung" },
+      { label: t.links.stornierung, href: "/agb#stornierung" },
     ],
     legal: [
       { label: t.links.impressum, href: "/impressum" },

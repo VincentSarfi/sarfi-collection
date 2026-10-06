@@ -151,6 +151,46 @@ export default function SchoenblickPageContent({ locale }: { locale: Locale }) {
             ))}
           </div>
 
+          {/* Vergleichstabelle – als echte <table> für Featured Snippets & KI-Antworten */}
+          <div className="mt-12">
+            <h3 className="font-display text-2xl text-forest-900 mb-4">{t.compareHeading}</h3>
+            <div className="overflow-x-auto rounded-2xl border border-cream-200 bg-white">
+              <table className="w-full min-w-[640px] font-body text-sm text-left">
+                <thead className="bg-cream-100 text-forest-700">
+                  <tr>
+                    <th scope="col" className="px-4 py-3 font-semibold">{t.compareCols.apartment}</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">{t.compareCols.size}</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">{t.compareCols.bedrooms}</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">{t.compareCols.beds}</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">{t.compareCols.guests}</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">{t.compareCols.price}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-cream-200 text-forest-700">
+                  {apartments.map((apt) => (
+                    <tr key={apt.id}>
+                      <th scope="row" className="px-4 py-3 font-semibold text-forest-900 whitespace-nowrap">
+                        <Link
+                          href={localizeHref(`/schoenblick/${apt.id}`, locale)}
+                          className="underline underline-offset-2 hover:text-gold-700"
+                        >
+                          {apt.name}
+                        </Link>
+                      </th>
+                      <td className="px-4 py-3 whitespace-nowrap">{apt.sqm} m²</td>
+                      <td className="px-4 py-3">{apt.bedrooms}</td>
+                      <td className="px-4 py-3">{apt.bedroomImages?.map((b) => b.bed).join(" + ")}</td>
+                      <td className="px-4 py-3">{apt.maxGuests}</td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        {apt.priceFrom} €{t.perNight}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
           {/* Group booking teaser → /schoenblick/gruppen */}
           <div className="mt-8 p-6 rounded-2xl bg-forest-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <p className="font-body text-sm text-cream-50/85 max-w-xl">
@@ -173,6 +213,7 @@ export default function SchoenblickPageContent({ locale }: { locale: Locale }) {
       <LocationMap
         address={haus.address}
         coordinates={haus.coordinates}
+        mapsUrl={haus.googleMapsUrl}
         description={t.locationDescription}
         nearbyAttractions={t.attractions}
       />
