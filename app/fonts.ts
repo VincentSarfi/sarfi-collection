@@ -4,7 +4,9 @@ import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 export const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  // Nur normal: Die Kursive wird nirgends genutzt, wurde aber auf jeder Seite
+  // vorgeladen (~37 KB im kritischen Pfad).
+  style: ["normal"],
   variable: "--font-cormorant",
   display: "swap",
   preload: true,
