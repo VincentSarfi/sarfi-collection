@@ -237,11 +237,11 @@ const ausflugsziele: typeof de = {
     tableName: "Büchelstein circular hike",
     schemaName: "Büchelstein hiking route from HAUS28",
     schemaDescription:
-      "Circular trail no. 54 \"Büchelsteiner-Runde\" from Kerschbaum, a few minutes' walk from HAUS28: Großer Büchelstein (831 m), Kleiner Büchelstein and the 18th-century Rastbuche pilgrimage chapel – approx. 7 km, with views into the Danube valley.",
+      "Circular hike straight from HAUS28 on trail no. 54 \"Büchelsteiner-Runde\": Großer Büchelstein (831 m), Kleiner Büchelstein and the 18th-century Rastbuche pilgrimage chapel – approx. 7 km, with views into the Danube valley.",
     intro:
       "The most beautiful hike from HAUS28 leads up to the Großer Büchelstein (831 m) – over the Kleiner Büchelstein, past the historic Rastbuche pilgrimage chapel and through dense Bavarian forest. Circular trail no. 54 is waymarked in red, suitable for active families and rewards you with sweeping views over the Bavarian Forest all the way to the Danube valley.",
     stats: [
-      { label: "Start", value: "HAUS28, trailhead Kerschbaum (approx. 450 m)" },
+      { label: "Start", value: "straight from HAUS28, Büchelstein 28" },
       { label: "Route", value: "approx. 7 km · 2–2.5 h · approx. 300 m ascent" },
       { label: "Summit", value: "831 m (Großer Büchelstein)" },
       { label: "Waymark", value: "No. 54 \"Büchelsteiner-Runde\" (red)" },
@@ -250,7 +250,7 @@ const ausflugsziele: typeof de = {
     waypoints: [
       {
         name: "Start: HAUS28",
-        detail: "From the house it's about 450 m on foot to the hikers' car park at the Kerschbaum ski lift, where the red-waymarked circular trail no. 54 begins.",
+        detail: "You set off right from the front door, into the forest and up towards the Büchelstein. Along the way, the red waymark no. 54 shows you the route.",
       },
       {
         name: "Großer Büchelstein (831 m)",
@@ -269,7 +269,7 @@ const ausflugsziele: typeof de = {
       {
         name: "Back to HAUS28",
         detail:
-          "The loop returns via Kerschbaum to the start – no stretch walked twice.",
+          "The loop returns via Kerschbaum to the house – no stretch walked twice.",
       },
     ],
     mapStrong: "Map & GPS:",

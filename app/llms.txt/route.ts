@@ -65,8 +65,8 @@ ${restaurants.map((r) => `- ${r.name} (${r.place}): ${r.de} ${r.url}`).join("\n"
 Fahrzeiten mit dem Auto (gerundet, ab HAUS28 / ab Haus Schönblick):
 ${Object.values(driveMinutes).map((d) => `- ${d.name}: ${minuten(d.haus28)} / ${minuten(d.schoenblick)}`).join("\n")}
 
-Wanderung ab HAUS28: Rundweg Nr. 54 „Büchelsteiner-Runde“ (rot markiert), Einstieg am Wanderparkplatz
-Skilift Kerschbaum rund 450 m vom Haus. Ca. 7 km, 2–2,5 Stunden, ca. 300 Höhenmeter, mittel.
+Wanderung direkt ab der Haustür von HAUS28: Rundweg Nr. 54 „Büchelsteiner-Runde“ (rot markiert).
+Ca. 7 km, 2–2,5 Stunden, ca. 300 Höhenmeter, mittel.
 Über den Großen Büchelstein (831 m) und den Kleinen Büchelstein zur Wallfahrtskapelle Rastbuche (18. Jh.).
 
 ## Seiten

@@ -411,7 +411,7 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
         de: "Wie weit ist es vom Büchelstein zum nächsten Ort?",
         question: "How far is it from the Büchelstein to the nearest town?",
         answer:
-          `From HAUS28 at the Büchelstein, Grattersdorf is about 5 minutes away by car. For shopping, Hengersberg is about ${m.hengersberg.haus28} minutes and Deggendorf (shops, restaurants) about ${m.deggendorf.haus28} minutes away. The circular trail up to the Büchelstein summit starts a few minutes' walk from the house.`,
+          `From HAUS28 at the Büchelstein, Grattersdorf is about 5 minutes away by car. For shopping, Hengersberg is about ${m.hengersberg.haus28} minutes and Deggendorf (shops, restaurants) about ${m.deggendorf.haus28} minutes away. The hike up to the Büchelstein summit starts right at the front door.`,
       },
       {
         de: "Wie lange ist der Mindestaufenthalt?",

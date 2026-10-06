@@ -233,7 +233,7 @@ export const haus28: PropertyData = {
     {
       question: "Wie weit ist es vom Büchelstein zum nächsten Ort?",
       answer:
-        `Vom HAUS28 am Büchelstein ist Grattersdorf in rund 5 Minuten erreichbar. Zum Einkaufen fährst du rund ${m.hengersberg.haus28} Minuten nach Hengersberg oder ${m.deggendorf.haus28} Minuten nach Deggendorf (Geschäfte, Restaurants). Der Rundweg auf den Büchelstein-Gipfel beginnt wenige Gehminuten vom Haus.`,
+        `Vom HAUS28 am Büchelstein ist Grattersdorf in rund 5 Minuten erreichbar. Zum Einkaufen fährst du rund ${m.hengersberg.haus28} Minuten nach Hengersberg oder ${m.deggendorf.haus28} Minuten nach Deggendorf (Geschäfte, Restaurants). Die Wanderung auf den Büchelstein-Gipfel startet direkt an der Haustür.`,
     },
     {
       question: "Wie lange ist der Mindestaufenthalt?",

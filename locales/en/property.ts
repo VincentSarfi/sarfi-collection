@@ -172,7 +172,7 @@ const property = {
       },
       {
         title: "Beautiful setting – in the heart of the Bavarian Forest",
-        text: `The circular trail up to the Büchelstein summit starts a few minutes' walk from the house. Pullman City is about ${m.pullmanCity.haus28} minutes away.`,
+        text: `The hike up to the Büchelstein summit starts right at the front door. Pullman City is about ${m.pullmanCity.haus28} minutes away.`,
       },
       {
         title: "Self check-in with a key box",
@@ -185,7 +185,7 @@ const property = {
     ],
     amenitiesHeading: "What this place offers",
     locationDescription:
-      `HAUS28 sits at the Büchelstein near Grattersdorf, idyllically placed on the edge of the Bavarian Forest. The circular trail up to the Büchelstein summit starts a few minutes' walk from the house. The Pullman City western town is about ${m.pullmanCity.haus28} minutes away – perfect for families. For shopping, Hengersberg is about ${m.hengersberg.haus28} minutes away and Deggendorf, with its shops and restaurants, about ${m.deggendorf.haus28}.`,
+      `HAUS28 sits at the Büchelstein near Grattersdorf, idyllically placed on the edge of the Bavarian Forest. The hike up to the Büchelstein summit starts right at the front door. The Pullman City western town is about ${m.pullmanCity.haus28} minutes away – perfect for families. For shopping, Hengersberg is about ${m.hengersberg.haus28} minutes away and Deggendorf, with its shops and restaurants, about ${m.deggendorf.haus28}.`,
     attractions: [
       { name: "Büchelstein summit (hike)", distance: "~30 min on foot" },
       { name: "Hengersberg (shopping)", distance: ca(m.hengersberg.haus28) },
@@ -198,7 +198,7 @@ const property = {
     excursions: {
       eyebrow: "Right from HAUS28",
       heading: "Hike to the Büchelstein & more day trips",
-      text: "The Büchelstein circular hike starts a few minutes' walk from the house and leads up to the summit (831 m) and to the historic Rastbuche pilgrimage chapel (18th century). All our day-trip tips for the region at a glance.",
+      text: "The Büchelstein circular hike starts right at the front door and leads up to the summit (831 m) and to the historic Rastbuche pilgrimage chapel (18th century). All our day-trip tips for the region at a glance.",
       cta: "All things to do",
     },
     awards: {

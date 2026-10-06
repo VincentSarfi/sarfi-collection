@@ -172,7 +172,7 @@ const property = {
       },
       {
         title: "Schöne Lage – mitten im Bayerischen Wald",
-        text: `Der Rundweg auf den Büchelstein-Gipfel beginnt wenige Gehminuten vom Haus. Pullman City erreichst du in rund ${m.pullmanCity.haus28} Minuten.`,
+        text: `Die Wanderung auf den Büchelstein-Gipfel startet direkt an der Haustür. Pullman City erreichst du in rund ${m.pullmanCity.haus28} Minuten.`,
       },
       {
         title: "Eigenständiger Check-in per Schlüsselbox",
@@ -185,7 +185,7 @@ const property = {
     ],
     amenitiesHeading: "Das bietet dir diese Unterkunft",
     locationDescription:
-      `HAUS28 liegt am Büchelstein bei Grattersdorf, idyllisch am Rand des Bayerischen Waldes. Der Rundweg auf den Büchelstein-Gipfel beginnt wenige Gehminuten vom Haus. Die Westernstadt Pullman City erreichst du in rund ${m.pullmanCity.haus28} Minuten – perfekt für Familien. Zum Einkaufen sind es nach Hengersberg rund ${m.hengersberg.haus28}, nach Deggendorf mit Geschäften und Restaurants rund ${m.deggendorf.haus28} Minuten.`,
+      `HAUS28 liegt am Büchelstein bei Grattersdorf, idyllisch am Rand des Bayerischen Waldes. Die Wanderung auf den Büchelstein-Gipfel startet direkt an der Haustür. Die Westernstadt Pullman City erreichst du in rund ${m.pullmanCity.haus28} Minuten – perfekt für Familien. Zum Einkaufen sind es nach Hengersberg rund ${m.hengersberg.haus28}, nach Deggendorf mit Geschäften und Restaurants rund ${m.deggendorf.haus28} Minuten.`,
     attractions: [
       { name: "Büchelstein-Gipfel (Wanderung)", distance: "~30 min zu Fuß" },
       { name: "Hengersberg (Einkaufen)", distance: ca(m.hengersberg.haus28) },
@@ -198,7 +198,7 @@ const property = {
     excursions: {
       eyebrow: "Direkt ab HAUS28",
       heading: "Wanderung zum Büchelstein & weitere Ausflüge",
-      text: "Die Büchelstein-Rundwanderung beginnt wenige Gehminuten vom Haus und führt auf den Gipfel (831 m) und zur historischen Wallfahrtskapelle Rastbuche (18. Jh.). Alle Ausflugstipps für die Region auf einen Blick.",
+      text: "Die Büchelstein-Rundwanderung startet direkt an der Haustür und führt auf den Gipfel (831 m) und zur historischen Wallfahrtskapelle Rastbuche (18. Jh.). Alle Ausflugstipps für die Region auf einen Blick.",
       cta: "Alle Ausflugsziele",
     },
     awards: {

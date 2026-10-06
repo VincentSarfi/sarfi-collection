@@ -239,11 +239,11 @@ const ausflugsziele = {
     tableName: "Büchelstein-Rundwanderung",
     schemaName: "Büchelstein Wanderroute ab HAUS28",
     schemaDescription:
-      "Rundweg Nr. 54 „Büchelsteiner-Runde“ ab Kerschbaum, wenige Gehminuten von HAUS28: Großer Büchelstein (831 m), Kleiner Büchelstein und Wallfahrtskapelle Rastbuche (18. Jh.) – ca. 7 km, mit Blicken ins Donautal.",
+      "Rundwanderung direkt ab HAUS28 auf dem Rundweg Nr. 54 „Büchelsteiner-Runde“: Großer Büchelstein (831 m), Kleiner Büchelstein und Wallfahrtskapelle Rastbuche (18. Jh.) – ca. 7 km, mit Blicken ins Donautal.",
     intro:
       "Die schönste Wanderung ab HAUS28 führt auf den Großen Büchelstein (831 m) – über den Kleinen Büchelstein, vorbei an der historischen Wallfahrtskapelle Rastbuche und durch dichten Bayerwald-Forst. Der Rundweg Nr. 54 ist rot markiert, für geübte Familien geeignet und belohnt mit einem Panoramablick über den Bayerischen Wald bis ins Donautal.",
     stats: [
-      { label: "Start", value: "HAUS28, Einstieg Kerschbaum (ca. 450 m)" },
+      { label: "Start", value: "direkt ab HAUS28, Büchelstein 28" },
       { label: "Strecke", value: "ca. 7 km · 2–2,5 h · ca. 300 Hm" },
       { label: "Gipfel", value: "831 m (Großer Büchelstein)" },
       { label: "Markierung", value: "Nr. 54 „Büchelsteiner-Runde“ (rot)" },
@@ -252,7 +252,7 @@ const ausflugsziele = {
     waypoints: [
       {
         name: "Start: HAUS28",
-        detail: "Vom Haus sind es rund 450 m zu Fuß bis zum Wanderparkplatz am Skilift Kerschbaum. Dort beginnt der rot markierte Rundweg Nr. 54.",
+        detail: "Du läufst direkt an der Haustür los, in den Wald und hinauf zum Büchelstein. Unterwegs zeigt die rote Markierung Nr. 54 den Weg.",
       },
       {
         name: "Großer Büchelstein (831 m)",
@@ -271,7 +271,7 @@ const ausflugsziele = {
       {
         name: "Rückweg zu HAUS28",
         detail:
-          "Über Kerschbaum geht es zurück zum Ausgangspunkt – als Schleife, ohne dieselbe Strecke zweimal zu gehen.",
+          "Über Kerschbaum geht es zurück zum Haus – als Schleife, ohne dieselbe Strecke zweimal zu gehen.",
       },
     ],
     mapStrong: "Wanderkarte & GPS:",
