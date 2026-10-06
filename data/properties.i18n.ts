@@ -434,7 +434,7 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
     ],
   },
   schoenblick: {
-    subtitle: "Panoramic apartments in the heart of the Bavarian Forest",
+    subtitle: "Panoramic holiday apartments in Schöfweg, Bavarian Forest",
     shortDescription:
       "Five tastefully furnished holiday apartments with panoramic views across the Bavarian Forest – ideal for couples, families and groups.",
     description:

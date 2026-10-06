@@ -221,6 +221,7 @@ const property = {
   },
   // components/property/ApartmentPage.tsx
   apartment: {
+    h1Suffix: "– Ferienwohnung in Schöfweg, Bayerischer Wald",
     newBadge: "Neu",
     typePre: "Apartment · ",
     typeMid: " m² · ",

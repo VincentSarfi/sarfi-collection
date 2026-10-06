@@ -193,6 +193,9 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
                 )}
                 <h1 className="font-display text-display-md text-forest-900 leading-tight mb-2">
                   {apartment.name}
+                  <span className="block font-display text-xl md:text-2xl text-forest-700 mt-1">
+                    {t.apartment.h1Suffix}
+                  </span>
                 </h1>
                 <p className="font-body text-base text-forest-600 mb-1">
                   {t.apartment.typePre}{apartment.sqm}{t.apartment.typeMid}{schoenblick.address}

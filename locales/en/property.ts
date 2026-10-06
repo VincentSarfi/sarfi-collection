@@ -221,6 +221,7 @@ const property = {
   },
   // components/property/ApartmentPage.tsx
   apartment: {
+    h1Suffix: "– Holiday apartment in Schöfweg, Bavarian Forest",
     newBadge: "New",
     typePre: "Apartment · ",
     typeMid: " m² · ",

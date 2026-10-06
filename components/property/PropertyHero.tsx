@@ -117,10 +117,11 @@ export default function PropertyHero({
           </div>
 
           {/* Title */}
-          <h1 className="font-display text-display-xl text-cream-50 mb-2 text-balance">
+          {/* Untertitel gehört zur H1 (Art + Ort der Unterkunft), sieht aber aus wie vorher */}
+          <h1 className="font-display text-display-xl text-cream-50 mb-4 text-balance">
             {name}
+            <span className="block mt-2 font-body text-xl font-normal text-cream-50/70">{subtitle}</span>
           </h1>
-          <p className="font-body text-xl text-cream-50/70 mb-4">{subtitle}</p>
 
           {/* Address */}
           <div className="flex items-center gap-1.5 text-cream-50/60 mb-6">

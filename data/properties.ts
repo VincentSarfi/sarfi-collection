@@ -339,7 +339,7 @@ const schoenblickFaqs = [
 export const schoenblick: PropertyData = {
   id: "schoenblick",
   name: "Haus Schönblick",
-  subtitle: "Panorama-Apartments im Herzen des Bayerischen Waldes",
+  subtitle: "Panorama-Ferienwohnungen in Schöfweg im Bayerischen Wald",
   address: "Hochwaldstraße 18/20, 94572 Schöfweg",
   coordinates: {
     lat: 48.8280385187145,
