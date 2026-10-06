@@ -387,7 +387,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
             <div className="flex flex-wrap gap-6 mb-10 font-body text-sm">
               {t.hike.stats.map((s) => (
                 <div key={s.label}>
-                  <p className="text-cream-50/40 text-xs mb-0.5">{s.label}</p>
+                  <p className="text-cream-50/60 text-xs mb-0.5">{s.label}</p>
                   <p className="text-cream-50 font-medium">{s.value}</p>
                 </div>
               ))}

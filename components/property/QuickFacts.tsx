@@ -61,7 +61,7 @@ export default function QuickFacts({
             >
               <span className="text-forest-500 shrink-0">{fact.icon}</span>
               <div>
-                <p className="font-body text-xs text-forest-400 leading-none mb-0.5">
+                <p className="font-body text-xs text-forest-500 leading-none mb-0.5">
                   {fact.label}
                 </p>
                 <p className="font-body text-sm font-medium text-forest-800 leading-none">

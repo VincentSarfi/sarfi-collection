@@ -60,7 +60,7 @@ const jsonLd = {
   },
   containsPlace: {
     "@type": "Accommodation",
-    additionalType: "House",
+    additionalType: "EntirePlace",
     name: "HAUS28 – A-frame holiday home",
     numberOfBedrooms: haus28.bedrooms,
     numberOfBathroomsTotal: haus28.bathrooms,
@@ -98,19 +98,6 @@ const jsonLd = {
     { "@type": "LocationFeatureSpecification", name: "Self check-in", value: true },
   ],
   numberOfRooms: haus28.bedrooms,
-  numberOfBedrooms: haus28.bedrooms,
-  numberOfBathroomsTotal: haus28.bathrooms,
-  floorSize: {
-    "@type": "QuantitativeValue",
-    value: haus28.sqm,
-    unitCode: "MTK",
-  },
-  occupancy: {
-    "@type": "QuantitativeValue",
-    value: haus28.maxGuests,
-    maxValue: haus28.maxGuests,
-    unitCode: "C62",
-  },
   checkinTime: "T16:00",
   checkoutTime: "T10:00",
   petsAllowed: false,

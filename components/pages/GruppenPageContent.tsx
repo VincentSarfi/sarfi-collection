@@ -37,7 +37,7 @@ export default function GruppenPageContent({ locale }: { locale: Locale }) {
         <div className="container-site py-12 md:py-16 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div>
             <nav aria-label="Breadcrumb" className="mb-3">
-              <ol className="flex items-center gap-2 font-body text-xs text-cream-50/40">
+              <ol className="flex items-center gap-2 font-body text-xs text-cream-50/60">
                 <li><Link href={localizeHref("/", locale)} className="hover:text-cream-50/70 transition-colors">{t.home}</Link></li>
                 <li className="flex items-center gap-2">
                   <IconArrowRight size={10} />

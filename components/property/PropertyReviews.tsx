@@ -253,7 +253,7 @@ export default function PropertyReviews({
         </div>
 
         {/* ── Mobile hint ───────────────────────────────────────── */}
-        <p className="md:hidden text-center font-body text-xs text-forest-400 mt-3">
+        <p className="md:hidden text-center font-body text-xs text-forest-500 mt-3">
           {t.swipeHint}
         </p>
       </div>

@@ -79,7 +79,7 @@ const about = {
   },
   superhost: {
     title: "Airbnb Superhost",
-    text: "We're recognized as Superhosts – for exceptional hospitality, fast communication and consistently five-star reviews.",
+    text: "We're recognized as Superhosts – for exceptional hospitality, fast communication and consistently outstanding reviews.",
   },
   cta: {
     text: "Get to know us in person – we'd love to hear from you.",

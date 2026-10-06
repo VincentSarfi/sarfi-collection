@@ -79,7 +79,7 @@ const about = {
   },
   superhost: {
     title: "Superhost auf Airbnb",
-    text: "Wir sind als Superhost ausgezeichnet – für außergewöhnliche Gastfreundschaft, schnelle Kommunikation und konsequent 5-Sterne-Bewertungen.",
+    text: "Wir sind als Superhost ausgezeichnet – für außergewöhnliche Gastfreundschaft, schnelle Kommunikation und durchweg hervorragende Bewertungen.",
   },
   cta: {
     text: "Lerne uns persönlich kennen – wir freuen uns auf deine Anfrage.",

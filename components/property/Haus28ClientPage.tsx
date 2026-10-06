@@ -406,7 +406,7 @@ export default function Haus28ClientPage({ hostingYears }: { hostingYears: numbe
               <div className="py-6">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <p className="font-body text-xs tracking-[0.12em] uppercase text-gold-600 mb-1">
+                    <p className="font-body text-xs tracking-[0.12em] uppercase text-gold-700 mb-1">
                       {t.haus28.excursions.eyebrow}
                     </p>
                     <h2 className="font-display text-xl text-forest-900 mb-1">
@@ -464,7 +464,7 @@ export default function Haus28ClientPage({ hostingYears }: { hostingYears: numbe
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/images/awards/laurel-right.svg" alt="" width={56} height={84} className="h-24 w-auto object-contain -ml-4" />
                 </div>
-                <p className="font-body text-xs uppercase tracking-widest text-cream-50/40">Airbnb</p>
+                <p className="font-body text-xs uppercase tracking-widest text-cream-50/60">Airbnb</p>
                 <p className="font-display text-2xl text-cream-50">{t.haus28.awards.guestFavorite}</p>
                 <div className="flex gap-0.5 text-gold-300 my-1">
                   {[1, 2, 3, 4, 5].map((i) => (
@@ -474,7 +474,7 @@ export default function Haus28ClientPage({ hostingYears }: { hostingYears: numbe
                 <p className="font-body text-sm text-cream-50/60">
                   {t.haus28.awards.airbnbScore} · {haus.airbnbReviewCount}{t.listing.reviewsPost}
                 </p>
-                <p className="font-body text-xs text-cream-50/40 max-w-[180px] mt-1">
+                <p className="font-body text-xs text-cream-50/60 max-w-[180px] mt-1">
                   {t.haus28.awards.top5}
                 </p>
               </div>
@@ -491,7 +491,7 @@ export default function Haus28ClientPage({ hostingYears }: { hostingYears: numbe
                 <p className="font-body text-sm text-cream-50/60">
                   {t.haus28.awards.bookingScore} · {haus.bookingReviewCount}{t.listing.reviewsPost}
                 </p>
-                <p className="font-body text-xs text-cream-50/40 max-w-[180px]">
+                <p className="font-body text-xs text-cream-50/60 max-w-[180px]">
                   Traveller Review Awards 2026
                 </p>
               </div>

@@ -27,8 +27,10 @@ const jsonLd = {
   additionalType: "https://schema.org/Apartment",
   containsPlace: {
     "@type": "Accommodation",
+    additionalType: "EntirePlace",
     name: apt.name,
     numberOfBedrooms: apt.bedrooms,
+    numberOfBathroomsTotal: apt.bathrooms,
     floorSize: {
       "@type": "QuantitativeValue",
       value: apt.sqm,
@@ -46,7 +48,7 @@ const jsonLd = {
     { "@type": "LocationFeatureSpecification", name: "Badezimmer", value: 1 },
     { "@type": "LocationFeatureSpecification", name: "WLAN", value: true },
     { "@type": "LocationFeatureSpecification", name: "Küche", value: true },
-    { "@type": "LocationFeatureSpecification", name: "Balkon", value: true },
+    { "@type": "LocationFeatureSpecification", name: apt.outdoor, value: true },
     { "@type": "LocationFeatureSpecification", name: "Parkplatz", value: true },
   ],
   name: apt.name,
@@ -65,12 +67,6 @@ const jsonLd = {
     "@type": "GeoCoordinates",
     latitude: 48.8280385187145,
     longitude: 13.202348503081259,
-  },
-  numberOfBedrooms: apt.bedrooms,
-  occupancy: {
-    "@type": "QuantitativeValue",
-    maxValue: apt.maxGuests,
-    unitCode: "C62",
   },
   checkinTime: "T16:00",
   checkoutTime: "T10:00",

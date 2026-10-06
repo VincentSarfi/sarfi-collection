@@ -107,7 +107,7 @@ export default function HomeHero() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         aria-hidden="true"
       >
-        <span className="font-body text-xs tracking-[0.15em] uppercase text-cream-50/40">
+        <span className="font-body text-xs tracking-[0.15em] uppercase text-cream-50/60">
           {t.scrollHint}
         </span>
         <motion.div
