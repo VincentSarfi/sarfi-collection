@@ -9,7 +9,7 @@ const schoenblickEn = localizeProperty(schoenblick, "en");
 export const metadata: Metadata = pageMetadata({
   path: "/schoenblick",
   locale: "en",
-  title: "Haus Schönblick – Panorama Holiday Apartments in Schöfweg",
+  title: { absolute: "Haus Schönblick – Panorama Holiday Apartments, Schöfweg" },
   description: `5 holiday apartments with panoramic views in the Bavarian Forest. Ideal for families and groups. From ${schoenblick.priceFrom} € / night. Book direct now!`,
   ogTitle: "Haus Schönblick – Panorama Apartments in the Bavarian Forest",
   ogDescription:
@@ -57,6 +57,7 @@ const jsonLd = {
   },
   checkinTime: "T16:00",
   checkoutTime: "T10:00",
+  petsAllowed: true,
   hasMap: schoenblick.googleMapsUrl,
   sameAs: [
     schoenblick.googleMapsUrl,

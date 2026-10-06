@@ -55,6 +55,19 @@ export default function SchoenblickPageContent({ locale }: { locale: Locale }) {
         address={haus.address}
       />
 
+      {/* Fließtext zum Haus – zitierfähige Aussagen statt nur Kacheln */}
+      <section className="bg-cream-50 pt-12" aria-labelledby="about-schoenblick-heading">
+        <div className="container-site max-w-3xl">
+          <h2 id="about-schoenblick-heading" className="font-display text-display-sm text-forest-900 mb-4">
+            {t.aboutHeading}
+          </h2>
+          <div className="space-y-4 font-body text-base text-forest-700 leading-relaxed">
+            <p>{haus.description}</p>
+            <p>{t.aboutLocation}</p>
+          </div>
+        </div>
+      </section>
+
       {/* Apartments grid */}
       <section className="section-pad bg-cream-50" aria-labelledby="apartments-heading">
         <div className="container-site">

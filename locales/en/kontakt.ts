@@ -1,4 +1,7 @@
 // Contact page (English). Structure mirrors locales/de/kontakt.ts.
+
+import { PET_FEE_PER_NIGHT, PET_MAX } from "@/data/surroundings";
+
 const kontakt = {
   header: {
     kicker: "Contact",
@@ -75,7 +78,7 @@ const kontakt = {
       },
       {
         q: "Are pets welcome?",
-        a: "On request and depending on the property. Please contact us before booking.",
+        a: `Not at HAUS28, unfortunately. At Haus Schönblick, up to ${PET_MAX} dogs are welcome on request – the surcharge is €${PET_FEE_PER_NIGHT} per dog per night. Please check with us before booking.`,
       },
     ],
   },

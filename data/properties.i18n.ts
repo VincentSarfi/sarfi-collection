@@ -12,6 +12,7 @@
 // Anything without a translation falls back to the German original.
 
 import type { Locale } from "@/lib/i18n";
+import { arrival, PET_FEE_PER_NIGHT, PET_MAX, restaurantsAnswer } from "./surroundings";
 import type { ApartmentData, PropertyData } from "./properties";
 
 // ---------------------------------------------------------------------------
@@ -267,7 +268,17 @@ const schoenblickFaqsEn: FaqTranslation[] = [
   {
     de: "Sind Haustiere erlaubt?",
     question: "Are pets allowed?",
-    answer: "Please contact us before booking if you'd like to bring a pet.",
+    answer: `Yes, on request: please check with us before booking. Up to ${PET_MAX} dogs are allowed, at a surcharge of €${PET_FEE_PER_NIGHT} per dog per night.`,
+  },
+  {
+    de: "Wie komme ich zum Haus Schönblick?",
+    question: "How do I get to Haus Schönblick?",
+    answer: arrival.en,
+  },
+  {
+    de: "Wo kann man in der Nähe essen gehen?",
+    question: "Where can I eat out nearby?",
+    answer: restaurantsAnswer("schoenblick", "en"),
   },
   {
     de: "Wie ist der Blick?",
@@ -385,6 +396,16 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
         question: "Are pets allowed at HAUS28?",
         answer:
           "Unfortunately, pets are not allowed at HAUS28. If you'd like to travel with your dog: pets are welcome at Haus Schönblick on request.",
+      },
+      {
+        de: "Wie komme ich zum HAUS28?",
+        question: "How do I get to HAUS28?",
+        answer: arrival.en,
+      },
+      {
+        de: "Wo kann man in der Nähe essen gehen?",
+        question: "Where can I eat out nearby?",
+        answer: restaurantsAnswer("haus28", "en"),
       },
       {
         de: "Wie weit ist es vom Büchelstein zum nächsten Ort?",

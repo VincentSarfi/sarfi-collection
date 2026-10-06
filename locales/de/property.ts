@@ -1,5 +1,8 @@
 // Objektseiten (HAUS28, Haus Schönblick, Apartments): UI-Texte der Property-Komponenten.
 // Daten-Texte (Beschreibungen, FAQs, Amenities, alt-Texte) kommen aus data/properties.i18n.ts.
+
+import { PET_FEE_PER_NIGHT } from "@/data/surroundings";
+
 const property = {
   // components/property/PropertyHero.tsx
   hero: {
@@ -196,7 +199,7 @@ const property = {
       heading: "Lerne deine:n Gastgeber:in kennen",
       statReviews: "Bewertungen",
       statRating: "Sternebewertung",
-      statYears: "Jahr Gastgeber",
+      statYears: (n: number): string => (n === 1 ? "Jahr Gastgeber" : "Jahre Gastgeber"),
       bio: "Wir sind Vincent und Elena – mit unseren zwei Kindern leben wir mitten in der Natur und lieben es, Gäste willkommen zu heißen. Unsere Ferienhäuser haben wir mit viel Herz und Handarbeit gestaltet – mal modern im A-Frame, mal gemütlich direkt am Skilift. Wir teilen gern unsere liebsten Tipps für Wanderungen, Skitage oder Ausflüge und sind jederzeit für dich da, wenn du etwas brauchst.",
       superhostTitle: "Superhost",
       superhostText:
@@ -248,7 +251,7 @@ const property = {
       { name: "Thermalbad Regen", distance: "~30 min" },
       { name: "Skigebiet Arber", distance: "~45 min" },
     ],
-    rulePets: "Haustiere nach Absprache",
+    rulePets: `Hunde auf Anfrage (${PET_FEE_PER_NIGHT} € pro Nacht)`,
     cancellationTitle: "Stornierung & Zugang",
     cancellationTextPre: "Kostenlose Stornierung bis 30 Tage vor Anreise. Danach gelten unsere ",
     cancellationLink: "Stornobedingungen",
@@ -262,6 +265,9 @@ const property = {
   },
   // app/(de|en)/…/schoenblick/page.tsx (Haus-Übersichtsseite)
   schoenblickPage: {
+    aboutHeading: "Über Haus Schönblick",
+    aboutLocation:
+      "Haus Schönblick liegt im Ortsteil Langfurth bei Schöfweg, direkt am Skilift Steinberg. Die fünf Ferienwohnungen verteilen sich auf die Hausnummern 18 und 20: B5 und B6 im Erdgeschoss mit Terrasse, B7 und B8 im ersten Stock mit Panoramabalkon, dazu die Hüttenwohnung A2 in Hausnummer 20. Alle Gäste teilen sich eine große Panoramaterrasse mit Sitzplätzen und einen kleinen Garten; geparkt wird kostenlos direkt vor dem Gebäude. Bis zur Westernstadt Pullman City sind es rund 15 Minuten mit dem Auto.",
     apartmentsEyebrow: "5 Ferienwohnungen",
     apartmentsHeading: "Wähle dein Apartment",
     apartmentsIntro:

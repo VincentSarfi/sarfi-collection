@@ -2,6 +2,9 @@
 // ApartmentSelector, BookingSidebarCard + buchen-Seiten.
 // Alle Strings zeichengetreu aus den Komponenten übernommen –
 // die deutschen Seiten müssen exakt denselben Text zeigen wie zuvor.
+
+import { restaurantsAnswer } from "@/data/surroundings";
+
 const booking = {
   // ── Formular-Validierung (BookingWidget) ──────────────────────────────────
   validation: {
@@ -366,6 +369,50 @@ const booking = {
     apartmentsWord: "Apartments",
     fromPre: "ab ",
     perNight: " / Nacht",
+    expectHeading: "Was eure Gruppe erwartet",
+    expect: [
+      {
+        title: "Gemeinsam draußen",
+        text: "Eine große Panoramaterrasse mit Sitzplätzen für alle Gäste und ein kleiner Garten – der Treffpunkt für Frühstück in der Sonne und lange Abende.",
+      },
+      {
+        title: "Für jeden Anlass",
+        text: "Familienfeiern, runde Geburtstage, Vereinsausflüge, Firmen-Retreats oder Skigruppen – der Skilift Steinberg liegt direkt am Haus.",
+      },
+      {
+        title: "Selbstversorgung",
+        text: "Jede Wohnung hat eine voll ausgestattete Küche. Frühstück oder Verpflegung bieten wir nicht an – dafür gute Gasthäuser in Laufweite und wenigen Autominuten.",
+      },
+      {
+        title: "Anreise & Parken",
+        text: "Kostenlose Parkplätze direkt vor dem Gebäude. Von der A3 (Ausfahrt Hengersberg) sind es rund 20 Minuten.",
+      },
+    ],
+    diningHeading: "Essen gehen in der Nähe",
+    diningSub: "Fahrzeit ab Haus Schönblick, gerundet. Bitte vorher die Ruhetage auf den Websites prüfen.",
+    partyHut:
+      "Für Feiern bis 30 Personen vermietet der Steinberglift außerdem den „Droidkastn“, eine restaurierte, rund 225 Jahre alte Holzhütte.",
+    partyHutLink: "Mehr zum Droidkastn",
+    faqs: (cap: number) => [
+      {
+        question: "Wie viele Personen passen ins Haus Schönblick?",
+        answer: `Bis zu ${cap} Personen: Die fünf Ferienwohnungen haben je 2 Schlafzimmer und Platz für bis zu 4 Gäste.`,
+      },
+      {
+        question: "Wie buche ich mehrere Apartments auf einmal?",
+        answer:
+          "Wähle oben im Buchungskalender Zeitraum und Apartments – du siehst den tagesaktuellen Gesamtpreis und zahlst alles in einem Schritt.",
+      },
+      {
+        question: "Gibt es Gemeinschaftsflächen für die Gruppe?",
+        answer:
+          "Ja: eine große Panoramaterrasse mit Sitzplätzen für alle Gäste und einen kleinen Garten. Jede Wohnung hat zusätzlich ihre eigene Küche.",
+      },
+      {
+        question: "Wo kann die Gruppe essen gehen?",
+        answer: restaurantsAnswer("schoenblick", "de"),
+      },
+    ],
     allApartmentsHeading: "Die fünf Apartments im Überblick",
   },
 };

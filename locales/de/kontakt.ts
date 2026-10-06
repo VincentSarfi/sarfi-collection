@@ -1,5 +1,8 @@
 // Kontakt-Seite: Texte 1:1 aus app/(de)/kontakt/page.tsx übernommen –
 // die deutsche Seite muss zeichengetreu identisch bleiben.
+
+import { PET_FEE_PER_NIGHT, PET_MAX } from "@/data/surroundings";
+
 const kontakt = {
   header: {
     kicker: "Kontakt",
@@ -76,7 +79,7 @@ const kontakt = {
       },
       {
         q: "Sind Haustiere willkommen?",
-        a: "Auf Anfrage und je nach Unterkunft. Bitte kontaktiere uns vor der Buchung.",
+        a: `Im HAUS28 leider nicht. Im Haus Schönblick sind bis zu ${PET_MAX} Hunde auf Anfrage willkommen – der Aufpreis beträgt ${PET_FEE_PER_NIGHT} € pro Hund und Nacht. Bitte frag vor der Buchung kurz bei uns an.`,
       },
     ],
   },

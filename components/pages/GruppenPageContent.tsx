@@ -4,8 +4,15 @@ import GroupBookingWidget from "@/components/booking/GroupBookingWidget";
 import { GROUP_APARTMENT_IDS, GROUP_MAX_GUESTS } from "@/lib/group-booking";
 import { PROPERTY_CONFIGS } from "@/config/properties.config";
 import { schoenblick } from "@/data/properties";
+import { restaurants } from "@/data/surroundings";
+import FaqAccordion from "@/components/property/FaqAccordion";
 import { IconArrowRight, IconUsers } from "@/components/ui/Icons";
 import { getDict, localizeHref, type Locale } from "@/lib/i18n";
+
+/** FAQs der Gruppenseite – auch für das FAQPage-Schema der Seite. */
+export function groupFaqs(locale: Locale) {
+  return getDict(locale).booking.groupPage.faqs(GROUP_MAX_GUESTS);
+}
 
 // Statischer Seitenrahmen (Server Component) um das interaktive
 // GroupBookingWidget. Texte für Hero/Vorteile/Kombis liegen im
@@ -98,6 +105,55 @@ export default function GruppenPageContent({ locale }: { locale: Locale }) {
         </div>
       </div>
 
+      {/* ── Was eure Gruppe erwartet ── */}
+      <div className="container-site pb-12">
+        <h2 className="font-display text-2xl text-forest-900 mb-6">{t.expectHeading}</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {t.expect.map((item) => (
+            <div key={item.title} className="rounded-2xl border border-cream-200 bg-white p-5">
+              <h3 className="font-body text-sm font-semibold text-forest-900 mb-2">{item.title}</h3>
+              <p className="font-body text-sm text-forest-600 leading-relaxed">{item.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Essen gehen ── */}
+      <div className="container-site pb-14">
+        <h2 className="font-display text-2xl text-forest-900 mb-2">{t.diningHeading}</h2>
+        <p className="font-body text-sm text-forest-500 mb-6 max-w-2xl">{t.diningSub}</p>
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {restaurants.map((r) => (
+            <li key={r.name} className="rounded-2xl border border-cream-200 bg-white p-5">
+              <div className="flex items-baseline justify-between gap-3 mb-1">
+                <a
+                  href={r.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-body text-sm font-semibold text-forest-900 underline underline-offset-2 hover:text-gold-700"
+                >
+                  {r.name}
+                </a>
+                <span className="flex-none font-body text-xs text-forest-400">{r.fromSchoenblick}</span>
+              </div>
+              <p className="font-body text-xs text-forest-500 mb-2">{locale === "en" ? r.placeEn : r.place}</p>
+              <p className="font-body text-sm text-forest-600 leading-relaxed">{locale === "en" ? r.en : r.de}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="font-body text-sm text-forest-600 mt-4">
+          {t.partyHut}{" "}
+          <a
+            href="https://www.steinberglift.de/de/gastronomie/droidkasten.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:text-gold-700"
+          >
+            {t.partyHutLink}
+          </a>
+        </p>
+      </div>
+
       {/* ── Alle 5 Apartments ── */}
       <div className="bg-white border-t border-cream-200">
         <div className="container-site py-12">
@@ -131,6 +187,9 @@ export default function GruppenPageContent({ locale }: { locale: Locale }) {
           </div>
         </div>
       </div>
+
+      {/* ── FAQ ── */}
+      <FaqAccordion faqs={groupFaqs(locale)} />
     </div>
   );
 }

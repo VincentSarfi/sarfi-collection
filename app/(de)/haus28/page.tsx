@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { haus28, getAggregateReviewStats } from "@/data/properties";
 import Haus28ClientPage from "@/components/property/Haus28ClientPage";
-import { absoluteUrl, pageMetadata } from "@/lib/seo";
+import { absoluteUrl, hostingYears, pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
   path: "/haus28",
   locale: "de",
-  title: "HAUS28 – A-Frame mit Whirlpool im Bayerischen Wald",
+  title: { absolute: "HAUS28 – A-Frame mit Whirlpool im Bayerischen Wald" },
   description:
     "Privater Outdoor-Whirlpool, 4 Schlafzimmer, 8 Gäste – modernes A-Frame in Grattersdorf. Direkt beim Gastgeber buchen, ohne Portalgebühren.",
   ogDescription:
@@ -134,7 +134,7 @@ export default function Haus28Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <Haus28ClientPage />
+      <Haus28ClientPage hostingYears={hostingYears()} />
     </>
   );
 }

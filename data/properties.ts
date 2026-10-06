@@ -1,6 +1,8 @@
 // Central data file for all property content.
 // Edit values here – all pages pull from this file.
 
+import { arrival, PET_FEE_PER_NIGHT, PET_MAX, restaurantsAnswer } from "./surroundings";
+
 export type Amenity = {
   icon: string;
   label: string;
@@ -221,6 +223,14 @@ export const haus28: PropertyData = {
         "Nein, im HAUS28 sind Haustiere leider nicht erlaubt. Wenn du mit Hund reisen möchtest: Im Haus Schönblick sind Haustiere auf Anfrage willkommen.",
     },
     {
+      question: "Wie komme ich zum HAUS28?",
+      answer: arrival.de,
+    },
+    {
+      question: "Wo kann man in der Nähe essen gehen?",
+      answer: restaurantsAnswer("haus28", "de"),
+    },
+    {
       question: "Wie weit ist es vom Büchelstein zum nächsten Ort?",
       answer:
         "Vom HAUS28 am Büchelstein ist Grattersdorf in wenigen Minuten erreichbar, Deggendorf (Einkaufen, Restaurants) ca. 20 Minuten entfernt. Wanderwege zum Büchelstein-Gipfel und durch den Bayerischen Wald starten direkt vor der Haustür.",
@@ -276,7 +286,15 @@ const schoenblickFaqs = [
   },
   {
     question: "Sind Haustiere erlaubt?",
-    answer: "Bitte kontaktiere uns vor der Buchung bezüglich Haustieren.",
+    answer: `Ja, auf Anfrage: Bitte frag vor der Buchung kurz bei uns an. Erlaubt sind bis zu ${PET_MAX} Hunde, der Aufpreis beträgt ${PET_FEE_PER_NIGHT} € pro Hund und Nacht.`,
+  },
+  {
+    question: "Wie komme ich zum Haus Schönblick?",
+    answer: arrival.de,
+  },
+  {
+    question: "Wo kann man in der Nähe essen gehen?",
+    answer: restaurantsAnswer("schoenblick", "de"),
   },
   {
     question: "Wie ist der Blick?",

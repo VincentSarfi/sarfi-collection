@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import GruppenPageContent from "@/components/pages/GruppenPageContent";
+import GruppenPageContent, { groupFaqs } from "@/components/pages/GruppenPageContent";
 import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -14,12 +14,23 @@ export const metadata: Metadata = pageMetadata({
   image: { url: "/images/schoenblick/aussen/hero.webp", alt: "Haus Schönblick – Gruppenunterkunft im Bayerischen Wald" },
 });
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: groupFaqs("de").map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: { "@type": "Answer", text: faq.answer },
+  })),
+};
+
 const breadcrumbJsonLd = breadcrumbSchema([["Startseite", "/"], ["Haus Schönblick", "/schoenblick"], ["Gruppen", "/schoenblick/gruppen"]]);
 
 export default function GruppenPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <GruppenPageContent locale="de" />
     </>
   );

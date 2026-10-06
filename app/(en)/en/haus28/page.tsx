@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import { haus28, getAggregateReviewStats } from "@/data/properties";
 import { localizeProperty } from "@/data/properties.i18n";
 import Haus28ClientPage from "@/components/property/Haus28ClientPage";
-import { absoluteUrl, pageMetadata } from "@/lib/seo";
+import { absoluteUrl, hostingYears, pageMetadata } from "@/lib/seo";
 
 const haus28En = localizeProperty(haus28, "en");
 
 export const metadata: Metadata = pageMetadata({
   path: "/haus28",
   locale: "en",
-  title: "HAUS28 – A-Frame with Hot Tub in the Bavarian Forest",
+  title: { absolute: "HAUS28 – A-Frame with Hot Tub in the Bavarian Forest" },
   description:
     "Private outdoor hot tub, 4 bedrooms, sleeps 8 – a modern A-frame in Grattersdorf. Book direct with your host, without platform fees.",
   ogDescription:
@@ -137,7 +137,7 @@ export default function EnglishHaus28Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <Haus28ClientPage />
+      <Haus28ClientPage hostingYears={hostingYears()} />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import { getAggregateReviewStats, haus28, schoenblick, type PropertyData } from "@/data/properties";
+import { arrival, PET_FEE_PER_NIGHT, PET_MAX, restaurants } from "@/data/surroundings";
 import { getAllPosts } from "@/lib/blog";
 import { SITE_URL } from "@/lib/seo";
 
@@ -50,6 +51,16 @@ SARFI Collection vermietet zwei Ferienunterkünfte im Bayerischen Wald (Niederba
    Check-in ab 16:00 Uhr, Check-out bis 10:00 Uhr.
    Bewertung: ${rating(schoenblick)}.
 
+Kosten und Regeln (beide Häuser): Zum Übernachtungspreis kommt nur eine einmalige Endreinigung pro
+Aufenthalt, die bei der Buchung angezeigt wird. Keine Kurtaxe. Kostenlose Parkplätze. Haustiere im
+HAUS28 nicht erlaubt, im Haus Schönblick auf Anfrage (bis ${PET_MAX} Hunde, ${PET_FEE_PER_NIGHT} € pro Hund und Nacht).
+Mindestaufenthalt im HAUS28: 2 Nächte (in der Hauptsaison ggf. mehr).
+
+Anreise: ${arrival.de}
+
+Gasthäuser in der Nähe:
+${restaurants.map((r) => `- ${r.name} (${r.place}): ${r.de} ${r.url}`).join("\n")}
+
 ## Seiten
 
 - [Startseite](${SITE_URL}): Übersicht beider Unterkünfte
@@ -64,7 +75,7 @@ ${posts.map((p) => `  - [${p.title}](${SITE_URL}/blog/${p.slug})`).join("\n")}
 - [Über uns](${SITE_URL}/ueber-uns): Die Gastgeber hinter SARFI Collection
 - [Kontakt & FAQ](${SITE_URL}/kontakt): Buchungsfragen und Kontaktformular
 - [AGB & Stornierungsbedingungen](${SITE_URL}/agb)
-- [English version](${SITE_URL}/en)
+- [English version](${SITE_URL}/en) · [Things to do (EN)](${SITE_URL}/en/ausflugsziele)
 
 ## Buchung
 

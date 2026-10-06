@@ -428,7 +428,8 @@ export default function BookingCalendar({
       </div>
 
       {/* Calendar grid: 2 months on lg+, 1 on mobile */}
-      <AnimatePresence mode="popLayout" custom={slideDir}>
+      {/* initial={false}: beim ersten Render sofort sichtbar (kein Einblenden vor der Hydration) */}
+      <AnimatePresence mode="popLayout" custom={slideDir} initial={false}>
         <motion.div
           key={`${viewYear}-${viewMonth}`}
           custom={slideDir}

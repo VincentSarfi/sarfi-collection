@@ -1,6 +1,8 @@
 // Booking flow: BookingWidget, BookingCalendar, PaymentStep,
 // ApartmentSelector, BookingSidebarCard + booking pages.
 // Must mirror the structure of locales/de/booking.ts exactly.
+import { restaurantsAnswer } from "@/data/surroundings";
+
 
 // English overlay for the German booking-header subtitles from
 // config/properties.config.ts (data stays untouched, German is the fallback).
@@ -374,6 +376,50 @@ const booking = {
     apartmentsWord: "apartments",
     fromPre: "from ",
     perNight: " / night",
+    expectHeading: "What your group can expect",
+    expect: [
+      {
+        title: "Together outdoors",
+        text: "A large panoramic terrace with seating for all guests and a small garden – the meeting point for breakfast in the sun and long evenings.",
+      },
+      {
+        title: "For every occasion",
+        text: "Family celebrations, milestone birthdays, club trips, company retreats or ski groups – the Steinberg ski lift is right by the house.",
+      },
+      {
+        title: "Self-catering",
+        text: "Every apartment has a fully equipped kitchen. We don't offer breakfast or catering – but there are good inns within walking distance and a few minutes' drive.",
+      },
+      {
+        title: "Arrival & parking",
+        text: "Free parking right in front of the building. It's about 20 minutes from the A3 (Hengersberg exit).",
+      },
+    ],
+    diningHeading: "Eating out nearby",
+    diningSub: "Rounded driving times from Haus Schönblick. Please check opening days on the websites before you go.",
+    partyHut:
+      "For parties of up to 30 people, the Steinberglift also rents out the \"Droidkastn\", a restored wooden hut around 225 years old.",
+    partyHutLink: "More about the Droidkastn",
+    faqs: (cap: number) => [
+      {
+        question: "How many people fit into Haus Schönblick?",
+        answer: `Up to ${cap} guests: the five holiday apartments each have 2 bedrooms and sleep up to 4.`,
+      },
+      {
+        question: "How do I book several apartments at once?",
+        answer:
+          "Choose your dates and apartments in the booking calendar above – you'll see the current total price and pay for everything in one go.",
+      },
+      {
+        question: "Are there shared spaces for the group?",
+        answer:
+          "Yes: a large panoramic terrace with seating for all guests and a small garden. Each apartment also has its own kitchen.",
+      },
+      {
+        question: "Where can the group eat out?",
+        answer: restaurantsAnswer("schoenblick", "en"),
+      },
+    ],
     allApartmentsHeading: "The five apartments at a glance",
   },
 };

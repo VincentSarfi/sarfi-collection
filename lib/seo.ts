@@ -47,6 +47,14 @@ export function websiteSchema(locale: Locale) {
   };
 }
 
+// Erste Gäste im HAUS28: Ende April 2025
+const HOSTING_SINCE = new Date("2025-04-25");
+
+/** Volle Jahre als Gastgeber (mindestens 1), beim statischen Build berechnet. */
+export function hostingYears(now = new Date()): number {
+  return Math.max(1, Math.floor((now.getTime() - HOSTING_SINCE.getTime()) / (365.25 * 24 * 3600 * 1000)));
+}
+
 /** Die Gastgeber als Person-Schema (Über-uns-Seiten). */
 export function hostsSchema(locale: Locale) {
   return ["Vincent Sarfi", "Elena Sarfi"].map((name) => ({

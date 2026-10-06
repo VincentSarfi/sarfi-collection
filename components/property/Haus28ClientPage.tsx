@@ -41,7 +41,8 @@ const bedroomImgs = [
 const reviewStats = getAggregateReviewStats([haus28])
 const totalReviews = reviewStats.reviewCount
 
-export default function Haus28ClientPage() {
+/** hostingYears kommt vom Server (beim Build berechnet) – kein Hydration-Mismatch. */
+export default function Haus28ClientPage({ hostingYears }: { hostingYears: number }) {
   const locale = useLocale()
   const t = getDict(locale).property
   const haus = localizeProperty(haus28, locale)
@@ -541,7 +542,7 @@ export default function Haus28ClientPage() {
                   {[
                     { value: String(totalReviews), label: t.haus28.hostProfile.statReviews },
                     { value: averageRatingLabel, label: t.haus28.hostProfile.statRating },
-                    { value: "1", label: t.haus28.hostProfile.statYears },
+                    { value: String(hostingYears), label: t.haus28.hostProfile.statYears(hostingYears) },
                   ].map((stat) => (
                     <div key={stat.label} className="flex flex-col items-center gap-0.5 px-2">
                       <span className="font-display text-lg text-forest-900">{stat.value}</span>

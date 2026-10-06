@@ -6,7 +6,7 @@ import { absoluteUrl, pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   path: "/schoenblick",
   locale: "de",
-  title: "Haus Schönblick – Panorama-Ferienwohnungen in Schöfweg",
+  title: { absolute: "Haus Schönblick – Panorama-Ferienwohnungen in Schöfweg" },
   description: `5 Ferienwohnungen mit Panoramablick im Bayerischen Wald. Ideal für Familien und Gruppen. Ab ${schoenblick.priceFrom} € / Nacht. Jetzt direkt buchen!`,
   ogTitle: "Haus Schönblick – Panorama-Apartments im Bayerischen Wald",
   ogDescription:
@@ -54,6 +54,7 @@ const jsonLd = {
   },
   checkinTime: "T16:00",
   checkoutTime: "T10:00",
+  petsAllowed: true,
   hasMap: schoenblick.googleMapsUrl,
   sameAs: [
     schoenblick.googleMapsUrl,

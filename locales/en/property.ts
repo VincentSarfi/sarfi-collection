@@ -1,5 +1,8 @@
 // Property pages (HAUS28, Haus Schönblick, apartments): UI copy for the property components.
 // Data copy (descriptions, FAQs, amenities, alt texts) comes from data/properties.i18n.ts.
+
+import { PET_FEE_PER_NIGHT } from "@/data/surroundings";
+
 const property = {
   // components/property/PropertyHero.tsx
   hero: {
@@ -196,7 +199,7 @@ const property = {
       heading: "Meet your hosts",
       statReviews: "Reviews",
       statRating: "Star rating",
-      statYears: "Year hosting",
+      statYears: (n: number): string => (n === 1 ? "Year hosting" : "Years hosting"),
       bio: "We're Vincent and Elena – we live surrounded by nature with our two children and love welcoming guests. We've shaped our holiday homes with plenty of heart and handiwork – one a modern A-frame in the woods, the other cosy and right by the ski lift. We're happy to share our favourite tips for hikes, ski days and day trips, and we're always there for you whenever you need anything.",
       superhostTitle: "Superhost",
       superhostText:
@@ -248,7 +251,7 @@ const property = {
       { name: "Regen thermal baths", distance: "~30 min" },
       { name: "Arber ski area", distance: "~45 min" },
     ],
-    rulePets: "Pets by arrangement",
+    rulePets: `Dogs on request (€${PET_FEE_PER_NIGHT} per night)`,
     cancellationTitle: "Cancellation & access",
     cancellationTextPre: "Free cancellation up to 30 days before arrival. After that, our ",
     cancellationLink: "cancellation policy",
@@ -262,6 +265,9 @@ const property = {
   },
   // app/(de|en)/…/schoenblick/page.tsx (house overview page)
   schoenblickPage: {
+    aboutHeading: "About Haus Schönblick",
+    aboutLocation:
+      "Haus Schönblick sits in Langfurth near Schöfweg, right by the Steinberg ski lift. The five holiday apartments are spread across house numbers 18 and 20: B5 and B6 on the ground floor with a terrace, B7 and B8 on the first floor with a panoramic balcony, plus the cabin-style apartment A2 in house no. 20. All guests share a large panoramic terrace with seating and a small garden; parking is free right in front of the building. The Pullman City Western town is about 15 minutes away by car.",
     apartmentsEyebrow: "5 holiday apartments",
     apartmentsHeading: "Choose your apartment",
     apartmentsIntro:
