@@ -3,7 +3,7 @@
 // Betriebe, DB, Wikipedia); Fahrzeiten sind gerundete Schätzungen.
 
 /** Aufpreis pro Hund und Nacht im Haus Schönblick (HAUS28: keine Haustiere). */
-export const PET_FEE_PER_NIGHT = 10;
+export const PET_FEE_PER_NIGHT = 15;
 export const PET_MAX = 2;
 
 export type Restaurant = {
@@ -19,17 +19,21 @@ export type Restaurant = {
   fromSchoenblick: string;
 };
 
+/** Neue Gaststätte am Skilift – auch Raum für Feiern (Gruppenseite). */
+export const stoabergAlm: Restaurant = {
+  // Flyer der Betreiber: Eröffnung 24.09.2026, Steinberg 7, Tel. 09908/234
+  name: "Stoaberg Alm",
+  place: "am Steinberglift, Schöfweg",
+  placeEn: "at the Steinberglift, Schöfweg",
+  url: "https://www.steinberglift.de/de/ski-schule/gastronomie/wirtshaus-stoaberghuettn.html",
+  de: "Neu seit September 2026: bayerische Küche, durchgehend warm – donnerstags Kesselfleisch, freitags Spareribs, sonntags Schweinebraten und Ente. April–November Do–So ab 10 Uhr, Dezember–März täglich.",
+  en: "New since September 2026: Bavarian food served all day – Kesselfleisch on Thursdays, spare ribs on Fridays, roast pork and duck on Sundays. April–November Thu–Sun from 10 a.m., December–March daily.",
+  fromHaus28: "~5 min",
+  fromSchoenblick: "~3 min",
+};
+
 export const restaurants: Restaurant[] = [
-  {
-    name: "Wirtshaus Stoaberghütt'n",
-    place: "am Steinberglift, Schöfweg",
-    placeEn: "at the Steinberglift, Schöfweg",
-    url: "https://www.steinberglift.de/de/gastronomie/wirtshaus.html",
-    de: "Bayerische Küche, frisch und hausgemacht, mit Blick bis zu den Alpen – inzwischen ganzjährig geöffnet.",
-    en: "Bavarian food, fresh and homemade, with views as far as the Alps – now open all year round.",
-    fromHaus28: "~5 min",
-    fromSchoenblick: "~3 min",
-  },
+  stoabergAlm,
   {
     name: "Panorama-Landgasthof Ranzinger",
     place: "Langfurth, Schöfweg",

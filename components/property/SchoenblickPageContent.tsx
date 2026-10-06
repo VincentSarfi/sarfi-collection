@@ -88,9 +88,11 @@ export default function SchoenblickPageContent({ locale }: { locale: Locale }) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
             {apartments.map((apt) => (
+              // Ganze Kachel klickbar: der Titel-Link spannt per ::after über die
+              // Karte, nur „Buchen“ liegt mit z-10 darüber.
               <article
                 key={apt.id}
-                className="group rounded-3xl overflow-hidden bg-white border border-cream-200 shadow-card hover:shadow-card-lg transition-all duration-300"
+                className="group relative rounded-3xl overflow-hidden bg-white border border-cream-200 shadow-card hover:shadow-card-lg hover:-translate-y-0.5 focus-within:ring-2 focus-within:ring-gold-500 transition-all duration-300"
               >
                 {/* Image */}
                 <div className="relative aspect-[3/2] overflow-hidden">
@@ -123,7 +125,14 @@ export default function SchoenblickPageContent({ locale }: { locale: Locale }) {
 
                 {/* Info */}
                 <div className="p-5">
-                  <h3 className="font-display text-xl text-forest-900 mb-1">{apt.name}</h3>
+                  <h3 className="font-display text-xl text-forest-900 mb-1">
+                    <Link
+                      href={localizeHref(`/schoenblick/${apt.id}`, locale)}
+                      className="after:absolute after:inset-0 after:z-0 focus-visible:outline-none group-hover:text-gold-700 transition-colors"
+                    >
+                      {apt.name}
+                    </Link>
+                  </h3>
                   <p className="font-body text-sm text-forest-500 mb-4">{apt.subtitle}</p>
 
                   <div className="flex items-center gap-4 text-forest-400 text-sm font-body mb-4">
@@ -144,16 +153,16 @@ export default function SchoenblickPageContent({ locale }: { locale: Locale }) {
                       <span className="font-body text-xs text-forest-400">{t.perNight}</span>
                     </div>
                     <div className="flex gap-2">
-                      <Link
-                        href={localizeHref(`/schoenblick/${apt.id}`, locale)}
-                        className="inline-flex items-center gap-1 px-4 py-2 text-sm font-body text-forest-600 hover:text-forest-900 border border-forest-200 rounded-full transition-colors"
+                      <span
+                        aria-hidden="true"
+                        className="inline-flex items-center gap-1 px-4 py-2 text-sm font-body text-forest-600 group-hover:text-forest-900 border border-forest-200 group-hover:border-forest-400 rounded-full transition-colors"
                       >
                         {t.details}
-                        <IconArrowRight size={13} />
-                      </Link>
+                        <IconArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+                      </span>
                       <Link
                         href={localizeHref("/schoenblick/buchen", locale)}
-                        className="px-4 py-2 bg-gold-500 text-forest-900 text-sm font-body font-medium rounded-full hover:bg-gold-400 transition-colors"
+                        className="relative z-10 px-4 py-2 bg-gold-500 text-forest-900 text-sm font-body font-medium rounded-full hover:bg-gold-400 transition-colors"
                       >
                         {t.book}
                       </Link>

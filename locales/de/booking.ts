@@ -391,8 +391,8 @@ const booking = {
     diningHeading: "Essen gehen in der Nähe",
     diningSub: "Fahrzeit ab Haus Schönblick, gerundet. Bitte vorher die Ruhetage auf den Websites prüfen.",
     partyHut:
-      "Für Feiern bis 30 Personen vermietet der Steinberglift außerdem den „Droidkastn“, eine restaurierte, rund 225 Jahre alte Holzhütte.",
-    partyHutLink: "Mehr zum Droidkastn",
+      "Für größere Feiern – Hochzeiten, Firmenevents oder Vereinsfeiern – vermietet die Stoaberg Alm am Skilift ihre Räume.",
+    partyHutLink: "Zur Stoaberg Alm",
     faqs: (cap: number) => [
       {
         question: "Wie viele Personen passen ins Haus Schönblick?",

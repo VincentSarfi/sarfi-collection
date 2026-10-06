@@ -173,6 +173,7 @@ const ausflugsziele = {
       practicalInfo: [
         { label: "Saison", value: "Dezember – März (schneeabhängig)" },
         { label: "Livecam", value: "steinberglift.de" },
+        { label: "Einkehr", value: "Stoaberg Alm direkt am Lift (neu seit 2026)" },
         { label: "Tipp", value: "Schlittschuhlaufen in Grafenau als Alternative" },
       ],
     },

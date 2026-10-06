@@ -174,6 +174,7 @@ const ausflugsziele: typeof de = {
       practicalInfo: [
         { label: "Season", value: "December – March (snow permitting)" },
         { label: "Live cam", value: "steinberglift.de" },
+        { label: "Food", value: "Stoaberg Alm right at the lift (new in 2026)" },
         { label: "Tip", value: "Ice skating in Grafenau as an alternative" },
       ],
     },

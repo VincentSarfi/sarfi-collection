@@ -62,7 +62,7 @@ function PropertyCard({
       initial={{ opacity: 0, y: 40 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
-      className="group relative overflow-hidden rounded-3xl bg-forest-900 shadow-card-lg hover:shadow-2xl transition-shadow duration-500"
+      className="group relative overflow-hidden rounded-3xl bg-forest-900 shadow-card-lg hover:shadow-2xl focus-within:ring-2 focus-within:ring-gold-500 transition-shadow duration-500"
     >
       {/* Image */}
       <div className="relative aspect-[4/3] md:aspect-[3/2] overflow-hidden">
@@ -125,16 +125,17 @@ function PropertyCard({
         <div className="flex flex-col gap-2 shrink-0">
           <Link
             href={localizeHref(bookHref, locale)}
-            className="inline-flex items-center justify-center px-5 py-2.5 bg-gold-500 text-forest-900 text-sm font-medium font-body rounded-full hover:bg-gold-400 transition-colors shadow-cta whitespace-nowrap"
+            className="relative z-10 inline-flex items-center justify-center px-5 py-2.5 bg-gold-500 text-forest-900 text-sm font-medium font-body rounded-full hover:bg-gold-400 transition-colors shadow-cta whitespace-nowrap"
           >
             {t.bookNow}
           </Link>
+          {/* Spannt per ::after über die ganze Karte – nur „Buchen“ liegt darüber */}
           <Link
             href={localizeHref(href, locale)}
-            className="inline-flex items-center justify-center gap-1 px-5 py-2 text-sm font-body text-cream-50/60 hover:text-cream-50 transition-colors group/link"
+            className="inline-flex items-center justify-center gap-1 px-5 py-2 text-sm font-body text-cream-50/60 group-hover:text-cream-50 transition-colors after:absolute after:inset-0 focus-visible:outline-none"
           >
             {t.discoverMore}
-            <IconArrowRight size={14} className="transition-transform group-hover/link:translate-x-0.5" />
+            <IconArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>
       </div>

@@ -398,8 +398,8 @@ const booking = {
     diningHeading: "Eating out nearby",
     diningSub: "Rounded driving times from Haus Schönblick. Please check opening days on the websites before you go.",
     partyHut:
-      "For parties of up to 30 people, the Steinberglift also rents out the \"Droidkastn\", a restored wooden hut around 225 years old.",
-    partyHutLink: "More about the Droidkastn",
+      "For bigger celebrations – weddings, company events or club parties – the Stoaberg Alm at the ski lift rents out its rooms.",
+    partyHutLink: "To the Stoaberg Alm",
     faqs: (cap: number) => [
       {
         question: "How many people fit into Haus Schönblick?",

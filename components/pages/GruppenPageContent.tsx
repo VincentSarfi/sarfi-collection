@@ -4,7 +4,7 @@ import GroupBookingWidget from "@/components/booking/GroupBookingWidget";
 import { GROUP_APARTMENT_IDS, GROUP_MAX_GUESTS } from "@/lib/group-booking";
 import { PROPERTY_CONFIGS } from "@/config/properties.config";
 import { schoenblick } from "@/data/properties";
-import { restaurants } from "@/data/surroundings";
+import { restaurants, stoabergAlm } from "@/data/surroundings";
 import FaqAccordion from "@/components/property/FaqAccordion";
 import { IconArrowRight, IconUsers } from "@/components/ui/Icons";
 import { getDict, localizeHref, type Locale } from "@/lib/i18n";
@@ -144,7 +144,7 @@ export default function GruppenPageContent({ locale }: { locale: Locale }) {
         <p className="font-body text-sm text-forest-600 mt-4">
           {t.partyHut}{" "}
           <a
-            href="https://www.steinberglift.de/de/gastronomie/droidkasten.html"
+            href={stoabergAlm.url}
             target="_blank"
             rel="noopener noreferrer"
             className="underline underline-offset-2 hover:text-gold-700"
