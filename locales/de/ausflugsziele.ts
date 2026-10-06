@@ -82,15 +82,15 @@ const ausflugsziele = {
       fromHaus28: "~20 min",
       fromSchoenblick: "~15 min",
       description:
-        "Mitten im Bayerischen Wald taucht die Westernstadt Pullman City in Eging am See auf – Europas größtes Western-Erlebnisdorf. Auf über 80.000 m² warten täglich mehr als 30 Live-Shows, Ponyreiten, Wildwasserbahn, Goldwaschen, Indianerlager und authentische Western-Gastronomie. Ein echtes Highlight für Familien und alle, die den Wilden Westen erleben wollen – ohne die USA zu verlassen.",
+        "Mitten im Bayerischen Wald taucht die Westernstadt Pullman City in Eging am See auf – Europas größtes Western-Erlebnisdorf. Auf über 80.000 m² warten Westernshows, Ponyreiten, Goldwaschen, ein Wasserspielplatz mit Rutsche, ein Streichelgehege und authentische Western-Gastronomie. Ein echtes Highlight für Familien und alle, die den Wilden Westen erleben wollen – ohne die USA zu verlassen.",
       schemaDescription:
-        "Europas größtes Western-Erlebnisdorf mit über 30 Shows täglich, Ponyreiten, Wildwasserbahn und authentischem Western-Flair.",
+        "Europas größtes Western-Erlebnisdorf mit Westernshows, Ponyreiten, Goldwaschen und Wasserspielplatz.",
       highlights: [
-        "30+ Live-Shows täglich",
-        "Wildwasserbahn & Saloon",
+        "Täglich wechselndes Showprogramm",
+        "Wasserspielplatz El Dorado mit Rutsche",
         "Pferdeshow & Ponyreiten",
         "Goldwaschen für Kinder",
-        "Übernachtung im Western-Camp möglich",
+        "Übernachtung in Hotels, Blockhütten oder Tipis möglich",
       ],
       practicalInfo: [
         { label: "Saison", value: "Mai – Oktober" },

@@ -83,15 +83,15 @@ const ausflugsziele: typeof de = {
       fromHaus28: "~20 min",
       fromSchoenblick: "~15 min",
       description:
-        "In the middle of the Bavarian Forest, the Western town of Pullman City in Eging am See awaits – Europe's largest Western theme village. Across more than 80,000 m² there are over 30 live shows every day, pony rides, a log flume, gold panning, a Native American camp and authentic Western food. A real highlight for families and anyone who wants to experience the Wild West without leaving Europe.",
+        "In the middle of the Bavarian Forest, the Western town of Pullman City in Eging am See awaits – Europe's largest Western theme village. Across more than 80,000 m² there are Western shows, pony rides, gold panning, a water playground with a slide, a petting zoo and authentic Western food. A real highlight for families and anyone who wants to experience the Wild West without leaving Europe.",
       schemaDescription:
-        "Europe's largest Western theme village with more than 30 shows a day, pony rides, a log flume and authentic Wild West flair.",
+        "Europe's largest Western theme village with Western shows, pony rides, gold panning and a water playground.",
       highlights: [
-        "30+ live shows every day",
-        "Log flume & saloon",
+        "Show programme changing daily",
+        "El Dorado water playground with slide",
         "Horse show & pony rides",
         "Gold panning for kids",
-        "Overnight stays in the Western camp",
+        "Overnight stays in hotels, log cabins or tipis",
       ],
       practicalInfo: [
         { label: "Season", value: "May – October" },
