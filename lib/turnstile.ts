@@ -12,7 +12,7 @@ export async function verifyTurnstile(token: string): Promise<boolean> {
   const secret = process.env.TURNSTILE_SECRET_KEY
   if (!secret) {
     // In Produktion nie fail-open – ohne Secret alles blocken.
-    if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production') {
       console.error('[turnstile] TURNSTILE_SECRET_KEY fehlt in Produktion – Anfrage blockiert')
       return false
     }

@@ -143,25 +143,27 @@ schoenblick.apartments.a2.smoobuPropertyId = "..."
 
 ---
 
-## Deployment auf Vercel (empfohlen)
+## Deployment: nur Sliplane
 
-1. Repository auf GitHub pushen
-2. [vercel.com](https://vercel.com) → "New Project" → GitHub-Repo auswählen
-3. Framework: **Next.js** (wird automatisch erkannt)
-4. **Umgebungsvariablen** (falls später benötigt): in Vercel Settings eintragen
-5. Deploy → automatisch bei jedem Push auf `main`
+Die Website läuft seit Juli 2026 ausschließlich auf **Sliplane** (Docker, siehe
+`Dockerfile`). Jeder Push auf `main` baut und deployt automatisch – sonst ist
+nichts zu tun. **Kein Vercel** mehr: nicht per CLI deployen und keine
+Vercel-Projekte oder Deploy-Hooks anlegen.
 
-### Domain-Konfiguration in Vercel
+- Umgebungsvariablen und Build-Args (`NEXT_PUBLIC_*`) werden in Sliplane gesetzt.
+- Der tägliche Restbetrag-Reminder (`/api/cron/restbetrag-reminder`) wird vom
+  Dashboard aufgerufen (`backend/utils/website-cron.js`), nicht von einem Cron hier.
+
+### Domains
+
+Alle Domains zeigen auf denselben Sliplane-Dienst; die Weiterleitungen macht die
+App selbst (`redirects()` in `next.config.ts`):
 
 | Domain | Ziel |
 |---|---|
-| `www.sarfi-collection.de` | Hauptprojekt |
-| `www.haus28.com` | Redirect → `sarfi-collection.de/haus28` |
-| `www.ferienhaus-schoenblick.de` | Redirect → `sarfi-collection.de/schoenblick` |
-| `www.sarfi.group` | Redirect → `sarfi-collection.de` |
-| `www.buechelstein.com` | Redirect → `sarfi-collection.de/haus28` |
-
-Redirects in Vercel unter "Domains" → "Redirect" konfigurieren.
+| `sarfi-collection.de` | → `www.sarfi-collection.de` |
+| `haus28.com`, `buechelstein.com` | → `sarfi-collection.de/haus28` |
+| `ferienhaus-schoenblick.de` | → `sarfi-collection.de/schoenblick` |
 
 ---
 

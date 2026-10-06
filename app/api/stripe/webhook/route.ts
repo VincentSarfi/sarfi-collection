@@ -13,7 +13,7 @@ import { voucherCardUrl, voucherValidUntil } from '@/lib/voucher'
  * Setup in Stripe Dashboard:
  *   URL: https://www.sarfi-collection.de/api/stripe/webhook
  *   Events: payment_intent.succeeded
- *   → Copy the Webhook Signing Secret → add as STRIPE_WEBHOOK_SECRET in Vercel
+ *   → Copy the Webhook Signing Secret → add as STRIPE_WEBHOOK_SECRET in Sliplane
  */
 export async function POST(request: NextRequest) {
   const body = await request.text()

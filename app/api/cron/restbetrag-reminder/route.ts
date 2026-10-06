@@ -6,10 +6,10 @@ import { sendRemainingPaymentReminderEmail } from '@/lib/notify'
 /**
  * Restbetrag-Zahlungserinnerung.
  *
- * Läuft täglich als Vercel-Cron (siehe vercel.json) und schickt jedem Gast
- * mit noch offenem Restbetrag EINMALIG eine Erinnerung, sobald die Anreise
- * näher rückt (Standard: spätestens ~REMINDER_WINDOW_DAYS Tage vorher, also
- * mindestens 14 Tage vor Anreise).
+ * Wird täglich um 08:00 vom Dashboard aufgerufen (backend/utils/website-cron.js)
+ * und schickt jedem Gast mit noch offenem Restbetrag EINMALIG eine Erinnerung,
+ * sobald die Anreise näher rückt (Standard: spätestens ~REMINDER_WINDOW_DAYS
+ * Tage vorher, also mindestens 14 Tage vor Anreise).
  *
  * Datenquelle: die beim Buchungs-Webhook erzeugten Stripe Payment Links
  * (metadata.type === 'restbetrag'). Gast-/Aufenthaltsdaten stammen aus den
@@ -21,7 +21,7 @@ import { sendRemainingPaymentReminderEmail } from '@/lib/notify'
  * Bezahlt-Erkennung: existiert auf dem Link eine bezahlte Checkout-Session,
  * wird nichts geschickt (und der Link als bezahlt markiert).
  *
- * Auth: Authorization: Bearer <CRON_SECRET>. Vercel-Cron sendet diesen Header
+ * Auth: Authorization: Bearer <CRON_SECRET>. Der Dashboard-Cron sendet diesen Header
  * automatisch, wenn CRON_SECRET als Env-Variable gesetzt ist.
  *
  * Manuelle / Test-Aufrufe (zusätzlich zum Bearer-Header):

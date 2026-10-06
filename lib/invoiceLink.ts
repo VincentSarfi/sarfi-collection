@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 
 // Signierter Self-Service-Rechnungslink. Muss zum Dashboard (backend/invoices/link.js)
-// passen: gleicher HMAC-Algorithmus + gleiches INVOICE_LINK_SECRET (Railway + Vercel).
+// passen: gleicher HMAC-Algorithmus + gleiches INVOICE_LINK_SECRET (im Dashboard und in Sliplane für die Website).
 
 // Muss zum Dashboard (backend/invoices/link.js) passen: gleiches INVOICE_LINK_SECRET,
 // kein unsicherer Fallback. Ohne Secret wird kein Token erzeugt (Link ohne gültigen t).

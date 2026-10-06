@@ -57,7 +57,7 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   // Schlanker, selbst-hostbarer Server-Output (server.js + minimales node_modules)
-  // für den Docker/Sliplane-Betrieb. Von Vercel ignoriert — dort unschädlich.
+  // für den Docker/Sliplane-Betrieb.
   output: "standalone",
   // Root für das File-Tracing FEST auf diesen App-Ordner. Sonst rät Next wegen
   // mehrerer package-lock.json in übergeordneten Verzeichnissen die Workspace-
@@ -66,8 +66,7 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.resolve(),
   async redirects() {
     return [
-      // Apex → www (kanonische Domain). Auf Vercel machte das die Plattform
-      // automatisch; self-hosted muss die App selbst umleiten.
+      // Apex → www (kanonische Domain); self-hosted muss die App selbst umleiten.
       {
         source: "/:path*",
         destination: "https://www.sarfi-collection.de/:path*",
