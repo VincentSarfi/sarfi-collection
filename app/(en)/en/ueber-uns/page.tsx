@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import UeberUnsPageContent from "@/components/pages/UeberUnsPageContent";
-import { pageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, hostsSchema, pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
   path: "/ueber-uns",
@@ -10,6 +10,13 @@ export const metadata: Metadata = pageMetadata({
     "Meet the hosts behind SARFI Collection. We love the Bavarian Forest and share that love with our guests.",
 });
 
+const jsonLd = [...hostsSchema("en"), breadcrumbSchema([["Home", "/en"], ["About us", "/en/ueber-uns"]])];
+
 export default function EnglishUeberUnsPage() {
-  return <UeberUnsPageContent locale="en" />;
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <UeberUnsPageContent locale="en" />
+    </>
+  );
 }

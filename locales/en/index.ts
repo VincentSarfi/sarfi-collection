@@ -1,4 +1,5 @@
 import about from "./about";
+import ausflugsziele from "./ausflugsziele";
 import booking from "./booking";
 import common from "./common";
 import home from "./home";
@@ -9,6 +10,7 @@ import property from "./property";
 
 const en = {
   about,
+  ausflugsziele,
   booking,
   common,
   home,

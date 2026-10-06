@@ -16,7 +16,7 @@ export function getDict(locale: Locale): Dictionary {
 
 /**
  * Seiten, die es auch auf Englisch gibt (deutsche Pfade als Referenz).
- * Alles andere (Blog, Ausflugsziele, Rechtliches …) existiert nur auf Deutsch –
+ * Alles andere (Blog, Gutschein, Rechtliches …) existiert nur auf Deutsch –
  * Links darauf bleiben auch aus /en heraus präfixlos.
  */
 const translatedRoutes = new Set([
@@ -39,6 +39,7 @@ const translatedRoutes = new Set([
   "/buchen",
   "/kontakt",
   "/ueber-uns",
+  "/ausflugsziele",
   // Late-Checkout-Widget (QR-Zielseite): Der Header-Umschalter verliert den
   // QR-Token (?u=…) — dafür hat das Widget einen eigenen Sprachlink, der ihn
   // mitnimmt. Der Eintrag hier sorgt, dass der Header wenigstens auf der

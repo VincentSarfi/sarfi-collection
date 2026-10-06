@@ -230,11 +230,12 @@ export default function PropertyReviews({
             <div className="hidden md:block absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-cream-50 to-transparent z-10 pointer-events-none" />
           )}
 
-          {/* Scrollable track */}
+          {/* Scrollable track – scroll-pl = px, damit der Snap beim Laden nicht
+              einrastet (Chrome wertet das als Scroll und stoppt die LCP-Messung) */}
           <div
             ref={scrollRef}
             onScroll={checkScroll}
-            className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide pb-2 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-0 lg:px-0"
+            className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide pb-2 -mx-4 px-4 scroll-pl-4 sm:-mx-6 sm:px-6 sm:scroll-pl-6 lg:-mx-0 lg:px-0 lg:scroll-pl-0"
           >
             {reviews.map((review, i) => (
               <motion.div

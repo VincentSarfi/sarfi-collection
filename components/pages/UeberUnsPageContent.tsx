@@ -1,10 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { IconStar, IconArrowRight } from "@/components/ui/Icons";
+import { getAggregateReviewStats } from "@/data/properties";
 import { getDict, localizeHref, type Locale } from "@/lib/i18n";
 
 export default function UeberUnsPageContent({ locale }: { locale: Locale }) {
   const t = getDict(locale).about;
+  const { ratingValue, reviewCount } = getAggregateReviewStats();
+  const rating = ratingValue.toFixed(2).replace(".", locale === "de" ? "," : ".");
 
   return (
     <div className="min-h-screen bg-cream-50">
@@ -45,31 +48,50 @@ export default function UeberUnsPageContent({ locale }: { locale: Locale }) {
           <p className="font-body text-sm text-forest-500 mt-1">{t.profile.role}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-          {/* Story */}
-          <div>
-            <h2 className="font-display text-2xl text-forest-900 mb-4">{t.story.heading}</h2>
-            <div className="space-y-4 font-body text-base text-forest-600 leading-relaxed">
-              {t.story.paragraphs.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-            </div>
+        {/* Story – volle Breite, mit Zwischenüberschriften (zitierfähige Absätze) */}
+        <div className="max-w-3xl mx-auto">
+          <h2 className="font-display text-display-sm text-forest-900 mb-6">{t.story.heading}</h2>
+          <div className="space-y-8 font-body text-base text-forest-600 leading-relaxed">
+            {t.story.sections.map((section) => (
+              <section key={section.heading}>
+                <h3 className="font-display text-xl text-forest-900 mb-3">{section.heading}</h3>
+                <div className="space-y-4">
+                  {section.paragraphs.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                </div>
+              </section>
+            ))}
+            <p>{t.story.ratingLine(rating, reviewCount)}</p>
           </div>
 
-          {/* Values */}
-          <div>
-            <h2 className="font-display text-2xl text-forest-900 mb-4">{t.values.heading}</h2>
-            <div className="space-y-4">
-              {t.values.items.map((value) => (
-                <div key={value.title} className="flex gap-4 p-4 rounded-xl bg-white border border-cream-200 shadow-card">
-                  <span className="text-2xl shrink-0">{value.icon}</span>
-                  <div>
-                    <p className="font-body text-sm font-semibold text-forest-800 mb-1">{value.title}</p>
-                    <p className="font-body text-sm text-forest-500 leading-relaxed">{value.text}</p>
-                  </div>
+          {/* Fakten */}
+          <div className="mt-10 rounded-2xl bg-white border border-cream-200 shadow-card p-6">
+            <h2 className="font-display text-xl text-forest-900 mb-4">{t.facts.heading}</h2>
+            <dl className="divide-y divide-cream-200 font-body text-sm">
+              {t.facts.items.map((item) => (
+                <div key={item.label} className="grid grid-cols-[8rem_1fr] sm:grid-cols-[10rem_1fr] gap-4 py-2.5">
+                  <dt className="font-semibold text-forest-800">{item.label}</dt>
+                  <dd className="text-forest-600">{item.value}</dd>
                 </div>
               ))}
-            </div>
+            </dl>
+          </div>
+        </div>
+
+        {/* Values */}
+        <div className="mt-16">
+          <h2 className="font-display text-2xl text-forest-900 mb-4 text-center">{t.values.heading}</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {t.values.items.map((value) => (
+              <div key={value.title} className="flex gap-4 p-4 rounded-xl bg-white border border-cream-200 shadow-card">
+                <span className="text-2xl shrink-0">{value.icon}</span>
+                <div>
+                  <p className="font-body text-sm font-semibold text-forest-800 mb-1">{value.title}</p>
+                  <p className="font-body text-sm text-forest-500 leading-relaxed">{value.text}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 

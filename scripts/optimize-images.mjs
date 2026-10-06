@@ -12,7 +12,8 @@ const OUT_DIR = 'public/img-opt'
 // Muss zu images.deviceSizes/imageSizes in next.config.ts und zur Stufen-Liste
 // in lib/imageLoader.ts passen.
 export const WIDTHS = [384, 640, 828, 1080, 1200, 1920]
-const QUALITY = 78
+// 72 + smartSubsample: ~12–18 % kleiner als 78, optisch kein Unterschied
+const QUALITY = 72
 const EXTS = new Set(['.webp', '.jpg', '.jpeg', '.png'])
 const CONCURRENCY = 8
 
@@ -47,7 +48,7 @@ async function processImage(srcPath) {
       // verloren; ohne rotate() landen solche Bilder gedreht im Output.
       .rotate()
       .resize({ width: Math.min(w, srcW), withoutEnlargement: true })
-      .webp({ quality: QUALITY })
+      .webp({ quality: QUALITY, smartSubsample: true })
       .toFile(outPath)
     made++
   }

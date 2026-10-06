@@ -265,6 +265,11 @@ export default async function BlogPostPage({ params }: Props) {
             <span className="inline-block px-3 py-1 bg-forest-100 text-forest-700 rounded-full font-body text-xs font-medium">
               {post.category}
             </span>
+            {post.draft && (
+              <span className="inline-block px-3 py-1 bg-gold-100 text-gold-700 rounded-full font-body text-xs font-semibold">
+                Entwurf – nicht öffentlich
+              </span>
+            )}
             <span className="font-body text-xs text-forest-400">
               {formatDate(post.publishedAt)}
               {post.updatedAt && post.updatedAt !== post.publishedAt && (

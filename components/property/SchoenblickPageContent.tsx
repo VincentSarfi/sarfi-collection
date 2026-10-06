@@ -155,11 +155,12 @@ export default function SchoenblickPageContent({ locale }: { locale: Locale }) {
           <div className="mt-12">
             <h3 className="font-display text-2xl text-forest-900 mb-4">{t.compareHeading}</h3>
             <div className="overflow-x-auto rounded-2xl border border-cream-200 bg-white">
-              <table className="w-full min-w-[640px] font-body text-sm text-left">
+              <table className="w-full min-w-[760px] font-body text-sm text-left">
                 <thead className="bg-cream-100 text-forest-700">
                   <tr>
                     <th scope="col" className="px-4 py-3 font-semibold">{t.compareCols.apartment}</th>
                     <th scope="col" className="px-4 py-3 font-semibold">{t.compareCols.size}</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">{t.compareCols.location}</th>
                     <th scope="col" className="px-4 py-3 font-semibold">{t.compareCols.bedrooms}</th>
                     <th scope="col" className="px-4 py-3 font-semibold">{t.compareCols.beds}</th>
                     <th scope="col" className="px-4 py-3 font-semibold">{t.compareCols.guests}</th>
@@ -178,6 +179,10 @@ export default function SchoenblickPageContent({ locale }: { locale: Locale }) {
                         </Link>
                       </th>
                       <td className="px-4 py-3 whitespace-nowrap">{apt.sqm} m²</td>
+                      <td className="px-4 py-3">
+                        {apt.location}
+                        <span className="block text-forest-500">{apt.outdoor}</span>
+                      </td>
                       <td className="px-4 py-3">{apt.bedrooms}</td>
                       <td className="px-4 py-3">{apt.bedroomImages?.map((b) => b.bed).join(" + ")}</td>
                       <td className="px-4 py-3">{apt.maxGuests}</td>

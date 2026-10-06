@@ -27,6 +27,9 @@ type FaqTranslation = {
 
 type TextOverlay = {
   subtitle?: string;
+  location?: string;
+  outdoor?: string;
+  style?: string;
   shortDescription?: string;
   description?: string;
   faqs?: FaqTranslation[];
@@ -143,7 +146,7 @@ const galleryAltEn: Record<string, string> = {
   "Apartment B6 – Wohnbereich": "Apartment B6 – Living area",
   "Apartment B6 – Wohnzimmer mit grünem Sofa": "Apartment B6 – Living room with green sofa",
   "Apartment B6 – Wohn- und Essbereich Übersicht": "Apartment B6 – Living and dining area overview",
-  "Apartment B6 – Wohnzimmer Balkonzugang": "Apartment B6 – Living room with balcony access",
+  "Apartment B6 – Wohnzimmer mit Terrassenzugang": "Apartment B6 – Living room with terrace access",
   "Apartment B6 – Schlafzimmer 1 Doppelbett": "Apartment B6 – Bedroom 1 with double bed",
   "Apartment B6 – Schlafzimmer 2": "Apartment B6 – Bedroom 2",
   "Apartment B6 – Schlafzimmer 2 Übersicht": "Apartment B6 – Bedroom 2 overview",
@@ -284,6 +287,17 @@ const schoenblickFaqsEn: FaqTranslation[] = [
     answer: "Yes, fast Wi-Fi is included free of charge in every apartment.",
   },
   {
+    de: "Gibt es Parkplätze?",
+    question: "Is there parking?",
+    answer: "Yes, there are parking spaces right in front of the building that you can simply use – free of charge.",
+  },
+  {
+    de: "Welche Kosten kommen zum Übernachtungspreis dazu?",
+    question: "Are there any costs on top of the nightly rate?",
+    answer:
+      "Only a one-off final cleaning fee per stay, which is shown directly when you book. There is no tourist tax. You'll see the nightly rate for your dates in the booking calendar.",
+  },
+  {
     de: "Wie weit ist es zur Pullman City?",
     question: "How far is it to Pullman City?",
     answer:
@@ -355,6 +369,24 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
         answer: "Yes, fast Wi-Fi is included free of charge.",
       },
       {
+        de: "Gibt es einen Parkplatz?",
+        question: "Is there parking?",
+        answer:
+          "Yes, and it's free: two parking spaces are right in front of the house, and there's a large car park about 100 m away for additional vehicles.",
+      },
+      {
+        de: "Welche Kosten kommen zum Übernachtungspreis dazu?",
+        question: "Are there any costs on top of the nightly rate?",
+        answer:
+          "Only a one-off final cleaning fee per stay, which is shown directly when you book. There is no tourist tax. You'll see the nightly rate for your dates in the booking calendar.",
+      },
+      {
+        de: "Sind Haustiere im HAUS28 erlaubt?",
+        question: "Are pets allowed at HAUS28?",
+        answer:
+          "Unfortunately, pets are not allowed at HAUS28. If you'd like to travel with your dog: pets are welcome at Haus Schönblick on request.",
+      },
+      {
         de: "Wie weit ist es vom Büchelstein zum nächsten Ort?",
         question: "How far is it from the Büchelstein to the nearest town?",
         answer:
@@ -389,6 +421,9 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
     faqs: schoenblickFaqsEn,
     apartments: {
       b5: {
+        location: "Ground floor",
+        outdoor: "Terrace",
+        style: "A modern apartment with parquet floors, a red kitchen and its own terrace.",
         subtitle: "Bright apartment with forest views & terrace",
         shortDescription: "A bright, comfortable apartment with forest views and a terrace for up to 4 guests.",
         description:
@@ -396,13 +431,19 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
         faqs: schoenblickFaqsEn,
       },
       b6: {
+        location: "Ground floor",
+        outdoor: "Terrace",
+        style: "A modern apartment with parquet floors, terrace access and two double beds.",
         subtitle: "Light-filled apartment with panoramic views",
         shortDescription: "A generous apartment with glorious panoramic views over the hills of the Bavarian Forest.",
         description:
-          "Apartment B6 wins you over with its breathtaking panoramic views and light-filled rooms. The modern interior combines comfort with Bavarian charm. Enjoy your mornings on the balcony with fresh forest air and sweeping views over the Schöfweg woods. Bedroom 1: king-size bed · Bedroom 2: double bed.",
+          "Apartment B6 wins you over with its breathtaking panoramic views and light-filled rooms. The modern interior combines comfort with Bavarian charm. Enjoy your mornings on the terrace with fresh forest air and views over the Schöfweg woods. Bedroom 1: king-size bed · Bedroom 2: double bed.",
         faqs: schoenblickFaqsEn,
       },
       b8: {
+        location: "First floor",
+        outdoor: "Panoramic balcony",
+        style: "Wood-panelled walls give B8 a rustic feel, the modern furniture keeps it fresh and cosy – with a panoramic balcony.",
         subtitle: "Spacious holiday apartment for families",
         shortDescription: "A roomy 2-bedroom apartment for up to 4 guests – ideal for families.",
         description:
@@ -410,6 +451,9 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
         faqs: schoenblickFaqsEn,
       },
       b7: {
+        location: "First floor",
+        outdoor: "Panoramic balcony",
+        style: "Our most modern apartment: herringbone parquet, modern furniture, splashes of colour and a panoramic balcony.",
         subtitle: "Our most beautiful apartment – herringbone parquet, mountain views & balcony",
         shortDescription:
           "Premium apartment at Haus Schönblick: newly renovated, herringbone parquet, natural stone washbasin, balcony and forest views.",
@@ -418,7 +462,10 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
         faqs: schoenblickFaqsEn,
       },
       a2: {
-        subtitle: "Cosy apartment with peaceful garden views",
+        location: "House no. 20",
+        outdoor: "Balcony with a view",
+        style: "Our cabin-style apartment with old farmhouse furniture, wood-panelled walls and a lovely view from the balcony – the only holiday apartment in house no. 20.",
+        subtitle: "Cabin-style apartment with farmhouse furniture & balcony views",
         shortDescription: "A cosy apartment for families of up to 4, with peaceful garden and forest views.",
         description:
           "Apartment A2 is the cosiest hideaway at Haus Schönblick – with 2 bedrooms and 55 m², it's ideal for families of up to 4 in search of real peace and quiet. The tranquil setting with garden and forest views, the warm interior and hiking trails right on the doorstep make for a relaxing holiday far from the everyday. Bedroom 1: 2 single beds · Bedroom 2: bunk bed (one bed below, one above).",
@@ -451,6 +498,11 @@ function applyOverlay<T extends Localizable>(entity: T, overlay: TextOverlay | u
   if (overlay?.subtitle !== undefined) copy.subtitle = overlay.subtitle;
   if (overlay?.shortDescription !== undefined) copy.shortDescription = overlay.shortDescription;
   if (overlay?.description !== undefined) copy.description = overlay.description;
+  if ("location" in copy) {
+    if (overlay?.location !== undefined) copy.location = overlay.location;
+    if (overlay?.outdoor !== undefined) copy.outdoor = overlay.outdoor;
+    if (overlay?.style !== undefined) copy.style = overlay.style;
+  }
 
   copy.amenities = copy.amenities.map((amenity) => ({
     ...amenity,

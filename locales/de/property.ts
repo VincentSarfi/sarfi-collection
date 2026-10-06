@@ -281,6 +281,7 @@ const property = {
     compareCols: {
       apartment: "Apartment",
       size: "Größe",
+      location: "Lage & Außenbereich",
       bedrooms: "Schlafzimmer",
       beds: "Betten",
       guests: "Gäste",

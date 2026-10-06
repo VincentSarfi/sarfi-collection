@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ApartmentPage from "@/components/property/ApartmentPage";
 import { schoenblick } from "@/data/properties";
 import { localizeProperty } from "@/data/properties.i18n";
+import { apartmentFaqs } from "@/data/apartmentFaqs";
 import { PROPERTY_CONFIGS } from "@/config/properties.config";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
@@ -85,7 +86,7 @@ const jsonLd = {
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: apt.faqs.map((faq) => ({
+  mainEntity: apartmentFaqs(apt, "de").map((faq) => ({
     "@type": "Question",
     name: faq.question,
     acceptedAnswer: { "@type": "Answer", text: faq.answer },

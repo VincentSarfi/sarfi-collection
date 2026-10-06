@@ -28,6 +28,7 @@ export default function HomeHero() {
           alt={t.imageAlt}
           fill
           priority
+          fetchPriority="high"
           quality={90}
           className="object-cover"
           sizes="100vw"

@@ -118,6 +118,7 @@ export default function Haus28ClientPage() {
                   alt={img.alt}
                   fill
                   priority={i === 0}
+                  fetchPriority={i === 0 ? "high" : undefined}
                   className="object-cover"
                   sizes="100vw"
                 />
@@ -340,7 +341,7 @@ export default function Haus28ClientPage() {
               {/* Wo du schlafen wirst */}
               <div className="py-6 border-b border-cream-200">
                 <h2 className="font-display text-xl text-forest-900 mb-5">{t.listing.whereYouSleep}</h2>
-                <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none -mx-1 px-1">
+                <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none -mx-1 px-1 scroll-pl-1">
                   {bedrooms.map((room) => (
                     <div
                       key={room.name}

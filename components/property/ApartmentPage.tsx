@@ -21,6 +21,7 @@ import { schoenblick } from "@/data/properties"
 import { localizeProperty } from "@/data/properties.i18n"
 import { schoenblickReviews } from "@/data/reviews"
 import type { ApartmentData } from "@/data/properties"
+import { apartmentFaqs } from "@/data/apartmentFaqs"
 import { type PropertyBookingConfig, resolveSmoobuId } from "@/config/properties.config"
 import { getDict, localizeHref } from "@/lib/i18n"
 import { useLocale } from "@/lib/i18n/LocaleProvider"
@@ -109,6 +110,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
                   alt={img.alt}
                   fill
                   priority={i === 0}
+                  fetchPriority={i === 0 ? "high" : undefined}
                   className="object-cover"
                   sizes="100vw"
                 />
@@ -458,7 +460,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
         </div>
 
         {/* ── 5. FAQ ────────────────────────────────────────────────── */}
-        <FaqAccordion faqs={apartment.faqs} />
+        <FaqAccordion faqs={apartmentFaqs(apartment, locale)} />
 
         {/* ── 6. RELATED ────────────────────────────────────────────── */}
         <RelatedProperties

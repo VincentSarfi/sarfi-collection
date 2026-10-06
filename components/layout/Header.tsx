@@ -31,6 +31,7 @@ export default function Header() {
         { label: t.nav.apartmentB6, href: "/schoenblick/b6" },
         { label: t.nav.apartmentB8, href: "/schoenblick/b8" },
         { label: t.nav.apartmentA2, href: "/schoenblick/a2" },
+        { label: t.nav.groups, href: "/schoenblick/gruppen" },
       ],
     },
     { label: t.nav.ausflugsziele, href: "/ausflugsziele" },
@@ -158,37 +159,34 @@ export default function Header() {
                   />
                 </button>
 
-                <AnimatePresence>
-                  {dropdown === link.href && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8, scale: 0.97 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 8, scale: 0.97 }}
-                      transition={{ duration: 0.18 }}
-                      className="absolute left-0 top-full mt-2 min-w-[200px] rounded-xl bg-forest-900 border border-cream-50/10 shadow-card-lg py-2"
-                      role="menu"
+                {/* Immer im DOM (Links für Crawler), nur per CSS ein-/ausgeblendet */}
+                <div
+                  className={`absolute left-0 top-full mt-2 min-w-[200px] rounded-xl bg-forest-900 border border-cream-50/10 shadow-card-lg py-2 transition-all duration-200 ${
+                    dropdown === link.href
+                      ? "visible opacity-100 translate-y-0 scale-100"
+                      : "invisible opacity-0 translate-y-2 scale-[0.97] pointer-events-none"
+                  }`}
+                  role="menu"
+                >
+                  <Link
+                    href={localizeHref(link.href, locale)}
+                    className="block px-4 py-2 text-sm text-cream-50/70 hover:text-cream-50 hover:bg-cream-50/10 transition-colors font-body"
+                    role="menuitem"
+                  >
+                    {t.nav.allApartments}
+                  </Link>
+                  <div className="my-1 border-t border-cream-50/10" />
+                  {link.children.map((child) => (
+                    <Link
+                      key={child.href}
+                      href={localizeHref(child.href, locale)}
+                      className="block px-4 py-2 text-sm text-cream-50/80 hover:text-cream-50 hover:bg-cream-50/10 transition-colors font-body"
+                      role="menuitem"
                     >
-                      <Link
-                        href={localizeHref(link.href, locale)}
-                        className="block px-4 py-2 text-sm text-cream-50/70 hover:text-cream-50 hover:bg-cream-50/10 transition-colors font-body"
-                        role="menuitem"
-                      >
-                        {t.nav.allApartments}
-                      </Link>
-                      <div className="my-1 border-t border-cream-50/10" />
-                      {link.children.map((child) => (
-                        <Link
-                          key={child.href}
-                          href={localizeHref(child.href, locale)}
-                          className="block px-4 py-2 text-sm text-cream-50/80 hover:text-cream-50 hover:bg-cream-50/10 transition-colors font-body"
-                          role="menuitem"
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      {child.label}
+                    </Link>
+                  ))}
+                </div>
               </div>
             ) : (
               <Link

@@ -10,6 +10,7 @@ const common = {
       apartmentB6: "Apartment B6",
       apartmentB8: "Apartment B8",
       apartmentA2: "Apartment A2",
+      groups: "Gruppenbuchung (bis 20 Pers.)",
       ausflugsziele: "Ausflugsziele",
       blog: "Blog",
       ueberUns: "Über uns",

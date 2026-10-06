@@ -39,6 +39,12 @@ export type ApartmentData = {
     thumbnail: string;
   };
   faqs: { question: string; answer: string }[];
+  /** Lage im Haus, z. B. "Erdgeschoss" */
+  location: string;
+  /** Außenbereich, z. B. "Terrasse" */
+  outdoor: string;
+  /** Charakter der Wohnung in einem Satz */
+  style: string;
   isNew?: boolean;
   bedroomImages?: { name: string; bed: string; img: string }[];
 };
@@ -200,6 +206,21 @@ export const haus28: PropertyData = {
       answer: "Ja, schnelles WLAN ist kostenfrei inklusive.",
     },
     {
+      question: "Gibt es einen Parkplatz?",
+      answer:
+        "Ja, und Parken ist kostenlos: Zwei Stellplätze liegen direkt vor dem Haus, für weitere Fahrzeuge gibt es rund 100 m entfernt einen großen Parkplatz.",
+    },
+    {
+      question: "Welche Kosten kommen zum Übernachtungspreis dazu?",
+      answer:
+        "Nur eine einmalige Endreinigung pro Aufenthalt – sie wird dir bei der Buchung direkt mit angezeigt. Eine Kurtaxe gibt es nicht. Den Übernachtungspreis für deinen Reisezeitraum siehst du im Buchungskalender.",
+    },
+    {
+      question: "Sind Haustiere im HAUS28 erlaubt?",
+      answer:
+        "Nein, im HAUS28 sind Haustiere leider nicht erlaubt. Wenn du mit Hund reisen möchtest: Im Haus Schönblick sind Haustiere auf Anfrage willkommen.",
+    },
+    {
       question: "Wie weit ist es vom Büchelstein zum nächsten Ort?",
       answer:
         "Vom HAUS28 am Büchelstein ist Grattersdorf in wenigen Minuten erreichbar, Deggendorf (Einkaufen, Restaurants) ca. 20 Minuten entfernt. Wanderwege zum Büchelstein-Gipfel und durch den Bayerischen Wald starten direkt vor der Haustür.",
@@ -270,6 +291,15 @@ const schoenblickFaqs = [
   {
     question: "Gibt es WLAN?",
     answer: "Ja, schnelles WLAN ist kostenfrei in allen Apartments inklusive.",
+  },
+  {
+    question: "Gibt es Parkplätze?",
+    answer: "Ja, direkt vor dem Gebäude gibt es Parkplätze, auf die du dich einfach stellen kannst – kostenlos.",
+  },
+  {
+    question: "Welche Kosten kommen zum Übernachtungspreis dazu?",
+    answer:
+      "Nur eine einmalige Endreinigung pro Aufenthalt – sie wird dir bei der Buchung direkt mit angezeigt. Eine Kurtaxe gibt es nicht. Den Übernachtungspreis für deinen Reisezeitraum siehst du im Buchungskalender.",
   },
   {
     question: "Wie weit ist es zur Pullman City?",
@@ -378,6 +408,9 @@ export const schoenblick: PropertyData = {
           { src: "/images/schoenblick/b5/gallery/haus_schoenblick_251228_290.webp", alt: "Apartment B5 – Bayerischer Wald" },
         ],
       },
+      location: "Erdgeschoss",
+      outdoor: "Terrasse",
+      style: "Moderne Wohnung mit Parkettboden, roter Küche und eigener Terrasse.",
       faqs: schoenblickFaqs,
       bedroomImages: [
         { name: "Schlafzimmer 1", bed: "1 Kingsize-Doppelbett", img: "/images/schoenblick/b5/gallery/haus_schoenblick_251228_227.webp" },
@@ -400,7 +433,7 @@ export const schoenblick: PropertyData = {
       priceFrom: 59,
       shortDescription: "Großzügiges Apartment mit herrlichem Panorama über die Hügel des Bayerischen Waldes.",
       description:
-        "Apartment B6 besticht durch seinen atemberaubenden Panoramablick und die lichtdurchfluteten Räume. Die moderne Einrichtung verbindet Komfort mit bayerischem Charme. Genießt den Morgen auf dem Balkon bei frischer Waldluft und Weitblick über den Schöfweger Wald. Schlafzimmer 1: Kingsize-Bett · Schlafzimmer 2: Doppelbett.",
+        "Apartment B6 besticht durch seinen atemberaubenden Panoramablick und die lichtdurchfluteten Räume. Die moderne Einrichtung verbindet Komfort mit bayerischem Charme. Genieß den Morgen auf der Terrasse bei frischer Waldluft und Blick über den Schöfweger Wald. Schlafzimmer 1: Kingsize-Bett · Schlafzimmer 2: Doppelbett.",
       amenities: schoenblickAmenities,
       images: {
         hero: "/images/schoenblick/b6/gallery/img_9762.webp",
@@ -408,7 +441,7 @@ export const schoenblick: PropertyData = {
         gallery: [
           { src: "/images/schoenblick/b6/gallery/img_9762.webp", alt: "Apartment B6 – Wohnzimmer mit grünem Sofa" },
           { src: "/images/schoenblick/b6/gallery/img_9780.webp", alt: "Apartment B6 – Wohn- und Essbereich Übersicht" },
-          { src: "/images/schoenblick/b6/gallery/img_9758.webp", alt: "Apartment B6 – Wohnzimmer Balkonzugang" },
+          { src: "/images/schoenblick/b6/gallery/img_9758.webp", alt: "Apartment B6 – Wohnzimmer mit Terrassenzugang" },
           { src: "/images/schoenblick/b6/gallery/img_9772.webp", alt: "Apartment B6 – Schlafzimmer 1 Doppelbett" },
           { src: "/images/schoenblick/b6/gallery/img_9767.webp", alt: "Apartment B6 – Schlafzimmer 2" },
           { src: "/images/schoenblick/b6/gallery/img_9774.webp", alt: "Apartment B6 – Schlafzimmer 2 Übersicht" },
@@ -424,6 +457,9 @@ export const schoenblick: PropertyData = {
           { src: "/images/schoenblick/b6/gallery/img_9783.webp", alt: "Apartment B6 – Küche Detail" },
         ],
       },
+      location: "Erdgeschoss",
+      outdoor: "Terrasse",
+      style: "Moderne Wohnung mit Parkettboden, Terrassenzugang und zwei Doppelbetten.",
       faqs: schoenblickFaqs,
       bedroomImages: [
         { name: "Schlafzimmer 1", bed: "1 Kingsize-Doppelbett", img: "/images/schoenblick/b6/gallery/img_9772.webp" },
@@ -481,6 +517,9 @@ export const schoenblick: PropertyData = {
           { src: "/images/schoenblick/b8/gallery/haus_schoenblick_251228_183.webp", alt: "Apartment B8 – Waldspaziergang" },
         ],
       },
+      location: "1. Stock",
+      outdoor: "Panoramabalkon",
+      style: "Holzverkleidete Wände machen B8 urig, die modernen Möbel frisch und gemütlich – mit Panoramabalkon.",
       faqs: schoenblickFaqs,
       bedroomImages: [
         { name: "Schlafzimmer 1", bed: "1 Kingsize-Doppelbett", img: "/images/schoenblick/b8/gallery/haus_schoenblick_251228_083.webp" },
@@ -537,6 +576,9 @@ export const schoenblick: PropertyData = {
           { src: "/images/schoenblick/b7/gallery/img_3092.jpg", alt: "Apartment B7 – Flur mit Zimmerzugang" },
         ],
       },
+      location: "1. Stock",
+      outdoor: "Panoramabalkon",
+      style: "Unsere modernste Wohnung: Fischgrätparkett, moderne Möbel, Farbakzente und ein Panoramabalkon.",
       faqs: schoenblickFaqs,
       bedroomImages: [
         { name: "Schlafzimmer 1", bed: "1 Kingsize-Bett (180×200 cm)", img: "/images/schoenblick/b7/gallery/img_3059.jpg" },
@@ -546,7 +588,7 @@ export const schoenblick: PropertyData = {
     a2: {
       id: "a2",
       name: "Apartment A2",
-      subtitle: "Gemütliches Apartment mit ruhiger Gartenaussicht",
+      subtitle: "Hüttenwohnung mit Bauernmöbeln & Balkonblick",
       airbnbUrl: "https://www.airbnb.de/rooms/1512149022196493833",
       airbnbRating: 5.0,
       airbnbReviewCount: 26,
@@ -588,6 +630,9 @@ export const schoenblick: PropertyData = {
           { src: "/images/schoenblick/a2/gallery/img_9828.webp", alt: "Apartment A2 – Abendstimmung" },
         ],
       },
+      location: "Hausnummer 20",
+      outdoor: "Balkon mit Weitblick",
+      style: "Unsere Hüttenwohnung mit alten Bauernmöbeln, holzverkleideten Wänden und schönem Blick vom Balkon – die einzige Ferienwohnung in Hausnummer 20.",
       faqs: schoenblickFaqs,
       bedroomImages: [
         { name: "Schlafzimmer 1", bed: "2 Einzelbetten", img: "/images/schoenblick/a2/gallery/img_9810.webp" },

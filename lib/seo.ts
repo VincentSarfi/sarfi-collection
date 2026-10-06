@@ -47,6 +47,19 @@ export function websiteSchema(locale: Locale) {
   };
 }
 
+/** Die Gastgeber als Person-Schema (Über-uns-Seiten). */
+export function hostsSchema(locale: Locale) {
+  return ["Vincent Sarfi", "Elena Sarfi"].map((name) => ({
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name,
+    jobTitle: locale === "de" ? "Gastgeber" : "Host",
+    image: absoluteUrl("/images/team/profilbild.jpg"),
+    url: localizedUrl("/ueber-uns", locale),
+    worksFor: { "@id": ORGANIZATION_ID },
+  }));
+}
+
 /** BreadcrumbList aus [Name, Pfad]-Paaren. */
 export function breadcrumbSchema(items: [name: string, path: string][]) {
   return {
