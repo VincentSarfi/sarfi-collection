@@ -1,5 +1,5 @@
-// Gästebewertungen von Airbnb, Booking.com und FeWo-direkt (Texte wörtlich,
-// bei Booking nur der positive Teil; Booking-Noten auf 5er-Skala: 9/10 = 4,5).
+// Gästebewertungen von Airbnb, Booking.com, FeWo-direkt und HomeToGo (Texte
+// wörtlich, bei Booking nur der positive Teil; Booking-Noten auf 5er-Skala: 9/10 = 4,5).
 
 export type Review = {
   id: string;
@@ -507,6 +507,19 @@ export const reviews: Review[] = [
     text: "We wanted a place where the younger kids would have room to play indoors and outdoors. This property was perfect! The host and his family live nearby, which was very helpful. This home has four bedrooms and two full baths, a large open-plan living area with kitchen, dining, and living rooms. There is also an outstanding outdoor living space with dining and cooking amenities. The kitchen was the best-equipped that I've experienced in a vacation rental, nothing to compare. Great baths, plenty of hot water. Everything is well-provisioned. I plan to stay here again next time we're in the area!",
     avatarInitials: "MN",
   },
+
+  // ─── HAUS28 Reviews (HomeToGo) ───────────────────────────────────────────
+  {
+    id: "h28-h1",
+    propertyId: "haus28",
+    author: "Kai S.",
+    location: "HomeToGo",
+    date: "Februar 2026",
+    rating: 5,
+    text: "Gemütliches und geschmackvoll eingerichtetes Ferienhaus am Rande des Bayerischen Walds.",
+    avatarInitials: "KS",
+  },
+
   // ─── Schönblick Reviews (echte Airbnb-Bewertungen) ─────────────────────
   {
     id: "sb-b5-3",

@@ -16,6 +16,7 @@ function platforms(p: PropertyData): string {
     p.bookingReviewCount && "Booking.com",
     p.fewoReviewCount && "FeWo-direkt",
     p.googleReviewCount && "Google",
+    p.hometogoReviewCount && "HomeToGo",
   ]
     .filter(Boolean)
     .join(", ");

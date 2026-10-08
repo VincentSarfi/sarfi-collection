@@ -67,6 +67,8 @@ export type PropertyData = {
   fewoReviewCount?: number;
   googleRating?: number;
   googleReviewCount?: number;
+  hometogoRating?: number;
+  hometogoReviewCount?: number;
   priceFrom: number;
   images: {
     hero: string;
@@ -121,6 +123,8 @@ export const haus28: PropertyData = {
   fewoReviewCount: 17,
   googleRating: 4.8,
   googleReviewCount: 11,
+  hometogoRating: 5.0,
+  hometogoReviewCount: 1,
   smoobuPropertyId: "2610828",
   smoobuEmbedUrl: "https://login.smoobu.com/de/booking-tool/iframe/2610828",
   shortDescription:
@@ -354,13 +358,14 @@ export const schoenblick: PropertyData = {
   // Airbnb: Summe der Wohnungs-Inserate (B5, B6, B8 je 5,0 aus 3; A2 4,5 aus 2).
   // Booking: aktuelles Inserat 8,8 aus 8; eine 3/10 zählt laut Vincent nicht
   // mit, ohne sie 9,6 aus 7. Die alten Booking-Inserate des Vorbesitzers sind
-  // geschlossen. Google: nur die 2 sicher eurer Zeit zuzuordnenden Rezensionen.
+  // geschlossen. Google: 17 × 5 Sterne; eine 1-Stern-Rezension von vor 7 Jahren
+  // (Vorbesitzer) zählt nicht mit.
   airbnbRating: 4.91,
   airbnbReviewCount: 11,
   bookingRating: 9.6,
   bookingReviewCount: 7,
   googleRating: 5.0,
-  googleReviewCount: 2,
+  googleReviewCount: 17,
   smoobuPropertyId: "2934161",
   shortDescription:
     "Fünf geschmackvolle Ferienwohnungen mit Panoramablick über den Bayerischen Wald – ideal für Paare, Familien und Gruppen.",
@@ -698,6 +703,9 @@ function collectPlatformReviews(p: PropertyData): { rating: number; count: numbe
   }
   if (p.googleRating && p.googleReviewCount) {
     entries.push({ rating: p.googleRating, count: p.googleReviewCount });
+  }
+  if (p.hometogoRating && p.hometogoReviewCount) {
+    entries.push({ rating: p.hometogoRating, count: p.hometogoReviewCount });
   }
   return entries;
 }
