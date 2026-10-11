@@ -12,7 +12,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   path: "/",
   locale: "de",
-  title: { absolute: "SARFI Collection – Exklusive Ferienunterkünfte im Bayerischen Wald" },
+  title: { absolute: "SARFI Collection – Ferienunterkünfte im Bayerischen Wald" },
   description:
     "HAUS28 – A-Frame mit Whirlpool am Büchelstein. Haus Schönblick – Panorama-Apartments in Schöfweg. Ferienunterkünfte im Bayerischen Wald, direkt buchen.",
   ogTitle: "SARFI Collection – Dein Rückzugsort im Bayerischen Wald",

@@ -12,7 +12,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   path: "/",
   locale: "en",
-  title: { absolute: "SARFI Collection – Exclusive Holiday Homes in the Bavarian Forest" },
+  title: { absolute: "SARFI Collection – Holiday Homes in the Bavarian Forest" },
   description:
     "HAUS28 – an A-frame with hot tub at the Büchelstein. Haus Schönblick – panorama apartments in Schöfweg. Holiday homes in the Bavarian Forest, book direct.",
   ogTitle: "SARFI Collection – Your Retreat in the Bavarian Forest",

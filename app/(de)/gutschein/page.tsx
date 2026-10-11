@@ -90,7 +90,7 @@ export default function GutscheinPage() {
             {faqs.map((f) => (
               <details key={f.q} className="group rounded-2xl bg-white border border-cream-200 px-5 py-4">
                 <summary className="font-body text-sm font-semibold text-forest-900 cursor-pointer list-none flex items-center justify-between">
-                  {f.q}
+                  <h3 className="font-body text-sm font-semibold">{f.q}</h3>
                   <span className="text-forest-400 transition-transform group-open:rotate-45 text-lg leading-none">+</span>
                 </summary>
                 <p className="font-body text-sm text-forest-600 leading-relaxed mt-3">{f.a}</p>

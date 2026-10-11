@@ -92,6 +92,15 @@ const DEFAULT_OG_IMAGE = {
 
 export const defaultOgImages = [DEFAULT_OG_IMAGE];
 
+/**
+ * Meta-Description mit optionalem Zusatz, solange sie unter der Länge bleibt,
+ * ab der Google kürzt (~160 Zeichen). Kurze Apartment-Beschreibungen bekommen
+ * so den Ort dazu, lange bleiben unverändert.
+ */
+export function descriptionMitZusatz(basis: string, zusatz: string, max = 160): string {
+  return (basis + zusatz).length <= max ? basis + zusatz : basis;
+}
+
 type PageMetadataInput = {
   /** Deutscher Pfad der Seite, z. B. "/haus28" (auch für die englische Fassung). */
   path: string;

@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { IconMenu, IconX, IconChevronDown } from "@/components/ui/Icons";
 import SarfiLogo from "@/components/ui/SarfiLogo";
-import { getDict, localizeHref, localizePath, stripLocale, switchLocalePath } from "@/lib/i18n";
+import { getDict, hasEnglishVersion, localizeHref, localizePath, stripLocale, switchLocalePath } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 export default function Header() {
@@ -38,7 +38,9 @@ export default function Header() {
     { label: t.nav.blog, href: "/blog" },
     { label: t.nav.ueberUns, href: "/ueber-uns" },
     { label: t.nav.kontakt, href: "/kontakt" },
-  ];
+    // Auf Englisch nur Seiten mit englischer Fassung; der deutsche Blog steht
+    // dort im Footer mit dem Hinweis „(in German)“.
+  ].filter((link) => locale === "de" || hasEnglishVersion(link.href));
 
   // Aktiv-Zustand anhand des Referenzpfads (ohne /en-Präfix) prüfen.
   const barePath = stripLocale(pathname);

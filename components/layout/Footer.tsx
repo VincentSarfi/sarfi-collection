@@ -2,7 +2,7 @@ import Link from "next/link";
 import { IconInstagram, IconMail, IconMapPin, IconPhone } from "@/components/ui/Icons";
 import SarfiLogo from "@/components/ui/SarfiLogo";
 import NewsletterForm from "@/components/layout/NewsletterForm";
-import { getDict, localizeHref, localizePath, type Locale } from "@/lib/i18n";
+import { getDict, hasEnglishVersion, localizeHref, localizePath, type Locale } from "@/lib/i18n";
 
 export default function Footer({ locale = "de" }: { locale?: Locale }) {
   const t = getDict(locale).common.footer;
@@ -129,6 +129,7 @@ export default function Footer({ locale = "de" }: { locale?: Locale }) {
                 <li key={link.href}>
                   <Link
                     href={localizeHref(link.href, locale)}
+                    hrefLang={locale === "en" && !hasEnglishVersion(link.href) ? "de" : undefined}
                     className="font-body text-sm text-cream-50/60 hover:text-cream-50 transition-colors"
                   >
                     {link.label}

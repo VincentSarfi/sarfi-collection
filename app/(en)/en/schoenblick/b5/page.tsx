@@ -4,7 +4,7 @@ import { schoenblick } from "@/data/properties";
 import { localizeProperty } from "@/data/properties.i18n";
 import { apartmentFaqs } from "@/data/apartmentFaqs";
 import { PROPERTY_CONFIGS } from "@/config/properties.config";
-import { absoluteUrl, pageMetadata } from "@/lib/seo";
+import { absoluteUrl, descriptionMitZusatz, pageMetadata } from "@/lib/seo";
 
 const apt = schoenblick.apartments!.b5;
 const aptEn = localizeProperty(apt, "en");
@@ -14,7 +14,7 @@ export const metadata: Metadata = pageMetadata({
   path: "/schoenblick/b5",
   locale: "en",
   title: `${apt.name} – Haus Schönblick, Schöfweg`,
-  description: `${aptEn.shortDescription} From ${apt.priceFrom} € / night.`,
+  description: descriptionMitZusatz(`${aptEn.shortDescription} From ${apt.priceFrom} € / night.`, " In Schöfweg, right by the Steinberg ski lift."),
   ogTitle: `${apt.name} – Haus Schönblick in the Bavarian Forest`,
   ogDescription: aptEn.shortDescription,
   image: { url: apt.images.hero, alt: apt.name },
