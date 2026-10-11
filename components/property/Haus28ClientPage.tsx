@@ -496,7 +496,7 @@ export default function Haus28ClientPage({ hostingYears }: { hostingYears: numbe
                   className="h-32 w-auto object-contain"
                 />
                 <p className="font-body text-sm text-cream-50/60">
-                  {formatScore(haus.bookingRating ?? 0, locale)}/10 · {haus.bookingReviewCount}{t.listing.reviewsPost}
+                  {formatScore(haus.bookingAwardScore ?? 0, locale)}/10
                 </p>
                 <p className="font-body text-xs text-cream-50/60 max-w-[180px]">
                   Traveller Review Awards 2026

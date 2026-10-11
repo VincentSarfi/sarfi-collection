@@ -63,6 +63,8 @@ export type PropertyData = {
   airbnbReviewCount: number;
   bookingRating?: number;
   bookingReviewCount?: number;
+  /** Wert, mit dem Booking.com den Traveller Review Award vergeben hat. */
+  bookingAwardScore?: number;
   fewoRating?: number;
   fewoReviewCount?: number;
   googleRating?: number;
@@ -119,6 +121,9 @@ export const haus28: PropertyData = {
   airbnbReviewCount: 25,
   bookingRating: 9.7,
   bookingReviewCount: 15,
+  // Traveller Review Award 2026 wurde für 9,9 vergeben – nur dieser Wert steht
+  // unter dem Award-Badge, nicht die aktuelle Bewertung.
+  bookingAwardScore: 9.9,
   fewoRating: 4.85,
   fewoReviewCount: 17,
   googleRating: 4.8,

@@ -48,10 +48,10 @@ export default function AwardsStrip({ locale = "de" }: { locale?: Locale }) {
               <div className="flex gap-0.5 text-gold-300">
                 {[1, 2, 3, 4, 5].map((i) => <IconStar key={i} size={12} filled />)}
               </div>
-              <span className="font-display text-xl text-cream-50">{formatScore(haus28.bookingRating ?? 0, locale)}/10</span>
+              <span className="font-display text-xl text-cream-50">{formatScore(haus28.bookingAwardScore ?? 0, locale)}/10</span>
             </div>
             <p className="font-body text-xs text-cream-50/50">
-              {t.bookingNote} · {haus28.bookingReviewCount} {t.reviewsSuffix}
+              {t.bookingNote}
             </p>
           </div>
         </div>
