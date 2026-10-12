@@ -15,7 +15,7 @@ export type BildFreigabe = {
   width: number;
   height: number;
   alt: { de: string; en: string };
-  /** Bildnachweis im Wortlaut der Freigabe */
+  /** Bildnachweis im Wortlaut der Freigabe; leer bei eigenen Fotos (kein Nachweis nötig) */
   credit: string;
 };
 
@@ -200,3 +200,30 @@ export const gasthausMaterial: Record<string, { bilder: BildFreigabe[]; freigabe
       "Josef Altmann (Inhaber Steinberglift) per WhatsApp am 12.10.2026: Fotos von steinberglift.de dürfen genutzt werden. Quelle: Gastronomie-Seite steinberglift.de.",
   },
 };
+
+/**
+ * Büchelstein-Rundwanderung: eigene Fotos von Vincent (Drachenschanze am
+ * Großen Büchelstein), 12.10.2026 für Website und Wanderung freigegeben.
+ */
+export const wanderungBilder: BildFreigabe[] = [
+  {
+    src: "/images/ausflugsziele/buechelstein/aussicht-felsen.webp",
+    width: 2000,
+    height: 1500,
+    alt: {
+      de: "Gipfelfelsen am Großen Büchelstein mit Blick über Felder, Wälder und Dörfer des Vorlands",
+      en: "Summit rocks on the Großer Büchelstein looking out over fields, forests and villages",
+    },
+    credit: "",
+  },
+  {
+    src: "/images/ausflugsziele/buechelstein/drachenschanze.webp",
+    width: 1024,
+    height: 768,
+    alt: {
+      de: "Holzrampe der Drachenschanze am Großen Büchelstein, dahinter weiter Blick ins Land unter Wolken",
+      en: "Wooden hang-glider ramp on the Großer Büchelstein with a wide view across the countryside under clouds",
+    },
+    credit: "",
+  },
+];

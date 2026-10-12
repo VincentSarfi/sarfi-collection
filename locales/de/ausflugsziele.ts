@@ -311,7 +311,7 @@ const ausflugsziele = {
       {
         name: "Großer Büchelstein (831 m)",
         detail:
-          "Der Hauptgipfel und Höhepunkt der Tour. Bei klarem Wetter reicht das Panorama über den Bayerischen Wald bis ins Donautal – bei Föhn sogar bis zu den Alpen. Moosige Felsplatten am Gipfel: feste Schuhe lohnen sich.",
+          "Der Hauptgipfel und Höhepunkt der Tour. Von der Drachenschanze am Gipfel reicht das Panorama bei klarem Wetter über den Bayerischen Wald bis ins Donautal – bei Föhn sogar bis zu den Alpen. Moosige Felsplatten am Gipfel: feste Schuhe lohnen sich.",
       },
       {
         name: "Kleiner Büchelstein",

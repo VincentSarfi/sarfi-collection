@@ -2,7 +2,7 @@ import { Fragment, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { IconArrowRight, IconMapPin } from "@/components/ui/Icons";
-import { ausflugszieleMaterial, gasthausMaterial } from "@/data/ausflugsziele-bildmaterial";
+import { ausflugszieleMaterial, gasthausMaterial, wanderungBilder } from "@/data/ausflugsziele-bildmaterial";
 import SteinbergliftWebcam from "@/components/pages/SteinbergliftWebcam";
 import DetailsHashOpener from "@/components/pages/DetailsHashOpener";
 import { driveMinutes, restaurants } from "@/data/surroundings";
@@ -53,7 +53,12 @@ export function ausflugszieleJsonLd(locale: Locale) {
         },
       };
     }),
-    { "@type": "TouristAttraction", name: t.hike.schemaName, description: t.hike.schemaDescription },
+    {
+      "@type": "TouristAttraction",
+      name: t.hike.schemaName,
+      description: t.hike.schemaDescription,
+      ...(wanderungBilder.length > 0 ? { image: wanderungBilder.map((b) => SITE + b.src) } : {}),
+    },
   ];
   return {
     "@context": "https://schema.org",
@@ -212,7 +217,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                 {tag}
               </span>
             ))}
-            {opts.foto && (
+            {opts.foto?.credit && (
               <span className="font-body text-[10px] text-forest-500">
                 {t.photoLabel}: {opts.foto.credit}
               </span>
@@ -327,8 +332,33 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
       HIKE_ID,
       "",
       <details id={HIKE_ID} className={karte}>
-        {kopf({ name: t.hike.heading, untertitel: t.hike.cardNote, tags: t.hike.cardTags, emoji: "🥾", dunkel: true })}
+        {kopf({
+          name: t.hike.heading,
+          untertitel: t.hike.cardNote,
+          tags: t.hike.cardTags,
+          emoji: "🥾",
+          dunkel: true,
+          foto: wanderungBilder[0]
+            ? { src: wanderungBilder[0].src, alt: wanderungBilder[0].alt[locale], credit: wanderungBilder[0].credit }
+            : undefined,
+        })}
         <div className={koerper}>
+          {wanderungBilder.length > 0 && (
+            <div className="relative flex gap-3 -mx-2.5 px-2.5 sm:-mx-5 sm:px-5 scroll-px-2.5 sm:scroll-px-5 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+              {wanderungBilder.map((b) => (
+                <figure key={b.src} className="m-0 flex-none w-[80%] sm:w-[48%] snap-start">
+                  <div className="relative aspect-video rounded-xl overflow-hidden bg-cream-100">
+                    <Image src={b.src} alt={b.alt[locale]} fill className="object-cover" sizes="(max-width: 640px) 80vw, 420px" />
+                  </div>
+                  {b.credit && (
+                    <figcaption className="mt-1 font-body text-[11px] text-forest-500 leading-snug">
+                      {t.photoLabel}: {b.credit}
+                    </figcaption>
+                  )}
+                </figure>
+              ))}
+            </div>
+          )}
           <p className="font-body text-[15px] text-forest-700 leading-relaxed">{t.hike.intro}</p>
           <dl className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3 rounded-xl bg-cream-50 p-4">
             {t.hike.stats.map((s) => (
