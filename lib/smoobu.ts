@@ -5,6 +5,7 @@
 
 import { smoobuHeaders } from './smoobu-auth'
 import { firmenblock, type Firmenangaben } from './firmenblock'
+import { hundeZeile } from './pets'
 
 const SMOOBU_BASE = 'https://login.smoobu.com/api'
 // Website-Buchungen laufen auf den Kanal „Webseite", NICHT auf „Direktbuchung".
@@ -48,6 +49,8 @@ export type BookingRequest = {
   language?: 'de' | 'en'
   /** „Firmenbuchung / Rechnung gewünscht": landet als Firmenblock in der Notiz. */
   business?: Firmenangaben
+  /** Mitgebuchte Hunde: landen als „Hunde: …"-Zeile in der Notiz. */
+  pets?: number
 }
 
 export type BookingResult = {
@@ -204,6 +207,15 @@ export async function verifyAvailability(
 // ─── Create Booking ───────────────────────────────────────────────────────────
 
 export async function createBooking(req: BookingRequest): Promise<BookingResult> {
+  // Die Notiz liest das Dashboard: die Hundezeile für die eigene Rechnungs-
+  // position (im Preis enthalten, nicht zusätzlich), den Firmenblock für den
+  // Empfänger. Beide Parser suchen zeilenweise und vertragen den anderen Block.
+  const nights = Math.round((Date.parse(req.checkOut) - Date.parse(req.checkIn)) / 86_400_000)
+  const notice = [
+    req.pets && req.pets > 0 ? hundeZeile(req.pets, nights) : '',
+    req.business ? firmenblock(req.business) : '',
+  ].filter(Boolean).join('\n\n')
+
   const body = {
     apartmentId: parseInt(req.apartmentId, 10),
     arrivalDate: req.checkIn,
@@ -226,8 +238,7 @@ export async function createBooking(req: BookingRequest): Promise<BookingResult>
     deposit: req.depositAmount ?? req.totalPrice,
     language: req.language ?? 'de',
     guestAppMessage: req.message ?? '',
-    // Firmenangaben für die Rechnungs-Engine des Dashboards (lib/firmenblock.ts).
-    ...(req.business ? { notice: firmenblock(req.business) } : {}),
+    ...(notice ? { notice } : {}),
     country: 'DE',
     address: { street: 'k.A.', zip: '00000', city: 'Deutschland', country: 'DE' },
   }

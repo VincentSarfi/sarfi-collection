@@ -19,6 +19,8 @@ export interface GuestConfirmationData {
   checkOut: string
   nights: number
   guests: number
+  /** Mitgebuchte Hunde (Aufpreis ist in totalPrice enthalten). */
+  pets?: number
   totalPrice: number
   depositAmount: number
   paymentOption?: "50" | "100"
@@ -76,6 +78,8 @@ export interface BookingNotificationData {
   checkOut: string
   nights: number
   guests: number
+  /** Mitgebuchte Hunde (Aufpreis ist in totalPrice enthalten). */
+  pets?: number
   // Preise
   totalPrice: number
   depositAmount: number
@@ -92,6 +96,12 @@ export interface BookingNotificationData {
   clientIp?: string
   clientCountry?: string
   userAgent?: string
+}
+
+/** „ + 1 Hund" für die Gästezahl in den Host-Mails, leer ohne Hunde. */
+function plusHunde(pets?: number): string {
+  if (!pets) return ''
+  return pets === 1 ? ' + 1 Hund' : ` + ${pets} Hunde`
 }
 
 const EN_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -194,7 +204,7 @@ export async function sendCheckoutStartedNotification(data: BookingNotificationD
                 <td width="50%" style="padding:0 0 12px 8px;">
                   <div style="background:#f5f0e8;border-radius:8px;padding:14px;">
                     <p style="margin:0 0 4px;font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.1em;">Gäste</p>
-                    <p style="margin:0;font-size:16px;font-weight:700;color:#1a2e1a;">${data.guests}</p>
+                    <p style="margin:0;font-size:16px;font-weight:700;color:#1a2e1a;">${data.guests}${plusHunde(data.pets)}</p>
                   </div>
                 </td>
               </tr>
@@ -365,7 +375,7 @@ export async function sendBookingNotification(data: BookingNotificationData) {
                 <td width="50%" style="padding:0 0 12px 8px;vertical-align:top;">
                   <div style="background:#f5f0e8;border-radius:8px;padding:14px;">
                     <p style="margin:0 0 4px;font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.1em;">Gäste</p>
-                    <p style="margin:0;font-size:16px;font-weight:700;color:#1a2e1a;">${data.guests}</p>
+                    <p style="margin:0;font-size:16px;font-weight:700;color:#1a2e1a;">${data.guests}${plusHunde(data.pets)}</p>
                   </div>
                 </td>
               </tr>
@@ -452,7 +462,7 @@ Unterkunft: ${data.propertyName}
 Anreise:    ${formatDate(data.checkIn)}
 Abreise:    ${formatDate(data.checkOut)}
 Nächte:     ${nights}
-Gäste:      ${data.guests}
+Gäste:      ${data.guests}${plusHunde(data.pets)}
 
 PREISE
 Gesamt:     ${total.toLocaleString('de-DE')} €
@@ -751,9 +761,12 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   const nightsLabel = en
     ? (data.nights === 1 ? '1 night' : `${data.nights} nights`)
     : (data.nights === 1 ? '1 Nacht' : `${data.nights} Nächte`)
-  const guestsLabel = en
+  const petsLabel = !data.pets ? ''
+    : en ? ` · ${data.pets === 1 ? '1 dog' : `${data.pets} dogs`}`
+    : ` · ${data.pets === 1 ? '1 Hund' : `${data.pets} Hunde`}`
+  const guestsLabel = (en
     ? (data.guests === 1 ? '1 guest' : `${data.guests} guests`)
-    : (data.guests === 1 ? '1 Gast' : `${data.guests} Gäste`)
+    : (data.guests === 1 ? '1 Gast' : `${data.guests} Gäste`)) + petsLabel
   const invoiceUrl  = data.smoobuBookingId ? invoiceLink(data.smoobuBookingId) : null
 
   // Escape user-controlled fields before HTML interpolation

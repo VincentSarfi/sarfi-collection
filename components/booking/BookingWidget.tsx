@@ -11,6 +11,7 @@ import type { AvailabilityMap } from "@/lib/smoobu"
 import type { NightRate } from "@/lib/pricelabs"
 import { getDict, localizeHref, type Locale } from "@/lib/i18n"
 import { useLocale } from "@/lib/i18n/LocaleProvider"
+import { PET_MAX, petTotal } from "@/lib/pets"
 
 type BookingDict = ReturnType<typeof getDict>["booking"]
 
@@ -42,6 +43,8 @@ export interface BookingWidgetProps {
   hideMobileBar?: boolean
   /** Render as a sticky sidebar card (calendar opens inline, no page scroll) */
   sidebarMode?: boolean
+  /** Hunde mitbuchbar (config.petsAllowed). Der Server prüft dasselbe Flag. */
+  petsAllowed?: boolean
 }
 
 type Step = "dates" | "form" | "payment" | "confirmed" | "error"
@@ -73,6 +76,8 @@ interface PriceBreakdown {
   nights: number
   nightlyTotal: number
   extraPersonTotal: number
+  petTotal: number
+  pets: number
   cleaningFee: number
   total: number
   avgNightly: number
@@ -90,6 +95,7 @@ function calcPrice(
   guests: number,
   baseOccupancy: number,
   extraPersonFee: number,
+  pets: number,
 ): PriceBreakdown {
   const nights = Math.round(
     (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24),
@@ -111,13 +117,16 @@ function calcPrice(
 
   const extraGuests = Math.max(0, guests - baseOccupancy)
   const extraPersonTotal = extraGuests * extraPersonFee * nights
+  const hundeTotal = petTotal(pets, nights)
 
   return {
     nights,
     nightlyTotal: Math.round(nightlyTotal),
     extraPersonTotal,
+    petTotal: hundeTotal,
+    pets,
     cleaningFee,
-    total: Math.round(nightlyTotal + extraPersonTotal + cleaningFee),
+    total: Math.round(nightlyTotal + extraPersonTotal + hundeTotal + cleaningFee),
     avgNightly: Math.round(nightlyTotal / nights),
     extraGuests,
   }
@@ -193,6 +202,41 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   required?: boolean
 }
 
+// ─── Hunde-Zähler ─────────────────────────────────────────────────────────────
+// Nur bei petsAllowed. "dropdown" sitzt im Gäste-Popover (Sidebar, StickyPanel),
+// "inline" unter dem Kalender auf Mobil.
+
+function DogsRow({ pets, setPets, disabled, variant }: {
+  pets: number
+  setPets: (n: number) => void
+  disabled?: boolean
+  variant: "dropdown" | "inline"
+}) {
+  const t = getDict(useLocale()).booking
+  const btn = variant === "dropdown"
+    ? "w-8 h-8 rounded-full border border-cream-300 flex items-center justify-center text-forest-600 hover:border-forest-500 disabled:opacity-30 transition-colors"
+    : "w-8 h-8 flex items-center justify-center rounded-full border border-forest-300 text-forest-700 hover:bg-forest-100 disabled:opacity-30 transition-colors"
+  return (
+    <div className={variant === "dropdown"
+      ? "flex items-center justify-between mt-4 pt-4 border-t border-cream-100"
+      : "flex items-center justify-between bg-cream-100 rounded-2xl px-4 py-3"}>
+      <div>
+        <p className={variant === "dropdown" ? "font-body text-sm font-medium text-forest-800" : "font-body text-sm text-forest-700"}>{t.labels.dogs}</p>
+        <p className="font-body text-xs text-forest-400">{t.labels.dogsHint}</p>
+      </div>
+      <div className="flex items-center gap-3">
+        <button type="button" aria-label={t.labels.ariaFewerDogs} onClick={() => setPets(Math.max(0, pets - 1))} disabled={disabled || pets <= 0} className={btn}>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+        </button>
+        <span className="font-body text-base font-semibold text-forest-900 w-4 text-center">{pets}</span>
+        <button type="button" aria-label={t.labels.ariaMoreDogs} onClick={() => setPets(Math.min(PET_MAX, pets + 1))} disabled={disabled || pets >= PET_MAX} className={btn}>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 3v8M3 7h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+        </button>
+      </div>
+    </div>
+  )
+}
+
 function Input({ label, error, required, ...props }: InputProps) {
   return (
     <div>
@@ -242,6 +286,7 @@ export default function BookingWidget({
   propertyHref,
   hideMobileBar = false,
   sidebarMode = false,
+  petsAllowed = false,
 }: BookingWidgetProps) {
   // ── Locale (Texte + Zahlen-/Datumsformatierung) ──
   const locale = useLocale()
@@ -261,6 +306,7 @@ export default function BookingWidget({
   const [checkOut, setCheckOut] = useState<Date | null>(null)
   const [selectionStep, setSelectionStep] = useState<SelectionStep>("checkin")
   const [guests, setGuests] = useState(2)
+  const [pets, setPets] = useState(0)
   const [showGuestDropdown, setShowGuestDropdown] = useState(false)
   const [showCalendarOverlay, setShowCalendarOverlay] = useState(false)
 
@@ -434,8 +480,8 @@ export default function BookingWidget({
 
   const priceBreakdown = useMemo<PriceBreakdown | null>(() => {
     if (!checkIn || !checkOut) return null
-    return calcPrice(checkIn, checkOut, priceMap, priceFrom, cleaningFee, guests, baseOccupancy, extraPersonFee)
-  }, [checkIn, checkOut, priceMap, priceFrom, cleaningFee, guests, baseOccupancy, extraPersonFee])
+    return calcPrice(checkIn, checkOut, priceMap, priceFrom, cleaningFee, guests, baseOccupancy, extraPersonFee, pets)
+  }, [checkIn, checkOut, priceMap, priceFrom, cleaningFee, guests, baseOccupancy, extraPersonFee, pets])
 
   // Effective display price: minimum PriceLabs price over the fetched year, else priceFrom
   const effectivePrice = useMemo(() => {
@@ -514,6 +560,7 @@ export default function BookingWidget({
           checkIn: toDateKey(checkIn),
           checkOut: toDateKey(checkOut),
           guests,
+          pets,
           firstName: form.firstName.trim(),
           lastName: form.lastName.trim(),
           email: form.email.trim().toLowerCase(),
@@ -673,7 +720,7 @@ export default function BookingWidget({
               </div>
               <div className="flex justify-between font-body text-sm">
                 <span className="text-forest-500">{t.labels.guests}</span>
-                <span className="font-medium text-forest-900">{guests}</span>
+                <span className="font-medium text-forest-900">{guests}{pets > 0 && ` · ${t.labels.dogCount(pets)}`}</span>
               </div>
               {priceBreakdown && (
                 <div className="flex justify-between font-body text-sm border-t border-cream-200 pt-2 mt-2">
@@ -899,7 +946,7 @@ export default function BookingWidget({
               className="w-full rounded-xl border-2 border-cream-200 hover:border-forest-300 px-3 py-2.5 flex items-center justify-between transition-colors">
               <div className="text-left">
                 <p className="font-body text-[10px] text-forest-400 uppercase tracking-wider mb-0.5">{t.labels.guests}</p>
-                <p className="font-body text-sm text-forest-900 font-medium">{t.labels.guestCount(guests)}</p>
+                <p className="font-body text-sm text-forest-900 font-medium">{t.labels.guestCount(guests)}{pets > 0 && ` · ${t.labels.dogCount(pets)}`}</p>
               </div>
               <svg className={`w-4 h-4 text-forest-500 transition-transform ${showGuestDropdown ? "rotate-180" : ""}`} fill="none" viewBox="0 0 16 16">
                 <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -926,6 +973,7 @@ export default function BookingWidget({
                       </button>
                     </div>
                   </div>
+                  {petsAllowed && <DogsRow pets={pets} setPets={setPets} disabled={step === "payment"} variant="dropdown" />}
                   <button type="button" onClick={() => setShowGuestDropdown(false)}
                     className="mt-3 text-xs font-body text-forest-500 underline hover:text-forest-800 w-full text-right">{t.labels.close}</button>
                 </motion.div>
@@ -963,6 +1011,12 @@ export default function BookingWidget({
                   <div className="flex justify-between font-body text-sm text-forest-600">
                     <span>{t.labels.extraPersonFee}</span>
                     <span>+{priceBreakdown.extraPersonTotal} €</span>
+                  </div>
+                )}
+                {priceBreakdown.petTotal > 0 && (
+                  <div className="flex justify-between font-body text-sm text-forest-600">
+                    <span>{t.labels.dogFee(priceBreakdown.pets, priceBreakdown.nights)}</span>
+                    <span>+{priceBreakdown.petTotal} €</span>
                   </div>
                 )}
                 <div className="flex justify-between font-body text-sm text-forest-600">
@@ -1179,6 +1233,9 @@ export default function BookingWidget({
                       </div>
                     )}
 
+                    {/* Hunde – auch bei fester Mobil-Leiste hier, dort ist kein Platz */}
+                    {petsAllowed && <DogsRow pets={pets} setPets={setPets} variant="inline" />}
+
                     {/* Price breakdown – visible once dates are selected */}
                     {checkIn && checkOut && priceBreakdown && (
                       <div className="bg-white rounded-2xl border border-cream-200 px-4 py-3 space-y-1.5">
@@ -1190,6 +1247,12 @@ export default function BookingWidget({
                           <div className="flex justify-between font-body text-sm text-gold-700">
                             <span>{t.widget.extraPersShort(priceBreakdown.extraGuests)} × {extraPersonFee} € × {priceBreakdown.nights} {t.labels.nightsPlural}</span>
                             <span>+{priceBreakdown.extraPersonTotal} €</span>
+                          </div>
+                        )}
+                        {priceBreakdown.petTotal > 0 && (
+                          <div className="flex justify-between font-body text-sm text-forest-700">
+                            <span>{t.labels.dogFee(priceBreakdown.pets, priceBreakdown.nights)}</span>
+                            <span>+{priceBreakdown.petTotal} €</span>
                           </div>
                         )}
                         <div className="flex justify-between font-body text-sm text-forest-700">
@@ -1504,6 +1567,7 @@ export default function BookingWidget({
                   checkOut={checkOut}
                   propertyName={propertyName}
                   guests={guests}
+                  pets={pets}
                   paymentOption={paymentOption}
                   onSuccess={handlePaymentSuccess}
                   onError={handlePaymentError}
@@ -1527,6 +1591,9 @@ export default function BookingWidget({
                 showGuestDropdown={showGuestDropdown}
                 setShowGuestDropdown={setShowGuestDropdown}
                 setGuests={setGuests}
+                pets={pets}
+                setPets={setPets}
+                petsAllowed={petsAllowed}
                 priceBreakdown={priceBreakdown}
                 extraPersonFee={extraPersonFee}
                 step={step}
@@ -1642,6 +1709,9 @@ interface StickyPanelProps {
   showGuestDropdown: boolean
   setShowGuestDropdown: (v: boolean) => void
   setGuests: (n: number) => void
+  pets: number
+  setPets: (n: number) => void
+  petsAllowed: boolean
   priceBreakdown: PriceBreakdown | null
   extraPersonFee: number
   step: Step
@@ -1659,6 +1729,9 @@ function StickyPanel({
   showGuestDropdown,
   setShowGuestDropdown,
   setGuests,
+  pets,
+  setPets,
+  petsAllowed,
   priceBreakdown,
   extraPersonFee,
   step,
@@ -1742,7 +1815,7 @@ function StickyPanel({
           >
             <div className="text-left">
               <p className="font-body text-[10px] text-forest-400 uppercase tracking-wider mb-0.5">{t.labels.guests}</p>
-              <p className="font-body text-sm text-forest-900 font-medium">{t.labels.guestCount(guests)}</p>
+              <p className="font-body text-sm text-forest-900 font-medium">{t.labels.guestCount(guests)}{pets > 0 && ` · ${t.labels.dogCount(pets)}`}</p>
             </div>
             <svg
               className={`w-4 h-4 text-forest-500 transition-transform ${showGuestDropdown ? "rotate-180" : ""}`}
@@ -1787,6 +1860,7 @@ function StickyPanel({
                     </button>
                   </div>
                 </div>
+                {petsAllowed && <DogsRow pets={pets} setPets={setPets} disabled={step === "payment"} variant="dropdown" />}
                 <button
                   type="button"
                   onClick={() => setShowGuestDropdown(false)}
@@ -1839,6 +1913,12 @@ function StickyPanel({
                       {t.labels.extraPersonFee} ({priceBreakdown.extraGuests} {t.labels.personWord(priceBreakdown.extraGuests)} × {extraPersonFee} € × {priceBreakdown.nights} {t.labels.nightWord(priceBreakdown.nights)})
                     </span>
                     <span>{priceBreakdown.extraPersonTotal.toLocaleString(nf)} €</span>
+                  </div>
+                )}
+                {priceBreakdown.petTotal > 0 && (
+                  <div className="flex justify-between font-body text-sm text-forest-600">
+                    <span>{t.labels.dogFee(priceBreakdown.pets, priceBreakdown.nights)}</span>
+                    <span>{priceBreakdown.petTotal.toLocaleString(nf)} €</span>
                   </div>
                 )}
                 <div className="flex justify-between font-body text-sm text-forest-600">

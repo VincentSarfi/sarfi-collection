@@ -57,6 +57,8 @@ export async function POST(request: NextRequest) {
 
     // Buchungssprache des Gasts (aus payment-intent-Metadata; Alt-Buchungen: de)
     const guestLocale = toMailLocale(m.locale)
+    // Hunde (Alt-PIs ohne Feld: 0). Der Preis enthält den Aufpreis bereits.
+    const pets = parseInt(m.pets ?? '0', 10) || 0
 
     try {
       const result = await createOrAdoptBooking({
@@ -64,6 +66,7 @@ export async function POST(request: NextRequest) {
         checkIn:     m.checkIn,
         checkOut:    m.checkOut,
         guests:      parseInt(m.guests, 10),
+        pets,
         firstName:   m.firstName,
         lastName:    m.lastName,
         email:       m.email,
@@ -132,6 +135,7 @@ export async function POST(request: NextRequest) {
           checkOut:      m.checkOut,
           nights,
           guests:        parseInt(m.guests, 10),
+          pets,
           totalPrice:    parseFloat(m.totalPrice),
           depositAmount: parseFloat(m.depositAmount),
           paymentOption: (m.paymentOption as "50" | "100") ?? "50",
@@ -148,6 +152,7 @@ export async function POST(request: NextRequest) {
           checkOut:           m.checkOut,
           nights,
           guests:             parseInt(m.guests, 10),
+          pets,
           totalPrice:         parseFloat(m.totalPrice),
           depositAmount:      parseFloat(m.depositAmount),
           paymentOption:      (m.paymentOption as "50" | "100") ?? "50",
@@ -173,6 +178,7 @@ export async function POST(request: NextRequest) {
           checkOut:      m.checkOut,
           nights:        0,
           guests:        parseInt(m.guests, 10),
+          pets,
           totalPrice:    parseFloat(m.totalPrice),
           depositAmount: parseFloat(m.depositAmount),
           paymentOption: (m.paymentOption as "50" | "100") ?? "50",

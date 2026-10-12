@@ -73,6 +73,7 @@ export default function Haus28BuchenContent({ locale }: { locale: Locale }) {
         priceFrom={config.priceFrom}
         baseOccupancy={config.baseOccupancy}
         extraPersonFee={config.extraPersonFee}
+        petsAllowed={config.petsAllowed}
         breadcrumb={config.breadcrumb}
         propertyHref={config.propertyHref}
       />

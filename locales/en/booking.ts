@@ -1,7 +1,7 @@
 // Booking flow: BookingWidget, BookingCalendar, PaymentStep,
 // ApartmentSelector, BookingSidebarCard + booking pages.
 // Must mirror the structure of locales/de/booking.ts exactly.
-import { restaurantsAnswer } from "@/data/surroundings";
+import { PET_FEE_PER_NIGHT, PET_MAX, restaurantsAnswer } from "@/data/surroundings";
 
 
 // English overlay for the German booking-header subtitles from
@@ -63,6 +63,13 @@ const booking = {
     maxPersons: (n: number) => `max. ${n} guests`,
     ariaFewerGuests: "Fewer guests",
     ariaMoreGuests: "More guests",
+    dogs: "Dogs",
+    dogsHint: `€${PET_FEE_PER_NIGHT} per dog/night · max. ${PET_MAX}`,
+    dogCount: (n: number) => (n === 1 ? "1 dog" : `${n} dogs`),
+    dogFee: (n: number, nights: number) =>
+      `${n === 1 ? "1 dog" : `${n} dogs`} × €${PET_FEE_PER_NIGHT} × ${nights} ${nights === 1 ? "night" : "nights"}`,
+    ariaFewerDogs: "Fewer dogs",
+    ariaMoreDogs: "More dogs",
   },
 
   // ── Trust badges ──────────────────────────────────────────────────────────

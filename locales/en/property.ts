@@ -1,7 +1,7 @@
 // Property pages (HAUS28, Haus Schönblick, apartments): UI copy for the property components.
 // Data copy (descriptions, FAQs, amenities, alt texts) comes from data/properties.i18n.ts.
 
-import { PET_FEE_PER_NIGHT, ca, driveMinutes as m } from "@/data/surroundings";
+import { PET_FEE_PER_NIGHT, PET_MAX, ca, driveMinutes as m } from "@/data/surroundings";
 
 // Surroundings of Haus Schönblick – same list on the house and the apartment pages.
 const schoenblickAttractions = [
@@ -255,7 +255,8 @@ const property = {
     locationDescription:
       `Haus Schönblick sits in Langfurth near Schöfweg, right by the Steinberg ski lift in the Bavarian Forest. Hiking trails start right outside the house, and two inns are just a few minutes away. Grafenau is about ${m.grafenau.schoenblick} minutes and the national park about ${m.nationalparkLusen.schoenblick} minutes by car.`,
     attractions: schoenblickAttractions,
-    rulePets: `Dogs on request (€${PET_FEE_PER_NIGHT} per night)`,
+    rulePets: `Dogs welcome, bookable directly (€${PET_FEE_PER_NIGHT} per dog per night, max. ${PET_MAX})`,
+    ruleNoPets: "No pets",
     cancellationTitle: "Cancellation & access",
     cancellationTextPre: "Free cancellation up to 30 days before arrival. After that, our ",
     cancellationLink: "cancellation policy",

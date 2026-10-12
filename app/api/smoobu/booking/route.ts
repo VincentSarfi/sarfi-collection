@@ -88,6 +88,8 @@ export async function POST(request: NextRequest) {
     }
     // Buchungssprache aus den verifizierten Payment-Metadaten (nie vom Client)
     req.language = m.locale === 'en' ? 'en' : 'de'
+    // Hunde ebenso aus den Metadaten – der verifizierte Preis enthält sie schon
+    req.pets = parseInt(m.pets ?? '0', 10) || 0
   } catch (err) {
     console.error('[booking] Stripe-Verifikation fehlgeschlagen:', err)
     return NextResponse.json({ error: 'Zahlung konnte nicht verifiziert werden' }, { status: 402 })

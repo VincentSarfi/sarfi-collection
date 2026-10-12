@@ -8,6 +8,7 @@ import { findConfigBySmoobuId, computeExpectedPrice } from '@/lib/pricing'
 import { verifyTurnstile } from '@/lib/turnstile'
 import { bookingWindowEnd, depositAllowed } from '@/lib/booking-window'
 import { firmenangabenAus } from '@/lib/firmenblock'
+import { parsePets } from '@/lib/pets'
 
 
 export interface CreatePaymentIntentRequest {
@@ -16,6 +17,7 @@ export interface CreatePaymentIntentRequest {
   checkIn: string
   checkOut: string
   guests: number
+  pets?: number            // Hunde (0–PET_MAX), nur wo config.petsAllowed
   firstName: string
   lastName: string
   email: string
@@ -121,9 +123,17 @@ export async function POST(request: NextRequest) {
   if (guests < 1 || guests > config.maxGuests) {
     return NextResponse.json({ error: 'Ungültige Gästeanzahl' }, { status: 422 })
   }
+  // Ob Hunde erlaubt sind, entscheidet die Konfiguration, nie der Client.
+  const pets = parsePets(body.pets, config.petsAllowed)
+  if (pets === null) {
+    return NextResponse.json(
+      { error: config.petsAllowed ? 'Ungültige Anzahl Hunde' : 'In dieser Unterkunft sind leider keine Hunde erlaubt' },
+      { status: 422 },
+    )
+  }
 
   // ── Server-side price verification (never trust the client total) ──
-  const priceCheck = await computeExpectedPrice(config, apartmentId, checkIn, checkOut, guests)
+  const priceCheck = await computeExpectedPrice(config, apartmentId, checkIn, checkOut, guests, pets)
   if (priceCheck.nights < priceCheck.minStayRequired) {
     return NextResponse.json(
       { error: `Der Mindestaufenthalt für diesen Zeitraum beträgt ${priceCheck.minStayRequired} Nächte.` },
@@ -134,7 +144,7 @@ export async function POST(request: NextRequest) {
     console.warn(
       `[payment-intent] Preismanipulation abgelehnt: client=${totalPrice} < min=${priceCheck.minAcceptable} ` +
       `(erwartet=${priceCheck.expectedTotal}, PriceLabs-Raten=${priceCheck.usedDynamicRates}) ` +
-      `für ${apartmentId} ${checkIn}–${checkOut} guests=${guests}`,
+      `für ${apartmentId} ${checkIn}–${checkOut} guests=${guests} pets=${pets}`,
     )
     return NextResponse.json(
       { error: 'Preis konnte nicht verifiziert werden. Bitte lade die Seite neu und versuche es erneut.' },
@@ -185,6 +195,8 @@ export async function POST(request: NextRequest) {
         checkIn,
         checkOut,
         guests: String(guests),
+        // Webhook → Smoobu-Notiz „Hunde: …" → eigene Rechnungsposition
+        pets: String(pets),
         firstName,
         lastName,
         email,
@@ -220,6 +232,7 @@ export async function POST(request: NextRequest) {
       checkOut,
       nights,
       guests,
+      pets,
       totalPrice: serverTotal,
       depositAmount:   depositEur,
       paymentOption:   anzahlungErlaubt ? (paymentOption ?? "50") : "100",

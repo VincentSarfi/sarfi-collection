@@ -3,7 +3,7 @@
 // Alle Strings zeichengetreu aus den Komponenten übernommen –
 // die deutschen Seiten müssen exakt denselben Text zeigen wie zuvor.
 
-import { restaurantsAnswer } from "@/data/surroundings";
+import { PET_FEE_PER_NIGHT, PET_MAX, restaurantsAnswer } from "@/data/surroundings";
 
 const booking = {
   // ── Formular-Validierung (BookingWidget) ──────────────────────────────────
@@ -56,6 +56,13 @@ const booking = {
     maxPersons: (n: number) => `max. ${n} Personen`,
     ariaFewerGuests: "Weniger Gäste",
     ariaMoreGuests: "Mehr Gäste",
+    dogs: "Hunde",
+    dogsHint: `${PET_FEE_PER_NIGHT} € pro Hund/Nacht · max. ${PET_MAX}`,
+    dogCount: (n: number) => (n === 1 ? "1 Hund" : `${n} Hunde`),
+    dogFee: (n: number, nights: number) =>
+      `${n === 1 ? "1 Hund" : `${n} Hunde`} × ${PET_FEE_PER_NIGHT} € × ${nights} ${nights === 1 ? "Nacht" : "Nächte"}`,
+    ariaFewerDogs: "Weniger Hunde",
+    ariaMoreDogs: "Mehr Hunde",
   },
 
   // ── Trust-Badges ──────────────────────────────────────────────────────────

@@ -268,7 +268,7 @@ const schoenblickFaqsEn: FaqTranslation[] = [
   {
     de: "Sind Haustiere erlaubt?",
     question: "Are pets allowed?",
-    answer: `Yes, on request: please check with us before booking. Up to ${PET_MAX} dogs are allowed, at a surcharge of €${PET_FEE_PER_NIGHT} per dog per night.`,
+    answer: `Yes, in apartments A2, B7 and B8: you can add up to ${PET_MAX} dogs directly when booking, at a surcharge of €${PET_FEE_PER_NIGHT} per dog per night. B5 and B6 have real-wood parquet floors, so pets are unfortunately not allowed there.`,
   },
   {
     de: "Wie komme ich zum Haus Schönblick?",
@@ -395,7 +395,7 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
         de: "Sind Haustiere im HAUS28 erlaubt?",
         question: "Are pets allowed at HAUS28?",
         answer:
-          "Unfortunately, pets are not allowed at HAUS28. If you'd like to travel with your dog: pets are welcome at Haus Schönblick on request.",
+          "Unfortunately, pets are not allowed at HAUS28. If you'd like to travel with your dog: at Haus Schönblick you can add dogs directly when booking apartments A2, B7 and B8.",
       },
       {
         de: "Wie komme ich zum HAUS28?",

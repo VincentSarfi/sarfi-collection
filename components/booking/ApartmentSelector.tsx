@@ -211,6 +211,7 @@ export default function ApartmentSelector({ apartments }: ApartmentSelectorProps
             priceFrom={selectedOption.config.priceFrom}
             baseOccupancy={selectedOption.config.baseOccupancy}
             extraPersonFee={selectedOption.config.extraPersonFee}
+            petsAllowed={selectedOption.config.petsAllowed}
             breadcrumb={selectedOption.config.breadcrumb}
             propertyHref={selectedOption.config.propertyHref}
             hideMobileBar

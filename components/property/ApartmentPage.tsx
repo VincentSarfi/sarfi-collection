@@ -382,6 +382,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
                 priceFrom={config.priceFrom}
                 baseOccupancy={config.baseOccupancy}
                 extraPersonFee={config.extraPersonFee}
+                petsAllowed={config.petsAllowed}
                 breadcrumb={config.breadcrumb}
                 propertyHref={config.propertyHref}
                 sidebarMode={true}
@@ -417,7 +418,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
                 <ul className="space-y-1.5 font-body text-sm text-forest-600">
                   <li>{t.listing.ruleCheckIn}</li>
                   <li>{t.listing.ruleMaxGuestsPre}{apartment.maxGuests}{t.listing.ruleMaxGuestsPost}</li>
-                  <li>{t.apartment.rulePets}</li>
+                  <li>{config.petsAllowed ? t.apartment.rulePets : t.apartment.ruleNoPets}</li>
                   <li>{t.listing.ruleNoSmoking}</li>
                 </ul>
               </div>
@@ -527,6 +528,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
                 priceFrom={config.priceFrom}
                 baseOccupancy={config.baseOccupancy}
                 extraPersonFee={config.extraPersonFee}
+                petsAllowed={config.petsAllowed}
                 breadcrumb={config.breadcrumb}
                 propertyHref={config.propertyHref}
                 hideMobileBar={true}

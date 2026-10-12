@@ -78,7 +78,7 @@ const kontakt = {
       },
       {
         q: "Are pets welcome?",
-        a: `Not at HAUS28, unfortunately. At Haus Schönblick, up to ${PET_MAX} dogs are welcome on request – the surcharge is €${PET_FEE_PER_NIGHT} per dog per night. Please check with us before booking.`,
+        a: `Not at HAUS28, unfortunately. At Haus Schönblick you can add up to ${PET_MAX} dogs directly when booking apartments A2, B7 and B8 – the surcharge is €${PET_FEE_PER_NIGHT} per dog per night. B5 and B6 (real-wood parquet) don't allow pets.`,
       },
     ],
   },

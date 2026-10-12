@@ -79,7 +79,7 @@ const kontakt = {
       },
       {
         q: "Sind Haustiere willkommen?",
-        a: `Im HAUS28 leider nicht. Im Haus Schönblick sind bis zu ${PET_MAX} Hunde auf Anfrage willkommen – der Aufpreis beträgt ${PET_FEE_PER_NIGHT} € pro Hund und Nacht. Bitte frag vor der Buchung kurz bei uns an.`,
+        a: `Im HAUS28 leider nicht. Im Haus Schönblick kannst du in den Apartments A2, B7 und B8 bis zu ${PET_MAX} Hunde direkt mitbuchen – der Aufpreis beträgt ${PET_FEE_PER_NIGHT} € pro Hund und Nacht. In B5 und B6 (Echtholzparkett) sind keine Haustiere erlaubt.`,
       },
     ],
   },

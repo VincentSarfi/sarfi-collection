@@ -214,6 +214,7 @@ interface PaymentStepProps {
   checkOut: Date | null
   propertyName: string
   guests: number
+  pets?: number
   paymentOption: "50" | "100"
   onSuccess: (paymentIntentId: string) => void
   onError: (msg: string) => void
@@ -229,6 +230,7 @@ export default function PaymentStep({
   checkOut,
   propertyName,
   guests,
+  pets = 0,
   paymentOption,
   onSuccess,
   onError,
@@ -275,7 +277,7 @@ export default function PaymentStep({
           )}
           <div className="flex justify-between font-body text-sm">
             <span className="text-forest-500">{t.labels.guests}</span>
-            <span className="font-medium text-forest-900">{guests}</span>
+            <span className="font-medium text-forest-900">{guests}{pets > 0 && ` · ${t.labels.dogCount(pets)}`}</span>
           </div>
           <div className="border-t border-cream-200 pt-2 mt-1 space-y-1">
             <div className="flex justify-between font-body text-sm text-forest-600">

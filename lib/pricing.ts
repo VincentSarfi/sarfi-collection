@@ -12,6 +12,7 @@ import {
   type PropertyBookingConfig,
 } from '@/config/properties.config'
 import { getPricingMap } from '@/lib/pricelabs'
+import { petTotal } from '@/lib/pets'
 
 function addDays(dateStr: string, n: number): string {
   const d = new Date(dateStr)
@@ -70,11 +71,14 @@ export type PriceCheck = {
   /** Required minimum stay in nights (config minStay, raised by the dynamic
    *  PriceLabs min_stay of the check-in day when available). */
   minStayRequired: number
+  /** Hundeaufpreis (EUR), in expectedTotal und floor enthalten. */
+  petTotal: number
 }
 
 /**
  * Recompute the expected price for a stay. Mirrors the client-side calcPrice:
- *   total = sum(nightly) + extraGuests * extraPersonFee * nights + cleaningFee
+ *   total = sum(nightly) + extraGuests * extraPersonFee * nights
+ *           + pets * PET_FEE_PER_NIGHT * nights + cleaningFee
  *
  * The accepted lower bound is derived from `expectedTotal` (PRICE_TOLERANCE).
  * Only when PriceLabs delivers no rate at all does `floor` step in, and then as
@@ -89,6 +93,7 @@ export async function computeExpectedPrice(
   checkIn: string,
   checkOut: string,
   guests: number,
+  pets = 0,
 ): Promise<PriceCheck> {
   const nights = Math.max(1, daysBetween(checkIn, checkOut).length)
 
@@ -119,12 +124,14 @@ export async function computeExpectedPrice(
 
   const extraGuests = Math.max(0, guests - config.baseOccupancy)
   const extraPersonTotal = extraGuests * config.extraPersonFee * nights
+  const hundeTotal = petTotal(pets, nights)
 
-  const expectedTotal = Math.round(nightlyTotal + extraPersonTotal + config.cleaningFee)
+  const expectedTotal = Math.round(nightlyTotal + extraPersonTotal + hundeTotal + config.cleaningFee)
   const tolerated = Math.round(expectedTotal * (1 - PRICE_TOLERANCE))
   const floor =
     Math.round(config.priceFrom * FALLBACK_FLOOR_FACTOR) * nights +
     extraPersonTotal +
+    hundeTotal +
     config.cleaningFee
 
   // With dynamic rates the expected total is authoritative. Without them it is
@@ -133,5 +140,5 @@ export async function computeExpectedPrice(
   const usedDynamicRates = daysWithRate > 0
   const minAcceptable = usedDynamicRates ? tolerated : Math.min(tolerated, floor)
 
-  return { expectedTotal, floor, minAcceptable, usedDynamicRates, nights, minStayRequired }
+  return { expectedTotal, floor, minAcceptable, usedDynamicRates, nights, minStayRequired, petTotal: hundeTotal }
 }

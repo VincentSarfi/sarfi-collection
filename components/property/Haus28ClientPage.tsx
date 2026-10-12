@@ -446,6 +446,7 @@ export default function Haus28ClientPage({ hostingYears }: { hostingYears: numbe
                 priceFrom={config.priceFrom}
                 baseOccupancy={config.baseOccupancy}
                 extraPersonFee={config.extraPersonFee}
+                petsAllowed={config.petsAllowed}
                 breadcrumb={config.breadcrumb}
                 propertyHref={config.propertyHref}
                 sidebarMode={true}
@@ -714,6 +715,7 @@ export default function Haus28ClientPage({ hostingYears }: { hostingYears: numbe
                 priceFrom={config.priceFrom}
                 baseOccupancy={config.baseOccupancy}
                 extraPersonFee={config.extraPersonFee}
+                petsAllowed={config.petsAllowed}
                 breadcrumb={config.breadcrumb}
                 propertyHref={config.propertyHref}
                 hideMobileBar={true}

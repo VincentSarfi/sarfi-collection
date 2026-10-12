@@ -55,7 +55,8 @@ SARFI Collection vermietet zwei Ferienunterkünfte im Bayerischen Wald (Niederba
 
 Kosten und Regeln (beide Häuser): Zum Übernachtungspreis kommt nur eine einmalige Endreinigung pro
 Aufenthalt, die bei der Buchung angezeigt wird. Keine Kurtaxe. Kostenlose Parkplätze. Haustiere im
-HAUS28 nicht erlaubt, im Haus Schönblick auf Anfrage (bis ${PET_MAX} Hunde, ${PET_FEE_PER_NIGHT} € pro Hund und Nacht).
+HAUS28 nicht erlaubt. Im Haus Schönblick in den Apartments A2, B7 und B8 direkt mitbuchbar (bis ${PET_MAX} Hunde,
+${PET_FEE_PER_NIGHT} € pro Hund und Nacht), in B5 und B6 nicht (Echtholzparkett).
 Mindestaufenthalt im HAUS28: 2 Nächte (in der Hauptsaison ggf. mehr).
 
 Anreise: ${arrival.de}

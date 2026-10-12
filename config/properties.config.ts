@@ -29,6 +29,9 @@ export type PropertyBookingConfig = {
   baseOccupancy: number
   /** Extra charge per person per night above baseOccupancy (0 = no surcharge) */
   extraPersonFee: number
+  /** Hunde direkt buchbar (Aufpreis/Höchstzahl: lib/pets.ts). Nur bei Fliesen
+   *  oder Gewerbe-Vinyl – Echtholzparkett (B5, B6) hält Krallen nicht aus. */
+  petsAllowed: boolean
   /** Hero image path */
   heroImage: string
   /** Breadcrumb trail leading to this booking page */
@@ -52,6 +55,7 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     priceFrom: 199,
     baseOccupancy: 4,
     extraPersonFee: 29,
+    petsAllowed: false,
     heroImage: '/images/haus28/hero.webp',
     breadcrumb: [{ label: 'HAUS28', href: '/haus28' }],
     propertyHref: '/haus28',
@@ -69,6 +73,7 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     priceFrom: 95,
     baseOccupancy: 2,
     extraPersonFee: 29,
+    petsAllowed: false,
     heroImage: '/images/schoenblick/b5/hero.webp',
     breadcrumb: [
       { label: 'Haus Schönblick', href: '/schoenblick' },
@@ -89,6 +94,7 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     priceFrom: 100,
     baseOccupancy: 2,
     extraPersonFee: 29,
+    petsAllowed: true,
     heroImage: '/images/schoenblick/b7/hero.jpg',
     breadcrumb: [
       { label: 'Haus Schönblick', href: '/schoenblick' },
@@ -109,6 +115,7 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     priceFrom: 95,
     baseOccupancy: 2,
     extraPersonFee: 29,
+    petsAllowed: false,
     heroImage: '/images/schoenblick/b6/hero.webp',
     breadcrumb: [
       { label: 'Haus Schönblick', href: '/schoenblick' },
@@ -129,6 +136,7 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     priceFrom: 95,
     baseOccupancy: 2,
     extraPersonFee: 29,
+    petsAllowed: true,
     heroImage: '/images/schoenblick/b8/hero.webp',
     breadcrumb: [
       { label: 'Haus Schönblick', href: '/schoenblick' },
@@ -149,6 +157,7 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     priceFrom: 95,
     baseOccupancy: 2,
     extraPersonFee: 29,
+    petsAllowed: true,
     heroImage: '/images/schoenblick/a2/hero.webp',
     breadcrumb: [
       { label: 'Haus Schönblick', href: '/schoenblick' },

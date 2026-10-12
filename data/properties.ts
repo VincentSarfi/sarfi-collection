@@ -232,7 +232,7 @@ export const haus28: PropertyData = {
     {
       question: "Sind Haustiere im HAUS28 erlaubt?",
       answer:
-        "Nein, im HAUS28 sind Haustiere leider nicht erlaubt. Wenn du mit Hund reisen möchtest: Im Haus Schönblick sind Haustiere auf Anfrage willkommen.",
+        "Nein, im HAUS28 sind Haustiere leider nicht erlaubt. Wenn du mit Hund reisen möchtest: Im Haus Schönblick kannst du in den Apartments A2, B7 und B8 Hunde direkt mitbuchen.",
     },
     {
       question: "Wie komme ich zum HAUS28?",
@@ -298,7 +298,7 @@ const schoenblickFaqs = [
   },
   {
     question: "Sind Haustiere erlaubt?",
-    answer: `Ja, auf Anfrage: Bitte frag vor der Buchung kurz bei uns an. Erlaubt sind bis zu ${PET_MAX} Hunde, der Aufpreis beträgt ${PET_FEE_PER_NIGHT} € pro Hund und Nacht.`,
+    answer: `Ja, in den Apartments A2, B7 und B8: Dort buchst du bis zu ${PET_MAX} Hunde direkt mit, der Aufpreis beträgt ${PET_FEE_PER_NIGHT} € pro Hund und Nacht. In B5 und B6 liegt Echtholzparkett, dort sind Haustiere leider nicht erlaubt.`,
   },
   {
     question: "Wie komme ich zum Haus Schönblick?",

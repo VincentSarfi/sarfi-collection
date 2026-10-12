@@ -1,7 +1,7 @@
 // Objektseiten (HAUS28, Haus Schönblick, Apartments): UI-Texte der Property-Komponenten.
 // Daten-Texte (Beschreibungen, FAQs, Amenities, alt-Texte) kommen aus data/properties.i18n.ts.
 
-import { PET_FEE_PER_NIGHT, ca, driveMinutes as m } from "@/data/surroundings";
+import { PET_FEE_PER_NIGHT, PET_MAX, ca, driveMinutes as m } from "@/data/surroundings";
 
 // Umgebung von Haus Schönblick – gleiche Liste auf der Haus- und den Apartmentseiten.
 const schoenblickAttractions = [
@@ -255,7 +255,8 @@ const property = {
     locationDescription:
       `Haus Schönblick liegt in Langfurth bei Schöfweg, direkt am Skilift Steinberg im Bayerischen Wald. Wanderwege starten direkt vor dem Haus, zwei Gasthäuser erreichst du in wenigen Minuten. Nach Grafenau sind es rund ${m.grafenau.schoenblick}, zum Nationalpark rund ${m.nationalparkLusen.schoenblick} Minuten.`,
     attractions: schoenblickAttractions,
-    rulePets: `Hunde auf Anfrage (${PET_FEE_PER_NIGHT} € pro Nacht)`,
+    rulePets: `Hunde erlaubt, direkt buchbar (${PET_FEE_PER_NIGHT} € pro Hund und Nacht, max. ${PET_MAX})`,
+    ruleNoPets: "Keine Haustiere",
     cancellationTitle: "Stornierung & Zugang",
     cancellationTextPre: "Kostenlose Stornierung bis 30 Tage vor Anreise. Danach gelten unsere ",
     cancellationLink: "Stornobedingungen",
