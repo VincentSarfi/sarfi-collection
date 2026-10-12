@@ -16,16 +16,12 @@ const ausflugsziele = {
     eyebrow: "Region Bayerischer Wald",
     h1: "Ausflugsziele & Freizeitangebote",
     intro:
-      "Rund um HAUS28 und Haus Schönblick wartet der Bayerische Wald mit einer Fülle an Erlebnissen – von wilder Natur über Westernflair bis zum Golfsimulator für Regentage. Hier findest du unsere persönlichen Empfehlungen für deinen Urlaub.",
+      "Vom Wanderweg an der Haustür bis zum Tagesausflug in den Nationalpark – sortiert nach Fahrzeit ab HAUS28 und Haus Schönblick. Tippe auf ein Ziel für alle Details.",
     pillHaus28: "HAUS28 · Grattersdorf",
     pillSchoenblick: "Haus Schönblick · Schöfweg",
   },
   overview: {
-    ariaLabel: "Ausflugsziele Übersicht",
-    eyebrow: "Nach Entfernung sortiert",
     heading: "Mehr erleben im Bayerischen Wald",
-    intro:
-      "Vom Wanderweg an der Haustür bis zum Tagesausflug in den Nationalpark – sortiert nach Fahrzeit ab HAUS28 und Haus Schönblick. Tippe auf eine Karte für alle Details.",
   },
   filter: {
     legend: "Ausflüge filtern",
@@ -46,12 +42,9 @@ const ausflugsziele = {
     },
   },
   restaurants: {
-    eyebrow: "Einkehren",
     heading: "Gasthäuser in der Nähe",
     intro:
       "Nach dem Ausflug oder einfach am Abend: unsere Tipps für bayerische und regionale Küche, alle nur wenige Minuten von den Unterkünften entfernt.",
-    cardTitle: "Einkehren in der Nähe",
-    cardNote: "Gasthäuser {von}–{bis} min von den Unterkünften",
     websiteLabel: "Website",
   },
   distanceTable: {
@@ -61,9 +54,13 @@ const ausflugsziele = {
     colHaus28: "ab HAUS28",
     colSchoenblick: "ab Haus Schönblick",
   },
+  leiste: {
+    zuFuss: "zu Fuß",
+    min: "min",
+  },
+  gutZuWissen: "Gut zu wissen",
   highlightsLabel: "Highlights",
   practicalLabel: "Praktische Infos",
-  detailsSummary: "Highlights & praktische Infos",
   photoLabel: "Foto",
   officialWebsiteLabel: "Offizielle Website",
   newTabHint: "(öffnet in neuem Tab)",
