@@ -22,13 +22,41 @@ const ausflugsziele = {
   },
   overview: {
     ariaLabel: "Ausflugsziele Übersicht",
-    eyebrow: "Alle Jahreszeiten",
+    eyebrow: "Nach Entfernung sortiert",
     heading: "Mehr erleben im Bayerischen Wald",
     intro:
-      "Von Westernflair über Ski bis Indoor-Golf – hier ist für jedes Wetter und jede Reisegruppe etwas dabei. Tippe auf eine Karte für alle Details.",
+      "Vom Wanderweg an der Haustür bis zum Tagesausflug in den Nationalpark – sortiert nach Fahrzeit ab HAUS28 und Haus Schönblick. Tippe auf eine Karte für alle Details.",
+  },
+  filter: {
+    legend: "Ausflüge filtern",
+    alle: "Alle",
+    kinder: "Mit Kindern",
+    regen: "Bei Regen",
+    winter: "Im Winter",
+    essen: "Essen gehen",
+  },
+  // {von}/{bis} füllt die Komponente aus data/surroundings.ts
+  groups: {
+    naehe: { heading: "Vor der Tür", note: "zu Fuß oder bis 10 min", hint: "" },
+    nah: { heading: "In der Nähe", note: "{von}–{bis} min mit dem Auto", hint: "" },
+    weiter: {
+      heading: "Ein Stück weiter",
+      note: "{von}–{bis} min mit dem Auto",
+      hint: "Baumwipfelpfad und Tier-Freigelände liegen zusammen im Nationalparkzentrum Lusen – gut an einem Tag zu verbinden.",
+    },
+  },
+  restaurants: {
+    eyebrow: "Einkehren",
+    heading: "Gasthäuser in der Nähe",
+    intro:
+      "Nach dem Ausflug oder einfach am Abend: unsere Tipps für bayerische und regionale Küche, alle nur wenige Minuten von den Unterkünften entfernt.",
+    cardTitle: "Einkehren in der Nähe",
+    cardNote: "Gasthäuser {von}–{bis} min von den Unterkünften",
+    websiteLabel: "Website",
   },
   distanceTable: {
     heading: "Entfernungen mit dem Auto",
+    summary: "Alle Fahrzeiten als Tabelle",
     colDestination: "Ausflugsziel",
     colHaus28: "ab HAUS28",
     colSchoenblick: "ab Haus Schönblick",
@@ -303,6 +331,7 @@ const ausflugsziele = {
           "Über Kerschbaum geht es zurück zum Haus – als Schleife, ohne dieselbe Strecke zweimal zu gehen.",
       },
     ],
+    routeSummary: "Route & Wegpunkte",
     mapStrong: "Wanderkarte & GPS:",
     mapText:
       " Die Runde findest du auf Outdooractive, Komoot und AllTrails unter „Büchelstein Grattersdorf“. Vor Ort einfach der roten Markierung Nr. 54 „Büchelsteiner-Runde“ folgen.",

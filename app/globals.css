@@ -197,3 +197,25 @@
     }
   }
 }
+
+/* ─────────────────────────────────────────
+   Ausflugsziele: Filter der Übersicht ohne JS.
+   Radios (sr-only) + Labels als Chips; :has()
+   blendet Karten und Gruppen ohne passenden
+   data-filter-Schlüssel aus. Ohne :has() bleibt
+   einfach alles sichtbar.
+   ───────────────────────────────────────── */
+.ausflug-chip {
+  @apply inline-flex flex-none items-center whitespace-nowrap px-3.5 py-1.5 rounded-full border border-forest-900/15 bg-white font-body text-sm text-forest-700 cursor-pointer select-none transition-colors hover:border-forest-900/40;
+}
+.ausflug-filter input:checked + .ausflug-chip {
+  @apply bg-forest-900 border-forest-900 text-cream-50;
+}
+.ausflug-filter input:focus-visible + .ausflug-chip {
+  @apply ring-2 ring-gold-500 ring-offset-2;
+}
+.ausflug-filter:has(#af-kinder:checked) [data-filter]:not([data-filter~="kinder"]),
+.ausflug-filter:has(#af-regen:checked) [data-filter]:not([data-filter~="regen"]),
+.ausflug-filter:has(#af-winter:checked) [data-filter]:not([data-filter~="winter"]) {
+  display: none;
+}
