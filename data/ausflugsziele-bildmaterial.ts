@@ -199,6 +199,49 @@ export const ausflugszieleMaterial: Record<string, AusflugszielMaterial> = {
     bilder: [],
     freigabe: { stand: "angefragt", notiz: "Mail an info@joska.com am 11.10.2026" },
   },
+  // Neue Ziele aus Issue #6 – Links am 12.10.2026 geprüft (HTTP 200), Mails
+  // am 12.10.2026 um 22:36 verschickt (Cockpit-Karte „Neue Ausflugsziele“).
+  brotjacklriegel: {
+    website: "https://region-sonnenwald.de/berge/brotjacklriegel",
+    bilder: [],
+    freigabe: {
+      stand: "angefragt",
+      notiz:
+        "Mail an info@region-sonnenwald.de (Touristikverein Sonnenwald e.V.) am 12.10.2026, dazu gefragt: Aussichtsplattform wieder begehbar? Turmweg Langfurth 1,6 km/ca. 45 min richtig?",
+    },
+  },
+  arber: {
+    website: "https://www.arber.de/",
+    bilder: [],
+    freigabe: {
+      stand: "angefragt",
+      notiz: "Mail an arber@hohenzollern.com (z. Hd. Pressekontakt Andreas Stadler) am 12.10.2026; Bild- & Textdatenbank auf arber.de/presse",
+    },
+  },
+  passau: {
+    website: "https://tourismus.passau.de/",
+    bilder: [],
+    freigabe: {
+      stand: "angefragt",
+      notiz: "Mail an marketing@passau.de (Tourismus & Stadtmarketing, Andreas Seyller) am 12.10.2026, ausdrücklich für die Website einer Ferienunterkunft",
+    },
+  },
+  museumsdorf: {
+    website: "https://www.museumsdorf.com/",
+    bilder: [],
+    freigabe: { stand: "angefragt", notiz: "Mail an info@museumsdorf.com am 12.10.2026" },
+  },
+  "glasmuseum-frauenau": {
+    website: "https://glasmuseum-frauenau.de/",
+    links: [
+      {
+        label: { de: "Gläserne Gärten", en: "Glass gardens" },
+        url: "https://glasmuseum-frauenau.de/besuch/glaeserne-gaerten/",
+      },
+    ],
+    bilder: [],
+    freigabe: { stand: "angefragt", notiz: "Mail an post@glasmuseum-frauenau.de am 12.10.2026" },
+  },
 };
 
 /**

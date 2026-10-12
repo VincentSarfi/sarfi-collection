@@ -21,8 +21,21 @@ export const driveMinutes = {
   elypso: { name: "Erlebnisbad elypso mit Saunawelt (Deggendorf)", haus28: 35, schoenblick: 35 },
   /** OSRM 12.10.2026: 42 bzw. 40 min Fahrt, plus 15 % Puffer. */
   joska: { name: "JOSKA Glasparadies (Bodenmais)", haus28: 50, schoenblick: 45 },
-  glasmuseumFrauenau: { name: "Glasmuseum Frauenau", haus28: 40, schoenblick: 35 },
+  /** OSRM 12.10.2026 bis Am Museumspark 1: 41 bzw. 31 min, plus 15 % (ab HAUS28 vorher 40). */
+  glasmuseumFrauenau: { name: "Glasmuseum Frauenau", haus28: 45, schoenblick: 35 },
+  /** OSRM 12.10.2026 bis Talstation Bergbahn bestätigt: 53 bzw. 51 min, plus 15 %. */
   arber: { name: "Großer Arber, Talstation Bergbahn", haus28: 60, schoenblick: 60 },
+  /** OSRM 12.10.2026 bis Rathausplatz (Altstadt): 40 bzw. 42 min, plus 15 %. */
+  passau: { name: "Passau Altstadt (Dreiflüsseeck, Dom St. Stephan)", haus28: 45, schoenblick: 50 },
+  /** OSRM 12.10.2026 bis Museumsdorf am Dreiburgensee: 29 bzw. 22 min, plus 15 %. */
+  museumsdorf: { name: "Museumsdorf Bayerischer Wald (Tittling)", haus28: 35, schoenblick: 25 },
+  /**
+   * 0 = zu Fuß: vom Haus Schönblick ca. 400 m bis Langfurth (OSRM-Fußweg), dort
+   * beginnt der Turmweg Langfurth – Brotjacklriegel (1,6 km, leicht, ca. 45 min
+   * laut Touristikverein Sonnenwald, region-sonnenwald.de, 12.10.2026).
+   * HAUS28: 10 min mit dem Auto bis Langfurth (Parkplatz beim Feuerwehrhaus).
+   */
+  brotjacklriegel: { name: "Brotjacklriegel (Turmweg ab Langfurth)", haus28: 10, schoenblick: 0 },
 } as const;
 
 /** „~30 min“ – Schreibweise für Tabellen und Listen (DE und EN gleich). */
