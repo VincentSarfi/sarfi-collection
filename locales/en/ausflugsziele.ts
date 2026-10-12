@@ -18,13 +18,41 @@ const ausflugsziele: typeof de = {
   },
   overview: {
     ariaLabel: "Overview of things to do",
-    eyebrow: "All seasons",
+    eyebrow: "Sorted by distance",
     heading: "More to experience in the Bavarian Forest",
     intro:
-      "From Wild West flair to skiing and indoor golf – there's something for every weather and every group. Tap a card for all the details.",
+      "From the hiking trail at the front door to a day trip into the national park – sorted by driving time from HAUS28 and Haus Schönblick. Tap a card for all the details.",
+  },
+  filter: {
+    legend: "Filter things to do",
+    alle: "All",
+    kinder: "With kids",
+    regen: "Rainy day",
+    winter: "In winter",
+    essen: "Eating out",
+  },
+  // {von}/{bis} are filled in by the component from data/surroundings.ts
+  groups: {
+    naehe: { heading: "On the doorstep", note: "on foot or up to 10 min", hint: "" },
+    nah: { heading: "Close by", note: "{von}–{bis} min by car", hint: "" },
+    weiter: {
+      heading: "A little further",
+      note: "{von}–{bis} min by car",
+      hint: "The Treetop Walk and the animal enclosure are both at the Lusen national park centre – easy to combine in one day.",
+    },
+  },
+  restaurants: {
+    eyebrow: "Eating out",
+    heading: "Inns and restaurants nearby",
+    intro:
+      "After a day out or just for dinner: our tips for Bavarian and regional food, all only a few minutes from the houses.",
+    cardTitle: "Eating out nearby",
+    cardNote: "Inns {von}–{bis} min from the houses",
+    websiteLabel: "Website",
   },
   distanceTable: {
     heading: "Driving distances",
+    summary: "All driving times as a table",
     colDestination: "Destination",
     colHaus28: "from HAUS28",
     colSchoenblick: "from Haus Schönblick",
@@ -299,6 +327,7 @@ const ausflugsziele: typeof de = {
           "The loop returns via Kerschbaum to the house – no stretch walked twice.",
       },
     ],
+    routeSummary: "Route & waypoints",
     mapStrong: "Map & GPS:",
     mapText:
       " You'll find the loop on Outdooractive, Komoot and AllTrails by searching for \"Büchelstein Grattersdorf\". On the ground, simply follow the red waymark no. 54 \"Büchelsteiner-Runde\".",
