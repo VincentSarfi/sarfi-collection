@@ -2,7 +2,7 @@ import { Fragment, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { IconArrowRight, IconMapPin } from "@/components/ui/Icons";
-import { ausflugszieleMaterial } from "@/data/ausflugsziele-bildmaterial";
+import { ausflugszieleMaterial, gasthausMaterial } from "@/data/ausflugsziele-bildmaterial";
 import SteinbergliftWebcam from "@/components/pages/SteinbergliftWebcam";
 import DetailsHashOpener from "@/components/pages/DetailsHashOpener";
 import { driveMinutes, restaurants } from "@/data/surroundings";
@@ -373,8 +373,9 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
     );
 
   /** Gasthäuser in der Nähe (data/surroundings.ts – dieselbe Quelle wie Gruppenseite & FAQ) */
-  const einkehr = () =>
-    zeile(
+  const einkehr = () => {
+    const titelbild = restaurants.map((r) => gasthausMaterial[r.name]?.bilder[0]).find(Boolean);
+    return zeile(
       EINKEHR_ID,
       "",
       <details id={EINKEHR_ID} className={karte}>
@@ -383,12 +384,30 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
           untertitel: restaurants.map((r) => r.name.replace(/ \(.*\)$/, "")).join(" · "),
           tags: [],
           emoji: "🍽️",
+          foto: titelbild ? { src: titelbild.src, alt: titelbild.alt[locale], credit: titelbild.credit } : undefined,
         })}
         <div className={koerper}>
           <p className="font-body text-[15px] text-forest-700 leading-relaxed">{t.restaurants.intro}</p>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {restaurants.map((r) => (
-              <li key={r.name} className="flex flex-col rounded-xl bg-cream-50 p-4">
+              <li
+                key={r.name}
+                className={`flex flex-col rounded-xl bg-cream-50 p-4 ${gasthausMaterial[r.name] ? "sm:col-span-2" : ""}`}
+              >
+                {(gasthausMaterial[r.name]?.bilder ?? []).length > 0 && (
+                  <div className="relative flex gap-2 -mx-4 -mt-4 mb-3 px-4 pt-4 scroll-px-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+                    {gasthausMaterial[r.name].bilder.map((b) => (
+                      <figure key={b.src} className="m-0 flex-none w-[85%] sm:w-[calc(50%-0.25rem)] snap-start">
+                        <div className="relative aspect-[3/2] rounded-lg overflow-hidden bg-cream-100">
+                          <Image src={b.src} alt={b.alt[locale]} fill className="object-cover" sizes="(max-width: 640px) 75vw, 420px" />
+                        </div>
+                        <figcaption className="mt-1 font-body text-[10px] text-forest-500">
+                          {t.photoLabel}: {b.credit}
+                        </figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                )}
                 <p className="font-body text-sm font-semibold text-forest-900">{r.name}</p>
                 <p className="font-body text-xs text-forest-500 mb-2">{locale === "en" ? r.placeEn : r.place}</p>
                 <p className="font-body text-sm text-forest-700 leading-snug mb-3">{locale === "en" ? r.en : r.de}</p>
@@ -408,6 +427,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
         </div>
       </details>,
     );
+  };
 
   return (
     <>

@@ -165,3 +165,38 @@ export const ausflugszieleMaterial: Record<string, AusflugszielMaterial> = {
     freigabe: { stand: "angefragt", notiz: "Mail an info@joska.com am 11.10.2026" },
   },
 };
+
+/**
+ * Fotos der Gasthäuser (Abschnitt „Gasthäuser in der Nähe“), Schlüssel ist
+ * `name` aus restaurants in data/surroundings.ts. Gleiche Regel wie oben:
+ * nur mit Freigabe, Bildnachweis im Wortlaut. Ranzinger, Zum Sonnenwald und
+ * Lohner am 12.10.2026 per Mail angefragt (Cockpit-Karte „Gasthäuser“).
+ */
+export const gasthausMaterial: Record<string, { bilder: BildFreigabe[]; freigabe: string }> = {
+  "Stoaberg Alm": {
+    bilder: [
+      {
+        src: "/images/ausflugsziele/einkehren/stoaberg-alm-stube.webp",
+        width: 1920,
+        height: 1280,
+        alt: {
+          de: "Gaststube der Stoaberg Alm am Steinberglift mit Holztischen, Wagenrad-Leuchter und Kachelofen",
+          en: "Dining room of the Stoaberg Alm at the Steinberglift with wooden tables, wagon-wheel chandelier and tiled stove",
+        },
+        credit: "Steinberglift Schöfweg",
+      },
+      {
+        src: "/images/ausflugsziele/einkehren/stoaberg-alm-gaststube.webp",
+        width: 1920,
+        height: 1280,
+        alt: {
+          de: "Holzvertäfelte Gaststube der Stoaberg Alm mit Ofen und karierten Vorhängen",
+          en: "Wood-panelled dining room of the Stoaberg Alm with stove and checked curtains",
+        },
+        credit: "Steinberglift Schöfweg",
+      },
+    ],
+    freigabe:
+      "Josef Altmann (Inhaber Steinberglift) per WhatsApp am 12.10.2026: Fotos von steinberglift.de dürfen genutzt werden. Quelle: Gastronomie-Seite steinberglift.de.",
+  },
+};
