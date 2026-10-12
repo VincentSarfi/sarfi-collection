@@ -20,6 +20,8 @@ export type MapPlace = {
   minutes: Record<HouseKey, number | null>;
   /** Eigenname, sonst Text aus location.map.places[id] */
   name?: string;
+  /** Weit weg: zählt für den Startausschnitt nur, wenn alles ins Bild passt (PlaceMap) */
+  fern?: boolean;
 };
 
 const drive = (key: keyof typeof driveMinutes) => ({
@@ -34,6 +36,14 @@ const ausflug: MapPlace[] = [
   { id: "indoor-golf", kind: "ausflug", anchor: "indoor-golf", emoji: "⛳", lng: 13.0844, lat: 48.8794, minutes: drive("ruselArena") },
   { id: "elypso", kind: "ausflug", anchor: "elypso", emoji: "🏊", lng: 12.9094, lat: 48.8196, minutes: drive("elypso") },
   { id: "joska", kind: "ausflug", anchor: "joska", emoji: "💎", lng: 13.0848, lat: 49.0673, minutes: drive("joska") },
+  // Museumsdorf Bayerischer Wald am Dreiburgensee (Tittling)
+  { id: "museumsdorf", kind: "ausflug", anchor: "museumsdorf", emoji: "🏡", lng: 13.35, lat: 48.7402, minutes: drive("museumsdorf") },
+  // Am Museumspark 1
+  { id: "glasmuseum-frauenau", kind: "ausflug", anchor: "glasmuseum-frauenau", emoji: "🏛️", lng: 13.2984, lat: 48.9883, minutes: drive("glasmuseumFrauenau") },
+  // Rathausplatz (Altstadt)
+  { id: "passau", kind: "ausflug", anchor: "passau", emoji: "⛪", lng: 13.4679, lat: 48.5754, minutes: drive("passau"), fern: true },
+  // Talstation Arber-Bergbahn
+  { id: "arber", kind: "ausflug", anchor: "arber", emoji: "🏔️", lng: 13.142, lat: 49.1214, minutes: drive("arber"), fern: true },
 ];
 
 const nah: MapPlace[] = [
@@ -41,6 +51,9 @@ const nah: MapPlace[] = [
   { id: "skigebiet-sonnenwald", kind: "nah", anchor: "skigebiet-sonnenwald", emoji: "⛷️", lng: 13.1983, lat: 48.8197, minutes: drive("steinberglift") },
   // Gipfel Großer Büchelstein; die Runde startet an der Haustür von HAUS28
   { id: "buechelstein-wanderung", kind: "nah", anchor: "buechelstein-wanderung", emoji: "🥾", lng: 13.1755, lat: 48.8083, minutes: { haus28: 0, schoenblick: null } },
+  // Gipfel; ab Haus Schönblick zu Fuß (400 m bis Langfurth, dann Turmweg),
+  // ab HAUS28 mit dem Auto bis zum Parkplatz Langfurth
+  { id: "brotjacklriegel", kind: "nah", anchor: "brotjacklriegel", emoji: "⛰️", lng: 13.2167, lat: 48.817, minutes: drive("brotjacklriegel") },
 ];
 
 // Stoaberg Alm fehlt bewusst: steht beim Steinberglift mit im Namen

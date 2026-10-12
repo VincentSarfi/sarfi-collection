@@ -93,11 +93,10 @@ export default function PlaceMap({ house, houseName, coordinates, fallbackUrl }:
     if (!container) return;
     const center: [number, number] = [coordinates.lng, coordinates.lat];
 
-    const boundsOf = (kinds: MapPlace["kind"][]) =>
-      mapPlaces
-        .filter((p) => kinds.includes(p.kind))
-        .reduce((b, p) => b.extend([p.lng, p.lat]), new maplibregl.LngLatBounds(center, center));
-    const bounds = { region: boundsOf(["ausflug"]), nearby: boundsOf(["nah", "einkehr"]) };
+    const boundsOf = (places: MapPlace[]) =>
+      places.reduce((b, p) => b.extend([p.lng, p.lat]), new maplibregl.LngLatBounds(center, center));
+    const ausflug = mapPlaces.filter((p) => p.kind === "ausflug");
+    const bounds = { region: boundsOf(ausflug), nearby: boundsOf(mapPlaces.filter((p) => p.kind !== "ausflug")) };
     boundsRef.current = bounds;
 
     let map: MapLibreMap;
@@ -108,7 +107,8 @@ export default function PlaceMap({ house, houseName, coordinates, fallbackUrl }:
         bounds: bounds.region,
         fitBoundsOptions: { padding: fitPadding(container.clientWidth) },
         maxBounds: DEM_BOUNDS,
-        minZoom: 8,
+        // 7.5 statt 8: auf dem Handy passen so auch Passau und der Arber ins Bild
+        minZoom: 7.5,
         maxZoom: 16,
         cooperativeGestures: true,
         dragRotate: false,
@@ -122,6 +122,16 @@ export default function PlaceMap({ house, houseName, coordinates, fallbackUrl }:
       return;
     }
     mapRef.current = map;
+    // Breite Karten dürfen wegen maxBounds (= Relief) nicht weit genug herauszoomen:
+    // Passau und Arber passen nicht mit ins Bild, JOSKA würde oben angeschnitten.
+    // Dann startet die Übersicht ohne die fernen Ziele – die liegen knapp außerhalb
+    // und sind per Verschieben erreichbar.
+    const padding = fitPadding(container.clientWidth);
+    const fitZoom = map.cameraForBounds(bounds.region, { padding })?.zoom;
+    if (fitZoom !== undefined && map.getZoom() > fitZoom + 0.01) {
+      bounds.region = boundsOf(ausflug.filter((p) => !p.fern));
+      map.fitBounds(bounds.region, { padding, animate: false });
+    }
     map.touchZoomRotate.disableRotation();
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
@@ -286,9 +296,11 @@ export default function PlaceMap({ house, houseName, coordinates, fallbackUrl }:
 
   return (
     <>
+      {/* !absolute: MapLibre gibt dem Container .maplibregl-map { position: relative } –
+          ohne !important wäre er beim Erzeugen 0 px hoch und der Startausschnitt falsch */}
       <div
         ref={containerRef}
-        className={`placemap absolute inset-0 transition-opacity duration-500 ${ready ? "opacity-100" : "opacity-0"}`}
+        className={`placemap !absolute inset-0 transition-opacity duration-500 ${ready ? "opacity-100" : "opacity-0"}`}
         role="region"
         aria-label={`${t.ariaPre}${houseName}`}
       />

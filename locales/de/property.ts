@@ -74,6 +74,11 @@ const property = {
         joska: "JOSKA Glasparadies",
         "skigebiet-sonnenwald": "Steinberglift & Stoaberg Alm",
         "buechelstein-wanderung": "Büchelstein-Wanderung",
+        museumsdorf: "Museumsdorf Bayerischer Wald",
+        "glasmuseum-frauenau": "Glasmuseum Frauenau",
+        passau: "Passau",
+        arber: "Großer Arber",
+        brotjacklriegel: "Brotjacklriegel",
       } as Record<string, string>,
       // Bedienhinweise und Schaltflächen von MapLibre
       ui: {
