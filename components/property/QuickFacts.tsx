@@ -37,7 +37,7 @@ export default function QuickFacts({
     (airbnbRating && airbnbReviewCount) && {
       icon: <IconStar size={20} />,
       label: t.rating,
-      value: `${airbnbRating.toLocaleString(locale === "en" ? "en-GB" : "de-DE")} (${airbnbReviewCount})`,
+      value: `${airbnbRating.toLocaleString(locale === "en" ? "en-GB" : "de-DE", { minimumFractionDigits: 1 })} (${airbnbReviewCount})`,
     },
     address && { icon: <IconMapPin size={20} />, label: t.address, value: address },
   ].filter(Boolean) as { icon: React.ReactNode; label: string; value: string }[];

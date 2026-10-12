@@ -363,14 +363,15 @@ export const schoenblick: PropertyData = {
   },
   priceFrom: 59,
   googleMapsUrl: "https://www.google.com/maps?cid=18059770108920997880",
-  // Stand 06.10.2026, nur Bewertungen seit der Übernahme im September 2025.
-  // Airbnb: Summe der Wohnungs-Inserate (B5, B6, B8 je 5,0 aus 3; A2 4,5 aus 2).
+  // Stand 12.10.2026, nur Bewertungen seit der Übernahme im September 2025.
+  // Airbnb: Summe der Wohnungs-Inserate (B5, B6, B8 je 5,0 aus 3; B7 5,0 aus 5;
+  // A2 4,5 aus 2) = 79 Sterne aus 16 = 4,94.
   // Booking: aktuelles Inserat 8,8 aus 8; eine 3/10 zählt laut Vincent nicht
   // mit, ohne sie 9,6 aus 7. Die alten Booking-Inserate des Vorbesitzers sind
   // geschlossen. Google: 17 × 5 Sterne; eine 1-Stern-Rezension von vor 7 Jahren
   // (Vorbesitzer) zählt nicht mit.
-  airbnbRating: 4.91,
-  airbnbReviewCount: 11,
+  airbnbRating: 4.94,
+  airbnbReviewCount: 16,
   bookingRating: 9.6,
   bookingReviewCount: 7,
   googleRating: 5.0,
@@ -553,9 +554,9 @@ export const schoenblick: PropertyData = {
       id: "b7",
       name: "Apartment B7",
       subtitle: "Das schönste Apartment – Fischgrätparkett, Bergblick & Balkon",
-      airbnbUrl: "",
+      airbnbUrl: "https://www.airbnb.de/rooms/1671190920376277730",
       airbnbRating: 5.0,
-      airbnbReviewCount: 2,
+      airbnbReviewCount: 5,
       smoobuPropertyId: "3276892",
       maxGuests: 4,
       bedrooms: 2,

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getAggregateReviewStats, schoenblick } from "@/data/properties";
+import { formatScore, getAggregateReviewStats, schoenblick } from "@/data/properties";
 import { localizeProperty } from "@/data/properties.i18n";
 import { schoenblickReviews } from "@/data/reviews";
 import PropertyHero from "@/components/property/PropertyHero";
@@ -118,7 +118,7 @@ export default function SchoenblickPageContent({ locale }: { locale: Locale }) {
                     <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-1 bg-forest-900/70 backdrop-blur-sm rounded-full">
                       <IconStar size={11} className="text-gold-300 fill-gold-300" filled />
                       <span className="font-body text-xs font-semibold text-cream-50">
-                        {apt.airbnbRating}
+                        {formatScore(apt.airbnbRating, locale)}
                       </span>
                     </div>
                   )}

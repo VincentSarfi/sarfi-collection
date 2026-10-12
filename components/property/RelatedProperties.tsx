@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconStar } from "@/components/ui/Icons";
+import { formatScore } from "@/data/properties";
 import { getDict } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 
@@ -84,7 +85,7 @@ export default function RelatedProperties({
                 <div className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 bg-forest-900/70 backdrop-blur-sm rounded-full">
                   <IconStar size={11} className="text-gold-300 fill-gold-300" filled />
                   <span className="font-body text-xs font-semibold text-cream-50">
-                    {property.rating}
+                    {formatScore(property.rating, locale)}
                   </span>
                 </div>
               </div>

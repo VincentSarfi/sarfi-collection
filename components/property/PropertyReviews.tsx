@@ -176,7 +176,7 @@ export default function PropertyReviews({
                 ))}
               </div>
               <span className="font-body text-lg font-semibold text-forest-800">
-                {averageRating.toLocaleString(locale === "en" ? "en-GB" : "de-DE")}
+                {averageRating.toLocaleString(locale === "en" ? "en-GB" : "de-DE", { minimumFractionDigits: 1 })}
               </span>
               <span className="font-body text-sm text-forest-500">
                 · {totalCount}{t.reviewsOnAirbnbPost}

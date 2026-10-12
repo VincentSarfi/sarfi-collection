@@ -17,7 +17,7 @@ import PropertyReviews from "@/components/property/PropertyReviews"
 import BookingWidget from "@/components/booking/BookingWidget"
 import FaqAccordion from "@/components/property/FaqAccordion"
 import RelatedProperties from "@/components/property/RelatedProperties"
-import { schoenblick } from "@/data/properties"
+import { formatScore, schoenblick } from "@/data/properties"
 import { localizeProperty } from "@/data/properties.i18n"
 import { schoenblickReviews } from "@/data/reviews"
 import type { ApartmentData } from "@/data/properties"
@@ -208,7 +208,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
                     <>
                       <span className="flex items-center gap-1 font-semibold text-forest-900">
                         <IconStar size={14} filled className="text-forest-900 fill-forest-900" />
-                        {apartment.airbnbRating.toLocaleString(locale === "en" ? "en-GB" : "de-DE")}
+                        {formatScore(apartment.airbnbRating, locale)}
                       </span>
                       <span className="text-forest-300">·</span>
                       <a href="#bewertungen" className="underline underline-offset-2 hover:text-forest-900 transition-colors">
@@ -482,7 +482,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
             {apartment.airbnbRating > 0 && apartment.airbnbUrl !== "" && (
               <div className="flex items-center gap-1 mt-0.5">
                 <IconStar size={11} filled className="text-forest-700 fill-forest-700" />
-                <span className="font-body text-xs font-semibold text-forest-700">{apartment.airbnbRating}</span>
+                <span className="font-body text-xs font-semibold text-forest-700">{formatScore(apartment.airbnbRating, locale)}</span>
               </div>
             )}
           </div>

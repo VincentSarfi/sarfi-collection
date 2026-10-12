@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import BookingWidget from "./BookingWidget"
-import type { ApartmentData } from "@/data/properties"
+import { formatScore, type ApartmentData } from "@/data/properties"
 import type { PropertyBookingConfig } from "@/config/properties.config"
 import { IconUsers, IconStar } from "@/components/ui/Icons"
 import { getDict, localizeHref } from "@/lib/i18n"
@@ -84,7 +84,7 @@ export default function ApartmentSelector({ apartments }: ApartmentSelectorProps
                     <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 bg-forest-900/70 backdrop-blur-sm rounded-full">
                       <IconStar size={10} className="text-gold-300 fill-gold-300" filled />
                       <span className="font-body text-xs font-semibold text-cream-50">
-                        {apt.airbnbRating}
+                        {formatScore(apt.airbnbRating, locale)}
                       </span>
                     </div>
                   )}
