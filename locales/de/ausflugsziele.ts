@@ -3,7 +3,9 @@
 // in data/ausflugsziele-bildmaterial.ts (Websites, Zusatzlinks, Fotos).
 // Fakten geprüft am 06.10.2026 (Betreiber-Websites, Nationalpark-Steckbrief,
 // Tourenportal Landkreis Deggendorf); elypso & JOSKA ergänzt am 12.10.2026
-// (elypso.de, joska.com); Fahrzeiten aus data/surroundings.ts.
+// (elypso.de, joska.com); Brotjacklriegel, Großer Arber, Passau, Museumsdorf
+// und Glasmuseum Frauenau am 12.10.2026 – nur aus der geprüften Faktenliste in
+// Issue #6 (Betreiberseiten); Fahrzeiten aus data/surroundings.ts.
 import { ca as caRaw, driveMinutes as m } from "@/data/surroundings";
 
 // „~30 min“ ohne Umbruch zwischen Zahl und Einheit (geschütztes Leerzeichen)
@@ -38,7 +40,7 @@ const ausflugsziele = {
     weiter: {
       heading: "Ein Stück weiter",
       note: "{von}–{bis} min mit dem Auto",
-      hint: "Baumwipfelpfad und Tier-Freigelände liegen zusammen im Nationalparkzentrum Lusen – gut an einem Tag zu verbinden.",
+      hint: "Baumwipfelpfad und Tier-Freigelände liegen zusammen im Nationalparkzentrum Lusen – gut an einem Tag zu verbinden. Für einen Glas-Tag passen das Glasmuseum Frauenau und JOSKA zusammen.",
     },
   },
   restaurants: {
@@ -258,6 +260,112 @@ const ausflugsziele = {
         { label: "Adresse", value: "Am Moosbach 1, 94249 Bodenmais" },
       ],
     },
+    {
+      id: "arber",
+      tag: "Berg & Winter",
+      cardTags: ["Winter", "Natur", "Barrierearm"],
+      name: "Großer Arber",
+      schemaName: "Großer Arber mit Arber-Bergbahn und Großem Arbersee",
+      subtitle: "1.456 m – der „König des Bayerischen Waldes“",
+      distance: `${ca(m.arber.haus28)} von HAUS28 & Haus Schönblick`,
+      fromHaus28: ca(m.arber.haus28),
+      fromSchoenblick: ca(m.arber.schoenblick),
+      description:
+        "Mit 1.456 Metern ist der Große Arber der höchste Berg des Bayerisch-Böhmischen Gebirgsmassivs – nicht umsonst heißt er „König des Bayerischen Waldes“. Die Gondelbahn bringt dich bequem und barrierefrei auf den Gipfel, die Wege oben sind breit genug für Rollstühle und Gehhilfen. Im Winter wird der Arber zum Skigebiet mit Rodelbahnen, Tourenskigehen und Winterwandern. Zum Arber gehört auch der Große Arbersee mit barrierefreiem Arberseehaus, Tretbootverleih und Waldkugelbahn.",
+      schemaDescription:
+        "Höchster Berg des Bayerisch-Böhmischen Gebirgsmassivs (1.456 m) mit barrierefreier Gondelbahn, Skigebiet im Winter und dem Großen Arbersee.",
+      highlights: [
+        "Gondelbahn bequem & barrierefrei auf den Gipfel",
+        "Gipfelwege breit genug für Rollstuhl & Gehhilfen",
+        "Winter: Skigebiet, Rodelbahnen, Tourenski, Winterwandern",
+        "Ski- & Snowboardverleih",
+        "Großer Arbersee: Tretboote, Waldkugelbahn, barrierefreies Arberseehaus",
+      ],
+      practicalInfo: [
+        { label: "Saison", value: "Sommer: Gondelbahn & Wandern · Winter: Skigebiet & Rodeln – Betriebszeiten und Preise auf arber.de" },
+        { label: "Anfahrt", value: "bis zur Talstation der Arber-Bergbahn" },
+        { label: "Tipp", value: "Gipfel und Arbersee an einem Tag verbinden" },
+      ],
+    },
+    {
+      id: "passau",
+      tag: "Stadt & Kultur",
+      cardTags: ["Regenwetter", "Kultur"],
+      name: "Passau",
+      schemaName: "Passau – Dreiflüssestadt mit Dom St. Stephan",
+      subtitle: "Dreiflüssestadt an Donau, Inn und Ilz",
+      distance: `${ca(m.passau.haus28)} von HAUS28 · ${ca(m.passau.schoenblick)} von Haus Schönblick`,
+      fromHaus28: ca(m.passau.haus28),
+      fromSchoenblick: ca(m.passau.schoenblick),
+      description:
+        "In Passau treffen am Dreiflüsseeck drei Flüsse aus drei Himmelsrichtungen zusammen: Donau, Inn und Ilz. Der Dom St. Stephan mit seinen weißen Türmen und blaugrünen Kuppeln wurde nach dem Stadtbrand von 1662 von Carlo Lurago und Giovanni Battista Carlone gestaltet. Seine Orgel nennt die Stadt die größte Domorgel der Welt – mit 17.974 Pfeifen und 233 Registern; von Mai bis Oktober gibt es werktags um 12 Uhr ein Mittagskonzert. Dazu kommen die Veste Oberhaus mit dem Oberhausmuseum und Schifffahrten auf den Flüssen. Ein Stadttag, der auch bei Regen funktioniert.",
+      schemaDescription:
+        "Dreiflüssestadt an Donau, Inn und Ilz mit Dom St. Stephan (Domorgel mit 17.974 Pfeifen und 233 Registern), Veste Oberhaus und Oberhausmuseum.",
+      highlights: [
+        "Dreiflüsseeck: Donau, Inn & Ilz",
+        "Dom St. Stephan – gestaltet nach dem Stadtbrand 1662",
+        "Domorgel mit 17.974 Pfeifen & 233 Registern",
+        "Veste Oberhaus mit Oberhausmuseum",
+        "Schifffahrten auf den Flüssen",
+      ],
+      practicalInfo: [
+        { label: "Orgelkonzerte", value: "Mai–Oktober werktags 12 Uhr (Mittagskonzert Erwachsene 6 €, Stand 2026), dazu 1× im Monat donnerstags 19:30 Uhr; im Advent Mi–Sa 12 Uhr" },
+        { label: "Fahrzeit", value: "gerechnet bis zur Altstadt (Rathausplatz)" },
+        { label: "Tipp", value: "Bei Regen Dom und Oberhausmuseum, bei Sonne eine Schifffahrt" },
+      ],
+    },
+    {
+      id: "museumsdorf",
+      tag: "Freilichtmuseum",
+      cardTags: ["Kinder", "Kultur"],
+      name: "Museumsdorf Bayerischer Wald",
+      schemaName: "Museumsdorf Bayerischer Wald (Tittling)",
+      subtitle: "Freilichtmuseum am Dreiburgensee bei Tittling",
+      distance: `${ca(m.museumsdorf.schoenblick)} von Haus Schönblick · ${ca(m.museumsdorf.haus28)} von HAUS28`,
+      fromHaus28: ca(m.museumsdorf.haus28),
+      fromSchoenblick: ca(m.museumsdorf.schoenblick),
+      description:
+        "Im Museumsdorf Bayerischer Wald bei Tittling stehen auf 25 Hektar über 150 Gebäude aus der Zeit von 1580 bis 1850 – direkt am Dreiburgensee. Dazu kommt eine volkskundliche Sammlung mit 60.000 Objekten. Im Sommerhalbjahr sind von Mittwoch bis Sonntag Museumskasse und zusätzliche Häuser geöffnet; im Winterhalbjahr ist ein Spaziergang über das Gelände möglich.",
+      schemaDescription:
+        "Freilichtmuseum am Dreiburgensee bei Tittling: über 150 Gebäude aus der Zeit von 1580 bis 1850 auf 25 ha, volkskundliche Sammlung mit 60.000 Objekten.",
+      highlights: [
+        "Über 150 Gebäude aus der Zeit von 1580 bis 1850",
+        "25 Hektar Gelände am Dreiburgensee",
+        "Volkskundliche Sammlung mit 60.000 Objekten",
+        "Kinder bis 6 Jahre in Begleitung frei",
+      ],
+      practicalInfo: [
+        { label: "Saison", value: "Sommerhalbjahr Mi–So 10–17 Uhr, auch an Feiertagen; Mo/Di 10–17 Uhr Zugang über das Drehkreuz (ermäßigt 3 €, Münzen); Winterhalbjahr 1. November 2026 bis Ostern 2027 Spaziergang möglich, Drehkreuz 10–16 Uhr" },
+        { label: "Eintritt", value: "Erwachsene 8 €, Kinder bis 6 J. in Begleitung frei (Stand 2026)" },
+        { label: "Hinweis", value: "Das Gasthaus Mühlhiasl ist vorübergehend wegen Pächterwechsel geschlossen (Stand Herbst 2026)" },
+      ],
+    },
+    {
+      id: "glasmuseum-frauenau",
+      tag: "Glas & Kunst",
+      cardTags: ["Regenwetter", "Kinder"],
+      name: "Glasmuseum Frauenau",
+      schemaName: "Glasmuseum Frauenau mit den Gläsernen Gärten",
+      subtitle: "Eine Reise mit dem Glas von der Antike bis zur Gegenwart",
+      distance: `${ca(m.glasmuseumFrauenau.schoenblick)} von Haus Schönblick · ${ca(m.glasmuseumFrauenau.haus28)} von HAUS28`,
+      fromHaus28: ca(m.glasmuseumFrauenau.haus28),
+      fromSchoenblick: ca(m.glasmuseumFrauenau.schoenblick),
+      description:
+        "Das Glasmuseum Frauenau nimmt dich mit auf eine Reise mit dem Glas von der Antike bis zur Gegenwart. Vor dem Museum, mit Blick auf die Pfarrkirche, liegen die Gläsernen Gärten: Mittelpunkt ist die Glasarche, insgesamt stehen dort über 30 Großskulpturen aus Glas, und die Gärten setzen sich bei der Glashütte Eisch und im Atelierviertel Moosau fort. Zur Parkanlage gehört ein großer Abenteuerspielplatz – drinnen Museum, draußen Spielplatz.",
+      schemaDescription:
+        "Museum zur Glasgeschichte von der Antike bis zur Gegenwart mit den Gläsernen Gärten (über 30 Großskulpturen aus Glas) und großem Abenteuerspielplatz.",
+      highlights: [
+        "Glasgeschichte von der Antike bis zur Gegenwart",
+        "Gläserne Gärten mit über 30 Großskulpturen aus Glas",
+        "Glasarche als Mittelpunkt der Gärten",
+        "Großer Abenteuerspielplatz in der Parkanlage",
+      ],
+      practicalInfo: [
+        { label: "Öffnung", value: "Di–So und an Feiertagen 9–17 Uhr, montags geschlossen" },
+        { label: "Eintritt", value: "aktuelle Preise auf glasmuseum-frauenau.de" },
+        { label: "Tipp", value: "Mit dem JOSKA Glasparadies in Bodenmais zu einem Glas-Tag verbinden" },
+      ],
+    },
   ],
   seasons: {
     eyebrow: "Wann fahren?",
@@ -281,7 +389,7 @@ const ausflugsziele = {
       {
         season: "Winter",
         months: "Dezember – Februar",
-        activities: ["Skifahren am Steinberglift", "Rodeln & Langlaufen", "Weihnachtsmärkte", "Hallenbad & Sauna im elypso Deggendorf"],
+        activities: ["Skifahren am Steinberglift", "Skigebiet & Rodelbahnen am Großen Arber", "Rodeln & Langlaufen", "Weihnachtsmärkte", "Hallenbad & Sauna im elypso Deggendorf"],
       },
     ],
   },
@@ -333,6 +441,33 @@ const ausflugsziele = {
     mapText:
       " Die Runde findest du auf Outdooractive, Komoot und AllTrails unter „Büchelstein Grattersdorf“. Vor Ort einfach der roten Markierung Nr. 54 „Büchelsteiner-Runde“ folgen.",
     cta: "HAUS28 – direkt am Büchelstein buchen",
+  },
+  // Zweite Wanderung „Vor der Tür“ – Fakten: region-sonnenwald.de (Touristikverein Sonnenwald), Issue #6
+  brotjacklriegel: {
+    heading: "Brotjacklriegel (1.011 m)",
+    cardTags: ["Natur", "Wandern"],
+    cardNote: "Zu Fuß ab Haus Schönblick über den Turmweg Langfurth",
+    schemaName: "Wanderung auf den Brotjacklriegel ab Haus Schönblick",
+    schemaDescription:
+      "Wanderung auf den Brotjacklriegel (1.011 m), den Hausberg der Region Sonnenwald: Turmweg Langfurth – Brotjacklriegel, 1,6 km, leicht, ca. 45 Minuten; Start ca. 400 m vom Haus Schönblick.",
+    intro:
+      "Der Brotjacklriegel (1.011 m) ist der markante Hausberg der Region Sonnenwald – und von Haus Schönblick aus zu Fuß erreichbar: Nach rund 400 m bist du in Langfurth, dort beginnt der Turmweg hinauf zum Gipfel, ein leichter Weg von 1,6 km. Oben stehen der Aussichtsturm des Bayerischen Waldvereins und das Turmstüberl.",
+    notice: "Laut Touristikverein Sonnenwald ist die Aussichtsplattform des Turms derzeit aus Brandschutzgründen gesperrt.",
+    stats: [
+      { label: "Start", value: "Langfurth, ca. 400 m zu Fuß ab Haus Schönblick" },
+      { label: "Turmweg Langfurth", value: "1,6 km · ca. 45 min · leicht" },
+      { label: "Gipfel", value: "1.011 m" },
+      { label: "Große Runde", value: "Brotjacklriegel-Rundweg, ca. 12 km · ca. 4,5 h · leicht" },
+      { label: "Turmstüberl", value: "April–November täglich 10–18 Uhr, Do Ruhetag" },
+      { label: "Ab HAUS28", value: "ca. 10 min mit dem Auto; Parken in Langfurth 55 (beim Feuerwehrhaus) oder am Wanderparkplatz Daxstein" },
+    ],
+    moreRoutesHeading: "Weitere Turmwege zum Gipfel",
+    moreRoutes: [
+      { name: "Ab Ölberg", detail: "1,6 km · ca. 1 h 10 min" },
+      { name: "Ab Daxstein", detail: "1,8 km · ca. 55 min · schwierig" },
+      { name: "Ab Mitterdorf/Schöfweg", detail: "4,4 km · ca. 1 h 30 min · leicht" },
+    ],
+    cta: "Haus Schönblick – zu Fuß zum Brotjacklriegel",
   },
   cta: {
     eyebrow: "Dein Ausgangspunkt",

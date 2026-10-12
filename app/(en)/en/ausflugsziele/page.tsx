@@ -8,10 +8,10 @@ export const metadata: Metadata = {
     locale: "en",
     title: "Things to Do in the Bavarian Forest",
     description:
-      "Pullman City, the Büchelstein hike, the Steinberglift, Rusel-Arena, the Treetop Walk, the national park, elypso & the JOSKA glass world: the best things to do in the Bavarian Forest.",
+      "Things to do in the Bavarian Forest by driving time: hikes from the door, the Großer Arber, Passau, the national park, Pullman City and more.",
     ogTitle: "Things to Do in the Bavarian Forest – Tips from SARFI Collection",
     ogDescription:
-      "Pullman City, the Büchelstein hike, the Steinberglift, indoor golf & more – the best day trips around HAUS28 and Haus Schönblick.",
+      "The Büchelstein and Brotjacklriegel hikes, the Großer Arber, Passau, Pullman City & more – the best day trips around HAUS28 and Haus Schönblick.",
     image: { url: "/images/shared/region-bayerischer-wald.jpg", alt: "Bavarian Forest" },
   }),
   keywords: [
@@ -23,6 +23,11 @@ export const metadata: Metadata = {
     "Bavarian Forest National Park",
     "elypso Deggendorf",
     "JOSKA Glasparadies Bodenmais",
+    "Großer Arber",
+    "Passau day trip",
+    "Brotjacklriegel hike",
+    "Bavarian Forest Museum Village",
+    "Frauenau Glass Museum",
     "Steinberglift ski lift Schöfweg",
   ],
 };

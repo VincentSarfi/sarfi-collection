@@ -34,7 +34,7 @@ const ausflugsziele: typeof de = {
     weiter: {
       heading: "A little further",
       note: "{von}–{bis} min by car",
-      hint: "The Treetop Walk and the animal enclosure are both at the Lusen national park centre – easy to combine in one day.",
+      hint: "The Treetop Walk and the animal enclosure are both at the Lusen national park centre – easy to combine in one day. For a day all about glass, pair the Frauenau Glass Museum with JOSKA.",
     },
   },
   restaurants: {
@@ -254,6 +254,112 @@ const ausflugsziele: typeof de = {
         { label: "Address", value: "Am Moosbach 1, 94249 Bodenmais" },
       ],
     },
+    {
+      id: "arber",
+      tag: "Mountain & winter",
+      cardTags: ["Winter", "Nature", "Step-free"],
+      name: "Großer Arber",
+      schemaName: "Großer Arber with the Arber cable car and the Großer Arbersee lake",
+      subtitle: "1,456 m – the \"King of the Bavarian Forest\"",
+      distance: `${ca(m.arber.haus28)} from HAUS28 & Haus Schönblick`,
+      fromHaus28: ca(m.arber.haus28),
+      fromSchoenblick: ca(m.arber.schoenblick),
+      description:
+        "At 1,456 metres, the Großer Arber is the highest mountain of the Bavarian-Bohemian massif – no wonder it's called the \"King of the Bavarian Forest\". The gondola takes you comfortably and step-free to the summit, where the paths are wide enough for wheelchairs and walking aids. In winter the Arber becomes a ski area with toboggan runs, ski touring and winter hiking. The Arber also includes the Großer Arbersee lake with the step-free Arberseehaus, pedal-boat hire and a forest marble run.",
+      schemaDescription:
+        "Highest mountain of the Bavarian-Bohemian massif (1,456 m) with a step-free gondola, a ski area in winter and the Großer Arbersee lake.",
+      highlights: [
+        "Gondola comfortably & step-free to the summit",
+        "Summit paths wide enough for wheelchairs & walking aids",
+        "Winter: ski area, toboggan runs, ski touring, winter hiking",
+        "Ski & snowboard hire",
+        "Großer Arbersee: pedal boats, forest marble run, step-free Arberseehaus",
+      ],
+      practicalInfo: [
+        { label: "Season", value: "Summer: gondola & hiking · winter: skiing & tobogganing – operating times and prices at arber.de" },
+        { label: "Getting there", value: "to the valley station of the Arber cable car" },
+        { label: "Tip", value: "Combine the summit and the Arbersee in one day" },
+      ],
+    },
+    {
+      id: "passau",
+      tag: "City & culture",
+      cardTags: ["Rainy days", "Culture"],
+      name: "Passau",
+      schemaName: "Passau – city of three rivers with St. Stephen's Cathedral",
+      subtitle: "City of three rivers on the Danube, Inn and Ilz",
+      distance: `${ca(m.passau.haus28)} from HAUS28 · ${ca(m.passau.schoenblick)} from Haus Schönblick`,
+      fromHaus28: ca(m.passau.haus28),
+      fromSchoenblick: ca(m.passau.schoenblick),
+      description:
+        "In Passau, three rivers from three directions meet at the Dreiflüsseeck: the Danube, the Inn and the Ilz. St. Stephen's Cathedral, with its white towers and blue-green domes, was designed after the town fire of 1662 by Carlo Lurago and Giovanni Battista Carlone. The city calls its organ the largest cathedral organ in the world – with 17,974 pipes and 233 stops; from May to October there is a midday concert at 12 noon on weekdays. Add the Veste Oberhaus fortress with the Oberhausmuseum and boat trips on the rivers. A city day that works in the rain too.",
+      schemaDescription:
+        "City of three rivers on the Danube, Inn and Ilz with St. Stephen's Cathedral (organ with 17,974 pipes and 233 stops), the Veste Oberhaus fortress and the Oberhausmuseum.",
+      highlights: [
+        "Dreiflüsseeck: Danube, Inn & Ilz",
+        "St. Stephen's Cathedral – designed after the town fire of 1662",
+        "Cathedral organ with 17,974 pipes & 233 stops",
+        "Veste Oberhaus fortress with the Oberhausmuseum",
+        "Boat trips on the rivers",
+      ],
+      practicalInfo: [
+        { label: "Organ concerts", value: "May–October weekdays at 12 noon (midday concert adults €6, 2026), plus once a month on Thursdays at 7.30 p.m.; in Advent Wed–Sat at 12 noon" },
+        { label: "Driving time", value: "calculated to the old town (Rathausplatz)" },
+        { label: "Tip", value: "Cathedral and Oberhausmuseum when it rains, a boat trip when the sun's out" },
+      ],
+    },
+    {
+      id: "museumsdorf",
+      tag: "Open-air museum",
+      cardTags: ["Kids", "Culture"],
+      name: "Bavarian Forest Museum Village",
+      schemaName: "Museumsdorf Bayerischer Wald – Bavarian Forest Museum Village (Tittling)",
+      subtitle: "Open-air museum on the Dreiburgensee near Tittling",
+      distance: `${ca(m.museumsdorf.schoenblick)} from Haus Schönblick · ${ca(m.museumsdorf.haus28)} from HAUS28`,
+      fromHaus28: ca(m.museumsdorf.haus28),
+      fromSchoenblick: ca(m.museumsdorf.schoenblick),
+      description:
+        "At the Museumsdorf Bayerischer Wald near Tittling, more than 150 buildings dating from 1580 to 1850 stand on 25 hectares – right on the Dreiburgensee lake. There's also a folklore collection of 60,000 objects. In the summer half of the year the ticket office and additional houses are open Wednesday to Sunday; in the winter half you can still take a walk around the grounds.",
+      schemaDescription:
+        "Open-air museum on the Dreiburgensee near Tittling: more than 150 buildings from 1580 to 1850 on 25 ha, folklore collection of 60,000 objects.",
+      highlights: [
+        "More than 150 buildings dating from 1580 to 1850",
+        "25 hectares of grounds on the Dreiburgensee",
+        "Folklore collection of 60,000 objects",
+        "Children up to 6 free when accompanied",
+      ],
+      practicalInfo: [
+        { label: "Season", value: "Summer half-year Wed–Sun 10 a.m.–5 p.m., public holidays too; Mon/Tue 10 a.m.–5 p.m. entry via turnstile (reduced €3, coins); winter half-year 1 November 2026 to Easter 2027 walks possible, turnstile 10 a.m.–4 p.m." },
+        { label: "Admission", value: "adults €8, children up to 6 free when accompanied (2026)" },
+        { label: "Note", value: "The Mühlhiasl inn is temporarily closed due to a change of tenant (autumn 2026)" },
+      ],
+    },
+    {
+      id: "glasmuseum-frauenau",
+      tag: "Glass & art",
+      cardTags: ["Rainy days", "Kids"],
+      name: "Frauenau Glass Museum",
+      schemaName: "Glasmuseum Frauenau (Frauenau Glass Museum) with the Glass Gardens",
+      subtitle: "A journey with glass from antiquity to the present",
+      distance: `${ca(m.glasmuseumFrauenau.schoenblick)} from Haus Schönblick · ${ca(m.glasmuseumFrauenau.haus28)} from HAUS28`,
+      fromHaus28: ca(m.glasmuseumFrauenau.haus28),
+      fromSchoenblick: ca(m.glasmuseumFrauenau.schoenblick),
+      description:
+        "The Glasmuseum Frauenau takes you on a journey with glass from antiquity to the present day. In front of the museum, looking out onto the parish church, lie the Glass Gardens: their centrepiece is the Glass Ark, more than 30 large glass sculptures stand there in total, and the gardens continue at the Eisch glassworks and in the Moosau artists' quarter. The park also has a large adventure playground – museum inside, playground outside.",
+      schemaDescription:
+        "Museum of glass history from antiquity to the present with the Glass Gardens (more than 30 large glass sculptures) and a large adventure playground.",
+      highlights: [
+        "Glass history from antiquity to the present",
+        "Glass Gardens with more than 30 large glass sculptures",
+        "The Glass Ark at the heart of the gardens",
+        "Large adventure playground in the park",
+      ],
+      practicalInfo: [
+        { label: "Opening", value: "Tue–Sun and public holidays 9 a.m.–5 p.m., closed on Mondays" },
+        { label: "Admission", value: "current prices at glasmuseum-frauenau.de" },
+        { label: "Tip", value: "Combine with the JOSKA Glasparadies in Bodenmais for a day all about glass" },
+      ],
+    },
   ],
   seasons: {
     eyebrow: "When to go?",
@@ -277,7 +383,7 @@ const ausflugsziele: typeof de = {
       {
         season: "Winter",
         months: "December – February",
-        activities: ["Skiing at the Steinberglift", "Tobogganing & cross-country skiing", "Christmas markets", "Indoor pool & sauna at elypso Deggendorf"],
+        activities: ["Skiing at the Steinberglift", "Ski area & toboggan runs at the Großer Arber", "Tobogganing & cross-country skiing", "Christmas markets", "Indoor pool & sauna at elypso Deggendorf"],
       },
     ],
   },
@@ -329,6 +435,32 @@ const ausflugsziele: typeof de = {
     mapText:
       " You'll find the loop on Outdooractive, Komoot and AllTrails by searching for \"Büchelstein Grattersdorf\". On the ground, simply follow the red waymark no. 54 \"Büchelsteiner-Runde\".",
     cta: "Book HAUS28 – right at the Büchelstein",
+  },
+  brotjacklriegel: {
+    heading: "Brotjacklriegel (1,011 m)",
+    cardTags: ["Nature", "Hiking"],
+    cardNote: "On foot from Haus Schönblick via the Langfurth tower trail",
+    schemaName: "Hike up the Brotjacklriegel from Haus Schönblick",
+    schemaDescription:
+      "Hike up the Brotjacklriegel (1,011 m), the local mountain of the Sonnenwald region: Langfurth – Brotjacklriegel tower trail, 1.6 km, easy, approx. 45 minutes; start approx. 400 m from Haus Schönblick.",
+    intro:
+      "The Brotjacklriegel (1,011 m) is the distinctive local mountain of the Sonnenwald region – and you can walk there from Haus Schönblick: after about 400 m you reach Langfurth, where the tower trail up to the summit begins, an easy 1.6 km path. At the top are the observation tower of the Bayerischer Waldverein and the Turmstüberl inn.",
+    notice: "According to the Sonnenwald tourist association, the tower's viewing platform is currently closed for fire-safety reasons.",
+    stats: [
+      { label: "Start", value: "Langfurth, approx. 400 m on foot from Haus Schönblick" },
+      { label: "Langfurth tower trail", value: "1.6 km · approx. 45 min · easy" },
+      { label: "Summit", value: "1,011 m" },
+      { label: "Long loop", value: "Brotjacklriegel circular trail, approx. 12 km · approx. 4.5 h · easy" },
+      { label: "Turmstüberl", value: "April–November daily 10 a.m.–6 p.m., closed Thursdays" },
+      { label: "From HAUS28", value: "approx. 10 min by car; parking at Langfurth 55 (by the fire station) or the Daxstein hikers' car park" },
+    ],
+    moreRoutesHeading: "Other tower trails to the summit",
+    moreRoutes: [
+      { name: "From Ölberg", detail: "1.6 km · approx. 1 h 10 min" },
+      { name: "From Daxstein", detail: "1.8 km · approx. 55 min · difficult" },
+      { name: "From Mitterdorf/Schöfweg", detail: "4.4 km · approx. 1 h 30 min · easy" },
+    ],
+    cta: "Haus Schönblick – walk to the Brotjacklriegel",
   },
   cta: {
     eyebrow: "Your base",

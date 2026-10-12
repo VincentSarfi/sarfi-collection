@@ -2,7 +2,7 @@ import { Fragment, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { IconArrowRight, IconMapPin } from "@/components/ui/Icons";
-import { ausflugszieleMaterial, gasthausMaterial, wanderungBilder } from "@/data/ausflugsziele-bildmaterial";
+import { ausflugszieleMaterial, gasthausMaterial, wanderungBilder, type AusflugszielMaterial, type BildFreigabe } from "@/data/ausflugsziele-bildmaterial";
 import SteinbergliftWebcam from "@/components/pages/SteinbergliftWebcam";
 import DetailsHashOpener from "@/components/pages/DetailsHashOpener";
 import { driveMinutes, restaurants } from "@/data/surroundings";
@@ -20,6 +20,10 @@ const ATTRACTION_EMOJI: Record<string, string> = {
   "indoor-golf": "⛳",
   elypso: "🏊",
   joska: "💎",
+  arber: "🏔️",
+  passau: "⛪",
+  museumsdorf: "🏡",
+  "glasmuseum-frauenau": "🏛️",
 };
 
 // schema.org-Typ und Ort je Ausflugsziel
@@ -31,9 +35,13 @@ const ATTRACTION_SCHEMA: Record<string, { type: string; locality: string }> = {
   "indoor-golf": { type: "SportsActivityLocation", locality: "Deggendorf" },
   elypso: { type: "SportsActivityLocation", locality: "Deggendorf" },
   joska: { type: "TouristAttraction", locality: "Bodenmais" },
+  arber: { type: "TouristAttraction", locality: "Bayerisch Eisenstein" },
+  passau: { type: "TouristAttraction", locality: "Passau" },
+  museumsdorf: { type: "Museum", locality: "Tittling" },
+  "glasmuseum-frauenau": { type: "Museum", locality: "Frauenau" },
 };
 
-/** ItemList der Ausflugsziele inkl. Büchelstein-Wanderung (JSON-LD). */
+/** ItemList der Ausflugsziele inkl. Büchelstein- und Brotjacklriegel-Wanderung (JSON-LD). */
 export function ausflugszieleJsonLd(locale: Locale) {
   const t = getDict(locale).ausflugsziele;
   const items = [
@@ -58,6 +66,12 @@ export function ausflugszieleJsonLd(locale: Locale) {
       name: t.hike.schemaName,
       description: t.hike.schemaDescription,
       ...(wanderungBilder.length > 0 ? { image: wanderungBilder.map((b) => SITE + b.src) } : {}),
+    },
+    {
+      "@type": "TouristAttraction",
+      name: t.brotjacklriegel.schemaName,
+      description: t.brotjacklriegel.schemaDescription,
+      url: ausflugszieleMaterial[BROTJACKL_ID]?.website,
     },
   ];
   return {
@@ -87,6 +101,10 @@ const ATTRACTION_FILTER: Record<string, FilterKey[]> = {
   "indoor-golf": ["regen"],
   elypso: ["kinder", "regen", "winter"],
   joska: ["kinder", "regen"],
+  arber: ["winter"],
+  passau: ["regen"],
+  museumsdorf: ["kinder"],
+  "glasmuseum-frauenau": ["kinder", "regen"],
 };
 
 // Fahrzeit-Eintrag je Ziel in data/surroundings.ts – Quelle für die Minuten der Leiste
@@ -98,17 +116,40 @@ const DRIVE_KEY: Record<string, keyof typeof driveMinutes> = {
   "indoor-golf": "ruselArena",
   elypso: "elypso",
   joska: "joska",
+  arber: "arber",
+  passau: "passau",
+  museumsdorf: "museumsdorf",
+  "glasmuseum-frauenau": "glasmuseumFrauenau",
+  brotjacklriegel: "brotjacklriegel",
 };
 
 // Die Liste ist die Fahrzeit-Leiste: drei Abschnitte, innerhalb nach Minuten.
-// HIKE_ID und EINKEHR_ID sind eigene Einträge (Wanderung bzw. Gasthäuser).
+// HIKE_ID, BROTJACKL_ID und EINKEHR_ID sind eigene Einträge (Wanderungen bzw. Gasthäuser).
 const HIKE_ID = "buechelstein-wanderung";
+const BROTJACKL_ID = "brotjacklriegel";
 const EINKEHR_ID = "einkehren";
 const GROUPS: { key: "naehe" | "nah" | "weiter"; ids: string[] }[] = [
-  { key: "naehe", ids: [HIKE_ID, "skigebiet-sonnenwald", EINKEHR_ID] },
-  { key: "nah", ids: ["indoor-golf", "pullman-city", "elypso"] },
-  { key: "weiter", ids: ["baumwipfelpfad", "nationalpark", "joska"] },
+  { key: "naehe", ids: [HIKE_ID, BROTJACKL_ID, "skigebiet-sonnenwald", EINKEHR_ID] },
+  { key: "nah", ids: ["indoor-golf", "museumsdorf", "pullman-city", "elypso"] },
+  { key: "weiter", ids: ["glasmuseum-frauenau", "baumwipfelpfad", "nationalpark", "joska", "passau", "arber"] },
 ];
+
+/** Texte einer Wanderung (locales: hike, brotjacklriegel) */
+type WanderungTexte = {
+  heading: string;
+  cardNote: string;
+  cardTags: string[];
+  intro: string;
+  notice?: string;
+  stats: { label: string; value: string }[];
+  waypoints?: { name: string; detail: string }[];
+  routeSummary?: string;
+  moreRoutesHeading?: string;
+  moreRoutes?: { name: string; detail: string }[];
+  mapStrong?: string;
+  mapText?: string;
+  cta: string;
+};
 
 /** „{von}–{bis}“ in einem Locale-Text füllen */
 function spanne(text: string, minuten: number[]) {
@@ -232,6 +273,25 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
   const karte = "group/item rounded-2xl bg-white border border-cream-200 transition-shadow hover:shadow-card open:shadow-card scroll-mt-36";
   const koerper = "px-2.5 pb-4 sm:px-5 sm:pb-6 pt-1 space-y-4 sm:space-y-5";
 
+  /** Offizielle Website + freigegebene Zusatzlinks (nur aus data/ausflugsziele-bildmaterial.ts) */
+  const offizielleLinks = (material: AusflugszielMaterial) => (
+    <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+      <a href={material.website} target="_blank" rel="noopener noreferrer" className={linkKlasse}>
+        {t.officialWebsiteLabel}
+        <span className="text-xs text-forest-500">({material.website.replace(/^https:\/\/(www\.)?/, "").replace(/\/$/, "")})</span>
+        <ExternalIcon />
+        <span className="sr-only"> {t.newTabHint}</span>
+      </a>
+      {material.links?.map((l) => (
+        <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer" className={`${linkKlasse} font-medium`}>
+          {l.label[locale]}
+          <ExternalIcon />
+          <span className="sr-only"> {t.newTabHint}</span>
+        </a>
+      ))}
+    </div>
+  );
+
   /** Ausflugsziel: Fotos/Webcam zum Wischen, Anfahrt, Beschreibung, Highlights, Infos, Links */
   const ziel = (id: string) => {
     const attr = t.attractions.find((a) => a.id === id);
@@ -306,46 +366,39 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-            <a href={material.website} target="_blank" rel="noopener noreferrer" className={linkKlasse}>
-              {t.officialWebsiteLabel}
-              <span className="text-xs text-forest-500">({material.website.replace(/^https:\/\/(www\.)?/, "").replace(/\/$/, "")})</span>
-              <ExternalIcon />
-              <span className="sr-only"> {t.newTabHint}</span>
-            </a>
-            {material.links?.map((l) => (
-              <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer" className={`${linkKlasse} font-medium`}>
-                {l.label[locale]}
-                <ExternalIcon />
-                <span className="sr-only"> {t.newTabHint}</span>
-              </a>
-            ))}
-          </div>
+          {offizielleLinks(material)}
         </div>
       </details>,
     );
   };
 
-  /** Büchelstein-Rundwanderung: Eckdaten und Wegpunkte (echte Reihenfolge, daher nummeriert) */
-  const wanderung = () =>
+  /**
+   * Wanderung ab der Haustür (Büchelstein ab HAUS28, Brotjacklriegel ab Haus Schönblick):
+   * Eckdaten, ggf. Hinweis, Wegpunkte (echte Reihenfolge, daher nummeriert) oder weitere Wege.
+   */
+  const wanderung = (
+    id: string,
+    w: WanderungTexte,
+    opts: { emoji: string; bilder: BildFreigabe[]; ctaHref: string; highlight?: number },
+  ) =>
     zeile(
-      HIKE_ID,
+      id,
       "",
-      <details id={HIKE_ID} className={karte}>
+      <details id={id} className={karte}>
         {kopf({
-          name: t.hike.heading,
-          untertitel: t.hike.cardNote,
-          tags: t.hike.cardTags,
-          emoji: "🥾",
+          name: w.heading,
+          untertitel: w.cardNote,
+          tags: w.cardTags,
+          emoji: opts.emoji,
           dunkel: true,
-          foto: wanderungBilder[0]
-            ? { src: wanderungBilder[0].src, alt: wanderungBilder[0].alt[locale], credit: wanderungBilder[0].credit }
+          foto: opts.bilder[0]
+            ? { src: opts.bilder[0].src, alt: opts.bilder[0].alt[locale], credit: opts.bilder[0].credit }
             : undefined,
         })}
         <div className={koerper}>
-          {wanderungBilder.length > 0 && (
+          {opts.bilder.length > 0 && (
             <div className="relative flex gap-3 -mx-2.5 px-2.5 sm:-mx-5 sm:px-5 scroll-px-2.5 sm:scroll-px-5 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
-              {wanderungBilder.map((b) => (
+              {opts.bilder.map((b) => (
                 <figure key={b.src} className="m-0 flex-none w-[80%] sm:w-[48%] snap-start">
                   <div className="relative aspect-video rounded-xl overflow-hidden bg-cream-100">
                     <Image src={b.src} alt={b.alt[locale]} fill className="object-cover" sizes="(max-width: 640px) 80vw, 420px" />
@@ -359,43 +412,68 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
               ))}
             </div>
           )}
-          <p className="font-body text-[15px] text-forest-700 leading-relaxed">{t.hike.intro}</p>
+          <p className="font-body text-[15px] text-forest-700 leading-relaxed">{w.intro}</p>
+          {w.notice && (
+            <p role="note" className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 font-body text-sm text-amber-900 leading-snug">
+              {w.notice}
+            </p>
+          )}
           <dl className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3 rounded-xl bg-cream-50 p-4">
-            {t.hike.stats.map((s) => (
+            {w.stats.map((s) => (
               <div key={s.label}>
                 <dt className="font-body text-[11px] uppercase tracking-[0.1em] text-gold-700">{s.label}</dt>
                 <dd className="font-body text-sm text-forest-900 leading-snug">{s.value}</dd>
               </div>
             ))}
           </dl>
-          <div>
-            <p className="font-body text-[11px] font-semibold tracking-[0.12em] uppercase text-gold-700 mb-2">{t.hike.routeSummary}</p>
-            <ol className="space-y-2.5">
-              {t.hike.waypoints.map((wp, i) => (
-                <li key={wp.name} className="flex gap-3">
-                  <span
-                    className={`flex-none mt-0.5 w-6 h-6 rounded-full flex items-center justify-center font-body text-xs font-semibold tabular-nums ${i === WAYPOINT_HIGHLIGHT ? "bg-gold-500 text-forest-900" : "bg-forest-50 text-forest-700"}`}
-                    aria-hidden="true"
-                  >
-                    {i + 1}
-                  </span>
-                  <div>
-                    <p className="font-body text-sm font-semibold text-forest-900">{wp.name}</p>
-                    <p className="font-body text-sm text-forest-600 leading-snug">{wp.detail}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-          <p className="font-body text-sm text-forest-700">
-            <strong className="text-forest-900">{t.hike.mapStrong}</strong>
-            {t.hike.mapText}
-          </p>
+          {w.waypoints && w.waypoints.length > 0 && (
+            <div>
+              <p className="font-body text-[11px] font-semibold tracking-[0.12em] uppercase text-gold-700 mb-2">{w.routeSummary}</p>
+              <ol className="space-y-2.5">
+                {w.waypoints.map((wp, i) => (
+                  <li key={wp.name} className="flex gap-3">
+                    <span
+                      className={`flex-none mt-0.5 w-6 h-6 rounded-full flex items-center justify-center font-body text-xs font-semibold tabular-nums ${i === opts.highlight ? "bg-gold-500 text-forest-900" : "bg-forest-50 text-forest-700"}`}
+                      aria-hidden="true"
+                    >
+                      {i + 1}
+                    </span>
+                    <div>
+                      <p className="font-body text-sm font-semibold text-forest-900">{wp.name}</p>
+                      <p className="font-body text-sm text-forest-600 leading-snug">{wp.detail}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+          {w.moreRoutes && w.moreRoutes.length > 0 && (
+            <div>
+              <p className="font-body text-[11px] font-semibold tracking-[0.12em] uppercase text-gold-700 mb-2">{w.moreRoutesHeading}</p>
+              <ul className="space-y-1.5">
+                {w.moreRoutes.map((r) => (
+                  <li key={r.name} className="flex items-start gap-2 font-body text-sm text-forest-700 leading-snug">
+                    <span className="mt-[0.45rem] w-1 h-1 rounded-full bg-gold-500 flex-none" aria-hidden="true" />
+                    <span>
+                      <strong className="font-semibold text-forest-900">{r.name}:</strong> {r.detail}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {w.mapStrong && (
+            <p className="font-body text-sm text-forest-700">
+              <strong className="text-forest-900">{w.mapStrong}</strong>
+              {w.mapText}
+            </p>
+          )}
+          {ausflugszieleMaterial[id] && offizielleLinks(ausflugszieleMaterial[id])}
           <Link
-            href={href("/haus28")}
+            href={href(opts.ctaHref)}
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-gold-500 text-forest-900 text-sm font-body font-medium rounded-full hover:bg-gold-400 transition-colors"
           >
-            {t.hike.cta}
+            {w.cta}
             <IconArrowRight size={14} />
           </Link>
         </div>
@@ -532,7 +610,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                 {GROUPS.map((g) => {
                   const gt = t.groups[g.key];
                   const filter = Array.from(new Set(g.ids.flatMap((id) => ATTRACTION_FILTER[id] ?? [])));
-                  const minuten = g.ids.flatMap((id) => (id === HIKE_ID || id === EINKEHR_ID ? [] : minutenVon(id)));
+                  const minuten = g.ids.flatMap((id) => (id === HIKE_ID || id === BROTJACKL_ID || id === EINKEHR_ID ? [] : minutenVon(id)));
                   return (
                     <li key={g.key} data-filter={filter.join(" ")}>
                       <div className={LEISTE}>
@@ -543,7 +621,15 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                         </div>
                       </div>
                       <ol>
-                        {g.ids.map((id) => (id === HIKE_ID ? wanderung() : id === EINKEHR_ID ? einkehr() : ziel(id)))}
+                        {g.ids.map((id) =>
+                          id === HIKE_ID
+                            ? wanderung(HIKE_ID, t.hike, { emoji: "🥾", bilder: wanderungBilder, ctaHref: "/haus28", highlight: WAYPOINT_HIGHLIGHT })
+                            : id === BROTJACKL_ID
+                              ? wanderung(BROTJACKL_ID, t.brotjacklriegel, { emoji: "⛰️", bilder: ausflugszieleMaterial[BROTJACKL_ID]?.bilder ?? [], ctaHref: "/schoenblick" })
+                              : id === EINKEHR_ID
+                                ? einkehr()
+                                : ziel(id),
+                        )}
                       </ol>
                       {gt.hint && (
                         <div className={LEISTE}>
