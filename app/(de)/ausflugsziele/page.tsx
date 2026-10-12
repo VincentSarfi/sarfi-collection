@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     locale: "de",
     title: "Ausflugsziele im Bayerischen Wald",
     description:
-      "Pullman City, Büchelstein-Wanderung, Steinberglift, Rusel-Arena, Baumwipfelpfad & Nationalpark: die besten Ausflugsziele im Bayerischen Wald.",
+      "Pullman City, Büchelstein-Wanderung, Steinberglift, Rusel-Arena, Baumwipfelpfad, Nationalpark, elypso & JOSKA Glasparadies: die besten Ausflugsziele im Bayerischen Wald.",
     ogTitle: "Ausflugsziele Bayerischer Wald – Tipps von SARFI Collection",
     ogDescription:
       "Pullman City, Büchelstein-Wanderung, Steinberglift, Indoor Golf & mehr – die besten Ausflüge rund um HAUS28 und Haus Schönblick.",
@@ -22,6 +22,9 @@ export const metadata: Metadata = {
     "Indoor Golf Rusel",
     "Baumwipfelpfad Neuschönau",
     "Nationalpark Bayerischer Wald",
+    "elypso Deggendorf",
+    "JOSKA Glasparadies Bodenmais",
+    "Schlechtwetter Bayerischer Wald",
     "Ausflüge Grattersdorf",
     "Ausflüge Schöfweg",
     "Freizeitangebote Bayerischer Wald",

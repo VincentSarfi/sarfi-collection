@@ -13,19 +13,12 @@ const ausflugsziele: typeof de = {
     pillHaus28: "HAUS28 · Grattersdorf",
     pillSchoenblick: "Haus Schönblick · Schöfweg",
   },
-  quickLinks: {
-    "pullman-city": "Pullman City",
-    baumwipfelpfad: "Treetop Walk",
-    nationalpark: "National Park",
-    "skigebiet-sonnenwald": "Ski area",
-    "indoor-golf": "Indoor golf",
-    "buechelstein-wanderung": "Büchelstein hike",
-  },
   overview: {
     ariaLabel: "Overview of things to do",
     eyebrow: "All seasons",
     heading: "More to experience in the Bavarian Forest",
-    intro: "From Wild West flair to skiing and indoor golf – there's something for every weather and every group.",
+    intro:
+      "From Wild West flair to skiing and indoor golf – there's something for every weather and every group. Tap a card for all the details.",
   },
   distanceTable: {
     heading: "Driving distances",
@@ -33,50 +26,21 @@ const ausflugsziele: typeof de = {
     colHaus28: "from HAUS28",
     colSchoenblick: "from Haus Schönblick",
   },
-  audiences: {
-    heading: "Which trip suits whom?",
-    groups: [
-      {
-        title: "With children",
-        items: [
-          { text: "Pullman City: shows, pony rides, gold panning", anchor: "pullman-city" },
-          { text: "Treetop Walk with adventure stations", anchor: "baumwipfelpfad" },
-          { text: "National park animal enclosure – free", anchor: "nationalpark" },
-          { text: "Toboggan run and beginner slopes at the Steinberglift", anchor: "skigebiet-sonnenwald" },
-        ],
-      },
-      {
-        title: "For seniors & step-free",
-        items: [
-          { text: "Treetop Walk: low-barrier boardwalk, pram-friendly", anchor: "baumwipfelpfad" },
-          { text: "National park visitor centres with exhibitions", anchor: "nationalpark" },
-          { text: "Indoor pool & sauna world at elypso in Deggendorf" },
-        ],
-      },
-      {
-        title: "On rainy days",
-        items: [
-          { text: "Indoor golf at the Rusel-Arena", anchor: "indoor-golf" },
-          { text: "Exhibitions at the Hans-Eisenmann-Haus", anchor: "nationalpark" },
-          { text: "elypso leisure pool in Deggendorf" },
-        ],
-      },
-      {
-        title: "In winter",
-        items: [
-          { text: "Skiing at the Steinberglift", anchor: "skigebiet-sonnenwald" },
-          { text: "Tobogganing and cross-country skiing", anchor: "skigebiet-sonnenwald" },
-          { text: "Christmas markets in the region" },
-        ],
-      },
-    ],
-  },
   highlightsLabel: "Highlights",
   practicalLabel: "Good to know",
+  photoLabel: "Photo",
+  officialWebsiteLabel: "Official website",
+  newTabHint: "(opens in a new tab)",
+  webcam: {
+    caption: "Live webcam at the Steinberglift",
+    linkLabel: "Webcam: Steinberglift – open the webcam page",
+    fallback: "Webcam currently unavailable – see the live image at steinberglift.de",
+  },
   attractions: [
     {
       id: "pullman-city",
       tag: "Family & fun",
+      cardTags: ["Kids", "Family"],
       name: "Pullman City",
       schemaName: "Pullman City – Western town in Eging am See",
       subtitle: "Western town in Eging am See – since 1997",
@@ -103,6 +67,7 @@ const ausflugsziele: typeof de = {
     {
       id: "baumwipfelpfad",
       tag: "Nature & adventure",
+      cardTags: ["Nature", "Kids", "Step-free"],
       name: "Treetop Walk Neuschönau",
       schemaName: "Treetop Walk Neuschönau (Baumwipfelpfad)",
       subtitle: "One of the longest treetop walks in Europe",
@@ -129,6 +94,7 @@ const ausflugsziele: typeof de = {
     {
       id: "nationalpark",
       tag: "Nature & hiking",
+      cardTags: ["Nature", "Kids"],
       name: "Bavarian Forest National Park",
       schemaName: "Bavarian Forest National Park",
       subtitle: "Germany's oldest national park",
@@ -155,6 +121,7 @@ const ausflugsziele: typeof de = {
     {
       id: "skigebiet-sonnenwald",
       tag: "Winter & sport",
+      cardTags: ["Winter", "Kids"],
       name: "Steinberglift Langfurth",
       schemaName: "Steinberglift Langfurth (Schöfweg)",
       subtitle: "Family ski lift right by Haus Schönblick",
@@ -162,7 +129,7 @@ const ausflugsziele: typeof de = {
       fromHaus28: ca(m.steinberglift.haus28),
       fromSchoenblick: "right on site",
       description:
-        "The Steinberglift in Langfurth near Schöfweg is literally on Haus Schönblick's doorstep: a 400 m main slope plus a kids' area with a beginner lift, a magic carpet and a practice slope, and a toboggan hill. There are more lifts on the nearby Brotjacklriegel (1,011 m) – seven lift facilities in Schöfweg altogether – and around 23 km of groomed cross-country trails in and around Schöfweg. A live webcam shows the current snow conditions – perfect for planning your day from the apartment.",
+        "The Steinberglift in Langfurth near Schöfweg is literally on Haus Schönblick's doorstep: a 400 m main slope plus a kids' area with a beginner lift, a magic carpet and a practice slope, and a toboggan hill. There are more lifts on the nearby Brotjacklriegel (1,011 m) – seven lift facilities in Schöfweg altogether – and around 23 km of groomed cross-country trails in and around Schöfweg. The live webcam shows the current snow conditions – perfect for planning your day from the apartment.",
       schemaDescription:
         "Family-friendly ski lift in Langfurth near Schöfweg with a 400 m slope, kids' area, toboggan hill and live webcam.",
       highlights: [
@@ -174,7 +141,6 @@ const ausflugsziele: typeof de = {
       ],
       practicalInfo: [
         { label: "Season", value: "winter, snow permitting (with snowmaking)" },
-        { label: "Live cam", value: "steinberglift.de" },
         { label: "Food", value: "Stoaberg Alm right at the lift (new since September 2026)" },
         { label: "Tip", value: "Ice skating in Grafenau as an alternative" },
       ],
@@ -182,6 +148,7 @@ const ausflugsziele: typeof de = {
     {
       id: "indoor-golf",
       tag: "Sport & fun",
+      cardTags: ["Rainy days"],
       name: "Rusel-Arena indoor golf",
       schemaName: "Rusel-Arena indoor golf",
       subtitle: "6 TrackMan simulators at Rusel golf course",
@@ -202,6 +169,60 @@ const ausflugsziele: typeof de = {
         { label: "Price", value: "from €44 / 55 min / bay" },
         { label: "Booking", value: "online at arena.deggendorfer-golfclub.de" },
         { label: "Tip", value: "A great group activity for non-golfers too" },
+      ],
+    },
+    {
+      id: "elypso",
+      tag: "Pools & wellness",
+      cardTags: ["Rainy days", "Kids", "Winter"],
+      name: "elypso Deggendorf",
+      schemaName: "elypso leisure pool Deggendorf",
+      subtitle: "Leisure pool and sauna world in Deggendorf",
+      distance: `${ca(m.elypso.haus28)} from HAUS28 & Haus Schönblick`,
+      fromHaus28: ca(m.elypso.haus28),
+      fromSchoenblick: ca(m.elypso.schoenblick),
+      description:
+        "The elypso in Deggendorf is the region's big leisure and adventure pool: the indoor pool world offers a sports pool, a multi-pool with a current channel, the wellness lagoon with pool bar and whirlpool, plus a kids' area with slides. The sauna world has several themed saunas with infusions, a sauna garden and a natural bathing pond. In summer the outdoor pool with its sandy beach opens too. The reliable plan for rainy days – and the perfect warm-up after a day on the slopes.",
+      schemaDescription:
+        "Leisure and adventure pool in Deggendorf with pool world, themed sauna world and a summer outdoor pool.",
+      highlights: [
+        "Sports pool & multi-pool with current channel",
+        "Wellness lagoon with pool bar & whirlpool",
+        "Sauna world with themed saunas & natural bathing pond",
+        "Kids' area & slides",
+        "Outdoor pool with sandy beach in summer",
+      ],
+      practicalInfo: [
+        { label: "Opening", value: "pool and sauna world all year round, outdoor pool mid-May to mid-September – times at elypso.de" },
+        { label: "Admission", value: "current prices at elypso.de · sauna world from age 16" },
+        { label: "Address", value: "Sandnerhofweg 4–6, 94469 Deggendorf" },
+      ],
+    },
+    {
+      id: "joska",
+      tag: "Glass & craft",
+      cardTags: ["Rainy days", "Kids"],
+      name: "JOSKA Glasparadies",
+      schemaName: "JOSKA Glasparadies Bodenmais",
+      subtitle: "Glassmaking tradition in Bodenmais – free entry",
+      distance: `${ca(m.joska.schoenblick)} from Haus Schönblick · ${ca(m.joska.haus28)} from HAUS28`,
+      fromHaus28: ca(m.joska.haus28),
+      fromSchoenblick: ca(m.joska.schoenblick),
+      description:
+        "At the JOSKA Glasparadies in Bodenmais you can experience the Bavarian Forest's glassmaking tradition up close: in the demonstration glassworks you watch the glassmakers at work for free – and can even blow your own piece of glass under guidance. There's also a large glass and decoration world with a shop, the crystal restaurant with beer garden and the Café Kristallino. Entry is free – ideal as a half-day trip, rain or shine.",
+      schemaDescription:
+        "Glass experience world in Bodenmais with demonstration glassworks, hands-on glassblowing, shop and restaurants – free entry.",
+      highlights: [
+        "Demonstration glassworks: watch the glassmakers live",
+        "Hands-on glassblowing – make your own piece",
+        "Large glass & decoration world with shop",
+        "Crystal restaurant, beer garden & Café Kristallino",
+        "Free entry",
+      ],
+      practicalInfo: [
+        { label: "Opening", value: "all year round, including Sundays & holidays – times at joska.com" },
+        { label: "Admission", value: "free; glassblowing & tours see joska.com" },
+        { label: "Address", value: "Am Moosbach 1, 94249 Bodenmais" },
       ],
     },
   ],
@@ -235,6 +256,8 @@ const ausflugsziele: typeof de = {
     eyebrow: "Straight from HAUS28",
     heading: "Büchelstein circular hike",
     tableName: "Büchelstein circular hike",
+    cardTags: ["Nature", "Hiking"],
+    cardNote: "Starts right at HAUS28's front door",
     schemaName: "Büchelstein hiking route from HAUS28",
     schemaDescription:
       "Circular hike straight from HAUS28 on trail no. 54 \"Büchelsteiner-Runde\": Großer Büchelstein (831 m), Kleiner Büchelstein and the 18th-century Rastbuche pilgrimage chapel – approx. 7 km, with views into the Danube valley.",

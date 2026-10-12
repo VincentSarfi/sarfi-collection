@@ -1,48 +1,64 @@
 import Link from "next/link";
+import Image from "next/image";
 import { IconArrowRight, IconMapPin } from "@/components/ui/Icons";
+import { ausflugszieleMaterial } from "@/data/ausflugsziele-bildmaterial";
+import SteinbergliftWebcam from "@/components/pages/SteinbergliftWebcam";
 import { getDict, localizedUrl, localizeHref, type Locale } from "@/lib/i18n";
 
-// Darstellung je Ausflugsziel (Texte kommen aus locales/*/ausflugsziele.ts).
+const SITE = "https://www.sarfi-collection.de";
+
+// Darstellung je Ausflugsziel (Texte: locales/*/ausflugsziele.ts,
+// Websites/Links/Bilder: data/ausflugsziele-bildmaterial.ts).
 const ATTRACTION_STYLE: Record<
   string,
-  { emoji: string; tagColor: string; bgColor: string; borderColor: string; link: string }
+  { emoji: string; tagColor: string; bgColor: string; borderColor: string }
 > = {
   "pullman-city": {
     emoji: "🤠",
     tagColor: "bg-amber-100 text-amber-800",
     bgColor: "bg-amber-50",
     borderColor: "border-amber-200",
-    link: "https://www.pullmancity.de",
   },
   baumwipfelpfad: {
     emoji: "🌲",
     tagColor: "bg-green-100 text-green-800",
     bgColor: "bg-emerald-50",
     borderColor: "border-emerald-200",
-    link: "https://treetop-walks.com/bayerischer-wald/",
   },
   nationalpark: {
     emoji: "🦌",
     tagColor: "bg-forest-100 text-forest-800",
     bgColor: "bg-slate-50",
     borderColor: "border-slate-200",
-    link: "https://www.nationalpark-bayerischer-wald.bayern.de/",
   },
   "skigebiet-sonnenwald": {
     emoji: "⛷️",
     tagColor: "bg-blue-100 text-blue-800",
     bgColor: "bg-sky-50",
     borderColor: "border-sky-200",
-    link: "https://www.steinberglift.de",
   },
   "indoor-golf": {
     emoji: "⛳",
     tagColor: "bg-lime-100 text-lime-800",
     bgColor: "bg-lime-50",
     borderColor: "border-lime-200",
-    link: "https://arena.deggendorfer-golfclub.de",
+  },
+  elypso: {
+    emoji: "🏊",
+    tagColor: "bg-cyan-100 text-cyan-800",
+    bgColor: "bg-cyan-50",
+    borderColor: "border-cyan-200",
+  },
+  joska: {
+    emoji: "💎",
+    tagColor: "bg-violet-100 text-violet-800",
+    bgColor: "bg-violet-50",
+    borderColor: "border-violet-200",
   },
 };
+
+// Stil der Büchelstein-Karte in der Übersicht (eigener Abschnitt, kein attractions-Eintrag)
+const HIKE_CARD_STYLE = { emoji: "🥾", tagColor: "bg-forest-100 text-forest-800", bgColor: "bg-forest-50" };
 
 // schema.org-Typ und Ort je Ausflugsziel
 const ATTRACTION_SCHEMA: Record<string, { type: string; locality: string }> = {
@@ -51,23 +67,30 @@ const ATTRACTION_SCHEMA: Record<string, { type: string; locality: string }> = {
   nationalpark: { type: "Park", locality: "Neuschönau" },
   "skigebiet-sonnenwald": { type: "SportsActivityLocation", locality: "Langfurth / Schöfweg" },
   "indoor-golf": { type: "SportsActivityLocation", locality: "Deggendorf" },
+  elypso: { type: "SportsActivityLocation", locality: "Deggendorf" },
+  joska: { type: "TouristAttraction", locality: "Bodenmais" },
 };
 
 /** ItemList der Ausflugsziele inkl. Büchelstein-Wanderung (JSON-LD). */
 export function ausflugszieleJsonLd(locale: Locale) {
   const t = getDict(locale).ausflugsziele;
   const items = [
-    ...t.attractions.map((attr) => ({
-      "@type": ATTRACTION_SCHEMA[attr.id].type,
-      name: attr.schemaName,
-      description: attr.schemaDescription,
-      url: ATTRACTION_STYLE[attr.id].link,
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: ATTRACTION_SCHEMA[attr.id].locality,
-        addressCountry: "DE",
-      },
-    })),
+    ...t.attractions.map((attr) => {
+      const material = ausflugszieleMaterial[attr.id];
+      const bilder = material?.bilder ?? [];
+      return {
+        "@type": ATTRACTION_SCHEMA[attr.id].type,
+        name: attr.schemaName,
+        description: attr.schemaDescription,
+        url: material?.website,
+        ...(bilder.length > 0 ? { image: bilder.map((b) => SITE + b.src) } : {}),
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: ATTRACTION_SCHEMA[attr.id].locality,
+          addressCountry: "DE",
+        },
+      };
+    }),
     { "@type": "TouristAttraction", name: t.hike.schemaName, description: t.hike.schemaDescription },
   ];
   return {
@@ -80,15 +103,6 @@ export function ausflugszieleJsonLd(locale: Locale) {
   };
 }
 
-const QUICK_LINK_EMOJI: Record<string, string> = {
-  "pullman-city": "🤠",
-  baumwipfelpfad: "🌲",
-  nationalpark: "🦌",
-  "skigebiet-sonnenwald": "⛷️",
-  "indoor-golf": "⛳",
-  "buechelstein-wanderung": "🥾",
-};
-
 const SEASON_STYLE = [
   { emoji: "🌸", color: "bg-pink-50 border-pink-200" },
   { emoji: "☀️", color: "bg-yellow-50 border-yellow-200" },
@@ -98,7 +112,17 @@ const SEASON_STYLE = [
 
 // Reihenfolge wie hike.waypoints: Start, Großer Büchelstein, Kleiner Büchelstein, Rastbuche, Rückweg
 const WAYPOINT_ICONS = ["🏠", "🏔️", "⛰️", "⛪", "🏠"];
-const WAYPOINT_HIGHLIGHT = 3; // Großer Büchelstein
+const WAYPOINT_HIGHLIGHT = 1; // Großer Büchelstein
+
+function ExternalIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      <polyline points="15 3 21 3 21 9" />
+      <line x1="10" y1="14" x2="21" y2="3" />
+    </svg>
+  );
+}
 
 /** Ausflugsziele-Seite (Inhalt) – von app/(de)/ausflugsziele und app/(en)/en/ausflugsziele gerendert. */
 export default function AusflugszielePageContent({ locale }: { locale: Locale }) {
@@ -152,27 +176,10 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
         </div>
       </section>
 
-      {/* Quick-links */}
-      <section className="bg-cream-100 border-b border-cream-200 sticky top-0 z-30 overflow-x-auto scrollbar-hide">
-        <div className="container-site">
-          <div className="flex items-center gap-1 py-3 w-max min-w-full">
-            {Object.entries(t.quickLinks).map(([id, label]) => (
-              <a
-                key={id}
-                href={`#${id}`}
-                className="flex-none px-4 py-2 font-body text-sm text-forest-700 hover:text-forest-900 hover:bg-cream-200 rounded-full transition-colors whitespace-nowrap"
-              >
-                {QUICK_LINK_EMOJI[id]} {label}
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Attractions Grid ──────────────────────────────────────────── */}
+      {/* ── Übersicht & Ziele ─────────────────────────────────────────── */}
       <section className="section-pad bg-cream-50" aria-label={t.overview.ariaLabel}>
         <div className="container-site">
-          <div className="mb-10">
+          <div className="mb-8">
             <p className="font-body text-sm tracking-[0.15em] uppercase text-gold-600 mb-2">
               {t.overview.eyebrow}
             </p>
@@ -184,62 +191,86 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
             </p>
           </div>
 
-          {/* Entfernungstabelle – als echte <table> für Featured Snippets & KI-Antworten */}
-          <h3 id="entfernungen-heading" className="font-display text-2xl text-forest-900 mb-4">
-            {t.distanceTable.heading}
-          </h3>
-          <div className="mb-12 overflow-x-auto rounded-2xl border border-cream-200 bg-white">
-            <table aria-labelledby="entfernungen-heading" className="w-full font-body text-sm text-left">
-              <thead className="bg-cream-100 text-forest-700">
-                <tr>
-                  <th scope="col" className="px-3 sm:px-4 py-3 font-semibold">{t.distanceTable.colDestination}</th>
-                  <th scope="col" className="px-3 sm:px-4 py-3 font-semibold">{t.distanceTable.colHaus28}</th>
-                  <th scope="col" className="px-3 sm:px-4 py-3 font-semibold">{t.distanceTable.colSchoenblick}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-cream-200 text-forest-700">
-                {t.attractions.map((attr) => (
-                  <tr key={attr.id}>
-                    <th scope="row" className="px-3 sm:px-4 py-3 font-semibold text-forest-900">
-                      <a href={`#${attr.id}`} className="underline underline-offset-2 hover:text-gold-700">
-                        {attr.name}
-                      </a>
-                    </th>
-                    <td className="px-3 sm:px-4 py-3">{attr.fromHaus28}</td>
-                    <td className="px-3 sm:px-4 py-3">{attr.fromSchoenblick}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {/* Übersicht: eine Karte je Ziel, mit Bild (falls freigegeben), Tags und Fahrzeiten */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-14">
+            {t.attractions.map((attr) => {
+              const style = ATTRACTION_STYLE[attr.id];
+              const thumb = ausflugszieleMaterial[attr.id]?.bilder[0];
+              return (
+                <a
+                  key={attr.id}
+                  href={`#${attr.id}`}
+                  className="group flex flex-col rounded-2xl border border-cream-200 bg-white overflow-hidden shadow-card hover:shadow-card-lg transition-shadow"
+                >
+                  {thumb ? (
+                    <div className="relative aspect-[3/2]">
+                      <Image
+                        src={thumb.src}
+                        alt={thumb.alt[locale]}
+                        fill
+                        priority={attr.id === "nationalpark"}
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        sizes="(max-width: 1024px) 50vw, 25vw"
+                      />
+                      <span className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-forest-900/60 text-cream-50 text-[10px] font-body">
+                        {t.photoLabel}: {thumb.credit}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className={`aspect-[3/2] flex items-center justify-center text-4xl ${style.bgColor}`} aria-hidden="true">
+                      {style.emoji}
+                    </div>
+                  )}
+                  <div className="p-3 sm:p-4 flex flex-col gap-2 flex-1">
+                    <p className="font-body text-sm font-semibold text-forest-900 leading-snug group-hover:underline underline-offset-2">
+                      {attr.name}
+                    </p>
+                    <div className="flex flex-wrap gap-1">
+                      {attr.cardTags.map((tag) => (
+                        <span key={tag} className={`px-1.5 py-0.5 rounded-full text-[10px] font-body font-medium ${style.tagColor}`}>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="mt-auto font-body text-[11px] text-forest-500 leading-relaxed">
+                      {t.distanceTable.colHaus28} {attr.fromHaus28}
+                      <br />
+                      {t.distanceTable.colSchoenblick} {attr.fromSchoenblick}
+                    </p>
+                  </div>
+                </a>
+              );
+            })}
 
-          {/* Für wen? – beantwortet Suchen wie „Ausflugsziele … für Senioren / mit Kindern“ */}
-          <h3 className="font-display text-2xl text-forest-900 mb-4">{t.audiences.heading}</h3>
-          <div className="mb-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {t.audiences.groups.map((group) => (
-              <div key={group.title} className="rounded-2xl border border-cream-200 bg-white p-5">
-                <h4 className="font-body text-sm font-semibold text-forest-900 mb-3">{group.title}</h4>
-                <ul className="space-y-2">
-                  {group.items.map((item) => (
-                    <li key={item.text} className="font-body text-sm text-forest-700 flex items-start gap-1.5">
-                      <span className="text-forest-400 mt-0.5" aria-hidden="true">·</span>
-                      {"anchor" in item && item.anchor ? (
-                        <a href={`#${item.anchor}`} className="underline underline-offset-2 hover:text-gold-700">
-                          {item.text}
-                        </a>
-                      ) : (
-                        item.text
-                      )}
-                    </li>
-                  ))}
-                </ul>
+            {/* Büchelstein-Wanderung */}
+            <a
+              href="#buechelstein-wanderung"
+              className="group flex flex-col rounded-2xl border border-cream-200 bg-white overflow-hidden shadow-card hover:shadow-card-lg transition-shadow"
+            >
+              <div className={`aspect-[3/2] flex items-center justify-center text-4xl ${HIKE_CARD_STYLE.bgColor}`} aria-hidden="true">
+                {HIKE_CARD_STYLE.emoji}
               </div>
-            ))}
+              <div className="p-3 sm:p-4 flex flex-col gap-2 flex-1">
+                <p className="font-body text-sm font-semibold text-forest-900 leading-snug group-hover:underline underline-offset-2">
+                  {t.hike.heading}
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  {t.hike.cardTags.map((tag) => (
+                    <span key={tag} className={`px-1.5 py-0.5 rounded-full text-[10px] font-body font-medium ${HIKE_CARD_STYLE.tagColor}`}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <p className="mt-auto font-body text-[11px] text-forest-500 leading-relaxed">{t.hike.cardNote}</p>
+              </div>
+            </a>
           </div>
 
           <div className="flex flex-col gap-8">
             {t.attractions.map((attr) => {
               const style = ATTRACTION_STYLE[attr.id];
+              const material = ausflugszieleMaterial[attr.id];
+              const bilder = material?.bilder ?? [];
               return (
                 <article
                   key={attr.id}
@@ -265,10 +296,42 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                       </div>
                     </div>
 
+                    {/* Freigegebene Fotos des Betreibers, Bildnachweis darunter */}
+                    {bilder.length > 0 && (
+                      <div className={`grid gap-3 mb-6 grid-cols-1 ${bilder.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
+                        {bilder.map((b) => (
+                          <figure key={b.src} className="m-0">
+                            <div className="relative aspect-[3/2] rounded-xl overflow-hidden">
+                              <Image
+                                src={b.src}
+                                alt={b.alt[locale]}
+                                fill
+                                className="object-cover"
+                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                              />
+                            </div>
+                            <figcaption className="mt-1 font-body text-[11px] text-forest-500">
+                              {t.photoLabel}: {b.credit}
+                            </figcaption>
+                          </figure>
+                        ))}
+                      </div>
+                    )}
+
                     {/* Description */}
                     <p className="font-body text-base text-forest-700 leading-relaxed mb-6">
                       {attr.description}
                     </p>
+
+                    {/* Live-Webcam (Steinberglift) – serverseitig durchgereicht */}
+                    {material?.webcam && (
+                      <div className="mb-6">
+                        <SteinbergliftWebcam
+                          page={material.webcam.seite}
+                          labels={{ ...t.webcam, newTab: t.newTabHint }}
+                        />
+                      </div>
+                    )}
 
                     {/* Two-column: Highlights + Practical */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
@@ -307,24 +370,65 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                       </div>
                     </div>
 
-                    {/* External link */}
-                    <a
-                      href={style.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 font-body text-sm text-forest-600 hover:text-forest-900 underline underline-offset-2 transition-colors"
-                    >
-                      {style.link.replace(/^https:\/\/(www\.)?/, "")}
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                        <polyline points="15 3 21 3 21 9" />
-                        <line x1="10" y1="14" x2="21" y2="3" />
-                      </svg>
-                    </a>
+                    {/* Offizielle Website + freigegebene Zusatzlinks (data/ausflugsziele-bildmaterial.ts) */}
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+                      <a
+                        href={material.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 font-body text-sm text-forest-600 hover:text-forest-900 underline underline-offset-2 transition-colors"
+                      >
+                        {material.website.replace(/^https:\/\/(www\.)?/, "").replace(/\/$/, "")}
+                        <ExternalIcon />
+                        <span className="sr-only"> {t.newTabHint}</span>
+                      </a>
+                      {material.links?.map((l) => (
+                        <a
+                          key={l.url}
+                          href={l.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 font-body text-sm font-medium text-forest-700 hover:text-forest-900 underline underline-offset-2 transition-colors"
+                        >
+                          {l.label[locale]}
+                          <ExternalIcon />
+                          <span className="sr-only"> {t.newTabHint}</span>
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 </article>
               );
             })}
+          </div>
+
+          {/* Entfernungstabelle – als echte <table> für Featured Snippets & KI-Antworten */}
+          <h3 id="entfernungen-heading" className="font-display text-2xl text-forest-900 mt-14 mb-4">
+            {t.distanceTable.heading}
+          </h3>
+          <div className="overflow-x-auto rounded-2xl border border-cream-200 bg-white">
+            <table aria-labelledby="entfernungen-heading" className="w-full font-body text-sm text-left">
+              <thead className="bg-cream-100 text-forest-700">
+                <tr>
+                  <th scope="col" className="px-3 sm:px-4 py-3 font-semibold">{t.distanceTable.colDestination}</th>
+                  <th scope="col" className="px-3 sm:px-4 py-3 font-semibold">{t.distanceTable.colHaus28}</th>
+                  <th scope="col" className="px-3 sm:px-4 py-3 font-semibold">{t.distanceTable.colSchoenblick}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-cream-200 text-forest-700">
+                {t.attractions.map((attr) => (
+                  <tr key={attr.id}>
+                    <th scope="row" className="px-3 sm:px-4 py-3 font-semibold text-forest-900">
+                      <a href={`#${attr.id}`} className="underline underline-offset-2 hover:text-gold-700">
+                        {attr.name}
+                      </a>
+                    </th>
+                    <td className="px-3 sm:px-4 py-3">{attr.fromHaus28}</td>
+                    <td className="px-3 sm:px-4 py-3">{attr.fromSchoenblick}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
