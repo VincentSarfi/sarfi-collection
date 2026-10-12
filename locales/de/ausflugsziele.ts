@@ -1,7 +1,9 @@
 // Ausflugsziele-Seite (components/pages/AusflugszielePageContent.tsx).
-// Nur Texte – Farben, Emojis und Links liegen in der Komponente.
+// Nur Texte – Farben, Emojis und Bildmaterial liegen in der Komponente bzw.
+// in data/ausflugsziele-bildmaterial.ts (Websites, Zusatzlinks, Fotos).
 // Fakten geprüft am 06.10.2026 (Betreiber-Websites, Nationalpark-Steckbrief,
-// Tourenportal Landkreis Deggendorf); Fahrzeiten aus data/surroundings.ts.
+// Tourenportal Landkreis Deggendorf); elypso & JOSKA ergänzt am 12.10.2026
+// (elypso.de, joska.com); Fahrzeiten aus data/surroundings.ts.
 import { ca, driveMinutes as m } from "@/data/surroundings";
 
 const ausflugsziele = {
@@ -15,19 +17,12 @@ const ausflugsziele = {
     pillHaus28: "HAUS28 · Grattersdorf",
     pillSchoenblick: "Haus Schönblick · Schöfweg",
   },
-  quickLinks: {
-    "pullman-city": "Pullman City",
-    baumwipfelpfad: "Baumwipfelpfad",
-    nationalpark: "Nationalpark",
-    "skigebiet-sonnenwald": "Skigebiet",
-    "indoor-golf": "Indoor Golf",
-    "buechelstein-wanderung": "Büchelstein-Tour",
-  } as Record<string, string>,
   overview: {
     ariaLabel: "Ausflugsziele Übersicht",
     eyebrow: "Alle Jahreszeiten",
     heading: "Mehr erleben im Bayerischen Wald",
-    intro: "Von Westernflair über Ski bis Indoor-Golf – hier ist für jedes Wetter und jede Reisegruppe etwas dabei.",
+    intro:
+      "Von Westernflair über Ski bis Indoor-Golf – hier ist für jedes Wetter und jede Reisegruppe etwas dabei. Tippe auf eine Karte für alle Details.",
   },
   distanceTable: {
     heading: "Entfernungen mit dem Auto",
@@ -35,50 +30,21 @@ const ausflugsziele = {
     colHaus28: "ab HAUS28",
     colSchoenblick: "ab Haus Schönblick",
   },
-  audiences: {
-    heading: "Welcher Ausflug passt zu wem?",
-    groups: [
-      {
-        title: "Mit Kindern",
-        items: [
-          { text: "Pullman City: Shows, Ponyreiten, Goldwaschen", anchor: "pullman-city" },
-          { text: "Baumwipfelpfad mit Erlebnisstationen", anchor: "baumwipfelpfad" },
-          { text: "Tierfreigehege im Nationalpark – kostenlos", anchor: "nationalpark" },
-          { text: "Rodelhang und Anfängerpisten am Steinberglift", anchor: "skigebiet-sonnenwald" },
-        ],
-      },
-      {
-        title: "Für Senioren & barrierearm",
-        items: [
-          { text: "Baumwipfelpfad: barrierearmer Holzsteg, kinderwagentauglich", anchor: "baumwipfelpfad" },
-          { text: "Nationalpark-Besucherzentren mit Ausstellungen", anchor: "nationalpark" },
-          { text: "Hallenbad & Saunawelt im elypso Deggendorf" },
-        ],
-      },
-      {
-        title: "Bei Regenwetter",
-        items: [
-          { text: "Indoor-Golf in der Rusel-Arena", anchor: "indoor-golf" },
-          { text: "Ausstellungen im Hans-Eisenmann-Haus", anchor: "nationalpark" },
-          { text: "Erlebnisbad elypso in Deggendorf" },
-        ],
-      },
-      {
-        title: "Im Winter",
-        items: [
-          { text: "Skifahren am Steinberglift", anchor: "skigebiet-sonnenwald" },
-          { text: "Rodeln und Langlaufen", anchor: "skigebiet-sonnenwald" },
-          { text: "Weihnachtsmärkte in der Region" },
-        ],
-      },
-    ],
-  },
   highlightsLabel: "Highlights",
   practicalLabel: "Praktische Infos",
+  photoLabel: "Foto",
+  officialWebsiteLabel: "Offizielle Website",
+  newTabHint: "(öffnet in neuem Tab)",
+  webcam: {
+    caption: "Live-Webcam am Steinberglift",
+    linkLabel: "Webcam: Steinberglift – zur Webcam-Seite",
+    fallback: "Webcam gerade nicht erreichbar – Live-Bild auf steinberglift.de ansehen",
+  },
   attractions: [
     {
       id: "pullman-city",
       tag: "Familie & Unterhaltung",
+      cardTags: ["Kinder", "Familie"],
       name: "Pullman City",
       schemaName: "Pullman City – Westernstadt Eging am See",
       subtitle: "Westernstadt in Eging am See – seit 1997",
@@ -105,6 +71,7 @@ const ausflugsziele = {
     {
       id: "baumwipfelpfad",
       tag: "Natur & Erlebnis",
+      cardTags: ["Natur", "Kinder", "Barrierearm"],
       name: "Baumwipfelpfad Neuschönau",
       schemaName: "Baumwipfelpfad Neuschönau",
       subtitle: "Einer der längsten Baumwipfelpfade Europas",
@@ -131,6 +98,7 @@ const ausflugsziele = {
     {
       id: "nationalpark",
       tag: "Natur & Wandern",
+      cardTags: ["Natur", "Kinder"],
       name: "Nationalpark Bayerischer Wald",
       schemaName: "Nationalpark Bayerischer Wald",
       subtitle: "Deutschlands ältester Nationalpark",
@@ -157,6 +125,7 @@ const ausflugsziele = {
     {
       id: "skigebiet-sonnenwald",
       tag: "Winter & Sport",
+      cardTags: ["Winter", "Kinder"],
       name: "Steinberglift Langfurth",
       schemaName: "Steinberglift Langfurth (Schöfweg)",
       subtitle: "Familien-Skilift direkt am Haus Schönblick",
@@ -164,7 +133,7 @@ const ausflugsziele = {
       fromHaus28: ca(m.steinberglift.haus28),
       fromSchoenblick: "direkt vor Ort",
       description:
-        "Der Steinberglift in Langfurth bei Schöfweg liegt buchstäblich vor der Haustür von Haus Schönblick: eine 400 m lange Hauptpiste, dazu ein Kinderland mit Anfängerlift, Förderband und Übungshang sowie ein Rodelhang. Weitere Lifte gibt es am nahen Brotjacklriegel (1.011 m) – in Schöfweg sind es insgesamt sieben Liftanlagen – und rund 23 km gespurte Loipen in Schöfweg und Umgebung. Eine Live-Webcam zeigt den aktuellen Schneezustand – ideal zur Planung direkt aus der Unterkunft.",
+        "Der Steinberglift in Langfurth bei Schöfweg liegt buchstäblich vor der Haustür von Haus Schönblick: eine 400 m lange Hauptpiste, dazu ein Kinderland mit Anfängerlift, Förderband und Übungshang sowie ein Rodelhang. Weitere Lifte gibt es am nahen Brotjacklriegel (1.011 m) – in Schöfweg sind es insgesamt sieben Liftanlagen – und rund 23 km gespurte Loipen in Schöfweg und Umgebung. Die Live-Webcam zeigt den aktuellen Schneezustand – ideal zur Planung direkt aus der Unterkunft.",
       schemaDescription:
         "Familienfreundlicher Skilift in Langfurth bei Schöfweg mit 400-m-Piste, Kinderland, Rodelhang und Live-Webcam.",
       highlights: [
@@ -176,7 +145,6 @@ const ausflugsziele = {
       ],
       practicalInfo: [
         { label: "Saison", value: "Winter, schneeabhängig (mit Beschneiung)" },
-        { label: "Livecam", value: "steinberglift.de" },
         { label: "Einkehr", value: "Stoaberg Alm direkt am Lift (neu seit September 2026)" },
         { label: "Tipp", value: "Schlittschuhlaufen in Grafenau als Alternative" },
       ],
@@ -184,6 +152,7 @@ const ausflugsziele = {
     {
       id: "indoor-golf",
       tag: "Sport & Spaß",
+      cardTags: ["Regenwetter"],
       name: "Rusel-Arena Indoor Golf",
       schemaName: "Rusel-Arena Indoor Golf",
       subtitle: "6 TrackMan-Simulatoren am Golfplatz Rusel",
@@ -204,6 +173,60 @@ const ausflugsziele = {
         { label: "Preis", value: "ab 44 € / 55 min / Station" },
         { label: "Buchung", value: "Online über arena.deggendorfer-golfclub.de" },
         { label: "Tipp", value: "Auch für Nicht-Golfer ideal als Gruppenaktivität" },
+      ],
+    },
+    {
+      id: "elypso",
+      tag: "Baden & Wellness",
+      cardTags: ["Regenwetter", "Kinder", "Winter"],
+      name: "elypso Deggendorf",
+      schemaName: "elypso Freizeit- und Erlebnisbad Deggendorf",
+      subtitle: "Freizeit- und Erlebnisbad mit Saunawelt",
+      distance: `${ca(m.elypso.haus28)} von HAUS28 & Haus Schönblick`,
+      fromHaus28: ca(m.elypso.haus28),
+      fromSchoenblick: ca(m.elypso.schoenblick),
+      description:
+        "Das elypso in Deggendorf ist das große Freizeit- und Erlebnisbad der Region: In der Badewelt warten Sportbecken, ein Multibecken mit Strömungskanal, die Wellness-Lagune mit Poolbar und Whirlpool sowie ein Kinderbereich mit Rutschen. Die Saunawelt bietet mehrere Themensaunen mit Aufgüssen, Saunagarten und Naturbadeteich. Im Sommer öffnet zusätzlich das Freibad mit Sandstrand. Der verlässliche Plan für Regentage – und nach einem Skitag die perfekte Aufwärm-Station.",
+      schemaDescription:
+        "Freizeit- und Erlebnisbad in Deggendorf mit Badewelt, Saunawelt mit Themensaunen und Sommer-Freibad.",
+      highlights: [
+        "Sportbecken & Multibecken mit Strömungskanal",
+        "Wellness-Lagune mit Poolbar & Whirlpool",
+        "Saunawelt mit Themensaunen & Naturbadeteich",
+        "Kinderbereich & Rutschen",
+        "Freibad mit Sandstrand im Sommer",
+      ],
+      practicalInfo: [
+        { label: "Öffnung", value: "Badewelt & Saunawelt ganzjährig, Freibad Mitte Mai bis Mitte September – Zeiten auf elypso.de" },
+        { label: "Eintritt", value: "aktuelle Preise auf elypso.de · Saunawelt ab 16 Jahren" },
+        { label: "Adresse", value: "Sandnerhofweg 4–6, 94469 Deggendorf" },
+      ],
+    },
+    {
+      id: "joska",
+      tag: "Glas & Handwerk",
+      cardTags: ["Regenwetter", "Kinder"],
+      name: "JOSKA Glasparadies",
+      schemaName: "JOSKA Glasparadies Bodenmais",
+      subtitle: "Glasmacher-Tradition in Bodenmais – Eintritt frei",
+      distance: `${ca(m.joska.schoenblick)} von Haus Schönblick · ${ca(m.joska.haus28)} von HAUS28`,
+      fromHaus28: ca(m.joska.haus28),
+      fromSchoenblick: ca(m.joska.schoenblick),
+      description:
+        "Im JOSKA Glasparadies in Bodenmais erlebst du die Glasmacher-Tradition des Bayerischen Waldes zum Anfassen: In der Schauglashütte siehst du den Glasmachern kostenlos bei der Arbeit zu – und bläst unter Anleitung sogar dein eigenes Glasstück. Dazu kommen die große Glas- und Deko-Welt mit Shop, das Kristallrestaurant mit Biergarten und das Café Kristallino. Der Eintritt ist frei – ideal als Halbtagesausflug, auch bei Regen.",
+      schemaDescription:
+        "Glas-Erlebniswelt in Bodenmais mit Schauglashütte, Glasblasen zum Mitmachen, Shop und Gastronomie – Eintritt frei.",
+      highlights: [
+        "Schauglashütte: Glasmachern live zusehen",
+        "Glasblasen zum Mitmachen – eigenes Stück gestalten",
+        "Große Glas- & Deko-Welt mit Shop",
+        "Kristallrestaurant, Biergarten & Café Kristallino",
+        "Eintritt frei",
+      ],
+      practicalInfo: [
+        { label: "Öffnung", value: "ganzjährig, auch Sonn- & Feiertage – Zeiten auf joska.com" },
+        { label: "Eintritt", value: "frei; Glasblasen & Führungen siehe joska.com" },
+        { label: "Adresse", value: "Am Moosbach 1, 94249 Bodenmais" },
       ],
     },
   ],
@@ -237,6 +260,8 @@ const ausflugsziele = {
     eyebrow: "Direkt ab HAUS28",
     heading: "Büchelstein-Rundwanderung",
     tableName: "Büchelstein-Rundwanderung",
+    cardTags: ["Natur", "Wandern"],
+    cardNote: "Start direkt an der Haustür von HAUS28",
     schemaName: "Büchelstein Wanderroute ab HAUS28",
     schemaDescription:
       "Rundwanderung direkt ab HAUS28 auf dem Rundweg Nr. 54 „Büchelsteiner-Runde“: Großer Büchelstein (831 m), Kleiner Büchelstein und Wallfahrtskapelle Rastbuche (18. Jh.) – ca. 7 km, mit Blicken ins Donautal.",
