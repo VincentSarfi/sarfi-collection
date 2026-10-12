@@ -23,6 +23,12 @@ export type AusflugszielMaterial = {
   website: string;
   /** weitere Links mit Erlaubnis des Betreibers, z. B. Webcam */
   links?: { label: { de: string; en: string }; url: string }[];
+  /**
+   * Live-Bild mit Erlaubnis zum Einbinden. Nicht direkt im Browser laden,
+   * denn dann ginge die IP jedes Besuchers an den Webcam-Host (DSGVO).
+   * Entweder serverseitig durchreichen (mit Cache) oder erst auf Klick laden.
+   */
+  webcam?: { bild: string; seite: string };
   bilder: BildFreigabe[];
   freigabe: {
     stand: "freigegeben" | "angefragt";
@@ -90,11 +96,57 @@ export const ausflugszieleMaterial: Record<string, AusflugszielMaterial> = {
         url: "https://www.steinberglift.de/de/ski-lift/webcam.html",
       },
     ],
-    bilder: [],
+    // Live-Bild, alle paar Minuten neu (Host e-ventis)
+    webcam: {
+      bild: "https://evfile01.de/00011187/webcam/current2.jpg",
+      seite: "https://www.steinberglift.de/de/ski-lift/webcam.html",
+    },
+    bilder: [
+      {
+        src: "/images/ausflugsziele/skigebiet-sonnenwald/piste-und-stoaberghuette.webp",
+        width: 1920,
+        height: 1436,
+        alt: {
+          de: "Skigebiet Sonnenwald am Steinberglift von oben: Piste, Schlepplift und Stoaberghütte",
+          en: "Sonnenwald ski area at the Steinberglift from above: slope, T-bar lift and Stoaberghütte",
+        },
+        credit: "Steinberglift Schöfweg",
+      },
+      {
+        src: "/images/ausflugsziele/skigebiet-sonnenwald/kinderland-skischule.webp",
+        width: 1920,
+        height: 1440,
+        alt: {
+          de: "Skikurs im Kinderland am Steinberglift: Skilehrerin mit einer Reihe Kinder auf dem Förderband",
+          en: "Ski lessons in the Steinberglift children's area: instructor with a line of children on the magic carpet",
+        },
+        credit: "Steinberglift Schöfweg",
+      },
+      {
+        src: "/images/ausflugsziele/skigebiet-sonnenwald/schlepplift.webp",
+        width: 1280,
+        height: 851,
+        alt: {
+          de: "Schlepplift am Steinberg vor verschneitem Wald, unten das Kinderland",
+          en: "T-bar lift at the Steinberg in front of snowy forest, children's area below",
+        },
+        credit: "Steinberglift Schöfweg",
+      },
+      {
+        src: "/images/ausflugsziele/skigebiet-sonnenwald/rodeln.webp",
+        width: 1920,
+        height: 1273,
+        alt: {
+          de: "Zwei Kinder mit Schlitten im Schnee am Steinberglift",
+          en: "Two children with sledges in the snow at the Steinberglift",
+        },
+        credit: "Steinberglift Schöfweg",
+      },
+    ],
     freigabe: {
       stand: "freigegeben",
       notiz:
-        "Josef Altmann per WhatsApp am 12.10.2026: „ja könnt ihr gerne machen“ (Fotos/Logo, Webcam-Link). Bilddateien liegen noch nicht vor.",
+        "Josef Altmann (Inhaber) per WhatsApp am 12.10.2026: „ja könnt ihr gerne machen“. Gemeint sind die Fotos von steinberglift.de und das Einbinden der Webcam (Klarstellung durch Vincent). Urheberrecht laut Impressum beim Steinberglift.",
     },
   },
   "indoor-golf": {
