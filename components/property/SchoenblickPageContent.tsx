@@ -239,6 +239,8 @@ export default function SchoenblickPageContent({ locale }: { locale: Locale }) {
 
       {/* Location */}
       <LocationMap
+        house="schoenblick"
+        houseName={haus.name}
         address={haus.address}
         coordinates={haus.coordinates}
         mapsUrl={haus.googleMapsUrl}

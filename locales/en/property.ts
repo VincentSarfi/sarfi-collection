@@ -56,8 +56,36 @@ const property = {
     nearby: "Nearby",
     gps: "GPS coordinates",
     openInGoogleMaps: "View on Google Maps",
-    mapTitlePre: "Map: ",
-    mapAriaPre: "OpenStreetMap map of ",
+    // components/property/PlaceMap.tsx
+    map: {
+      ariaPre: "Map of things to do around ",
+      viewRegion: "Things to do",
+      viewNearby: "Around the house",
+      byCar: "{min} min by car from {house}",
+      onFoot: "on foot from {house}",
+      labelWalk: "on foot",
+      more: "More on the things-to-do page",
+      failed: "The map can't be displayed in this browser.",
+      places: {
+        "pullman-city": "Pullman City",
+        lusen: "Treetop Walk & National Park",
+        "indoor-golf": "Rusel-Arena indoor golf",
+        elypso: "elypso leisure pool",
+        joska: "JOSKA glass paradise",
+        "skigebiet-sonnenwald": "Steinberglift & Stoaberg Alm",
+        "buechelstein-wanderung": "Büchelstein hike",
+      } as Record<string, string>,
+      // MapLibre gesture hints and buttons
+      ui: {
+        "CooperativeGesturesHandler.WindowsHelpText": "Use Ctrl + scroll to zoom the map",
+        "CooperativeGesturesHandler.MacHelpText": "Use ⌘ + scroll to zoom the map",
+        "CooperativeGesturesHandler.MobileHelpText": "Use two fingers to move the map",
+        "NavigationControl.ZoomIn": "Zoom in",
+        "NavigationControl.ZoomOut": "Zoom out",
+        "AttributionControl.ToggleAttribution": "Toggle attribution",
+        "Popup.Close": "Close",
+      } as Record<string, string>,
+    },
     defaultAttractions: [
       { name: "Lusen National Park Centre", distance: "~40–45 min" },
       { name: "Deggendorf (shopping)", distance: ca(m.deggendorf.haus28) },

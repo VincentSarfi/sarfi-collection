@@ -401,6 +401,8 @@ export default function Haus28ClientPage({ hostingYears }: { hostingYears: numbe
               {/* Location */}
               <div className="py-6 border-b border-cream-200">
                 <LocationMap
+                  house="haus28"
+                  houseName={haus.name}
                   address={haus.address}
                   coordinates={haus.coordinates}
                   mapsUrl={haus.googleMapsUrl}

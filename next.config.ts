@@ -37,14 +37,16 @@ const securityHeaders = [
       "script-src 'self' 'unsafe-inline' https://js.stripe.com https://pay.google.com https://challenges.cloudflare.com",
       // Styles: own + inline (Tailwind generates inline styles)
       "style-src 'self' 'unsafe-inline'",
-      // Images: own + data URIs + Stripe
-      "img-src 'self' data: https://*.stripe.com",
+      // Images: own + data URIs + Stripe; blob: für Kartenkacheln (MapLibre)
+      "img-src 'self' data: blob: https://*.stripe.com",
       // Fonts: own origin
       "font-src 'self'",
-      // Connect: own API + Stripe + Smoobu + PriceLabs
-      "connect-src 'self' https://api.stripe.com https://login.smoobu.com https://api.pricelabs.co",
+      // Connect: own API + Stripe + Smoobu + PriceLabs + Kartendaten (OpenFreeMap)
+      "connect-src 'self' https://api.stripe.com https://login.smoobu.com https://api.pricelabs.co https://tiles.openfreemap.org",
+      // MapLibre rechnet die Kacheln in einem Web Worker aus blob:-URL
+      "worker-src 'self' blob:",
       // Stripe payment UI + Cloudflare Turnstile run in iframes
-      "frame-src https://js.stripe.com https://hooks.stripe.com https://pay.google.com https://www.openstreetmap.org https://challenges.cloudflare.com",
+      "frame-src https://js.stripe.com https://hooks.stripe.com https://pay.google.com https://challenges.cloudflare.com",
       // No object/embed elements allowed
       "object-src 'none'",
       // Base tag restricted to own origin
@@ -140,6 +142,16 @@ const nextConfig: NextConfig = {
         headers: [
           { key: "Access-Control-Allow-Origin", value: "*" },
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
+        // Relief-Kacheln der Lagekarte (scripts/build-dem-tiles.mjs) – ändern sich praktisch nie
+        source: "/map/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=2592000, stale-while-revalidate=604800",
+          },
         ],
       },
       {

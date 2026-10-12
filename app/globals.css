@@ -200,3 +200,25 @@
 .ausflug-filter:has(#af-winter:checked) [data-filter]:not([data-filter~="winter"]) {
   display: none;
 }
+
+/* ─────────────────────────────────────────
+   Lagekarte (components/property/PlaceMap.tsx):
+   MapLibre-Popups und -Bedienelemente im
+   Website-Look
+   ───────────────────────────────────────── */
+.placemap .maplibregl-popup-content {
+  @apply rounded-xl bg-cream-50 px-4 py-3 shadow-card-lg;
+}
+.placemap .maplibregl-popup-close-button {
+  @apply right-1 top-1 h-7 w-7 rounded-full text-lg leading-none text-forest-500 hover:bg-cream-200 hover:text-forest-900;
+}
+.placemap .maplibregl-popup-anchor-bottom .maplibregl-popup-tip { border-top-color: theme("colors.cream.50"); }
+.placemap .maplibregl-popup-anchor-top .maplibregl-popup-tip { border-bottom-color: theme("colors.cream.50"); }
+.placemap .maplibregl-popup-anchor-left .maplibregl-popup-tip { border-right-color: theme("colors.cream.50"); }
+.placemap .maplibregl-popup-anchor-right .maplibregl-popup-tip { border-left-color: theme("colors.cream.50"); }
+.placemap .maplibregl-ctrl-group {
+  @apply overflow-hidden rounded-xl border-0 shadow-card;
+}
+.placemap .maplibregl-ctrl-attrib {
+  @apply bg-cream-50/80 text-[10px];
+}

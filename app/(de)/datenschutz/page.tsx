@@ -243,12 +243,12 @@ export default function DatenschutzPage() {
 
           {/* 8 */}
           <section>
-            <h2 className="font-display text-xl text-forest-900 mb-3">8. Kartendarstellung (OpenStreetMap)</h2>
+            <h2 className="font-display text-xl text-forest-900 mb-3">8. Kartendarstellung (OpenFreeMap)</h2>
             <p className="mb-3">
-              Zur Darstellung von Lageplänen unserer Unterkünfte binden wir Kartenausschnitte des Dienstes OpenStreetMap ein, angeboten von der OpenStreetMap Foundation (St John's Innovation Centre, Cowley Road, Cambridge, CB4 0WS, Großbritannien).
+              Auf den Seiten unserer Unterkünfte zeigen wir eine interaktive Karte der Lage und der Ausflugsziele in der Umgebung. Sie wird erst geladen, wenn Sie zu ihr scrollen. Kartendaten und Kartenschriften beziehen wir vom Dienst OpenFreeMap der Hyperknot Software Kft. (Ungarn); die Kartendaten selbst stammen aus OpenStreetMap. Die Höhendaten für das Relief liefern wir von unserem eigenen Server aus.
             </p>
             <p className="mb-3">
-              Beim Laden einer Karte wird eine Verbindung zu Servern der OpenStreetMap Foundation aufgebaut; dabei werden technisch bedingt Ihre IP-Adresse sowie übliche Verbindungsdaten übermittelt. Für Großbritannien liegt ein Angemessenheitsbeschluss der EU-Kommission vor (Art. 45 DSGVO). Die Nutzung erfolgt im Interesse einer ansprechenden Darstellung unserer Online-Angebote und einer leichten Auffindbarkeit der angegebenen Orte; dies stellt ein berechtigtes Interesse im Sinne von Art. 6 Abs. 1 lit. f DSGVO dar.
+              Beim Laden der Karte wird eine Verbindung zu den Servern von OpenFreeMap aufgebaut; dabei werden technisch bedingt Ihre IP-Adresse sowie übliche Verbindungsdaten (z. B. Browsertyp, Zeitpunkt, angefragter Kartenausschnitt) übermittelt. OpenFreeMap setzt nach eigenen Angaben keine Cookies und speichert IP-Adressen nicht in den regulären Zugriffsprotokollen, sondern nur in Fehlerprotokollen (Löschung nach 7 Tagen) oder vorübergehend zur Abwehr von Missbrauch (höchstens 30 Tage). Die Daten werden über das Content-Delivery-Netzwerk von Cloudflare (Cloudflare, Inc., 101 Townsend St., San Francisco, CA 94107, USA) ausgeliefert; dabei kann eine Übertragung von Daten in die USA stattfinden. Cloudflare ist nach dem EU-US Data Privacy Framework zertifiziert (Art. 45 DSGVO). Die Nutzung erfolgt im Interesse einer ansprechenden Darstellung unserer Online-Angebote und einer leichten Auffindbarkeit der angegebenen Orte; dies stellt ein berechtigtes Interesse im Sinne von Art. 6 Abs. 1 lit. f DSGVO dar.
             </p>
             <p className="mb-3">
               Daneben verlinken wir für die Routenplanung auf Google Maps (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland). Beim bloßen Besuch unserer Website werden keine Daten an Google übertragen — erst wenn Sie den Link aktiv anklicken, gelten die Datenschutzbestimmungen von Google: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">policies.google.com/privacy</a>
@@ -257,7 +257,7 @@ export default function DatenschutzPage() {
               Gleiches gilt für unsere Links zu WhatsApp (WhatsApp Ireland Ltd.), Instagram (Meta Platforms Ireland Ltd.) und Airbnb (Airbnb Ireland UC): Es handelt sich um einfache Verlinkungen ohne eingebettete Inhalte oder Plugins. Daten werden erst übertragen, wenn Sie den jeweiligen Link anklicken und die Seite des Anbieters aufrufen.
             </p>
             <p>
-              Mehr Informationen zum Umgang mit Nutzerdaten finden Sie in der Datenschutzerklärung der OpenStreetMap Foundation: <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">wiki.osmfoundation.org/wiki/Privacy_Policy</a>
+              Mehr Informationen zum Umgang mit Nutzerdaten finden Sie in der Datenschutzerklärung von OpenFreeMap: <a href="https://openfreemap.org/privacy/" target="_blank" rel="noopener noreferrer" className="text-gold-600 underline underline-offset-2">openfreemap.org/privacy</a>
             </p>
           </section>
 
@@ -323,12 +323,12 @@ export default function DatenschutzPage() {
           <section>
             <h2 className="font-display text-xl text-forest-900 mb-3">12. Aktualität und Änderung dieser Datenschutzerklärung</h2>
             <p>
-              Diese Datenschutzerklärung ist aktuell gültig und hat den Stand September 2026. Durch die Weiterentwicklung unserer Website und Angebote oder aufgrund geänderter gesetzlicher beziehungsweise behördlicher Vorgaben kann es notwendig werden, diese Datenschutzerklärung zu ändern. Die jeweils aktuelle Datenschutzerklärung kann jederzeit auf der Website unter <strong>www.sarfi-collection.de/datenschutz</strong> von Ihnen abgerufen und ausgedruckt werden.
+              Diese Datenschutzerklärung ist aktuell gültig und hat den Stand Oktober 2026. Durch die Weiterentwicklung unserer Website und Angebote oder aufgrund geänderter gesetzlicher beziehungsweise behördlicher Vorgaben kann es notwendig werden, diese Datenschutzerklärung zu ändern. Die jeweils aktuelle Datenschutzerklärung kann jederzeit auf der Website unter <strong>www.sarfi-collection.de/datenschutz</strong> von Ihnen abgerufen und ausgedruckt werden.
             </p>
           </section>
 
           <p className="text-xs text-forest-400 pt-4 border-t border-cream-200">
-            Stand: September 2026
+            Stand: Oktober 2026
           </p>
 
         </div>

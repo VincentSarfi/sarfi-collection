@@ -1,13 +1,22 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconMapPin } from "@/components/ui/Icons";
 import type { Coordinates } from "@/data/properties";
+import type { HouseKey } from "@/data/map-places";
 import { getDict } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 
+// MapLibre erst laden, wenn die Karte ins Bild scrollt (siehe inView unten)
+const PlaceMap = dynamic(() => import("@/components/property/PlaceMap"), { ssr: false });
+
 interface LocationMapProps {
+  /** Welche Fahrzeiten die Karte zeigt (data/map-places.ts) */
+  house: HouseKey;
+  /** Beschriftung des Haus-Schilds auf der Karte */
+  houseName: string;
   address: string;
   coordinates: Coordinates;
   /** Google-Unternehmensprofil; ohne Angabe wird nach der Adresse gesucht */
@@ -17,6 +26,8 @@ interface LocationMapProps {
 }
 
 export default function LocationMap({
+  house,
+  houseName,
   address,
   coordinates,
   mapsUrl,
@@ -28,12 +39,6 @@ export default function LocationMap({
   const attractions = nearbyAttractions ?? t.defaultAttractions;
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
-  // OpenStreetMap embed – zuverlässig ohne API-Key
-  const bbox = 0.02; // ~2 km Sichtbereich
-  const mapsEmbedUrl =
-    `https://www.openstreetmap.org/export/embed.html` +
-    `?bbox=${coordinates.lng - bbox},${coordinates.lat - bbox},${coordinates.lng + bbox},${coordinates.lat + bbox}` +
-    `&layer=mapnik&marker=${coordinates.lat},${coordinates.lng}`;
   const mapsDirectUrl =
     mapsUrl ?? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 
@@ -62,62 +67,32 @@ export default function LocationMap({
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-          {/* Map */}
-          <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="lg:col-span-2"
-          >
-            <div className="relative rounded-2xl overflow-hidden shadow-card-lg aspect-[4/3] bg-cream-200">
-              {inView && (
-                <iframe
-                  src={mapsEmbedUrl}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0, position: "absolute", inset: 0 }}
-                  loading="lazy"
-                  allowFullScreen
-                  title={`${t.mapTitlePre}${address}`}
-                  aria-label={`${t.mapAriaPre}${address}`}
-                />
-              )}
-            </div>
-          </motion.div>
+        {/* Karte über die volle Breite – in der schmalen Spalte der Objektseiten
+            wären sonst die Beschriftungen der Ausflugsziele zu gedrängt */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="relative rounded-2xl overflow-hidden shadow-card-lg aspect-[4/5] sm:aspect-[16/10] lg:aspect-[16/9] max-h-[640px] w-full bg-[#f5eedd]"
+        >
+          {inView && (
+            <PlaceMap house={house} houseName={houseName} coordinates={coordinates} fallbackUrl={mapsDirectUrl} />
+          )}
+        </motion.div>
 
-          {/* Sidebar */}
-          <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="flex flex-col gap-5"
-          >
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8"
+        >
+          <div className="flex flex-col gap-5">
             {description && (
               <div>
                 <h3 className="font-display text-lg text-forest-800 mb-2">{t.surroundings}</h3>
                 <p className="font-body text-sm text-forest-600 leading-relaxed">{description}</p>
               </div>
             )}
-
-            <div>
-              <h3 className="font-body text-sm font-semibold text-forest-800 mb-3 tracking-wide">
-                {t.nearby}
-              </h3>
-              <ul className="flex flex-col gap-2">
-                {attractions.map((attr) => (
-                  <li
-                    key={attr.name}
-                    className="flex items-center justify-between py-2 border-b border-cream-200 last:border-0"
-                  >
-                    <span className="font-body text-sm text-forest-700">{attr.name}</span>
-                    <span className="font-body text-xs text-forest-400 bg-cream-200 px-2 py-0.5 rounded-full">
-                      {attr.distance}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
 
             {/* GPS */}
             <div className="p-3 rounded-xl bg-cream-200 border border-cream-300">
@@ -136,8 +111,27 @@ export default function LocationMap({
               <IconMapPin size={14} />
               {t.openInGoogleMaps}
             </a>
-          </motion.div>
-        </div>
+          </div>
+
+          <div>
+            <h3 className="font-body text-sm font-semibold text-forest-800 mb-3 tracking-wide">
+              {t.nearby}
+            </h3>
+            <ul className="flex flex-col gap-2">
+              {attractions.map((attr) => (
+                <li
+                  key={attr.name}
+                  className="flex items-center justify-between gap-3 py-2 border-b border-cream-200 last:border-0"
+                >
+                  <span className="font-body text-sm text-forest-700">{attr.name}</span>
+                  <span className="flex-none font-body text-xs text-forest-400 bg-cream-200 px-2 py-0.5 rounded-full">
+                    {attr.distance}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

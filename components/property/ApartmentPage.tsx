@@ -361,6 +361,8 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
               {/* Location */}
               <div className="py-7">
                 <LocationMap
+                  house="schoenblick"
+                  houseName={schoenblick.name}
                   address={schoenblick.address}
                   coordinates={schoenblick.coordinates}
                   mapsUrl={schoenblick.googleMapsUrl}

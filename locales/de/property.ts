@@ -56,8 +56,36 @@ const property = {
     nearby: "In der Nähe",
     gps: "GPS-Koordinaten",
     openInGoogleMaps: "Auf Google Maps ansehen",
-    mapTitlePre: "Karte: ",
-    mapAriaPre: "OpenStreetMap Karte für ",
+    // components/property/PlaceMap.tsx
+    map: {
+      ariaPre: "Karte mit Ausflugszielen rund um ",
+      viewRegion: "Ausflugsziele",
+      viewNearby: "Rund ums Haus",
+      byCar: "{min} min mit dem Auto ab {house}",
+      onFoot: "zu Fuß ab {house}",
+      labelWalk: "zu Fuß",
+      more: "Mehr dazu auf der Ausflugsziele-Seite",
+      failed: "Die Karte lässt sich in diesem Browser nicht anzeigen.",
+      places: {
+        "pullman-city": "Pullman City",
+        lusen: "Baumwipfelpfad & Nationalpark",
+        "indoor-golf": "Rusel-Arena Indoor Golf",
+        elypso: "elypso Erlebnisbad",
+        joska: "JOSKA Glasparadies",
+        "skigebiet-sonnenwald": "Steinberglift & Stoaberg Alm",
+        "buechelstein-wanderung": "Büchelstein-Wanderung",
+      } as Record<string, string>,
+      // Bedienhinweise und Schaltflächen von MapLibre
+      ui: {
+        "CooperativeGesturesHandler.WindowsHelpText": "Strg + Mausrad zum Zoomen",
+        "CooperativeGesturesHandler.MacHelpText": "⌘ + Mausrad zum Zoomen",
+        "CooperativeGesturesHandler.MobileHelpText": "Mit zwei Fingern verschieben",
+        "NavigationControl.ZoomIn": "Hineinzoomen",
+        "NavigationControl.ZoomOut": "Herauszoomen",
+        "AttributionControl.ToggleAttribution": "Quellenangaben ein-/ausblenden",
+        "Popup.Close": "Schließen",
+      } as Record<string, string>,
+    },
     defaultAttractions: [
       { name: "Nationalparkzentrum Lusen", distance: "~40–45 min" },
       { name: "Deggendorf (Einkaufen)", distance: ca(m.deggendorf.haus28) },
