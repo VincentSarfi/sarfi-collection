@@ -146,6 +146,9 @@ const galleryAltEn: Record<string, string> = {
   // Apartment B6
   "Apartment B6 – Wohnbereich": "Apartment B6 – Living area",
   "Apartment B6 – Wohnzimmer mit grünem Sofa": "Apartment B6 – Living room with green sofa",
+  "Apartment B6 – Samtsofa vor Backsteinwand": "Apartment B6 – Velvet sofa against a brick wall",
+  "Apartment B6 – Wohnbereich mit Esstisch und Sofa": "Apartment B6 – Living area with dining table and sofa",
+  "Apartment B6 – Essbereich mit Backsteinwand": "Apartment B6 – Dining area with brick wall",
   "Apartment B6 – Wohn- und Essbereich Übersicht": "Apartment B6 – Living and dining area overview",
   "Apartment B6 – Wohnzimmer mit Terrassenzugang": "Apartment B6 – Living room with terrace access",
   "Apartment B6 – Schlafzimmer 1 Doppelbett": "Apartment B6 – Bedroom 1 with double bed",
