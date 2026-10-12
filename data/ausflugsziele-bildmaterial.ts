@@ -45,8 +45,43 @@ export const ausflugszieleMaterial: Record<string, AusflugszielMaterial> = {
   },
   baumwipfelpfad: {
     website: "https://treetop-walks.com/bayerischer-wald/",
-    bilder: [],
-    freigabe: { stand: "angefragt", notiz: "Mail an info@baumwipfelpfad.bayern am 11.10.2026" },
+    bilder: [
+      {
+        src: "/images/ausflugsziele/baumwipfelpfad/baumei-luftaufnahme.webp",
+        width: 1920,
+        height: 1439,
+        alt: {
+          de: "Der Aussichtsturm „Baumei“ des Baumwipfelpfads Bayerischer Wald von oben, umgeben von Wald",
+          en: "The “Baumei” observation tower of the Bavarian Forest Treetop Walk from above, surrounded by forest",
+        },
+        credit: "Erlebnis Akademie AG/Baumwipfelpfad Bayerischer Wald",
+      },
+      {
+        src: "/images/ausflugsziele/baumwipfelpfad/aussicht-familie.webp",
+        width: 1920,
+        height: 1281,
+        alt: {
+          de: "Familie am Geländer des Baumwipfelpfads mit Blick über die Wälder des Bayerischen Waldes",
+          en: "Family at the railing of the Treetop Walk looking out over the Bavarian Forest",
+        },
+        credit: "Erlebnis Akademie AG/Baumwipfelpfad Bayerischer Wald",
+      },
+      {
+        src: "/images/ausflugsziele/baumwipfelpfad/pfad-baumkronen.webp",
+        width: 1920,
+        height: 1440,
+        alt: {
+          de: "Holzsteg des Baumwipfelpfads auf Höhe der Baumkronen im Sommer",
+          en: "Wooden boardwalk of the Treetop Walk at treetop height in summer",
+        },
+        credit: "Erlebnis Akademie AG/Baumwipfelpfad Bayerischer Wald",
+      },
+    ],
+    freigabe: {
+      stand: "freigegeben",
+      notiz:
+        "Theresa Karl (Marketing, Erlebnis Akademie AG) per Mail am 12.10.2026: Bildmaterial aus dem Pressebereich eak-ag.de/eakag/presse/baumwipfelpfad-bayerischer-wald.php mit Bildnachweis „Erlebnis Akademie AG/Baumwipfelpfad Bayerischer Wald“. Fotos aus dem Pressepaket „Sommer“.",
+    },
   },
   nationalpark: {
     website: "https://www.nationalpark-bayerischer-wald.bayern.de/",
@@ -169,10 +204,46 @@ export const ausflugszieleMaterial: Record<string, AusflugszielMaterial> = {
 /**
  * Fotos der Gasthäuser (Abschnitt „Gasthäuser in der Nähe“), Schlüssel ist
  * `name` aus restaurants in data/surroundings.ts. Gleiche Regel wie oben:
- * nur mit Freigabe, Bildnachweis im Wortlaut. Ranzinger, Zum Sonnenwald und
- * Lohner am 12.10.2026 per Mail angefragt (Cockpit-Karte „Gasthäuser“).
+ * nur mit Freigabe, Bildnachweis im Wortlaut. Zum Sonnenwald und Lohner am
+ * 12.10.2026 per Mail angefragt (Cockpit-Karte „Gasthäuser“).
  */
 export const gasthausMaterial: Record<string, { bilder: BildFreigabe[]; freigabe: string }> = {
+  "Panorama-Landgasthof Ranzinger": {
+    bilder: [
+      {
+        src: "/images/ausflugsziele/einkehren/ranzinger-panorama-terrasse.webp",
+        width: 1162,
+        height: 774,
+        alt: {
+          de: "Panorama-Terrasse des Landgasthofs Ranzinger mit Blick über die Hügel des Bayerischen Waldes",
+          en: "Panorama terrace of the Landgasthof Ranzinger overlooking the hills of the Bavarian Forest",
+        },
+        credit: "Panorama-Landgasthof Ranzinger",
+      },
+      {
+        src: "/images/ausflugsziele/einkehren/ranzinger-brotzeit.webp",
+        width: 900,
+        height: 598,
+        alt: {
+          de: "Hausgemachte Brotzeit mit Geräuchertem, Brot und Rotwein im Landgasthof Ranzinger",
+          en: "Homemade snack platter with smoked meat, bread and red wine at the Landgasthof Ranzinger",
+        },
+        credit: "Panorama-Landgasthof Ranzinger",
+      },
+      {
+        src: "/images/ausflugsziele/einkehren/ranzinger-landgasthof.webp",
+        width: 800,
+        height: 600,
+        alt: {
+          de: "Der Panorama-Landgasthof Ranzinger in Langfurth von außen",
+          en: "The Panorama-Landgasthof Ranzinger in Langfurth from outside",
+        },
+        credit: "Panorama-Landgasthof Ranzinger",
+      },
+    ],
+    freigabe:
+      "Luise Ranzinger per Mail am 12.10.2026: einverstanden mit der Empfehlung, auch mit Fotos von hotel-ranzinger.de. Nur Motive vom eigenen Haus genommen (keine Region-Bilder der Website).",
+  },
   "Stoaberg Alm": {
     bilder: [
       {

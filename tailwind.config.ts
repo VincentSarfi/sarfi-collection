@@ -54,6 +54,8 @@ const config: Config = {
         "display-xl": ["clamp(3rem, 8vw, 7rem)", { lineHeight: "1.05", letterSpacing: "-0.02em" }],
         "display-lg": ["clamp(2.25rem, 5vw, 4.5rem)", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
         "display-md": ["clamp(1.75rem, 3.5vw, 3rem)", { lineHeight: "1.15", letterSpacing: "-0.015em" }],
+        // genutzt auf Über uns und Haus Schönblick – fehlte bisher, die Überschriften fielen auf 17 px zurück
+        "display-sm": ["clamp(1.5rem, 2.5vw, 2.25rem)", { lineHeight: "1.2", letterSpacing: "-0.01em" }],
       },
       spacing: {
         "18": "4.5rem",
