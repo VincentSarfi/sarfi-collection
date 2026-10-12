@@ -35,6 +35,7 @@ const ausflugsziele = {
   },
   highlightsLabel: "Highlights",
   practicalLabel: "Praktische Infos",
+  detailsSummary: "Highlights & praktische Infos",
   photoLabel: "Foto",
   officialWebsiteLabel: "Offizielle Website",
   newTabHint: "(öffnet in neuem Tab)",
