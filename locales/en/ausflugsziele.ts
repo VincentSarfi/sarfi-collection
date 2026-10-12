@@ -12,16 +12,12 @@ const ausflugsziele: typeof de = {
     eyebrow: "Bavarian Forest region",
     h1: "Things to Do in the Bavarian Forest",
     intro:
-      "Around HAUS28 and Haus Schönblick, the Bavarian Forest is full of things to experience – from wild nature and Wild West flair to golf simulators for rainy days. Here are our personal recommendations for your stay.",
+      "From the hiking trail at the front door to a day trip into the national park – sorted by driving time from HAUS28 and Haus Schönblick. Tap a destination for all the details.",
     pillHaus28: "HAUS28 · Grattersdorf",
     pillSchoenblick: "Haus Schönblick · Schöfweg",
   },
   overview: {
-    ariaLabel: "Overview of things to do",
-    eyebrow: "Sorted by distance",
     heading: "More to experience in the Bavarian Forest",
-    intro:
-      "From the hiking trail at the front door to a day trip into the national park – sorted by driving time from HAUS28 and Haus Schönblick. Tap a card for all the details.",
   },
   filter: {
     legend: "Filter things to do",
@@ -42,12 +38,9 @@ const ausflugsziele: typeof de = {
     },
   },
   restaurants: {
-    eyebrow: "Eating out",
     heading: "Inns and restaurants nearby",
     intro:
       "After a day out or just for dinner: our tips for Bavarian and regional food, all only a few minutes from the houses.",
-    cardTitle: "Eating out nearby",
-    cardNote: "Inns {von}–{bis} min from the houses",
     websiteLabel: "Website",
   },
   distanceTable: {
@@ -57,9 +50,13 @@ const ausflugsziele: typeof de = {
     colHaus28: "from HAUS28",
     colSchoenblick: "from Haus Schönblick",
   },
+  leiste: {
+    zuFuss: "on foot",
+    min: "min",
+  },
+  gutZuWissen: "Good to know",
   highlightsLabel: "Highlights",
   practicalLabel: "Good to know",
-  detailsSummary: "Highlights & practical info",
   photoLabel: "Photo",
   officialWebsiteLabel: "Official website",
   newTabHint: "(opens in a new tab)",

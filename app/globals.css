@@ -180,25 +180,6 @@
 }
 
 /* ─────────────────────────────────────────
-   Ausflugsziele: Highlights & praktische Infos
-   mobil einklappbar (natives details), ab lg immer
-   offen ohne Summary – ohne JS und ohne doppelten
-   Inhalt. Browser ohne ::details-content zeigen am
-   Desktop die zuklappbare Variante (Summary sichtbar).
-   ───────────────────────────────────────── */
-@supports selector(::details-content) {
-  @media (min-width: 1024px) {
-    .ausflug-details > summary {
-      display: none;
-    }
-    .ausflug-details::details-content {
-      content-visibility: visible;
-      display: block;
-    }
-  }
-}
-
-/* ─────────────────────────────────────────
    Ausflugsziele: Filter der Übersicht ohne JS.
    Radios (sr-only) + Labels als Chips; :has()
    blendet Karten und Gruppen ohne passenden
