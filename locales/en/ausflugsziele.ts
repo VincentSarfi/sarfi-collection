@@ -31,6 +31,7 @@ const ausflugsziele: typeof de = {
   },
   highlightsLabel: "Highlights",
   practicalLabel: "Good to know",
+  detailsSummary: "Highlights & practical info",
   photoLabel: "Photo",
   officialWebsiteLabel: "Official website",
   newTabHint: "(opens in a new tab)",

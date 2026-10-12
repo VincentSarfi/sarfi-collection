@@ -352,8 +352,14 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                       </div>
                     )}
 
-                    {/* Two-column: Highlights + Practical */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+                    {/* Highlights + Praktische Infos: mobil einklappbar (natives details),
+                        ab lg per CSS immer offen ohne Summary – siehe .ausflug-details in globals.css */}
+                    <details className="ausflug-details group mb-5">
+                      <summary className="flex items-center gap-2 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden py-1 font-body text-xs font-semibold tracking-[0.12em] uppercase text-forest-500 hover:text-forest-700 transition-colors">
+                        <span className="transition-transform group-open:rotate-90" aria-hidden="true">▸</span>
+                        {t.detailsSummary}
+                      </summary>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-3">
                       {/* Highlights */}
                       <div>
                         <p className="font-body text-xs font-semibold tracking-[0.12em] uppercase text-forest-400 mb-3">
@@ -387,7 +393,8 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                           ))}
                         </dl>
                       </div>
-                    </div>
+                      </div>
+                    </details>
 
                     {/* Offizielle Website + freigegebene Zusatzlinks (data/ausflugsziele-bildmaterial.ts) */}
                     <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
@@ -397,7 +404,10 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 font-body text-sm text-forest-600 hover:text-forest-900 underline underline-offset-2 transition-colors"
                       >
-                        {material.website.replace(/^https:\/\/(www\.)?/, "").replace(/\/$/, "")}
+                        {t.officialWebsiteLabel}
+                        <span className="text-xs text-forest-500 no-underline">
+                          ({material.website.replace(/^https:\/\/(www\.)?/, "").replace(/\/$/, "")})
+                        </span>
                         <ExternalIcon />
                         <span className="sr-only"> {t.newTabHint}</span>
                       </a>
