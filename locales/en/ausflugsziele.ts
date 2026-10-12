@@ -1,5 +1,8 @@
 import type de from "../de/ausflugsziele";
-import { ca, driveMinutes as m } from "@/data/surroundings";
+import { ca as caRaw, driveMinutes as m } from "@/data/surroundings";
+
+// Keep "~30 min" on one line (non-breaking space between number and unit)
+const ca = (minutes: number) => caRaw(minutes).replace(/ /g, " ");
 
 // Things to do page (components/pages/AusflugszielePageContent.tsx).
 const ausflugsziele: typeof de = {
@@ -127,7 +130,7 @@ const ausflugsziele: typeof de = {
       subtitle: "Family ski lift right by Haus Schönblick",
       distance: `right at Haus Schönblick in Langfurth · ${ca(m.steinberglift.haus28)} from HAUS28`,
       fromHaus28: ca(m.steinberglift.haus28),
-      fromSchoenblick: "right on site",
+      fromSchoenblick: "on foot (approx. 600 m)",
       description:
         "The Steinberglift in Langfurth near Schöfweg is literally on Haus Schönblick's doorstep: a 400 m main slope plus a kids' area with a beginner lift, a magic carpet and a practice slope, and a toboggan hill. There are more lifts on the nearby Brotjacklriegel (1,011 m) – seven lift facilities in Schöfweg altogether – and around 23 km of groomed cross-country trails in and around Schöfweg. The live webcam shows the current snow conditions – perfect for planning your day from the apartment.",
       schemaDescription:

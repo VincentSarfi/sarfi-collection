@@ -203,21 +203,23 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                   className="group flex flex-col rounded-2xl border border-cream-200 bg-white overflow-hidden shadow-card hover:shadow-card-lg transition-shadow"
                 >
                   {thumb ? (
-                    <div className="relative aspect-[3/2]">
-                      <Image
-                        src={thumb.src}
-                        alt={thumb.alt[locale]}
-                        fill
-                        priority={attr.id === "nationalpark"}
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        sizes="(max-width: 1024px) 50vw, 25vw"
-                      />
-                      <span className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-forest-900/60 text-cream-50 text-[10px] font-body">
+                    <div>
+                      <div className="relative aspect-[16/10] sm:aspect-[3/2]">
+                        <Image
+                          src={thumb.src}
+                          alt={thumb.alt[locale]}
+                          fill
+                          priority={attr.id === "nationalpark"}
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          sizes="(max-width: 1024px) 50vw, 25vw"
+                        />
+                      </div>
+                      <p className="px-3 sm:px-4 pt-1.5 font-body text-[10px] text-forest-500 leading-snug">
                         {t.photoLabel}: {thumb.credit}
-                      </span>
+                      </p>
                     </div>
                   ) : (
-                    <div className={`aspect-[3/2] flex items-center justify-center text-4xl ${style.bgColor}`} aria-hidden="true">
+                    <div className={`aspect-[16/10] sm:aspect-[3/2] flex items-center justify-center text-5xl ${style.bgColor}`} aria-hidden="true">
                       {style.emoji}
                     </div>
                   )}
@@ -247,7 +249,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
               href="#buechelstein-wanderung"
               className="group flex flex-col rounded-2xl border border-cream-200 bg-white overflow-hidden shadow-card hover:shadow-card-lg transition-shadow"
             >
-              <div className={`aspect-[3/2] flex items-center justify-center text-4xl ${HIKE_CARD_STYLE.bgColor}`} aria-hidden="true">
+              <div className={`aspect-[16/10] sm:aspect-[3/2] flex items-center justify-center text-5xl ${HIKE_CARD_STYLE.bgColor}`} aria-hidden="true">
                 {HIKE_CARD_STYLE.emoji}
               </div>
               <div className="p-3 sm:p-4 flex flex-col gap-2 flex-1">
@@ -266,7 +268,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
             </a>
           </div>
 
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-6 sm:gap-8">
             {t.attractions.map((attr) => {
               const style = ATTRACTION_STYLE[attr.id];
               const material = ausflugszieleMaterial[attr.id];
@@ -277,7 +279,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                   id={attr.id}
                   className={`rounded-3xl border ${style.borderColor} ${style.bgColor} overflow-hidden scroll-mt-20`}
                 >
-                  <div className="p-6 sm:p-8">
+                  <div className="p-5 sm:p-8">
                     {/* Header */}
                     <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
                       <div className="flex items-center gap-3">
@@ -296,25 +298,42 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                       </div>
                     </div>
 
-                    {/* Freigegebene Fotos des Betreibers, Bildnachweis darunter */}
+                    {/* Freigegebene Fotos des Betreibers, Bildnachweis darunter.
+                        Desktop: Leitbild 16:9 + Leiste kleiner Bilder; mobil: Wischleiste mit Scroll-Snap. */}
                     {bilder.length > 0 && (
-                      <div className={`grid gap-3 mb-6 grid-cols-1 ${bilder.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
-                        {bilder.map((b) => (
-                          <figure key={b.src} className="m-0">
-                            <div className="relative aspect-[3/2] rounded-xl overflow-hidden">
-                              <Image
-                                src={b.src}
-                                alt={b.alt[locale]}
-                                fill
-                                className="object-cover"
-                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                              />
-                            </div>
-                            <figcaption className="mt-1 font-body text-[11px] text-forest-500">
-                              {t.photoLabel}: {b.credit}
-                            </figcaption>
-                          </figure>
-                        ))}
+                      <div className="mb-6">
+                        <figure className="m-0 hidden sm:block">
+                          <div className="relative aspect-video rounded-xl overflow-hidden">
+                            <Image
+                              src={bilder[0].src}
+                              alt={bilder[0].alt[locale]}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 1280px) 90vw, 1150px"
+                            />
+                          </div>
+                          <figcaption className="mt-1 font-body text-[11px] text-forest-500">
+                            {t.photoLabel}: {bilder[0].credit}
+                          </figcaption>
+                        </figure>
+                        <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide sm:mt-3 sm:grid sm:grid-cols-3 sm:overflow-visible">
+                          {bilder.map((b, i) => (
+                            <figure key={b.src} className={`m-0 w-[85%] flex-none snap-start sm:w-auto ${i === 0 ? "sm:hidden" : ""}`}>
+                              <div className="relative aspect-[3/2] sm:aspect-[4/3] rounded-lg overflow-hidden">
+                                <Image
+                                  src={b.src}
+                                  alt={b.alt[locale]}
+                                  fill
+                                  className="object-cover"
+                                  sizes="(max-width: 640px) 85vw, 320px"
+                                />
+                              </div>
+                              <figcaption className="mt-1 font-body text-[11px] text-forest-500 leading-snug">
+                                {t.photoLabel}: {b.credit}
+                              </figcaption>
+                            </figure>
+                          ))}
+                        </div>
                       </div>
                     )}
 
@@ -445,9 +464,9 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {t.seasons.items.map((s, i) => (
-              <div key={s.season} className={`rounded-2xl border p-5 ${SEASON_STYLE[i].color}`}>
+              <div key={s.season} className={`rounded-2xl border p-4 sm:p-5 ${SEASON_STYLE[i].color}`}>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xl" aria-hidden="true">{SEASON_STYLE[i].emoji}</span>
                   <h3 className="font-display text-lg text-forest-900">{s.season}</h3>

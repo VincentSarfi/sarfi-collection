@@ -4,7 +4,10 @@
 // Fakten geprüft am 06.10.2026 (Betreiber-Websites, Nationalpark-Steckbrief,
 // Tourenportal Landkreis Deggendorf); elypso & JOSKA ergänzt am 12.10.2026
 // (elypso.de, joska.com); Fahrzeiten aus data/surroundings.ts.
-import { ca, driveMinutes as m } from "@/data/surroundings";
+import { ca as caRaw, driveMinutes as m } from "@/data/surroundings";
+
+// „~30 min“ ohne Umbruch zwischen Zahl und Einheit (geschütztes Leerzeichen)
+const ca = (minutes: number) => caRaw(minutes).replace(/ /g, " ");
 
 const ausflugsziele = {
   breadcrumbHome: "Startseite",
@@ -131,7 +134,7 @@ const ausflugsziele = {
       subtitle: "Familien-Skilift direkt am Haus Schönblick",
       distance: `direkt bei Haus Schönblick in Langfurth · ${ca(m.steinberglift.haus28)} von HAUS28`,
       fromHaus28: ca(m.steinberglift.haus28),
-      fromSchoenblick: "direkt vor Ort",
+      fromSchoenblick: "zu Fuß (ca. 600 m)",
       description:
         "Der Steinberglift in Langfurth bei Schöfweg liegt buchstäblich vor der Haustür von Haus Schönblick: eine 400 m lange Hauptpiste, dazu ein Kinderland mit Anfängerlift, Förderband und Übungshang sowie ein Rodelhang. Weitere Lifte gibt es am nahen Brotjacklriegel (1.011 m) – in Schöfweg sind es insgesamt sieben Liftanlagen – und rund 23 km gespurte Loipen in Schöfweg und Umgebung. Die Live-Webcam zeigt den aktuellen Schneezustand – ideal zur Planung direkt aus der Unterkunft.",
       schemaDescription:
