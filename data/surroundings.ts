@@ -19,6 +19,8 @@ export const driveMinutes = {
   deggendorf: { name: "Deggendorf Zentrum", haus28: 30, schoenblick: 30 },
   hengersberg: { name: "Hengersberg (Einkaufen, A3)", haus28: 20, schoenblick: 20 },
   elypso: { name: "Erlebnisbad elypso mit Saunawelt (Deggendorf)", haus28: 35, schoenblick: 35 },
+  /** OSRM 12.10.2026: 42 bzw. 40 min Fahrt, plus 15 % Puffer. */
+  joska: { name: "JOSKA Glasparadies (Bodenmais)", haus28: 50, schoenblick: 45 },
   glasmuseumFrauenau: { name: "Glasmuseum Frauenau", haus28: 40, schoenblick: 35 },
   arber: { name: "Großer Arber, Talstation Bergbahn", haus28: 60, schoenblick: 60 },
 } as const;
