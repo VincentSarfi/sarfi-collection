@@ -73,7 +73,7 @@ export default function LocationMap({
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="relative rounded-2xl overflow-hidden shadow-card-lg aspect-[4/5] sm:aspect-[16/10] lg:aspect-[16/9] max-h-[640px] w-full bg-[#f5eedd]"
+          className="relative rounded-2xl overflow-hidden shadow-card-lg aspect-[4/5] sm:aspect-[4/3] xl:aspect-[16/9] max-h-[640px] w-full bg-[#f5eedd]"
         >
           {inView && (
             <PlaceMap house={house} houseName={houseName} coordinates={coordinates} fallbackUrl={mapsDirectUrl} />
