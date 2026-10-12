@@ -82,7 +82,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
     }))
 
   const aptReviews = schoenblickReviews.filter(
-    (r) => !r.apartmentId || r.apartmentId === apartment.id,
+    (r) => !r.apartmentId || [r.apartmentId].flat().includes(apartment.id),
   )
 
   return (
@@ -401,6 +401,8 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
             averageRating={apartment.airbnbRating}
             totalCount={apartment.airbnbReviewCount}
             airbnbUrl={apartment.airbnbUrl}
+            bookingRating={apartment.bookingRating}
+            bookingCount={apartment.bookingReviewCount}
           />
         </div>
 

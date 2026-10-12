@@ -25,6 +25,9 @@ export type ApartmentData = {
   airbnbUrl: string;
   airbnbRating: number;
   airbnbReviewCount: number;
+  /** Booking.com, 10er-Skala; ein gemeinsames Inserat, Zuordnung über Smoobu */
+  bookingRating?: number;
+  bookingReviewCount?: number;
   smoobuPropertyId: string;
   maxGuests: number;
   bedrooms: number;
@@ -367,8 +370,9 @@ export const schoenblick: PropertyData = {
   // Airbnb: Summe der Wohnungs-Inserate (B5, B6, B8 je 5,0 aus 3; B7 5,0 aus 5;
   // A2 4,5 aus 2) = 79 Sterne aus 16 = 4,94.
   // Booking: aktuelles Inserat 8,8 aus 8; eine 3/10 zählt laut Vincent nicht
-  // mit, ohne sie 9,6 aus 7. Die alten Booking-Inserate des Vorbesitzers sind
-  // geschlossen. Google: 17 × 5 Sterne; eine 1-Stern-Rezension von vor 7 Jahren
+  // mit, ohne sie 9,6 aus 7. Die alten Booking-Inserate sind geschlossen; dort
+  // liegen noch 6 Bewertungen eigener Gäste (Nov. 2025 – März 2026, 7–9/10),
+  // die laut Vincent nur zählen, wenn sie nichts verschlechtern – also keine. Google: 17 × 5 Sterne; eine 1-Stern-Rezension von vor 7 Jahren
   // (Vorbesitzer) zählt nicht mit.
   airbnbRating: 4.94,
   airbnbReviewCount: 16,
@@ -410,6 +414,9 @@ export const schoenblick: PropertyData = {
       airbnbUrl: "https://www.airbnb.de/rooms/1542179745378169386",
       airbnbRating: 5.0,
       airbnbReviewCount: 3,
+      // Booking: Iaroslav 10, Susanne 9 (Gruppe B5 + B8)
+      bookingRating: 9.5,
+      bookingReviewCount: 2,
       smoobuPropertyId: "3025621",
       maxGuests: 4,
       bedrooms: 2,
@@ -462,6 +469,9 @@ export const schoenblick: PropertyData = {
       airbnbUrl: "https://www.airbnb.de/rooms/1511581373647900244",
       airbnbRating: 5.0,
       airbnbReviewCount: 3,
+      // Booking: Dalibor 10, Linda 9
+      bookingRating: 9.5,
+      bookingReviewCount: 2,
       smoobuPropertyId: "2934141",
       maxGuests: 4,
       bedrooms: 2,
@@ -511,6 +521,9 @@ export const schoenblick: PropertyData = {
       airbnbUrl: "https://www.airbnb.de/rooms/1525349872389165473",
       airbnbRating: 5.0,
       airbnbReviewCount: 3,
+      // Booking: Natalie 9, zweimal 10 ohne Text, Susanne 9 (Gruppe B5 + B8)
+      bookingRating: 9.5,
+      bookingReviewCount: 4,
       smoobuPropertyId: "3025606",
       maxGuests: 4,
       bedrooms: 2,

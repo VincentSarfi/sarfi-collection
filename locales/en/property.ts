@@ -121,6 +121,7 @@ const property = {
     heading: "Guest reviews",
     // The reviews section always shows the Airbnb figures
     reviewsOnAirbnbPost: " reviews on Airbnb",
+    onBooking: (score: string, n: number) => `${score}/10 from ${n} ${n === 1 ? "review" : "reviews"} on Booking.com`,
     prevAria: "Previous reviews",
     nextAria: "Next reviews",
     allOnAirbnb: "All on Airbnb",

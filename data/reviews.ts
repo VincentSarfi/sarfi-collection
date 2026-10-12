@@ -4,7 +4,8 @@
 export type Review = {
   id: string;
   propertyId: "haus28" | "schoenblick";
-  apartmentId?: string;
+  /** Wohnung(en) im Haus Schönblick; bei Gruppenbuchungen mehrere. Ohne Angabe: alle. */
+  apartmentId?: string | string[];
   author: string;
   location: string;
   date: string;
@@ -703,9 +704,11 @@ export const reviews: Review[] = [
     avatarInitials: "E",
   },
   // ─── Schönblick Reviews (Booking.com, Inserat seit der Übernahme) ───────
+  // Wohnung laut Buchungsnummer in Smoobu (Stand 12.10.2026).
   {
     id: "sb-bk-1",
     propertyId: "schoenblick",
+    apartmentId: "b6",
     author: "Dalibor",
     location: "Booking.com",
     date: "August 2026",
@@ -716,6 +719,7 @@ export const reviews: Review[] = [
   {
     id: "sb-bk-2",
     propertyId: "schoenblick",
+    apartmentId: "b8",
     author: "Natalie",
     location: "Booking.com",
     date: "August 2026",
@@ -726,6 +730,7 @@ export const reviews: Review[] = [
   {
     id: "sb-bk-3",
     propertyId: "schoenblick",
+    apartmentId: ["b5", "b8"],
     author: "Susanne",
     location: "Booking.com",
     date: "April 2026",
@@ -736,6 +741,7 @@ export const reviews: Review[] = [
   {
     id: "sb-bk-4",
     propertyId: "schoenblick",
+    apartmentId: "b5",
     author: "Iaroslav",
     location: "Booking.com",
     date: "März 2026",

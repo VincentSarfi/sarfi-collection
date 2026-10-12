@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconStar, IconChevronRight } from "@/components/ui/Icons";
 import type { Review } from "@/data/reviews";
+import { formatScore } from "@/data/properties";
 import { getDict } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useLineClamp } from "@/lib/useLineClamp";
@@ -15,6 +16,9 @@ interface PropertyReviewsProps {
   averageRating: number;
   totalCount: number;
   airbnbUrl?: string;
+  /** Booking.com (10er-Skala), nur bei Apartments mit zugeordneten Bewertungen */
+  bookingRating?: number;
+  bookingCount?: number;
 }
 
 // Ab dieser Länge erscheint „Mehr anzeigen“ schon im Server-HTML (gemessen wird danach).
@@ -111,6 +115,8 @@ export default function PropertyReviews({
   averageRating,
   totalCount,
   airbnbUrl,
+  bookingRating,
+  bookingCount,
 }: PropertyReviewsProps) {
   const locale = useLocale();
   const t = getDict(locale).property.reviews;
@@ -165,7 +171,7 @@ export default function PropertyReviews({
             >
               {t.heading}
             </h2>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
               <div className="flex gap-0.5 text-gold-500">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <IconStar
@@ -181,6 +187,11 @@ export default function PropertyReviews({
               <span className="font-body text-sm text-forest-500">
                 · {totalCount}{t.reviewsOnAirbnbPost}
               </span>
+              {bookingRating && bookingCount ? (
+                <span className="font-body text-sm text-forest-500">
+                  · {t.onBooking(formatScore(bookingRating, locale), bookingCount)}
+                </span>
+              ) : null}
             </div>
           </div>
 

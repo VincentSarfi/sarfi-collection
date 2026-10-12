@@ -121,6 +121,7 @@ const property = {
     heading: "Gästebewertungen",
     // Die Bewertungs-Sektion zeigt immer die Airbnb-Werte
     reviewsOnAirbnbPost: " Bewertungen auf Airbnb",
+    onBooking: (score: string, n: number) => `${score}/10 aus ${n} ${n === 1 ? "Bewertung" : "Bewertungen"} auf Booking.com`,
     prevAria: "Vorherige Bewertungen",
     nextAria: "Nächste Bewertungen",
     allOnAirbnb: "Alle auf Airbnb",
