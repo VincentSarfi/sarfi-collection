@@ -391,7 +391,7 @@ const ausflugsziele: typeof de = {
     eyebrow: "Straight from HAUS28",
     heading: "Büchelstein circular hike",
     tableName: "Büchelstein circular hike",
-    cardTags: ["Nature", "Hiking"],
+    cardTags: ["Nature", "Hiking", "Kids"],
     cardNote: "Starts right at HAUS28's front door",
     schemaName: "Büchelstein hiking route from HAUS28",
     schemaDescription:
@@ -438,20 +438,21 @@ const ausflugsziele: typeof de = {
   },
   brotjacklriegel: {
     heading: "Brotjacklriegel (1,011\u00a0m)",
-    cardTags: ["Nature", "Hiking"],
+    cardTags: ["Nature", "Hiking", "Kids"],
     cardNote: "On foot from Haus Schönblick via the Langfurth tower trail",
     schemaName: "Hike up the Brotjacklriegel from Haus Schönblick",
     schemaDescription:
       "Hike up the Brotjacklriegel (1,011 m), the local mountain of the Sonnenwald region: Langfurth – Brotjacklriegel tower trail, 1.6 km, easy, approx. 45 minutes; start approx. 400 m from Haus Schönblick.",
     intro:
-      "The Brotjacklriegel (1,011 m) is the distinctive local mountain of the Sonnenwald region – and you can walk there from Haus Schönblick: after about 400 m you reach Langfurth, where the tower trail up to the summit begins, an easy 1.6 km path. At the top are the observation tower of the Bayerischer Waldverein and the Turmstüberl inn.",
-    notice: "According to the Sonnenwald tourist association, the tower's viewing platform is currently closed for fire-safety reasons.",
+      "The Brotjacklriegel (1,011 m) is the distinctive local mountain of the Sonnenwald region – and you can walk there from Haus Schönblick: after about 400 m you reach Langfurth, where the tower trail up to the summit begins, an easy 1.6 km path. The trail leads along the Sonnenwald nature trail, a forest experience with ten stations – especially for children and families. At the top are the observation tower of the Bayerischer Waldverein and the Turmstüberl inn.",
+    notice: "According to the Sonnenwald tourist association, the tower's viewing platform is currently closed for fire-safety reasons; work on reopening it is under way (as of October 2026).",
     stats: [
       { label: "Start", value: "Langfurth, approx. 400 m on foot from Haus Schönblick" },
       { label: "Langfurth tower trail", value: "1.6 km · approx. 45 min · easy" },
       { label: "Summit", value: "1,011 m" },
       { label: "Long loop", value: "Brotjacklriegel circular trail, approx. 12 km · approx. 4.5 h · easy" },
-      { label: "Turmstüberl", value: "April–November daily 10 a.m.–6 p.m., closed Thursdays" },
+      { label: "Nature trail", value: "Sonnenwald nature trail: ten stations, especially for children & families – the tower trails from Langfurth and from Mitterdorf / Schöfweg lead along it" },
+      { label: "Turmstüberl", value: "in good hiking weather daily until 8 November 2026 (closed Thursdays) · 24 Dec 2026 – 10 Jan 2027 daily 10 a.m.–5 p.m. · from 16 Jan 2027 Sat & Sun" },
       { label: "From HAUS28", value: "approx. 10 min by car; parking at Langfurth 55 (by the fire station) or the Daxstein hikers' car park" },
     ],
     moreRoutesHeading: "Other tower trails to the summit",

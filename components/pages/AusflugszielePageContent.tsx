@@ -105,6 +105,8 @@ const ATTRACTION_FILTER: Record<string, FilterKey[]> = {
   passau: ["regen"],
   museumsdorf: ["kinder"],
   "glasmuseum-frauenau": ["kinder", "regen"],
+  // Sonnenwald-Erlebnispfad, „besonders für Kinder und Familien“ (Touristikverein, 13.10.2026)
+  brotjacklriegel: ["kinder"],
 };
 
 // Fahrzeit-Eintrag je Ziel in data/surroundings.ts – Quelle für die Minuten der Leiste
@@ -237,7 +239,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
   };
 
   /** Kopfzeile eines Eintrags (summary): Bild oder Symbol, Name, Untertitel, Tags */
-  const kopf = (opts: { name: string; untertitel: string; tags: string[]; emoji: string; dunkel?: boolean; foto?: { src: string; alt: string; credit: string } }) => (
+  const kopf = (opts: { name: string; untertitel: string; tags: string[]; emoji: string; dunkel?: boolean; foto?: { src: string; alt: string; credit: string; lizenz?: { name: string; url: string } } }) => (
     <summary className="flex items-center gap-2.5 sm:gap-4 p-2.5 sm:p-4 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden rounded-2xl">
       <div
         className={`relative flex-none w-14 h-14 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex items-center justify-center text-2xl sm:text-4xl ${opts.dunkel ? "bg-forest-900" : "bg-cream-100"}`}
@@ -261,6 +263,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
             {opts.foto?.credit && (
               <span className="font-body text-[10px] text-forest-500">
                 {t.photoLabel}: {opts.foto.credit}
+                {opts.foto.lizenz && ` · ${opts.foto.lizenz.name}`}
               </span>
             )}
           </div>
@@ -326,6 +329,14 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                   </div>
                   <figcaption className="mt-1 font-body text-[11px] text-forest-500 leading-snug">
                     {t.photoLabel}: {b.credit}
+                      {b.lizenz && (
+                        <>
+                          {" · "}
+                          <a href={b.lizenz.url} target="_blank" rel="noopener noreferrer license" className="underline underline-offset-2 hover:text-forest-700">
+                            {b.lizenz.name}
+                          </a>
+                        </>
+                      )}
                   </figcaption>
                 </figure>
               ))}
@@ -383,7 +394,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
   ) =>
     zeile(
       id,
-      "",
+      (ATTRACTION_FILTER[id] ?? []).join(" "),
       <details id={id} className={karte}>
         {kopf({
           name: w.heading,
@@ -392,7 +403,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
           emoji: opts.emoji,
           dunkel: true,
           foto: opts.bilder[0]
-            ? { src: opts.bilder[0].src, alt: opts.bilder[0].alt[locale], credit: opts.bilder[0].credit }
+            ? { src: opts.bilder[0].src, alt: opts.bilder[0].alt[locale], credit: opts.bilder[0].credit, lizenz: opts.bilder[0].lizenz }
             : undefined,
         })}
         <div className={koerper}>
@@ -406,6 +417,14 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                   {b.credit && (
                     <figcaption className="mt-1 font-body text-[11px] text-forest-500 leading-snug">
                       {t.photoLabel}: {b.credit}
+                      {b.lizenz && (
+                        <>
+                          {" · "}
+                          <a href={b.lizenz.url} target="_blank" rel="noopener noreferrer license" className="underline underline-offset-2 hover:text-forest-700">
+                            {b.lizenz.name}
+                          </a>
+                        </>
+                      )}
                     </figcaption>
                   )}
                 </figure>
@@ -422,7 +441,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
             {w.stats.map((s) => (
               <div key={s.label}>
                 <dt className="font-body text-[11px] uppercase tracking-[0.1em] text-gold-700">{s.label}</dt>
-                <dd className="font-body text-sm text-forest-900 leading-snug">{s.value}</dd>
+                <dd className="font-body text-sm text-forest-900 leading-snug [overflow-wrap:anywhere]">{s.value}</dd>
               </div>
             ))}
           </dl>
@@ -511,6 +530,14 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                         </div>
                         <figcaption className="mt-1 font-body text-[10px] text-forest-500">
                           {t.photoLabel}: {b.credit}
+                      {b.lizenz && (
+                        <>
+                          {" · "}
+                          <a href={b.lizenz.url} target="_blank" rel="noopener noreferrer license" className="underline underline-offset-2 hover:text-forest-700">
+                            {b.lizenz.name}
+                          </a>
+                        </>
+                      )}
                         </figcaption>
                       </figure>
                     ))}

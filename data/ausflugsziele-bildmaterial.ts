@@ -17,6 +17,8 @@ export type BildFreigabe = {
   alt: { de: string; en: string };
   /** Bildnachweis im Wortlaut der Freigabe; leer bei eigenen Fotos (kein Nachweis nötig) */
   credit: string;
+  /** Lizenz, falls der Urheber eine verlangt (z. B. CC BY-SA) – wird als Link neben dem Nachweis gezeigt */
+  lizenz?: { name: string; url: string };
 };
 
 export type AusflugszielMaterial = {
@@ -203,11 +205,56 @@ export const ausflugszieleMaterial: Record<string, AusflugszielMaterial> = {
   // am 12.10.2026 um 22:36 verschickt (Cockpit-Karte „Neue Ausflugsziele“).
   brotjacklriegel: {
     website: "https://region-sonnenwald.de/berge/brotjacklriegel",
-    bilder: [],
+    bilder: [
+      {
+        src: "/images/ausflugsziele/brotjacklriegel/brotjacklriegel-ansicht.webp",
+        width: 1920,
+        height: 1440,
+        alt: {
+          de: "Der Brotjacklriegel mit Sendemast, gesehen von einer Frühlingswiese",
+          en: "The Brotjacklriegel with its transmitter mast, seen from a spring meadow",
+        },
+        credit: "Touristikverein Sonnenwald e. V.",
+        lizenz: { name: "CC BY-SA 4.0", url: "https://creativecommons.org/licenses/by-sa/4.0/deed.de" },
+      },
+      {
+        src: "/images/ausflugsziele/brotjacklriegel/aussichtsturm.webp",
+        width: 1920,
+        height: 1358,
+        alt: {
+          de: "Der Aussichtsturm auf dem Brotjacklriegel zwischen frühlingsgrünen Bäumen",
+          en: "The observation tower on the Brotjacklriegel between spring-green trees",
+        },
+        credit: "Touristikverein Sonnenwald e. V.",
+        lizenz: { name: "CC BY-SA 4.0", url: "https://creativecommons.org/licenses/by-sa/4.0/deed.de" },
+      },
+      {
+        src: "/images/ausflugsziele/brotjacklriegel/jackl-holzfigur.webp",
+        width: 640,
+        height: 480,
+        alt: {
+          de: "Geschnitzte Holzfigur „Jackl“ im Wald am Brotjacklriegel",
+          en: "Carved wooden figure “Jackl” in the forest on the Brotjacklriegel",
+        },
+        credit: "Touristikverein Sonnenwald e. V.",
+        lizenz: { name: "CC BY-SA 4.0", url: "https://creativecommons.org/licenses/by-sa/4.0/deed.de" },
+      },
+      {
+        src: "/images/ausflugsziele/brotjacklriegel/aussicht-vom-turm.webp",
+        width: 1920,
+        height: 1440,
+        alt: {
+          de: "Blick vom Aussichtsturm am Brotjacklriegel über die Wälder und Höhen des Bayerischen Waldes",
+          en: "View from the Brotjacklriegel observation tower over the forests and hills of the Bavarian Forest",
+        },
+        credit: "Touristikverein Sonnenwald e. V.",
+        lizenz: { name: "CC BY-SA 4.0", url: "https://creativecommons.org/licenses/by-sa/4.0/deed.de" },
+      },
+    ],
     freigabe: {
-      stand: "angefragt",
+      stand: "freigegeben",
       notiz:
-        "Mail an info@region-sonnenwald.de (Touristikverein Sonnenwald e.V.) am 12.10.2026, dazu gefragt: Aussichtsplattform wieder begehbar? Turmweg Langfurth 1,6 km/ca. 45 min richtig?",
+        "Brigitte Grantner, Touristikverein Sonnenwald e.V., per Mail am 13.10.2026: 4 Fotos mit vollständigen Bildrechten für unsere Homepage, Lizenz CC BY-SA, Urheber „Touristikverein Sonnenwald e. V.“ (Version nicht genannt, verlinkt ist 4.0). Plattform weiterhin gesperrt, Zeitangabe Turmweg Langfurth bestätigt.",
     },
   },
   arber: {

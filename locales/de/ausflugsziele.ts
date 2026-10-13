@@ -445,20 +445,21 @@ const ausflugsziele = {
   // Zweite Wanderung „Vor der Tür“ – Fakten: region-sonnenwald.de (Touristikverein Sonnenwald), Issue #6
   brotjacklriegel: {
     heading: "Brotjacklriegel (1.011\u00a0m)",
-    cardTags: ["Natur", "Wandern"],
+    cardTags: ["Natur", "Wandern", "Kinder"],
     cardNote: "Zu Fuß ab Haus Schönblick über den Turmweg Langfurth",
     schemaName: "Wanderung auf den Brotjacklriegel ab Haus Schönblick",
     schemaDescription:
       "Wanderung auf den Brotjacklriegel (1.011 m), den Hausberg der Region Sonnenwald: Turmweg Langfurth – Brotjacklriegel, 1,6 km, leicht, ca. 45 Minuten; Start ca. 400 m vom Haus Schönblick.",
     intro:
-      "Der Brotjacklriegel (1.011 m) ist der markante Hausberg der Region Sonnenwald – und von Haus Schönblick aus zu Fuß erreichbar: Nach rund 400 m bist du in Langfurth, dort beginnt der Turmweg hinauf zum Gipfel, ein leichter Weg von 1,6 km. Oben stehen der Aussichtsturm des Bayerischen Waldvereins und das Turmstüberl.",
-    notice: "Laut Touristikverein Sonnenwald ist die Aussichtsplattform des Turms derzeit aus Brandschutzgründen gesperrt.",
+      "Der Brotjacklriegel (1.011 m) ist der markante Hausberg der Region Sonnenwald – und von Haus Schönblick aus zu Fuß erreichbar: Nach rund 400 m bist du in Langfurth, dort beginnt der Turmweg hinauf zum Gipfel, ein leichter Weg von 1,6 km. Der Weg führt über den Sonnenwald-Erlebnispfad, ein Walderlebnis mit zehn Stationen – besonders für Kinder und Familien. Oben stehen der Aussichtsturm des Bayerischen Waldvereins und das Turmstüberl.",
+    notice: "Laut Touristikverein Sonnenwald ist die Aussichtsplattform des Turms derzeit aus Brandschutzgründen gesperrt; an der Wiederöffnung wird mit Nachdruck gearbeitet (Stand Oktober 2026).",
     stats: [
       { label: "Start", value: "Langfurth, ca. 400 m zu Fuß ab Haus Schönblick" },
       { label: "Turmweg Langfurth", value: "1,6 km · ca. 45 min · leicht" },
       { label: "Gipfel", value: "1.011 m" },
       { label: "Große Runde", value: "Brotjacklriegel-Rundweg, ca. 12 km · ca. 4,5 h · leicht" },
-      { label: "Turmstüberl", value: "April–November täglich 10–18 Uhr, Do Ruhetag" },
+      { label: "Erlebnispfad", value: "Sonnenwald-Erlebnispfad: zehn Stationen, besonders für Kinder & Familien – die Turmwege ab Langfurth und ab Mitterdorf / Schöfweg führen darüber" },
+      { label: "Turmstüberl", value: "bei Wanderwetter bis 8. November 2026 täglich (Do Ruhetag) · 24.12.2026 – 10.01.2027 täglich 10–17 Uhr · ab 16.01.2027 Sa & So" },
       { label: "Ab HAUS28", value: "ca. 10 min mit dem Auto; Parken in Langfurth 55 (beim Feuerwehrhaus) oder am Wanderparkplatz Daxstein" },
     ],
     moreRoutesHeading: "Weitere Turmwege zum Gipfel",
