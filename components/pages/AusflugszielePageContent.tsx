@@ -518,12 +518,9 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
         })}
         <div className={koerper}>
           <p className="font-body text-[15px] text-forest-700 leading-relaxed">{t.restaurants.intro}</p>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <ul className="grid grid-cols-1 gap-3">
             {restaurants.map((r) => (
-              <li
-                key={r.name}
-                className={`flex flex-col rounded-xl bg-cream-50 p-4 ${gasthausMaterial[r.name] ? "sm:col-span-2" : ""}`}
-              >
+              <li key={r.name} className="flex flex-col rounded-xl bg-cream-50 p-4">
                 {(gasthausMaterial[r.name]?.bilder ?? []).length > 0 && (
                   <div className="relative flex gap-2 -mx-4 -mt-4 mb-3 px-4 pt-4 scroll-px-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
                     {gasthausMaterial[r.name].bilder.map((b) => (

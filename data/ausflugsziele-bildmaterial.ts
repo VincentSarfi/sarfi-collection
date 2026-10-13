@@ -275,8 +275,53 @@ export const ausflugszieleMaterial: Record<string, AusflugszielMaterial> = {
   },
   museumsdorf: {
     website: "https://www.museumsdorf.com/",
-    bilder: [],
-    freigabe: { stand: "angefragt", notiz: "Mail an info@museumsdorf.com am 12.10.2026" },
+    bilder: [
+      {
+        src: "/images/ausflugsziele/museumsdorf/hoefe-am-weiher.webp",
+        width: 1920,
+        height: 1440,
+        alt: {
+          de: "Historische Höfe und Holzhäuser am Weiher im Museumsdorf Bayerischer Wald",
+          en: "Historic farmsteads and wooden houses by the pond in the Museumsdorf Bayerischer Wald",
+        },
+        credit: "Museumsdorf Bayerischer Wald",
+      },
+      {
+        src: "/images/ausflugsziele/museumsdorf/kapelle.webp",
+        width: 1920,
+        height: 1282,
+        alt: {
+          de: "Kleine rote Holzkapelle zwischen alten Bauernhäusern im Museumsdorf",
+          en: "Small red wooden chapel between old farmhouses in the Museumsdorf",
+        },
+        credit: "Museumsdorf Bayerischer Wald",
+      },
+      {
+        src: "/images/ausflugsziele/museumsdorf/kinder-am-steg.webp",
+        width: 1920,
+        height: 1278,
+        alt: {
+          de: "Zwei Mädchen im Dirndl auf einem Holzsteg am Wasser im Museumsdorf",
+          en: "Two girls in dirndls on a wooden jetty by the water in the Museumsdorf",
+        },
+        credit: "Museumsdorf Bayerischer Wald",
+      },
+      {
+        src: "/images/ausflugsziele/museumsdorf/winter.webp",
+        width: 1920,
+        height: 1080,
+        alt: {
+          de: "Besucher auf verschneitem Weg zwischen Holzhäusern im Museumsdorf im Winter",
+          en: "Visitors on a snowy path between wooden houses in the Museumsdorf in winter",
+        },
+        credit: "Museumsdorf Bayerischer Wald",
+      },
+    ],
+    freigabe: {
+      stand: "freigegeben",
+      notiz:
+        "Christina Höltl, Museumsdorf Bayerischer Wald, per Mail am 13.10.2026 (von christina.hoeltl@rotel.de): Bilder für den beschriebenen Zweck freigegeben, Bildrechte geklärt; Bildnachweis „Museumsdorf Bayerischer Wald“. 4 Fotos aus der Mail (Logo nicht verwendet).",
+    },
   },
   "glasmuseum-frauenau": {
     website: "https://glasmuseum-frauenau.de/",
@@ -294,10 +339,46 @@ export const ausflugszieleMaterial: Record<string, AusflugszielMaterial> = {
 /**
  * Fotos der Gasthäuser (Abschnitt „Gasthäuser in der Nähe“), Schlüssel ist
  * `name` aus restaurants in data/surroundings.ts. Gleiche Regel wie oben:
- * nur mit Freigabe, Bildnachweis im Wortlaut. Zum Sonnenwald und Lohner am
- * 12.10.2026 per Mail angefragt (Cockpit-Karte „Gasthäuser“).
+ * nur mit Freigabe, Bildnachweis im Wortlaut. Zum Sonnenwald am 12.10.2026
+ * per Mail angefragt (Cockpit-Karte „Gasthäuser“).
  */
 export const gasthausMaterial: Record<string, { bilder: BildFreigabe[]; freigabe: string }> = {
+  "Gasthaus Lohner": {
+    bilder: [
+      {
+        src: "/images/ausflugsziele/einkehren/lohner-biergarten.webp",
+        width: 1706,
+        height: 1280,
+        alt: {
+          de: "Überdachter Biergarten des Gasthauses Lohner in Grattersdorf",
+          en: "Covered beer garden of the Gasthaus Lohner in Grattersdorf",
+        },
+        credit: "Gasthaus Lohner",
+      },
+      {
+        src: "/images/ausflugsziele/einkehren/lohner-pizza.webp",
+        width: 997,
+        height: 997,
+        alt: {
+          de: "Hausgemachte Pizza mit Rucola und Parmesan im Gasthaus Lohner",
+          en: "Homemade pizza with rocket and parmesan at the Gasthaus Lohner",
+        },
+        credit: "Gasthaus Lohner",
+      },
+      {
+        src: "/images/ausflugsziele/einkehren/lohner-burger.webp",
+        width: 640,
+        height: 480,
+        alt: {
+          de: "Hausgemachter Burger im Gasthaus Lohner",
+          en: "Homemade burger at the Gasthaus Lohner",
+        },
+        credit: "Gasthaus Lohner",
+      },
+    ],
+    freigabe:
+      "Trixi und Markus Lohner per Mail am 13.10.2026: Fotos von gasthaus-lohner.de dürfen gezeigt werden; Beschreibung um hausgemachte Pizzen und Burger ergänzt (ihr Wunsch). Keine Personenfotos verwendet.",
+  },
   "Panorama-Landgasthof Ranzinger": {
     bilder: [
       {
