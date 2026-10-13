@@ -5,6 +5,7 @@ import { IconArrowRight, IconMapPin } from "@/components/ui/Icons";
 import { ausflugszieleMaterial, gasthausMaterial, wanderungBilder, type AusflugszielMaterial, type BildFreigabe } from "@/data/ausflugsziele-bildmaterial";
 import SteinbergliftWebcam from "@/components/pages/SteinbergliftWebcam";
 import DetailsHashOpener from "@/components/pages/DetailsHashOpener";
+import AusflugFilterHelfer from "@/components/pages/AusflugFilterHelfer";
 import { driveMinutes, restaurants } from "@/data/surroundings";
 import { getDict, localizedUrl, localizeHref, type Locale } from "@/lib/i18n";
 
@@ -91,8 +92,9 @@ const WAYPOINT_HIGHLIGHT = 1;
 
 // Filter der Liste (CSS-only, siehe .ausflug-filter in globals.css).
 // Zuordnung sprachunabhängig; die sichtbaren Tags kommen aus den Locales.
-type FilterKey = "kinder" | "regen" | "winter";
-const FILTER_KEYS: FilterKey[] = ["kinder", "regen", "winter"];
+// „essen“ zeigt nur die Gasthäuser; die Gasthäuser gehören zu keinem anderen Filter
+type FilterKey = "kinder" | "regen" | "winter" | "essen";
+const FILTER_KEYS: FilterKey[] = ["kinder", "regen", "winter", "essen"];
 const ATTRACTION_FILTER: Record<string, FilterKey[]> = {
   "pullman-city": ["kinder"],
   baumwipfelpfad: ["kinder"],
@@ -107,6 +109,7 @@ const ATTRACTION_FILTER: Record<string, FilterKey[]> = {
   "glasmuseum-frauenau": ["kinder", "regen"],
   // Sonnenwald-Erlebnispfad, „besonders für Kinder und Familien“ (Touristikverein, 13.10.2026)
   brotjacklriegel: ["kinder"],
+  einkehren: ["essen"],
 };
 
 // Fahrzeit-Eintrag je Ziel in data/surroundings.ts – Quelle für die Minuten der Leiste
@@ -504,7 +507,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
     const titelbild = restaurants.map((r) => gasthausMaterial[r.name]?.bilder[0]).find(Boolean);
     return zeile(
       EINKEHR_ID,
-      "",
+      (ATTRACTION_FILTER[EINKEHR_ID] ?? []).join(" "),
       <details id={EINKEHR_ID} className={karte}>
         {kopf({
           name: t.restaurants.heading,
@@ -567,6 +570,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
   return (
     <>
       <DetailsHashOpener />
+      <AusflugFilterHelfer einkehrId={EINKEHR_ID} />
 
       {/* Hero – kompakt, die Liste soll schnell im Bild sein */}
       <section className="relative bg-forest-900 overflow-hidden">
@@ -626,10 +630,6 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                       </Fragment>
                     ))}
                   </fieldset>
-                  <a href={`#${EINKEHR_ID}`} className="ausflug-chip">
-                    {t.filter.essen}
-                    <span aria-hidden="true">&nbsp;↓</span>
-                  </a>
                 </div>
               </div>
 

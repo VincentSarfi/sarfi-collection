@@ -197,7 +197,8 @@
 }
 .ausflug-filter:has(#af-kinder:checked) [data-filter]:not([data-filter~="kinder"]),
 .ausflug-filter:has(#af-regen:checked) [data-filter]:not([data-filter~="regen"]),
-.ausflug-filter:has(#af-winter:checked) [data-filter]:not([data-filter~="winter"]) {
+.ausflug-filter:has(#af-winter:checked) [data-filter]:not([data-filter~="winter"]),
+.ausflug-filter:has(#af-essen:checked) [data-filter]:not([data-filter~="essen"]) {
   display: none;
 }
 
