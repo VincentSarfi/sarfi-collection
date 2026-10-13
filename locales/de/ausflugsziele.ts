@@ -444,7 +444,7 @@ const ausflugsziele = {
   },
   // Zweite Wanderung „Vor der Tür“ – Fakten: region-sonnenwald.de (Touristikverein Sonnenwald), Issue #6
   brotjacklriegel: {
-    heading: "Brotjacklriegel (1.011 m)",
+    heading: "Brotjacklriegel (1.011\u00a0m)",
     cardTags: ["Natur", "Wandern"],
     cardNote: "Zu Fuß ab Haus Schönblick über den Turmweg Langfurth",
     schemaName: "Wanderung auf den Brotjacklriegel ab Haus Schönblick",

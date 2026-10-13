@@ -437,7 +437,7 @@ const ausflugsziele: typeof de = {
     cta: "Book HAUS28 – right at the Büchelstein",
   },
   brotjacklriegel: {
-    heading: "Brotjacklriegel (1,011 m)",
+    heading: "Brotjacklriegel (1,011\u00a0m)",
     cardTags: ["Nature", "Hiking"],
     cardNote: "On foot from Haus Schönblick via the Langfurth tower trail",
     schemaName: "Hike up the Brotjacklriegel from Haus Schönblick",

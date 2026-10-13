@@ -278,7 +278,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
     <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
       <a href={material.website} target="_blank" rel="noopener noreferrer" className={linkKlasse}>
         {t.officialWebsiteLabel}
-        <span className="text-xs text-forest-500">({material.website.replace(/^https:\/\/(www\.)?/, "").replace(/\/$/, "")})</span>
+        <span className="text-xs text-forest-500">({new URL(material.website).hostname.replace(/^www\./, "")})</span>
         <ExternalIcon />
         <span className="sr-only"> {t.newTabHint}</span>
       </a>
