@@ -267,10 +267,52 @@ export const ausflugszieleMaterial: Record<string, AusflugszielMaterial> = {
   },
   passau: {
     website: "https://tourismus.passau.de/",
-    bilder: [],
+    bilder: [
+      {
+        src: "/images/ausflugsziele/passau/dreifluesseeck.webp",
+        width: 1920,
+        height: 1207,
+        alt: {
+          de: "Luftbild vom Dreiflüsseeck: Inn und Donau fließen an der Spitze der Passauer Altstadt zusammen, rechts auf dem Berg die Veste Oberhaus",
+          en: "Aerial view of the Dreiflüsseeck: the Inn and the Danube meet at the tip of Passau's old town, with the Veste Oberhaus on the hill to the right",
+        },
+        credit: "© Hajo Dietz",
+      },
+      {
+        src: "/images/ausflugsziele/passau/dom-st-stephan.webp",
+        width: 1920,
+        height: 1280,
+        alt: {
+          de: "Dom St. Stephan mit seinen grünen Kuppeltürmen über den Dächern der Passauer Altstadt, oben am Hang die Veste Oberhaus",
+          en: "St. Stephen's Cathedral with its green domed towers above the roofs of Passau's old town, the Veste Oberhaus on the hillside above",
+        },
+        credit: "© Hajo Dietz",
+      },
+      {
+        src: "/images/ausflugsziele/passau/ausflugsschiff.webp",
+        width: 1920,
+        height: 1280,
+        alt: {
+          de: "Ausflugsschiff auf dem Fluss vor der Passauer Altstadt mit einer weißen Kirche mit zwei Türmen",
+          en: "Excursion boat on the river in front of Passau's old town and a white church with two towers",
+        },
+        credit: "© Stadt Passau",
+      },
+      {
+        src: "/images/ausflugsziele/passau/aussicht-batterie-linde.webp",
+        width: 1920,
+        height: 1280,
+        alt: {
+          de: "Kinder an der Mauer des Aussichtspunkts Batterie Linde mit Blick über die Passauer Altstadt und den Dom",
+          en: "Children at the wall of the Batterie Linde viewpoint looking out over Passau's old town and the cathedral",
+        },
+        credit: "© Manfred Rauscher",
+      },
+    ],
     freigabe: {
-      stand: "angefragt",
-      notiz: "Mail an marketing@passau.de (Tourismus & Stadtmarketing, Andreas Seyller) am 12.10.2026, ausdrücklich für die Website einer Ferienunterkunft",
+      stand: "freigegeben",
+      notiz:
+        "Susanne Wax, Passau Tourismus & Stadtmarketing, per Mail am 14.10.2026: 11 Fotos per Download (ftapi.passau.de), „Gegen Angabe des Copyrights (steht jeweils im Dateinamen) können diese Fotos gerne für Ihre genannten Zwecke verwendet werden.“ Angefragt war die Ausflugsziele-Seite.",
     },
   },
   museumsdorf: {
