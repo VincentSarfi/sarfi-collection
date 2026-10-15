@@ -42,8 +42,43 @@ export type AusflugszielMaterial = {
 export const ausflugszieleMaterial: Record<string, AusflugszielMaterial> = {
   "pullman-city": {
     website: "https://www.pullmancity.de",
-    bilder: [],
-    freigabe: { stand: "angefragt", notiz: "Mail an info@pullmancity.de am 11.10.2026" },
+    bilder: [
+      {
+        src: "/images/ausflugsziele/pullman-city/rindertrieb-main-street.webp",
+        width: 1920,
+        height: 1280,
+        alt: {
+          de: "Rindertrieb mit Longhorn-Rindern und Cowboys auf der Main Street von Pullman City, Zuschauer am Straßenrand",
+          en: "Cattle drive with longhorns and cowboys on Pullman City's Main Street, spectators along the street",
+        },
+        credit: "© Pullman City Bayern",
+      },
+      {
+        src: "/images/ausflugsziele/pullman-city/kunstreiter-ungarische-post.webp",
+        width: 1920,
+        height: 1280,
+        alt: {
+          de: "Kunstreiter stehen bei der „Ungarischen Post“ auf zwei Pferden vor dem Gold Nugget Saloon",
+          en: "Trick riders standing on two horses each in the “Hungarian Post” in front of the Gold Nugget Saloon",
+        },
+        credit: "© Pullman City Bayern",
+      },
+      {
+        src: "/images/ausflugsziele/pullman-city/spielplatz.webp",
+        width: 1920,
+        height: 1279,
+        alt: {
+          de: "Kinder klettern auf dem Holzspielplatz zwischen Nadelbäumen in Pullman City",
+          en: "Children climbing on the wooden playground among the conifers at Pullman City",
+        },
+        credit: "© Pullman City Bayern",
+      },
+    ],
+    freigabe: {
+      stand: "freigegeben",
+      notiz:
+        "Pullman City Team (marketing@pullmancity.de) per Mail am 15.10.2026: 3 Fotos für unsere Webseite, „Gerne können Sie diese verwenden, wenn dies für uns kostenfrei ist.“ Bildnachweis „©Pullman City Bayern“. Logo (PDF) nicht genutzt.",
+    },
   },
   baumwipfelpfad: {
     website: "https://treetop-walks.com/bayerischer-wald/",
