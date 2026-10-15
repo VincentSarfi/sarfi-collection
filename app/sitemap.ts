@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
 import { hasEnglishVersion, localizedUrl } from "@/lib/i18n";
+import { zielSeiten } from "@/data/ausflugsziel-seiten";
 
 const BASE_URL = "https://www.sarfi-collection.de";
 
@@ -48,6 +49,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...entries("/schoenblick/a2", "weekly", 0.8),
     ...entries("/blog", "weekly", 0.7),
     ...entries("/ausflugsziele", "monthly", 0.7),
+    ...zielSeiten.flatMap((s) => entries(`/ausflugsziele/${s.slug}`, "monthly", 0.6)),
     ...entries("/gutschein", "yearly", 0.5),
     ...entries("/ueber-uns", "monthly", 0.5),
     ...entries("/kontakt", "monthly", 0.5),

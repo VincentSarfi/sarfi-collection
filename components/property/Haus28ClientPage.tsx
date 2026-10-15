@@ -425,13 +425,24 @@ export default function Haus28ClientPage({ hostingYears }: { hostingYears: numbe
                       {t.haus28.excursions.text}
                     </p>
                   </div>
-                  <Link
-                    href={localizeHref("/ausflugsziele#buechelstein-wanderung", locale)}
-                    className="flex-none inline-flex items-center gap-2 px-5 py-2.5 bg-forest-900 text-cream-50 text-sm font-body font-medium rounded-full hover:bg-forest-800 transition-colors whitespace-nowrap"
-                  >
-                    {t.haus28.excursions.cta}
-                    <IconArrowRight size={14} />
-                  </Link>
+                  <div className="flex flex-col items-start sm:items-end gap-2">
+                    <Link
+                      href={localizeHref("/ausflugsziele#buechelstein-wanderung", locale)}
+                      className="flex-none inline-flex items-center gap-2 px-5 py-2.5 bg-forest-900 text-cream-50 text-sm font-body font-medium rounded-full hover:bg-forest-800 transition-colors whitespace-nowrap"
+                    >
+                      {t.haus28.excursions.cta}
+                      <IconArrowRight size={14} />
+                    </Link>
+                    {/* Eigene Seite zur Wanderung (nur deutsch) */}
+                    <Link
+                      href="/ausflugsziele/buechelstein-wanderung"
+                      hrefLang={locale === "en" ? "de" : undefined}
+                      className="inline-flex items-center gap-1.5 font-body text-sm text-forest-700 hover:text-forest-900 underline underline-offset-2 decoration-forest-300"
+                    >
+                      {t.haus28.excursions.hikeLink}
+                      <IconArrowRight size={12} />
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

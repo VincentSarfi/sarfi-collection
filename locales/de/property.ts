@@ -234,6 +234,7 @@ const property = {
       heading: "Wanderung zum Büchelstein & weitere Ausflüge",
       text: "Die Büchelstein-Rundwanderung startet direkt an der Haustür und führt auf den Gipfel (831 m) und zur historischen Wallfahrtskapelle Rastbuche (18. Jh.). Alle Ausflugstipps für die Region auf einen Blick.",
       cta: "Alle Ausflugsziele",
+      hikeLink: "Büchelstein-Wanderung: Weg, Parken, Einkehr",
     },
     awards: {
       heading: "Auszeichnungen",
@@ -305,6 +306,7 @@ const property = {
   // app/(de|en)/…/schoenblick/page.tsx (Haus-Übersichtsseite)
   schoenblickPage: {
     aboutHeading: "Über Haus Schönblick",
+    vorDerTuer: "Direkt vor der Tür:",
     aboutLocation:
       `Haus Schönblick liegt im Ortsteil Langfurth bei Schöfweg, direkt am Skilift Steinberg. Die fünf Ferienwohnungen verteilen sich auf die Hausnummern 18 und 20: B5 und B6 im Erdgeschoss mit Terrasse, B7 und B8 im ersten Stock mit Panoramabalkon, dazu die Hüttenwohnung A2 in Hausnummer 20. Alle Gäste teilen sich eine große Panoramaterrasse mit Sitzplätzen und einen kleinen Garten; geparkt wird kostenlos direkt vor dem Gebäude. Bis zur Westernstadt Pullman City sind es rund ${m.pullmanCity.schoenblick} Minuten mit dem Auto.`,
     apartmentsEyebrow: "5 Ferienwohnungen",

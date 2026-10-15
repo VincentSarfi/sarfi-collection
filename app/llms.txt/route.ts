@@ -1,6 +1,7 @@
 import { getAggregateReviewStats, haus28, schoenblick, type PropertyData } from "@/data/properties";
 import { arrival, driveMinutes, PET_FEE_PER_NIGHT, PET_MAX, restaurants } from "@/data/surroundings";
 import { getAllPosts } from "@/lib/blog";
+import { zielSeiten } from "@/data/ausflugsziel-seiten";
 import { SITE_URL } from "@/lib/seo";
 
 // Wird beim Build aus data/properties.ts erzeugt, damit Namen, Adressen und
@@ -79,6 +80,7 @@ Ca. 7 km, 2–2,5 Stunden, ca. 300 Höhenmeter, mittel.
 ${apartments.map((a) => `- [${a.name}](${SITE_URL}/schoenblick/${a.id}): ${a.subtitle} – ${a.location}, ${a.outdoor}, ${a.sqm} m², ab ${a.priceFrom} €`).join("\n")}
 - [Gruppenunterkunft](${SITE_URL}/schoenblick/gruppen): mehrere Apartments in einer Buchung, bis ${groupMax} Personen
 - [Ausflugsziele](${SITE_URL}/ausflugsziele): Sehenswürdigkeiten und Wanderungen im Bayerischen Wald
+${zielSeiten.map((s) => `  - [${s.title}](${SITE_URL}/ausflugsziele/${s.slug}): ${s.description}`).join("\n")}
 - [Blog](${SITE_URL}/blog): Neuigkeiten und Tipps der Gastgeber
 ${posts.map((p) => `  - [${p.title}](${SITE_URL}/blog/${p.slug})`).join("\n")}
 - [Geschenkgutschein](${SITE_URL}/gutschein): Gutschein für beide Unterkünfte, sofort per E-Mail

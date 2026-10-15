@@ -71,6 +71,9 @@ const ausflugsziele = {
   practicalLabel: "Praktische Infos",
   photoLabel: "Foto",
   officialWebsiteLabel: "Offizielle Website",
+  // Link auf die eigene Seite eines Ziels bzw. den Blogbeitrag dazu
+  mehrInfos: "Alle Infos, Tipps & Fragen",
+  blogLabel: "Im Blog",
   newTabHint: "(öffnet in neuem Tab)",
   webcam: {
     caption: "Live-Webcam am Steinberglift",
@@ -425,7 +428,7 @@ const ausflugsziele = {
       {
         name: "Großer Büchelstein (831 m)",
         detail:
-          "Der Hauptgipfel und Höhepunkt der Tour. Von der Drachenschanze am Gipfel reicht das Panorama bei klarem Wetter über den Bayerischen Wald bis ins Donautal – bei Föhn sogar bis zu den Alpen. Moosige Felsplatten am Gipfel: feste Schuhe lohnen sich.",
+          "Der Hauptgipfel und Höhepunkt der Tour. Von der Drachenschanze am Gipfel reicht das Panorama bei klarem Wetter über den Bayerischen Wald bis ins Donautal – bei Föhn sogar bis zu den Alpen. Der Weg führt über moosbewachsene Felsplatten: feste Schuhe lohnen sich.",
       },
       {
         name: "Kleiner Büchelstein",

@@ -66,6 +66,16 @@ export default function SchoenblickPageContent({ locale }: { locale: Locale }) {
             <p>{haus.description}</p>
             <p>{t.aboutLocation}</p>
           </div>
+          {/* Eigene Seiten zu den Zielen vor der Tür (nur deutsch) */}
+          <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 font-body text-sm text-forest-700">
+            <span className="font-medium text-forest-900">{t.vorDerTuer}</span>
+            <Link href="/ausflugsziele/steinberglift" hrefLang={locale === "en" ? "de" : undefined} className="underline underline-offset-2 decoration-forest-300 hover:text-forest-900">
+              Steinberglift
+            </Link>
+            <Link href="/ausflugsziele/brotjacklriegel" hrefLang={locale === "en" ? "de" : undefined} className="underline underline-offset-2 decoration-forest-300 hover:text-forest-900">
+              Brotjacklriegel
+            </Link>
+          </p>
         </div>
       </section>
 

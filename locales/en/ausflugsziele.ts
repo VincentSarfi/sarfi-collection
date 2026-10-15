@@ -65,6 +65,8 @@ const ausflugsziele: typeof de = {
   practicalLabel: "Good to know",
   photoLabel: "Photo",
   officialWebsiteLabel: "Official website",
+  mehrInfos: "All details & tips (in German)",
+  blogLabel: "On our blog (in German)",
   newTabHint: "(opens in a new tab)",
   webcam: {
     caption: "Live webcam at the Steinberglift",
@@ -419,7 +421,7 @@ const ausflugsziele: typeof de = {
       {
         name: "Großer Büchelstein (831 m)",
         detail:
-          "The main summit and highlight of the hike. From the hang-glider ramp at the top, on a clear day the panorama stretches across the Bavarian Forest to the Danube valley – and when the föhn blows, all the way to the Alps. The rock slabs at the top can be mossy, so sturdy shoes are worth it.",
+          "The main summit and highlight of the hike. From the hang-glider ramp at the top, on a clear day the panorama stretches across the Bavarian Forest to the Danube valley – and when the föhn blows, all the way to the Alps. The path crosses mossy rock slabs, so sturdy shoes are worth it.",
       },
       {
         name: "Kleiner Büchelstein",

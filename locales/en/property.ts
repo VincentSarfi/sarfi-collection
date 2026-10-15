@@ -234,6 +234,7 @@ const property = {
       heading: "Hike to the Büchelstein & more day trips",
       text: "The Büchelstein circular hike starts right at the front door and leads up to the summit (831 m) and to the historic Rastbuche pilgrimage chapel (18th century). All our day-trip tips for the region at a glance.",
       cta: "All things to do",
+      hikeLink: "Büchelstein hike: route & tips (in German)",
     },
     awards: {
       heading: "Awards",
@@ -305,6 +306,7 @@ const property = {
   // app/(de|en)/…/schoenblick/page.tsx (house overview page)
   schoenblickPage: {
     aboutHeading: "About Haus Schönblick",
+    vorDerTuer: "Right on the doorstep (in German):",
     aboutLocation:
       `Haus Schönblick sits in Langfurth near Schöfweg, right by the Steinberg ski lift. The five holiday apartments are spread across house numbers 18 and 20: B5 and B6 on the ground floor with a terrace, B7 and B8 on the first floor with a panoramic balcony, plus the cabin-style apartment A2 in house no. 20. All guests share a large panoramic terrace with seating and a small garden; parking is free right in front of the building. The Pullman City Western town is about ${m.pullmanCity.schoenblick} minutes away by car.`,
     apartmentsEyebrow: "5 holiday apartments",

@@ -7,6 +7,8 @@ import SteinbergliftWebcam from "@/components/pages/SteinbergliftWebcam";
 import DetailsHashOpener from "@/components/pages/DetailsHashOpener";
 import AusflugFilterHelfer from "@/components/pages/AusflugFilterHelfer";
 import { driveMinutes, restaurants } from "@/data/surroundings";
+import { zielSeiteFuer } from "@/data/ausflugsziel-seiten";
+import { getAllPosts } from "@/lib/blog";
 import { getDict, localizedUrl, localizeHref, type Locale } from "@/lib/i18n";
 
 const SITE = "https://www.sarfi-collection.de";
@@ -110,6 +112,12 @@ const ATTRACTION_FILTER: Record<string, FilterKey[]> = {
   // Sonnenwald-Erlebnispfad, „besonders für Kinder und Familien“ (Touristikverein, 13.10.2026)
   brotjacklriegel: ["kinder"],
   einkehren: ["essen"],
+};
+
+// Blogbeitrag je Ziel – verlinkt wird nur, was veröffentlicht ist (keine Entwürfe)
+const BLOG_ZU_ZIEL: Record<string, string> = {
+  "pullman-city": "pullman-city-mit-kindern",
+  passau: "ausflug-nach-passau",
 };
 
 // Fahrzeit-Eintrag je Ziel in data/surroundings.ts – Quelle für die Minuten der Leiste
@@ -298,6 +306,31 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
     </div>
   );
 
+  /** Links auf die eigene Seite des Ziels und den passenden Blogbeitrag (nur deutsch vorhanden) */
+  const posts = getAllPosts();
+  const mehrLinks = (id: string) => {
+    const seite = zielSeiteFuer(id);
+    const post = posts.find((p) => p.slug === BLOG_ZU_ZIEL[id]);
+    if (!seite && !post) return null;
+    const lang = locale === "en" ? "de" : undefined;
+    return (
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+        {seite && (
+          <Link href={`/ausflugsziele/${seite.slug}`} hrefLang={lang} className={`${linkKlasse} font-semibold`}>
+            {t.mehrInfos}
+            <IconArrowRight size={14} />
+          </Link>
+        )}
+        {post && (
+          <Link href={`/blog/${post.slug}`} hrefLang={lang} className={linkKlasse}>
+            {t.blogLabel}: {post.title}
+            <IconArrowRight size={14} />
+          </Link>
+        )}
+      </div>
+    );
+  };
+
   /** Ausflugsziel: Fotos/Webcam zum Wischen, Anfahrt, Beschreibung, Highlights, Infos, Links */
   const ziel = (id: string) => {
     const attr = t.attractions.find((a) => a.id === id);
@@ -380,6 +413,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
             </div>
           </div>
 
+          {mehrLinks(id)}
           {offizielleLinks(material)}
         </div>
       </details>,
@@ -490,6 +524,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
               {w.mapText}
             </p>
           )}
+          {mehrLinks(id)}
           {ausflugszieleMaterial[id] && offizielleLinks(ausflugszieleMaterial[id])}
           <Link
             href={href(opts.ctaHref)}
