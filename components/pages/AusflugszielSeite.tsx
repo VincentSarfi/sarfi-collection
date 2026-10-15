@@ -209,6 +209,11 @@ export default function AusflugszielSeite({ seite }: { seite: ZielSeite }) {
                   ))}
                 </ul>
               )}
+              {a.link && (
+                <Link href={a.link.href} className="inline-flex items-center gap-1.5 font-body text-[15px] text-forest-700 hover:text-forest-900 underline underline-offset-2 decoration-forest-300">
+                  {a.link.text} <IconArrowRight size={14} />
+                </Link>
+              )}
             </section>
           ))}
 

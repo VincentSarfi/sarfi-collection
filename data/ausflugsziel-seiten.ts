@@ -26,6 +26,14 @@ import { driveMinutes as m, restaurants } from "@/data/surroundings";
 const lohner = (haus: "fromHaus28" | "fromSchoenblick") =>
   parseInt(restaurants.find((r) => r.name === "Gasthaus Lohner")?.[haus].replace(/\D/g, "") ?? "", 10);
 
+/** Unsere übrigen Gasthaus-Tipps mit Fahrzeit ab HAUS28, z. B. „Stoaberg Alm (am Steinberglift, Schöfweg, ~4 min), …“ */
+const weitereGasthaeuserAbHaus28 = () => {
+  const namen = restaurants
+    .filter((r) => r.name !== "Gasthaus Lohner")
+    .map((r) => `${r.name.replace(/ \(.*\)$/, "")} (${r.place}, ${r.fromHaus28})`);
+  return namen.length > 1 ? `${namen.slice(0, -1).join(", ")} und ${namen.at(-1)}` : namen.join("");
+};
+
 export type ZielSeite = {
   slug: string;
   /** Einträge auf /ausflugsziele, die hierher verlinken (Anker-IDs) */
@@ -45,7 +53,8 @@ export type ZielSeite = {
   /** Hinweis, der aktuell wichtig ist (z. B. Sperrung) */
   hinweis?: string;
   fakten: { label: string; wert: string }[];
-  abschnitte: { h2: string; absaetze: string[]; liste?: string[] }[];
+  /** link: interner Verweis unter dem Abschnitt, z. B. auf unsere Gasthaus-Tipps */
+  abschnitte: { h2: string; absaetze: string[]; liste?: string[]; link?: { href: string; text: string } }[];
   faq: { frage: string; antwort: string }[];
   /** Übernachten in der Nähe: zuerst das Haus, das am nächsten liegt */
   unterkunft: { zuerst: "haus28" | "schoenblick"; haus28: string; schoenblick: string };
@@ -118,8 +127,9 @@ export const zielSeiten: ZielSeite[] = [
         h2: "Gut zu wissen",
         absaetze: [
           "Unterwegs, etwa am Kleinen Büchelstein, führt der Weg über moosbewachsene Felsplatten – feste Wanderschuhe sind deshalb ratsam. Vorher das Wetter prüfen. Einzelne Privat-, Forst- und Feldwege können gesperrt sein – dann den Schildern folgen.",
-          "Zum Einkehren nennt das Tourenportal das Gasthaus Lohner und den Büchelsteiner Hof, beide in Grattersdorf.",
+          `Zum Einkehren nach der Runde haben wir unsere Lieblingsgasthäuser zusammengestellt. Am nächsten liegt das Gasthaus Lohner im Ortskern von Grattersdorf, vom HAUS28 rund ${lohner("fromHaus28")} Minuten mit dem Auto.`,
         ],
+        link: { href: "/ausflugsziele#einkehren", text: "Unsere Gasthaus-Tipps mit Fotos und Fahrzeiten" },
       },
     ],
     faq: [
@@ -141,7 +151,7 @@ export const zielSeiten: ZielSeite[] = [
       {
         frage: "Wo kann man nach der Wanderung einkehren?",
         antwort:
-          `In Grattersdorf liegen das Gasthaus Lohner und der Büchelsteiner Hof, beide nennt auch das Tourenportal. Vom HAUS28 sind es zum Gasthaus Lohner rund ${lohner("fromHaus28")} Minuten mit dem Auto.`,
+          `Im Ortskern von Grattersdorf, wo die offizielle Runde beginnt, liegt das Gasthaus Lohner – vom HAUS28 rund ${lohner("fromHaus28")} Minuten mit dem Auto. Unsere weiteren Tipps, mit Fahrzeit ab HAUS28: ${weitereGasthaeuserAbHaus28()}. Fotos und Links stehen auf unserer Ausflugsziele-Seite unter „Gasthäuser in der Nähe“. Bitte vorher die Ruhetage prüfen.`,
       },
     ],
     unterkunft: {
