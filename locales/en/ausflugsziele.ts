@@ -4,6 +4,12 @@ import { ca as caRaw, driveMinutes as m } from "@/data/surroundings";
 // Keep "~30 min" on one line (non-breaking space between number and unit)
 const ca = (minutes: number) => caRaw(minutes).replace(/ /g, " ");
 
+// “~25 min from HAUS28 & Haus Schönblick”, or both separately when they differ
+const beide = (z: { haus28: number; schoenblick: number }) =>
+  z.haus28 === z.schoenblick
+    ? `${ca(z.haus28)} from HAUS28 & Haus Schönblick`
+    : `${ca(z.haus28)} from HAUS28 · ${ca(z.schoenblick)} from Haus Schönblick`;
+
 // Things to do page (components/pages/AusflugszielePageContent.tsx).
 const ausflugsziele: typeof de = {
   breadcrumbHome: "Home",
@@ -73,7 +79,7 @@ const ausflugsziele: typeof de = {
       name: "Pullman City",
       schemaName: "Pullman City – Western town in Eging am See",
       subtitle: "Western town in Eging am See – since 1997",
-      distance: `${ca(m.pullmanCity.haus28)} from HAUS28 & Haus Schönblick`,
+      distance: beide(m.pullmanCity),
       fromHaus28: ca(m.pullmanCity.haus28),
       fromSchoenblick: ca(m.pullmanCity.schoenblick),
       description:
@@ -181,7 +187,7 @@ const ausflugsziele: typeof de = {
       name: "Rusel-Arena indoor golf",
       schemaName: "Rusel-Arena indoor golf",
       subtitle: "6 TrackMan simulators at Rusel golf course",
-      distance: `${ca(m.ruselArena.haus28)} from HAUS28 & Haus Schönblick`,
+      distance: beide(m.ruselArena),
       fromHaus28: ca(m.ruselArena.haus28),
       fromSchoenblick: ca(m.ruselArena.schoenblick),
       description:
@@ -207,7 +213,7 @@ const ausflugsziele: typeof de = {
       name: "elypso Deggendorf",
       schemaName: "elypso leisure pool Deggendorf",
       subtitle: "Leisure pool and sauna world in Deggendorf",
-      distance: `${ca(m.elypso.haus28)} from HAUS28 & Haus Schönblick`,
+      distance: beide(m.elypso),
       fromHaus28: ca(m.elypso.haus28),
       fromSchoenblick: ca(m.elypso.schoenblick),
       description:
@@ -261,7 +267,7 @@ const ausflugsziele: typeof de = {
       name: "Großer Arber",
       schemaName: "Großer Arber with the Arber cable car and the Großer Arbersee lake",
       subtitle: "1,456 m – the \"King of the Bavarian Forest\"",
-      distance: `${ca(m.arber.haus28)} from HAUS28 & Haus Schönblick`,
+      distance: beide(m.arber),
       fromHaus28: ca(m.arber.haus28),
       fromSchoenblick: ca(m.arber.schoenblick),
       description:
@@ -453,7 +459,7 @@ const ausflugsziele: typeof de = {
       { label: "Long loop", value: "Brotjacklriegel circular trail, approx. 12 km · approx. 4.5 h · easy" },
       { label: "Nature trail", value: "Sonnenwald nature trail: ten stations, especially for children & families – the tower trails from Langfurth and from Mitterdorf / Schöfweg lead along it" },
       { label: "Turmstüberl", value: "in good hiking weather daily until 8 November 2026 (closed Thursdays) · 24 Dec 2026 – 10 Jan 2027 daily 10 a.m.–5 p.m. · from 16 Jan 2027 Sat & Sun" },
-      { label: "From HAUS28", value: "approx. 10 min by car; parking at Langfurth 55 (by the fire station) or the Daxstein hikers' car park" },
+      { label: "From HAUS28", value: "approx. 5 min by car; parking at Langfurth 55 (by the fire station) or the Daxstein hikers' car park" },
     ],
     moreRoutesHeading: "Other tower trails to the summit",
     moreRoutes: [

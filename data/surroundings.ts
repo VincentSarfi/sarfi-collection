@@ -1,41 +1,52 @@
 // Umgebung: Gasthäuser, Anreise, Haustier-Regel – genutzt von FAQs,
 // Gruppenseite und llms.txt. Recherchiert am 06.10.2026 (Websites der
-// Betriebe, DB, Wikipedia); Fahrzeiten sind gerundete Schätzungen.
+// Betriebe, DB, Wikipedia); Fahrzeiten per OSRM, siehe driveMinutes.
 
 /**
  * Fahrzeiten mit dem Auto in Minuten – einzige Quelle für alle Seiten.
- * OSRM-Routing ab Hausadresse plus 15 % Puffer, auf 5 min gerundet
- * (geprüft 06.10.2026). Früher standen hier geschätzte Werte, die bis zu
- * 15 min zu knapp waren (z. B. Pullman City „15 min“ ab Schönblick).
+ * OSRM-Routing (router.project-osrm.org) ab den Hauskoordinaten aus
+ * data/properties.ts, also dem Pin auf der Lagekarte. Ab 15 min mit 15 %
+ * Puffer, auf 5 min gerundet; kürzere Wege ohne Puffer auf ganze Minuten.
+ * Neu gerechnet am 15.10.2026: Bis dahin lag der Startpunkt für HAUS28 auf
+ * dem Ortsmittelpunkt von Büchelstein, gut 1,5 km westlich vom Haus
+ * (OpenStreetMap kennt die Hausnummer 28 nicht). Dadurch standen die nahen
+ * Ziele ab HAUS28 viel zu lang da, z. B. Steinberglift 10 statt 4 min.
+ * In den Kommentaren: OSRM-Rohwert ab HAUS28 bzw. Haus Schönblick.
  */
 export const driveMinutes = {
-  pullmanCity: { name: "Westernstadt Pullman City (Eging am See)", haus28: 30, schoenblick: 30 },
-  /** Baumwipfelpfad, Tier-Freigelände und Hans-Eisenmann-Haus liegen zusammen in Neuschönau. */
+  /** 23,9 bzw. 26,1 min */
+  pullmanCity: { name: "Westernstadt Pullman City (Eging am See)", haus28: 25, schoenblick: 30 },
+  /** Baumwipfelpfad, Tier-Freigelände und Hans-Eisenmann-Haus liegen zusammen in Neuschönau. 39,5 bzw. 35,8 min */
   nationalparkLusen: { name: "Nationalparkzentrum Lusen mit Baumwipfelpfad und Tier-Freigelände (Neuschönau)", haus28: 45, schoenblick: 40 },
-  /** 0 = zu Fuß erreichbar (ca. 600 m vom Haus Schönblick). */
-  steinberglift: { name: "Skilift Steinberg (Langfurth)", haus28: 10, schoenblick: 0 },
+  /** Talstation. Ab HAUS28 3,9 min (2,7 km); 0 = zu Fuß (ca. 600 m vom Haus Schönblick). */
+  steinberglift: { name: "Skilift Steinberg (Langfurth)", haus28: 4, schoenblick: 0 },
+  /** 21,7 bzw. 22,5 min */
   ruselArena: { name: "Rusel-Arena Indoor-Golf (Deggendorf-Rusel)", haus28: 25, schoenblick: 25 },
+  /** Stadtplatz: 26,1 bzw. 22,5 min */
   grafenau: { name: "Grafenau Zentrum", haus28: 30, schoenblick: 25 },
-  deggendorf: { name: "Deggendorf Zentrum", haus28: 30, schoenblick: 30 },
+  /** Luitpoldplatz: 26,1 bzw. 28,4 min */
+  deggendorf: { name: "Deggendorf Zentrum", haus28: 30, schoenblick: 35 },
+  /** Marktplatz: 17,0 bzw. 19,3 min */
   hengersberg: { name: "Hengersberg (Einkaufen, A3)", haus28: 20, schoenblick: 20 },
+  /** 29,0 bzw. 31,2 min */
   elypso: { name: "Erlebnisbad elypso mit Saunawelt (Deggendorf)", haus28: 35, schoenblick: 35 },
-  /** OSRM 12.10.2026: 42 bzw. 40 min Fahrt, plus 15 % Puffer. */
+  /** 42,7 bzw. 39,8 min */
   joska: { name: "JOSKA Glasparadies (Bodenmais)", haus28: 50, schoenblick: 45 },
-  /** OSRM 12.10.2026 bis Am Museumspark 1: 41 bzw. 31 min, plus 15 % (ab HAUS28 vorher 40). */
-  glasmuseumFrauenau: { name: "Glasmuseum Frauenau", haus28: 45, schoenblick: 35 },
-  /** OSRM 12.10.2026 bis Talstation Bergbahn bestätigt: 53 bzw. 51 min, plus 15 %. */
+  /** Am Museumspark 1: 35,0 bzw. 31,3 min */
+  glasmuseumFrauenau: { name: "Glasmuseum Frauenau", haus28: 40, schoenblick: 35 },
+  /** Talstation Bergbahn: 54,2 bzw. 51,3 min */
   arber: { name: "Großer Arber, Talstation Bergbahn", haus28: 60, schoenblick: 60 },
-  /** OSRM 12.10.2026 bis Rathausplatz (Altstadt): 40 bzw. 42 min, plus 15 %. */
+  /** Rathausplatz (Altstadt): 39,9 bzw. 42,2 min */
   passau: { name: "Passau Altstadt (Dreiflüsseeck, Dom St. Stephan)", haus28: 45, schoenblick: 50 },
-  /** OSRM 12.10.2026 bis Museumsdorf am Dreiburgensee: 29 bzw. 22 min, plus 15 %. */
-  museumsdorf: { name: "Museumsdorf Bayerischer Wald (Tittling)", haus28: 35, schoenblick: 25 },
+  /** Museumsdorf am Dreiburgensee: 23,9 bzw. 21,8 min */
+  museumsdorf: { name: "Museumsdorf Bayerischer Wald (Tittling)", haus28: 25, schoenblick: 25 },
   /**
    * 0 = zu Fuß: vom Haus Schönblick ca. 400 m bis Langfurth (OSRM-Fußweg), dort
    * beginnt der Turmweg Langfurth – Brotjacklriegel (1,6 km, leicht, ca. 45 min
    * laut Touristikverein Sonnenwald, region-sonnenwald.de, 12.10.2026).
-   * HAUS28: 10 min mit dem Auto bis Langfurth (Parkplatz beim Feuerwehrhaus).
+   * HAUS28: 5,0 min mit dem Auto bis Langfurth 55 (Parkplatz beim Feuerwehrhaus).
    */
-  brotjacklriegel: { name: "Brotjacklriegel (Turmweg ab Langfurth)", haus28: 10, schoenblick: 0 },
+  brotjacklriegel: { name: "Brotjacklriegel (Turmweg ab Langfurth)", haus28: 5, schoenblick: 0 },
 } as const;
 
 /** „~30 min“ – Schreibweise für Tabellen und Listen (DE und EN gleich). */
@@ -67,8 +78,9 @@ export const stoabergAlm: Restaurant = {
   url: "https://www.steinberglift.de/de/ski-schule/gastronomie/wirtshaus-stoaberghuettn.html",
   de: "Neu seit September 2026: bayerische Küche, durchgehend warm – donnerstags Kesselfleisch, freitags Spareribs, sonntags Schweinebraten und Ente. April–November Do–So ab 10 Uhr, Dezember–März täglich.",
   en: "New since September 2026: Bavarian food served all day – Kesselfleisch on Thursdays, spare ribs on Fridays, roast pork and duck on Sundays. April–November Thu–Sun from 10 a.m., December–March daily.",
-  fromHaus28: "~5 min",
-  fromSchoenblick: "~3 min",
+  // OSRM 15.10.2026 bis zur Talstation: 3,9 bzw. 2,3 min (zu Fuß ca. 600 m)
+  fromHaus28: "~4 min",
+  fromSchoenblick: "~2 min",
 };
 
 export const restaurants: Restaurant[] = [
@@ -80,7 +92,8 @@ export const restaurants: Restaurant[] = [
     url: "https://hotel-ranzinger.de/",
     de: "Regionale Küche, frisch und hausgemacht, auch vegane Gerichte – rund 600 m vom Haus Schönblick.",
     en: "Regional food, fresh and homemade, vegan dishes too – about 600 m from Haus Schönblick.",
-    fromHaus28: "~6 min",
+    // OSRM 15.10.2026: 5,0 bzw. 1,6 min
+    fromHaus28: "~5 min",
     fromSchoenblick: "~2 min",
   },
   {
@@ -90,8 +103,9 @@ export const restaurants: Restaurant[] = [
     url: "https://www.zum-sonnenwald.de/",
     de: "Bayerische Schmankerl mit Zutaten aus der Region, seit über 100 Jahren in Familienhand.",
     en: "Bavarian specialities made with regional produce, family-run for more than 100 years.",
-    fromHaus28: "~10 min",
-    fromSchoenblick: "~7 min",
+    // OSRM 15.10.2026: 9,4 bzw. 5,8 min
+    fromHaus28: "~9 min",
+    fromSchoenblick: "~6 min",
   },
   {
     name: "Gasthaus Lohner",
@@ -100,8 +114,9 @@ export const restaurants: Restaurant[] = [
     url: "https://www.gasthaus-lohner.de/",
     de: "Bayerische Schmankerl, hausgemachte Pizzen und Burger im Ortskern von Grattersdorf, auch zum Mitnehmen.",
     en: "Bavarian specialities, homemade pizzas and burgers in the centre of Grattersdorf, takeaway available too.",
-    fromHaus28: "~6 min",
-    fromSchoenblick: "~10 min",
+    // OSRM 15.10.2026: 5,4 bzw. 7,6 min
+    fromHaus28: "~5 min",
+    fromSchoenblick: "~8 min",
   },
 ];
 

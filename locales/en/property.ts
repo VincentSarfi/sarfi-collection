@@ -92,10 +92,10 @@ const property = {
       } as Record<string, string>,
     },
     defaultAttractions: [
-      { name: "Lusen National Park Centre", distance: "~40–45 min" },
+      { name: "Lusen National Park Centre", distance: ca(m.nationalparkLusen.haus28) },
       { name: "Deggendorf (shopping)", distance: ca(m.deggendorf.haus28) },
       { name: "elypso leisure pool, Deggendorf", distance: ca(m.elypso.haus28) },
-      { name: "Frauenau Glass Museum", distance: "~35–40 min" },
+      { name: "Frauenau Glass Museum", distance: ca(m.glasmuseumFrauenau.haus28) },
     ],
   },
   // components/property/AmenitiesGrid.tsx

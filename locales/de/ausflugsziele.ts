@@ -11,6 +11,12 @@ import { ca as caRaw, driveMinutes as m } from "@/data/surroundings";
 // „~30 min“ ohne Umbruch zwischen Zahl und Einheit (geschütztes Leerzeichen)
 const ca = (minutes: number) => caRaw(minutes).replace(/ /g, " ");
 
+// „~25 min von HAUS28 & Haus Schönblick“, bei verschiedenen Werten beide einzeln
+const beide = (z: { haus28: number; schoenblick: number }) =>
+  z.haus28 === z.schoenblick
+    ? `${ca(z.haus28)} von HAUS28 & Haus Schönblick`
+    : `${ca(z.haus28)} von HAUS28 · ${ca(z.schoenblick)} von Haus Schönblick`;
+
 const ausflugsziele = {
   breadcrumbHome: "Startseite",
   breadcrumbCurrent: "Ausflugsziele",
@@ -79,7 +85,7 @@ const ausflugsziele = {
       name: "Pullman City",
       schemaName: "Pullman City – Westernstadt Eging am See",
       subtitle: "Westernstadt in Eging am See – seit 1997",
-      distance: `${ca(m.pullmanCity.haus28)} von HAUS28 & Haus Schönblick`,
+      distance: beide(m.pullmanCity),
       fromHaus28: ca(m.pullmanCity.haus28),
       fromSchoenblick: ca(m.pullmanCity.schoenblick),
       description:
@@ -187,7 +193,7 @@ const ausflugsziele = {
       name: "Rusel-Arena Indoor Golf",
       schemaName: "Rusel-Arena Indoor Golf",
       subtitle: "6 TrackMan-Simulatoren am Golfplatz Rusel",
-      distance: `${ca(m.ruselArena.haus28)} von HAUS28 & Haus Schönblick`,
+      distance: beide(m.ruselArena),
       fromHaus28: ca(m.ruselArena.haus28),
       fromSchoenblick: ca(m.ruselArena.schoenblick),
       description:
@@ -213,7 +219,7 @@ const ausflugsziele = {
       name: "elypso Deggendorf",
       schemaName: "elypso Freizeit- und Erlebnisbad Deggendorf",
       subtitle: "Freizeit- und Erlebnisbad mit Saunawelt",
-      distance: `${ca(m.elypso.haus28)} von HAUS28 & Haus Schönblick`,
+      distance: beide(m.elypso),
       fromHaus28: ca(m.elypso.haus28),
       fromSchoenblick: ca(m.elypso.schoenblick),
       description:
@@ -267,7 +273,7 @@ const ausflugsziele = {
       name: "Großer Arber",
       schemaName: "Großer Arber mit Arber-Bergbahn und Großem Arbersee",
       subtitle: "1.456 m – der „König des Bayerischen Waldes“",
-      distance: `${ca(m.arber.haus28)} von HAUS28 & Haus Schönblick`,
+      distance: beide(m.arber),
       fromHaus28: ca(m.arber.haus28),
       fromSchoenblick: ca(m.arber.schoenblick),
       description:
@@ -460,7 +466,7 @@ const ausflugsziele = {
       { label: "Große Runde", value: "Brotjacklriegel-Rundweg, ca. 12 km · ca. 4,5 h · leicht" },
       { label: "Erlebnispfad", value: "Sonnenwald-Erlebnispfad: zehn Stationen, besonders für Kinder & Familien – die Turmwege ab Langfurth und ab Mitterdorf / Schöfweg führen darüber" },
       { label: "Turmstüberl", value: "bei Wanderwetter bis 8. November 2026 täglich (Do Ruhetag) · 24.12.2026 – 10.01.2027 täglich 10–17 Uhr · ab 16.01.2027 Sa & So" },
-      { label: "Ab HAUS28", value: "ca. 10 min mit dem Auto; Parken in Langfurth 55 (beim Feuerwehrhaus) oder am Wanderparkplatz Daxstein" },
+      { label: "Ab HAUS28", value: "ca. 5 min mit dem Auto; Parken in Langfurth 55 (beim Feuerwehrhaus) oder am Wanderparkplatz Daxstein" },
     ],
     moreRoutesHeading: "Weitere Turmwege zum Gipfel",
     moreRoutes: [

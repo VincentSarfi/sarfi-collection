@@ -92,10 +92,10 @@ const property = {
       } as Record<string, string>,
     },
     defaultAttractions: [
-      { name: "Nationalparkzentrum Lusen", distance: "~40–45 min" },
+      { name: "Nationalparkzentrum Lusen", distance: ca(m.nationalparkLusen.haus28) },
       { name: "Deggendorf (Einkaufen)", distance: ca(m.deggendorf.haus28) },
       { name: "Erlebnisbad elypso Deggendorf", distance: ca(m.elypso.haus28) },
-      { name: "Glasmuseum Frauenau", distance: "~35–40 min" },
+      { name: "Glasmuseum Frauenau", distance: ca(m.glasmuseumFrauenau.haus28) },
     ],
   },
   // components/property/AmenitiesGrid.tsx
