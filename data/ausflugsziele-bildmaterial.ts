@@ -223,8 +223,53 @@ export const ausflugszieleMaterial: Record<string, AusflugszielMaterial> = {
   },
   "indoor-golf": {
     website: "https://arena.deggendorfer-golfclub.de",
-    bilder: [],
-    freigabe: { stand: "angefragt", notiz: "Mail an info@deggendorfer-golfclub.de am 11.10.2026" },
+    bilder: [
+      {
+        src: "/images/ausflugsziele/rusel-arena/simulatoren-und-bar.webp",
+        width: 1920,
+        height: 1440,
+        alt: {
+          de: "Indoor-Golfhalle der Rusel-Arena: Simulator-Leinwände mit Golfbahnen, daneben die Bar, am Boden ein Teppich mit dem Logo des Deggendorfer Golfclubs",
+          en: "Indoor golf hall of the Rusel-Arena: simulator screens showing golf holes, the bar alongside and a rug with the Deggendorf golf club logo on the floor",
+        },
+        credit: "Deggendorfer Golfclub e. V.",
+      },
+      {
+        src: "/images/ausflugsziele/rusel-arena/lounge-panorama.webp",
+        width: 1920,
+        height: 1442,
+        alt: {
+          de: "Lounge mit grünen Sofas vor einer Panorama-Simulatorleinwand mit Landschaftsbild in der Rusel-Arena",
+          en: "Lounge with green sofas in front of a panoramic simulator screen showing a landscape at the Rusel-Arena",
+        },
+        credit: "Deggendorfer Golfclub e. V.",
+      },
+      {
+        src: "/images/ausflugsziele/rusel-arena/theke-und-boxen.webp",
+        width: 1920,
+        height: 1440,
+        alt: {
+          de: "Lange Theke und Stehtische neben den Simulator-Boxen in der Rusel-Arena",
+          en: "Long bar counter and high tables next to the simulator bays at the Rusel-Arena",
+        },
+        credit: "Deggendorfer Golfclub e. V.",
+      },
+      {
+        src: "/images/ausflugsziele/rusel-arena/sitzbereich.webp",
+        width: 1920,
+        height: 1440,
+        alt: {
+          de: "Sitzbereich mit Sofa, Holzbank und Kunstrasen in der Rusel-Arena",
+          en: "Seating area with a sofa, wooden bench and artificial turf at the Rusel-Arena",
+        },
+        credit: "Deggendorfer Golfclub e. V.",
+      },
+    ],
+    freigabe: {
+      stand: "freigegeben",
+      notiz:
+        "Franz Knon (f.knon@knon-gruppe.de) für den Deggendorfer Golfclub per Mail am 19.10.2026: 4 Fotos „die gewünschten Bilder“, nachdem wir am 15.10. bestätigt hatten, dass keine Kosten entstehen (Frage von Marion Weber). Einen Bildnachweis haben sie nicht genannt, wir nennen den Golfclub.",
+    },
   },
   elypso: {
     website: "https://www.elypso.de",
