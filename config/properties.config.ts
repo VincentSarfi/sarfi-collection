@@ -54,7 +54,7 @@ export const PROPERTY_CONFIGS: Record<string, PropertyBookingConfig> = {
     cleaningFee: 120,
     priceFrom: 199,
     baseOccupancy: 4,
-    extraPersonFee: 29,
+    extraPersonFee: 35,
     petsAllowed: false,
     heroImage: '/images/haus28/hero.webp',
     breadcrumb: [{ label: 'HAUS28', href: '/haus28' }],
