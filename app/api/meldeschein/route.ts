@@ -3,8 +3,10 @@ import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 // Proxy zum digitalen Meldeschein im Dashboard (gleiche Bauart wie
 // app/api/late-checkout: serverseitig, kein CORS, Rate-Limit hier). Der Gast
-// authentifiziert sich allein über den HMAC-Token `b` (Link aus der
-// Gästenachricht) oder `u` (QR-Code in der Einheit) — geprüft wird im Dashboard.
+// authentifiziert sich allein über den Token `b` (Link aus der Gästenachricht)
+// oder `u` (QR-Code in der Einheit bzw. vierteilig der Link aus der Smoobu-
+// Check-in-Vorlage mit Buchungs-ID und PIN) — geprüft wird im Dashboard, hier
+// wird nichts davon zerlegt oder geloggt.
 // Der Body kann ein Ausweisfoto als data-URL enthalten (bis ~8 MB).
 const BASE =
   process.env.MELDESCHEIN_API_URL ||
@@ -34,6 +36,28 @@ function tokenParams(src: { b?: unknown; u?: unknown }): Record<string, string> 
   return b ? { b } : u ? { u } : null
 }
 
+const AKTIONEN = ['status', 'deutsch', 'ausweis-lesen', 'einreichen', 'bestaetigung-starten', 'bestaetigen']
+
+// Status per POST mit dem Token im Rumpf statt als Query: so steht er nur in der
+// ersten Seiten-URL und nicht zusätzlich in Proxy- und Ingress-Logs.
+// Übergang: Kennt das Dashboard POST /status noch nicht (dessen Sammel-404 hat
+// kein `ok`), einmal wie bisher per GET fragen. Entfällt, sobald es live ist.
+async function statusAbfragen(t: Record<string, string>) {
+  let r = await fetch(`${BASE}/status`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(t),
+    cache: 'no-store',
+  })
+  let data = await r.json()
+  if (r.status === 404 && data && data.ok === undefined) {
+    r = await fetch(`${BASE}/status?${new URLSearchParams(t).toString()}`, { cache: 'no-store' })
+    data = await r.json()
+  }
+  return NextResponse.json(data, { status: r.status })
+}
+
+// Übergang für noch offene Seiten mit dem alten Widget (Status per GET).
 export async function GET(request: NextRequest) {
   const limited = rateLimited(request)
   if (limited) return limited
@@ -49,7 +73,9 @@ export async function GET(request: NextRequest) {
   }
 }
 
-type Mitreisender = { name: string; geburtsdatum: string; staat: string }
+// Mitreisende nur mit Staatsangehörigkeit (§ 29 Abs. 2 Satz 2 BMG): Name und
+// Geburtsdatum reicht der Proxy nicht durch, auch wenn ein altes Widget sie schickt.
+type Mitreisender = { staat: string }
 
 export async function POST(request: NextRequest) {
   const limited = rateLimited(request)
@@ -59,11 +85,12 @@ export async function POST(request: NextRequest) {
   try {
     const raw = await request.json()
     const action = str(raw.action, 20)
-    if (!['deutsch', 'ausweis-lesen', 'einreichen', 'bestaetigung-starten', 'bestaetigen'].includes(action)) {
+    if (!AKTIONEN.includes(action)) {
       return NextResponse.json({ ok: false, error: 'Unbekannte Aktion.' }, { status: 422 })
     }
     const t = tokenParams(raw)
     if (!t) return NextResponse.json({ ok: false, error: 'Unbekannter Link.' }, { status: 404 })
+    if (action === 'status') return await statusAbfragen(t)
 
     // Nur erwartete Felder mit Längenlimits durchreichen (kein Roh-Body)
     const body: Record<string, unknown> = { ...t }
@@ -74,12 +101,15 @@ export async function POST(request: NextRequest) {
       body.mitreisende = Array.isArray(raw.mitreisende)
         ? (raw.mitreisende as unknown[]).slice(0, 12).map((m) => {
             const x = (m ?? {}) as Partial<Mitreisender>
-            return { name: str(x.name, 120), geburtsdatum: str(x.geburtsdatum, 10), staat: str(x.staat, 2) }
+            return { staat: str(x.staat, 2) }
           })
         : []
       if (typeof raw.ausweisFoto === 'string' && raw.ausweisFoto) body.ausweisFoto = str(raw.ausweisFoto, 8 * 1024 * 1024)
     }
     if (action === 'ausweis-lesen') body.ausweisFoto = str(raw.ausweisFoto, 8 * 1024 * 1024)
+    // Einwilligung (Foto + Texterkennung) nur als echtes Boolean weiterreichen;
+    // ohne sie lehnt das Dashboard /ausweis-lesen und /einreichen ab.
+    if (action === 'ausweis-lesen' || action === 'einreichen') body.einwilligung = raw.einwilligung === true
     if (action === 'bestaetigen') body.setupIntentId = str(raw.setupIntentId, 80)
 
     const r = await fetch(`${BASE}/${action}`, {

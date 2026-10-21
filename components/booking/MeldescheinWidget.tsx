@@ -1,19 +1,25 @@
 'use client'
 
 // Digitaler Meldeschein (§ 29 Abs. 5 BMG). Ablauf:
-//   1. Status laden (Token b = Buchungslink, u = QR-Code in der Einheit)
-//   2. Frage: deutsche Staatsangehörigkeit? → ja: fertig (kein Meldeschein nötig)
-//   3. Scan: Pass/Ausweis fotografieren → Dashboard liest die MRZ (OCR) → Formular vorausgefüllt
+//   1. Status laden (Token b = Buchungslink, u = QR-Code in der Einheit
+//      <apId>.<hmac> oder Link aus der Smoobu-Check-in-Vorlage
+//      <apId>.<hmac>.<Buchungs-ID>.<PIN> — beide reicht die Seite unverändert durch)
+//   2. Frage: alle deutsche Staatsangehörigkeit? → ja: fertig (kein Meldeschein nötig)
+//   3. Scan: Einwilligung, dann Pass/Ausweis fotografieren → Dashboard liest die
+//      MRZ (OCR) → Formular vorausgefüllt
 //   4. Formular: Pflichtangaben nach § 30 BMG prüfen/ergänzen
-//   5. Bestätigung (nur ab Anreisetag): Apple Pay / Google Pay / Karte mit 3-D Secure
+//   5. Bestätigung (nur ab Anreisetag): Apple Pay oder Karte mit 3-D Secure
 //      (Stripe SetupIntent, keine Abbuchung) ersetzt die Unterschrift; das Dashboard
-//      prüft das Ergebnis serverseitig.
-// Alle Daten gehen über den Proxy /api/meldeschein ins Dashboard.
+//      prüft das Ergebnis serverseitig und antwortet notfalls „papier_noetig".
+// Alle Daten gehen über den Proxy /api/meldeschein ins Dashboard. Der Token steht
+// nur in der ersten Seiten-URL: danach liegt er im State und im sessionStorage,
+// die Adresszeile wird geleert, alle Abfragen laufen per POST.
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { loadStripe } from '@stripe/stripe-js/pure'
+import type { Stripe } from '@stripe/stripe-js'
 import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { getDict } from '@/lib/i18n'
 import { useLocale } from '@/lib/i18n/LocaleProvider'
@@ -34,7 +40,10 @@ type StatusData = {
   error?: string
 }
 
-type Mitreisender = { name: string; geburtsdatum: string; staat: string }
+// Mitreisende ausländische Ehe-/Lebenspartner und minderjährige Kinder stehen
+// nur der Zahl nach mit Staatsangehörigkeit auf dem Schein (§ 29 Abs. 2 Satz 2,
+// § 30 Abs. 2 Nr. 7 BMG) — keine Namen, keine Geburtsdaten.
+type Mitreisender = { staat: string }
 type OcrFelder = Partial<{
   ausweisArt: string; familienname: string; vorname: string; geburtsdatum: string | null
   staatsangehoerigkeit: string | null; ausstellendesLand: string | null; passnummer: string
@@ -86,6 +95,38 @@ const LEER = {
   ausweisArt: 'Reisepass', passnummer: '', ausstellendesLand: '',
 }
 
+// Wallet-Regel (wie setupIntentPruefen im Dashboard): Apple Pay zählt als starke
+// Kundenauthentifizierung, Google Pay nur mit echter 3-D-Secure-Challenge. Die
+// lässt sich bei Google Pay nicht erzwingen — ein Gerätetoken liefe ins
+// „papier_noetig". Deshalb hier aus; Android-Gäste nehmen die Karte mit Freigabe
+// in der Banking-App. Link ist eine Stripe-Anmeldung, keine SCA der Bank.
+// Wer Google Pay einschaltet, muss Kartentext und Datenschutzerklärung mitziehen.
+const WALLETS = { applePay: 'auto', googlePay: 'never', link: 'never' } as const
+// Kein Mandatstext („künftige Zahlungen belasten"): die Karte wird direkt nach
+// der Prüfung wieder gelöst, es gibt keine späteren Abbuchungen.
+const TERMS = { card: 'never', applePay: 'never', googlePay: 'never' } as const
+
+// Stripe.js erst laden, wenn die Kartenphase wirklich beginnt, nicht beim Öffnen
+// der Seite: wer nur „deutsch" wählt oder vor dem Anreisetag ausfüllt, bekommt
+// weder Stripe-Skript noch Stripe-Cookies (Datenschutzerklärung Abschnitt 4).
+let stripeEinmal: Promise<Stripe | null> | null = null
+function stripeLaden(): Promise<Stripe | null> {
+  if (!stripeEinmal) stripeEinmal = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? '')
+  return stripeEinmal
+}
+
+// Token für Reload und Sprachwechsel, nachdem er aus der Adresszeile entfernt
+// wurde. sessionStorage gilt nur für diesen Tab und endet mit ihm.
+const SPEICHER = 'sarfi-meldeschein-token'
+function tokenAusSpeicher(): string | null {
+  try {
+    const s = window.sessionStorage.getItem(SPEICHER)
+    return s && /^[bu]=[^&]+$/.test(s) ? s : null
+  } catch {
+    return null // Speicher gesperrt: dann gibt es nur den Link selbst
+  }
+}
+
 export default function MeldescheinWidget() {
   const locale = useLocale()
   const t = getDict(locale).meldeschein
@@ -94,20 +135,42 @@ export default function MeldescheinWidget() {
   const params = useSearchParams()
   const b = params.get('b') ?? ''
   const u = params.get('u') ?? ''
-  const token = useMemo<Record<string, string> | null>(() => {
-    const obj: Record<string, string> = {}
-    if (b) obj.b = b
-    else if (u) obj.u = u
-    return Object.keys(obj).length ? obj : null
+  // undefined = noch nicht gelesen; sonst "b=…" / "u=…" oder null (kein Token)
+  const [tokenStr, setTokenStr] = useState<string | null | undefined>(undefined)
+  const [imSpeicher, setImSpeicher] = useState(true)
+
+  useEffect(() => {
+    if (b || u) {
+      const s = new URLSearchParams(b ? { b } : { u }).toString()
+      let ok = true
+      try { window.sessionStorage.setItem(SPEICHER, s) } catch { ok = false }
+      setImSpeicher(ok)
+      setTokenStr(s)
+      // Token aus der Adresszeile nehmen: Stripe-iframes bekommen die URL der
+      // Elternseite mit, dazu Screenshots und weitergeleitete Links. Ohne Speicher
+      // bleibt er stehen, sonst liefen Reload und Sprachwechsel ins Leere.
+      if (ok) window.history.replaceState(null, '', window.location.pathname)
+      return
+    }
+    setTokenStr((alt) => alt ?? tokenAusSpeicher())
   }, [b, u])
+
+  const token = useMemo<Record<string, string> | null>(
+    () => (tokenStr ? Object.fromEntries(new URLSearchParams(tokenStr)) : null),
+    [tokenStr],
+  )
+  // Vierteiliges u = Link aus der Smoobu-Check-in-Vorlage (eigene Fehlertexte)
+  const istVorlage = Boolean(token?.u && token.u.split('.').length > 2)
 
   const [daten, setDaten] = useState<StatusData | null>(null)
   const [phase, setPhase] = useState<'laden' | 'frage' | 'scan' | 'formular' | 'karte' | 'fertig' | 'fehler'>('laden')
   const [fehlerText, setFehlerText] = useState('')
+  const [hinweis, setHinweis] = useState('')
   const [sendet, setSendet] = useState(false)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [setupIntentId, setSetupIntentId] = useState<string | null>(null)
   const [karteFehler, setKarteFehler] = useState('')
+  const [papierNoetig, setPapierNoetig] = useState(false)
 
   // Scan
   const [scanLaeuft, setScanLaeuft] = useState(false)
@@ -121,39 +184,14 @@ export default function MeldescheinWidget() {
   const [fotoName, setFotoName] = useState('')
   const [fotoFehler, setFotoFehler] = useState(false)
   const [einwilligung, setEinwilligung] = useState(false)
+  const [einwilligungFehlt, setEinwilligungFehlt] = useState(false)
   const [fehlerFelder, setFehlerFelder] = useState<string[]>([])
-
-  const [stripePromise] = useState(() =>
-    typeof window === 'undefined' ? null : loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ''),
-  )
 
   const schoenesDatum = useCallback((iso?: string | null) => {
     if (!iso) return ''
     const zeit = Date.parse(`${iso}T12:00:00`)
     return Number.isFinite(zeit) ? new Date(zeit).toLocaleDateString(datumsLocale, { day: 'numeric', month: 'long' }) : ''
   }, [datumsLocale])
-
-  const laden = useCallback(async () => {
-    setPhase('laden')
-    if (!token) { setFehlerText(t.fehler.keinToken); setPhase('fehler'); return }
-    try {
-      const r = await fetch(`/api/meldeschein?${new URLSearchParams(token).toString()}`)
-      const d: StatusData = await r.json()
-      if (!d.ok) {
-        setFehlerText(r.status === 404 ? (u ? t.fehler.keinAufenthalt : t.fehler.linkUngueltig) : d.error || t.fehler.standard)
-        setPhase('fehler')
-        return
-      }
-      setDaten(d)
-      if (d.gast) setF((x) => ({ ...x, familienname: x.familienname || d.gast!.familienname, vorname: x.vorname || d.gast!.vorname }))
-      setPhase(d.status === 'offen' ? 'frage' : 'fertig')
-    } catch {
-      setFehlerText(t.fehler.standard)
-      setPhase('fehler')
-    }
-  }, [token, u, t])
-
-  useEffect(() => { laden() }, [laden])
 
   const post = useCallback(async (action: string, body: Record<string, unknown> = {}) => {
     const r = await fetch('/api/meldeschein', {
@@ -165,25 +203,80 @@ export default function MeldescheinWidget() {
     return { status: r.status, d }
   }, [token])
 
+  /** Fehlertext für einen Abbruch. Die 404 des Dashboards sind absichtlich
+   *  gleich (verraten nicht, ob es eine Buchung gibt) — unterschieden wird nur
+   *  nach Linkart, damit der Gast den passenden Rückweg liest. */
+  const fehlerFuer = useCallback((status: number, d: { code?: string; error?: string }) => {
+    if (d.code === 'vorlage_unvollstaendig') return t.fehler.vorlageUnvollstaendig
+    if (status === 404) return token?.b ? t.fehler.linkUngueltig : istVorlage ? t.fehler.vorlageUngueltig : t.fehler.keinAufenthalt
+    if (status === 429) return t.fehler.zuViele
+    if (status >= 500) return t.fehler.standard
+    return d.error || t.fehler.standard
+  }, [t, token, istVorlage])
+
+  const laden = useCallback(async () => {
+    if (tokenStr === undefined) return // Token wird noch gelesen
+    setPhase('laden')
+    if (!token) { setFehlerText(t.fehler.keinToken); setPhase('fehler'); return }
+    // Nicht ersetzte Smoobu-Platzhalter ([bookingID] …) gar nicht erst schicken
+    if (token.u && /[[\]{}]/.test(token.u)) { setFehlerText(t.fehler.vorlageUnvollstaendig); setPhase('fehler'); return }
+    try {
+      const { status, d } = await post('status')
+      if (!d.ok) { setFehlerText(fehlerFuer(status, d)); setPhase('fehler'); return }
+      const s = d as StatusData
+      setDaten(s)
+      if (s.gast) setF((x) => ({ ...x, familienname: x.familienname || s.gast!.familienname, vorname: x.vorname || s.gast!.vorname }))
+      setPhase(s.status === 'offen' ? 'frage' : 'fertig')
+    } catch {
+      setFehlerText(t.fehler.standard)
+      setPhase('fehler')
+    }
+  }, [tokenStr, token, t, post, fehlerFuer])
+
+  useEffect(() => { laden() }, [laden])
+
+  /** Über QR-Code oder Vorlagen-Link hat schon jemand eingereicht (409):
+   *  nichts überschreiben, Stand neu laden und nur noch die Bestätigung anbieten. */
+  const schonEingereicht = () => {
+    setHinweis(t.fehler.bereitsEingereicht)
+    return laden()
+  }
+
   const deutsch = async () => {
     setSendet(true)
     try {
-      const { d } = await post('deutsch')
-      if (d.ok) { setDaten((x) => (x ? { ...x, status: 'entfaellt' } : x)); setPhase('fertig') }
-      else { setFehlerText(d.error || t.fehler.standard); setPhase('fehler') }
+      const { status, d } = await post('deutsch')
+      if (d.ok) { setDaten((x) => (x ? { ...x, status: d.status === 'erhalten' ? 'erhalten' : 'entfaellt' } : x)); setPhase('fertig') }
+      else if (d.code === 'bereits_eingereicht') await schonEingereicht()
+      else { setFehlerText(fehlerFuer(status, d)); setPhase('fehler') }
     } catch { setFehlerText(t.fehler.standard); setPhase('fehler') }
     setSendet(false)
   }
 
   // ── Scan: Foto → OCR → Vorausfüllen ─────────────────────────────────────
+  /** Dashboard lehnt ohne Einwilligung ab (422 einwilligung): zurück zum Haken. */
+  const einwilligungNachholen = () => {
+    setEinwilligung(false)
+    setEinwilligungFehlt(true)
+    setPhase('scan')
+  }
+
   const scannen = async (file: File | null) => {
     if (!file || scanLaeuft) return
+    if (!einwilligung) { setEinwilligungFehlt(true); return }
     setScanLaeuft(true)
     setScanHinweis('')
     try {
       const dataUrl = await fotoVerkleinern(file)
-      const { d } = await post('ausweis-lesen', { ausweisFoto: dataUrl })
-      if (!d.ok) { setScanHinweis('nichtErkannt'); setScanLaeuft(false); return }
+      const { d } = await post('ausweis-lesen', { ausweisFoto: dataUrl, einwilligung: true })
+      if (!d.ok) {
+        setScanLaeuft(false)
+        if (d.code === 'einwilligung') einwilligungNachholen()
+        else if (d.code === 'bereits_eingereicht') await schonEingereicht()
+        else if (d.code === 'erledigt') await laden()
+        else setScanHinweis('nichtErkannt')
+        return
+      }
       setFotoVorhanden(true)
       setFoto(dataUrl)
       setFotoName(file.name)
@@ -233,17 +326,21 @@ export default function MeldescheinWidget() {
     if (f.anschrift.trim().length < 8) lokal.push('anschrift')
     if (f.passnummer.trim().length < 4) lokal.push('passnummer')
     if (!foto && !fotoVorhanden) lokal.push('ausweisFoto')
+    if (mitreisende.some((m) => !m.staat)) lokal.push('mitreisende')
     setFehlerFelder(lokal)
-    if (lokal.length || !einwilligung) return
+    if (!einwilligung) { einwilligungNachholen(); return }
+    if (lokal.length) return
     setSendet(true)
     try {
-      const body: Record<string, unknown> = { ...f, mitreisende: mitreisende.filter((m) => m.name.trim()) }
+      const body: Record<string, unknown> = { ...f, mitreisende, einwilligung: true }
       if (foto && !fotoVorhanden) body.ausweisFoto = foto
-      const { d } = await post('einreichen', body)
+      const { status, d } = await post('einreichen', body)
       if (!d.ok) {
-        if (Array.isArray(d.fehler) && d.fehler.length) setFehlerFelder(d.fehler)
-        else { setFehlerText(d.error || t.fehler.standard); setPhase('fehler') }
         setSendet(false)
+        if (d.code === 'einwilligung') einwilligungNachholen()
+        else if (d.code === 'bereits_eingereicht') await schonEingereicht()
+        else if (Array.isArray(d.fehler) && d.fehler.length) setFehlerFelder(d.fehler)
+        else { setFehlerText(fehlerFuer(status, d)); setPhase('fehler') }
         return
       }
       setDaten((x) => (x ? { ...x, status: 'eingereicht', bestaetigungErlaubt: !d.zuFrueh, bestaetigungAb: d.ab || x.bestaetigungAb, stripe: d.stripe ?? x.stripe } : x))
@@ -264,7 +361,7 @@ export default function MeldescheinWidget() {
     try {
       const { d } = await post('bestaetigung-starten')
       if (d.ok && d.clientSecret) {
-        setClientSecret(d.clientSecret); setSetupIntentId(d.setupIntentId); setKarteFehler(''); setPhase('karte')
+        setClientSecret(d.clientSecret); setSetupIntentId(d.setupIntentId); setKarteFehler(''); setPapierNoetig(false); setPhase('karte')
       } else if (d.code === 'zu_frueh') {
         setDaten((x) => (x ? { ...x, bestaetigungErlaubt: false, bestaetigungAb: d.ab || x.bestaetigungAb } : x))
       } else {
@@ -277,13 +374,24 @@ export default function MeldescheinWidget() {
   const bestaetigt = async () => {
     setKarteFehler('')
     try {
-      const { d } = await post('bestaetigen', { setupIntentId })
-      if (d.ok) { setDaten((x) => (x ? { ...x, status: 'erhalten' } : x)); setPhase('fertig'); return }
-      setKarteFehler(d.code === 'keine_sca' ? t.karte.keineSca : t.karte.fehlgeschlagen)
+      const { status, d } = await post('bestaetigen', { setupIntentId })
+      if (d.ok) { setDaten((x) => (x ? { ...x, status: 'erhalten' } : x)); setPapierNoetig(false); setPhase('fertig'); return }
+      // Dashboard/Stripe gerade nicht erreichbar: derselbe SetupIntent lässt sich
+      // gleich noch einmal prüfen, der Gast bleibt in der Kartenphase.
+      if (status >= 500 || status === 429) { setKarteFehler(t.karte.fehlgeschlagen); return }
+      // Abgelehnt: dieser SetupIntent ist verbraucht. Status bleibt „eingereicht",
+      // ein neuer Versuch startet über „Jetzt bestätigen" mit frischem SetupIntent.
+      setClientSecret(null); setSetupIntentId(null)
+      if (d.code === 'zu_frueh') setDaten((x) => (x ? { ...x, bestaetigungErlaubt: false, bestaetigungAb: d.ab || x.bestaetigungAb } : x))
+      setPapierNoetig(d.code === 'papier_noetig')
+      setKarteFehler(d.code === 'papier_noetig' ? '' : d.code === 'keine_sca' ? t.karte.keineSca : t.karte.fehlgeschlagen)
+      setPhase('fertig')
     } catch { setKarteFehler(t.karte.fehlgeschlagen) }
   }
 
-  const tokenQuery = token ? `?${new URLSearchParams(token).toString()}` : ''
+  // Sprachwechsel: Token kommt aus dem sessionStorage; nur wenn der gesperrt ist,
+  // muss er wie früher in die URL.
+  const tokenQuery = token && !imSpeicher ? `?${new URLSearchParams(token).toString()}` : ''
   const kopf = (
     <div className="mx-auto mb-8 max-w-xl text-center">
       <p className="font-body text-xs font-semibold uppercase tracking-[0.28em] text-gold-600">{t.eyebrow}</p>
@@ -301,7 +409,13 @@ export default function MeldescheinWidget() {
       </Link>
     </div>
   )
-  const fuss = <p className={`${klein} mx-auto mt-6 max-w-xl text-center`}>{t.fuss}</p>
+  const fuss = (
+    <>
+      <p className={`${klein} mx-auto mt-6 max-w-xl text-center`}>{t.fuss}</p>
+      {/* Englische Gäste: Kurzfassung der (nur deutschen) Datenschutzerklärung, Art. 12 DSGVO */}
+      {t.datenschutzKurz && <p className={`${klein} mx-auto mt-3 max-w-xl text-center`}>{t.datenschutzKurz}</p>}
+    </>
+  )
   const spinner = <div className="mx-auto my-6 h-9 w-9 animate-spin rounded-full border-[3px] border-cream-200 border-t-gold-500" />
 
   if (phase === 'laden') {
@@ -336,8 +450,9 @@ export default function MeldescheinWidget() {
     let text = s === 'entfaellt' ? t.fertig.entfaelltText : t.fertig.erhaltenText
     if (eingereicht) {
       text = !daten.stripe ? t.karte.ohneStripe
-        : daten.bestaetigungErlaubt ? t.fertig.eingereichtText
-          : t.karte.zuFrueh(schoenesDatum(daten.bestaetigungAb || daten.arrival))
+        : !daten.bestaetigungErlaubt ? t.karte.zuFrueh(schoenesDatum(daten.bestaetigungAb || daten.arrival))
+          : papierNoetig ? t.karte.papierNoetig
+            : t.fertig.eingereichtText
     }
     return (
       <>
@@ -345,9 +460,12 @@ export default function MeldescheinWidget() {
         <div className={`${karte} mx-auto max-w-xl text-center`}>
           <span className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-forest-100 text-2xl">✓</span>
           <h2 className="font-display text-2xl text-forest-900 mb-2">{titel}</h2>
+          {eingereicht && hinweis && <p className="font-body text-sm text-forest-800 mb-2">{hinweis}</p>}
           <p className="font-body text-sm text-forest-600 leading-relaxed">{text}</p>
           {eingereicht && daten.stripe && daten.bestaetigungErlaubt && (
-            <button className={`${cta} mt-6`} disabled={sendet} onClick={bestaetigungStarten}>{t.fertig.nochmal}</button>
+            <button className={`${cta} mt-6`} disabled={sendet} onClick={bestaetigungStarten}>
+              {papierNoetig ? t.fertig.andereKarte : t.fertig.nochmal}
+            </button>
           )}
           {karteFehler && <p className="font-body text-sm text-red-600 mt-3">{karteFehler}</p>}
         </div>
@@ -385,14 +503,28 @@ export default function MeldescheinWidget() {
           {scanLaeuft ? (
             <>{spinner}<p className="font-body text-sm text-forest-600">{t.scan.liest}</p></>
           ) : (
-            <div className="mt-6 flex flex-col gap-3">
-              <label className={`${cta} cursor-pointer text-center`}>
-                {t.scan.knopf}
-                <input type="file" accept="image/*" capture="environment" className="sr-only" onChange={(e) => scannen(e.target.files?.[0] ?? null)} />
+            <>
+              {/* Einwilligung VOR dem ersten Foto: schon /ausweis-lesen speichert es. */}
+              <label className="mt-6 flex items-start gap-3 cursor-pointer text-left">
+                <input type="checkbox" className="mt-1 h-4 w-4 shrink-0 accent-gold-500" checked={einwilligung}
+                  onChange={(e) => { setEinwilligung(e.target.checked); if (e.target.checked) setEinwilligungFehlt(false) }} />
+                <span className={klein}>
+                  {t.einwilligung.text}{' '}
+                  <Link href="/datenschutz" target="_blank" className="underline">{t.einwilligung.datenschutz}</Link>
+                </span>
               </label>
-              {scanHinweis === 'nichtErkannt' && <p className="font-body text-sm text-red-600">{t.scan.nichtErkannt}</p>}
-              <button className={sekundaer} onClick={() => setPhase('formular')}>{t.scan.manuell}</button>
-            </div>
+              {einwilligungFehlt && <p className="font-body text-sm text-red-600 mt-2 text-left">{t.einwilligung.fehlt}</p>}
+              <div className="mt-5 flex flex-col gap-3">
+                <label className={`${cta} text-center ${einwilligung ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'}`}
+                  onClick={() => { if (!einwilligung) setEinwilligungFehlt(true) }}>
+                  {t.scan.knopf}
+                  <input type="file" accept="image/*" capture="environment" className="sr-only" disabled={!einwilligung}
+                    onChange={(e) => scannen(e.target.files?.[0] ?? null)} />
+                </label>
+                {scanHinweis === 'nichtErkannt' && <p className="font-body text-sm text-red-600">{t.scan.nichtErkannt}</p>}
+                <button className={sekundaer} disabled={!einwilligung} onClick={() => setPhase('formular')}>{t.scan.manuell}</button>
+              </div>
+            </>
           )}
         </div>
         {fuss}
@@ -400,7 +532,7 @@ export default function MeldescheinWidget() {
     )
   }
 
-  if (phase === 'karte' && clientSecret && stripePromise) {
+  if (phase === 'karte' && clientSecret) {
     return (
       <>
         {kopf}
@@ -408,7 +540,8 @@ export default function MeldescheinWidget() {
           <h2 className="font-display text-2xl text-forest-900 mb-3 text-center">{t.karte.titel}</h2>
           <p className="font-body text-sm text-forest-600 leading-relaxed mb-5 text-center">{t.karte.text}</p>
           <Elements
-            stripe={stripePromise}
+            key={clientSecret /* clientSecret ist in Elements nicht änderbar: neuer SetupIntent → neu aufbauen */}
+            stripe={stripeLaden()}
             options={{
               clientSecret,
               appearance: STRIPE_APPEARANCE,
@@ -512,33 +645,22 @@ export default function MeldescheinWidget() {
           <p className={`${klein} mb-2`}>{t.formular.mitreisendeHinweis}</p>
           <div className="space-y-3">
             {mitreisende.map((m, i) => (
-              <div key={i} className="grid grid-cols-1 gap-2 rounded-2xl bg-cream-50 p-3 sm:grid-cols-[1fr_auto_auto_auto] sm:items-center">
-                <input className={feld} placeholder={t.formular.mitName} value={m.name}
-                  onChange={(e) => setMitreisende((l) => l.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)))} />
-                <input type="date" className={feld} title={t.formular.mitGeburtsdatum} value={m.geburtsdatum}
-                  onChange={(e) => setMitreisende((l) => l.map((x, j) => (j === i ? { ...x, geburtsdatum: e.target.value } : x)))} />
-                <select className={feld} value={m.staat} title={t.formular.mitStaat}
-                  onChange={(e) => setMitreisende((l) => l.map((x, j) => (j === i ? { ...x, staat: e.target.value } : x)))}>{optionen}</select>
+              <div key={i} className="grid grid-cols-1 gap-2 rounded-2xl bg-cream-50 p-3 sm:grid-cols-[1fr_auto] sm:items-center">
+                <select className={`${feld} ${hat('mitreisende') && !m.staat ? feldFehler : ''}`} value={m.staat}
+                  aria-label={t.formular.mitStaat(i + 1)} title={t.formular.mitStaat(i + 1)}
+                  onChange={(e) => setMitreisende((l) => l.map((x, j) => (j === i ? { staat: e.target.value } : x)))}>{optionen}</select>
                 <button type="button" className="font-body text-xs text-forest-600 underline" onClick={() => setMitreisende((l) => l.filter((_, j) => j !== i))}>{t.formular.entfernen}</button>
               </div>
             ))}
           </div>
           {mitreisende.length < 12 && (
             <button type="button" className="mt-2 font-body text-sm text-forest-800 underline underline-offset-4"
-              onClick={() => setMitreisende((l) => [...l, { name: '', geburtsdatum: '', staat: '' }])}>
+              onClick={() => setMitreisende((l) => [...l, { staat: '' }])}>
               {t.formular.mitHinzufuegen}
             </button>
           )}
           {hat('mitreisende') && <p className="font-body text-xs text-red-600 mt-2">{t.formular.feldFehler.mitreisende}</p>}
         </div>
-
-        <label className="flex items-start gap-3 cursor-pointer">
-          <input type="checkbox" className="mt-1 h-4 w-4 accent-gold-500" checked={einwilligung} onChange={(e) => setEinwilligung(e.target.checked)} />
-          <span className={klein}>
-            {t.formular.einwilligung}{' '}
-            <Link href="/datenschutz" target="_blank" className="underline">{t.formular.datenschutz}</Link>
-          </span>
-        </label>
 
         {fehlerFelder.length > 0 && (
           <p className="font-body text-sm text-red-600">
@@ -547,7 +669,7 @@ export default function MeldescheinWidget() {
           </p>
         )}
 
-        <button type="submit" className={cta} disabled={sendet || !einwilligung}>{sendet ? t.formular.sendet : t.formular.weiter}</button>
+        <button type="submit" className={cta} disabled={sendet}>{sendet ? t.formular.sendet : t.formular.weiter}</button>
       </form>
       {fuss}
     </>
@@ -576,7 +698,11 @@ function KartenBestaetigung({ name, t, fehler, onFehler, onErfolg }: {
         redirect: 'if_required',
         confirmParams: { payment_method_data: { billing_details: { name: karteName } } },
       })
-      if (error) { onFehler(error.message || t.karte.fehlgeschlagen); setLaeuft(false); return }
+      // Schon bestätigt, nur die Prüfung im Dashboard hing (z. B. kurz nicht
+      // erreichbar): nicht neu authentifizieren, nur erneut prüfen lassen —
+      // ob das zählt, entscheidet ohnehin der Server.
+      const schonBestaetigt = error?.setup_intent?.status === 'succeeded'
+      if (error && !schonBestaetigt) { onFehler(error.message || t.karte.fehlgeschlagen); setLaeuft(false); return }
       await onErfolg()
     } catch {
       onFehler(t.karte.fehlgeschlagen)
@@ -586,8 +712,13 @@ function KartenBestaetigung({ name, t, fehler, onFehler, onErfolg }: {
 
   return (
     <div className="space-y-4">
-      {/* Wallets (Apple Pay / Google Pay) zeigt das Payment Element von sich aus oben an, wenn das Gerät sie hat. */}
-      <PaymentElement options={{ fields: { billingDetails: { name: 'never' } }, wallets: { applePay: 'auto', googlePay: 'auto' } }} />
+      {/* Apple Pay oben (nur wenn das Gerät es hat), Karte darunter — Regel siehe WALLETS. */}
+      <PaymentElement options={{
+        fields: { billingDetails: { name: 'never' } },
+        wallets: WALLETS,
+        terms: TERMS,
+        paymentMethodOrder: ['apple_pay', 'card'],
+      }} />
       <div>
         <label className={lbl}>{t.karte.name}</label>
         <input className={feld} value={karteName} onChange={(e) => setKarteName(e.target.value)} autoComplete="cc-name" />
