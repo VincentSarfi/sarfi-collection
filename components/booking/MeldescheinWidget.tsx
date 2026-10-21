@@ -371,6 +371,11 @@ export default function MeldescheinWidget() {
       setEigene(liste)
       const ich = liste.find((e) => e.token === tok)
       if (ich && aktivRef.current.token === tok) aktivSetzen({ token: tok, nr: ich.nr })
+      // Am Vortag eingereicht und den Tab offen gelassen: Am Anreisetag schaltet
+      // erst die frische Antwort die Bestätigung frei (Codex 21.10.2026). Nur
+      // dieses Feld, damit eine laufende Kartenphase unberührt bleibt.
+      const erlaubt = tok ? ich && ich.bestaetigungErlaubt : aktivRef.current.nr === 1 ? hauptStand(s).bestaetigungErlaubt : undefined
+      if (erlaubt !== undefined) setStand((x) => (x.bestaetigungErlaubt === Boolean(erlaubt) ? x : { ...x, bestaetigungErlaubt: Boolean(erlaubt) }))
     } catch {
       // Nur die Zahlen und die Liste bleiben dann alt; der Ablauf hängt nicht daran.
     }
@@ -423,6 +428,22 @@ export default function MeldescheinWidget() {
   }, [tokenStr, token, t, post, fehlerFuer, eigeneErmitteln, aktivSetzen, hauptSetzen, erinnerung])
 
   useEffect(() => { laden() }, [laden])
+
+  // Wer zurück in den offen gelassenen Tab kommt (oder ihn über Nacht offen
+  // hat), bekommt den aktuellen Stand: sonst bliebe am Anreisetag der
+  // Bestätigungsknopf verborgen. Ohne Neuladen, damit flüchtig gehaltene
+  // Personen-Kennungen erhalten bleiben.
+  useEffect(() => {
+    const wiederDa = () => { if (document.visibilityState === 'visible') void nachladen() }
+    document.addEventListener('visibilitychange', wiederDa)
+    window.addEventListener('focus', wiederDa)
+    const takt = window.setInterval(wiederDa, 10 * 60 * 1000)
+    return () => {
+      document.removeEventListener('visibilitychange', wiederDa)
+      window.removeEventListener('focus', wiederDa)
+      window.clearInterval(takt)
+    }
+  }, [nachladen])
 
   /** Mit Schein-Kennung kam ein 409 (über QR-Code oder Vorlagen-Link hat schon
    *  jemand eingereicht): nichts überschreiben, Stand neu laden. */
