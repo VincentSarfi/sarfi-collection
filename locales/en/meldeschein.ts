@@ -99,7 +99,10 @@ const meldeschein = {
   person: {
     zuFrueh: (datum: string) =>
       `Your details are saved. You can confirm them on the day of arrival (${datum}). Then open this link again here in this browser – your form is linked to it.`,
-    ohneSpeicher: "Your browser doesn't store anything. Please keep this page open until your form is confirmed.",
+    ohneSpeicher: "Your browser doesn't store your form. Keep this page open until it is confirmed and don't reload it.",
+    nurSitzung: "Your browser only keeps your form while this tab is open. Keep it open until your form is confirmed.",
+    zuFruehOhneSpeicher: (datum: string) =>
+      `Your details are saved. You can confirm them on the day of arrival (${datum}). Your browser won't keep your form once you close this tab, though: keep it open until then and confirm here – otherwise please sign the paper form at the property.`,
     abgelaufen: "Your stay is over – this form can no longer be changed.",
   },
 

@@ -16,12 +16,13 @@
 //      eigenen Schein aus — auf diesem Handy oder über denselben Link auf dem
 //      eigenen — und bestätigt ihn mit der eigenen Karte.
 // Der erste Schein läuft ohne Kennung wie bisher. Nur „weitere Person“ bekommt
-// ein eigenes Zufalls-Token (MeldescheinPersonen.tsx); ein Token schreibt nie den
-// ersten Schein. Liegt der erste Schein schon vor und wurde er nicht auf diesem
-// Gerät begonnen, fragt die Seite „Bist du eine weitere Person?“ statt ihn zum
-// Bestätigen anzubieten; die buchende Person kommt über den Erinnerungslink
-// (…&e=1) direkt zur Bestätigung. Schreibt dieses Gerät den ersten Schein, ohne
-// ihn begonnen zu haben, schickt es `nurWennFrei`: Kam jemand zuvor (409),
+// ein eigenes Zufalls-Token (lib/meldeschein-scheine.ts); ein Token schreibt nie
+// den ersten Schein. Liegt der erste Schein schon vor und wurde er nicht auf
+// diesem Gerät begonnen, fragt die Seite „Bist du eine weitere Person?“ statt ihn
+// zum Bestätigen anzubieten; die buchende Person kommt über den Erinnerungslink
+// (…&e=1) direkt zur Bestätigung; nur ein eigener offener weiterer Schein auf
+// einem Gerät ohne Vermerk geht vor (startWahl). Schreibt dieses Gerät den
+// ersten Schein, ohne ihn begonnen zu haben, schickt es `nurWennFrei`: Kam jemand zuvor (409),
 // speichert die Seite die Angaben auf Wunsch als eigenen Schein.
 // Alle Daten gehen über den Proxy /api/meldeschein ins Dashboard. Der Link-Token
 // steht nur in der ersten Seiten-URL: danach liegt er im State und im
@@ -38,10 +39,11 @@ import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-
 import { getDict } from '@/lib/i18n'
 import { useLocale } from '@/lib/i18n/LocaleProvider'
 import { STRIPE_APPEARANCE } from './PaymentStep'
+import { WeiterePersonen, type ListenEintrag, type WeitereInfo } from './MeldescheinPersonen'
 import {
-  WeiterePersonen, heuteIso, neuesToken, scheinSchluessel, scheinSpeicher, speicherArt, vortag, zuordnen,
-  type Eigener, type ListenEintrag, type MeinSchein, type ScheinStatus, type WeitereInfo,
-} from './MeldescheinPersonen'
+  heuteIso, neuesToken, scheinSchluessel, scheinSpeicher, speicherArt, speicherHinweis, startWahl, vortag, zuordnen,
+  type Eigener, type MeinTreffer, type ScheinStatus,
+} from '@/lib/meldeschein-scheine'
 
 type StatusData = {
   ok: boolean
@@ -56,7 +58,7 @@ type StatusData = {
   bestaetigungAb?: string
   bestaetigungErlaubt?: boolean
   weitere?: WeitereInfo
-  meine?: MeinSchein[]
+  meine?: MeinTreffer[]
   error?: string
 }
 
@@ -257,7 +259,6 @@ export default function MeldescheinWidget() {
   const hauptSetzen = useCallback((v: boolean) => { hauptRef.current = v; setHauptHierAnzeige(v) }, [])
   const [stand, setStand] = useState<Stand>({ status: 'offen', bestaetigungErlaubt: false })
   const [eigene, setEigene] = useState<Eigener[]>([])
-  const [ohneSpeicher, setOhneSpeicher] = useState(false)
 
   // Scan
   const [scanLaeuft, setScanLaeuft] = useState(false)
@@ -306,22 +307,22 @@ export default function MeldescheinWidget() {
   }, [t, token, istVorlage])
 
   // ── Eigene Scheine ──────────────────────────────────────────────────────
-  /** `meine` den gemerkten Tokens zuordnen. Tokens ohne bekannte nr fragt die
-   *  Seite einzeln ab (nur die aus `klaeren`); `aufraeumen` vergisst dabei
-   *  Tokens, die nie etwas geschrieben haben. */
-  const eigeneErmitteln = useCallback(async (s: StatusData, klaeren: string[] | 'alle', aufraeumen: boolean) => {
+  /** Die Statusantwort (Anfrage mit `gesendet`) den Tokens dieses Aufenthalts
+   *  zuordnen, nur über die Stelle des Tokens in der Anfrage (zuordnen). Nicht
+   *  mitgeschickte fragt die Seite einmal gesammelt nach. `aufraeumen` vergisst
+   *  Tokens, die das Dashboard nicht kennt, außer dem gerade bearbeiteten (dessen
+   *  erster Schritt kann noch unterwegs sein; geschrieben() merkt es wieder). */
+  const eigeneErmitteln = useCallback(async (s: StatusData, gesendet: string[], aufraeumen: boolean) => {
     const k = schluessel(s)
     if (!s.weitere || !Array.isArray(s.meine) || !k) return []
-    const { eigene: liste, ohneNr } = zuordnen(scheinSpeicher.eigene(k), s.meine)
-    for (const tok of ohneNr) {
-      if (klaeren !== 'alle' && !klaeren.includes(tok)) continue
-      const { d } = await post('status', { personTokens: [tok] })
-      const m = d?.ok && Array.isArray(d.meine) && d.meine.length === 1 ? (d.meine[0] as MeinSchein) : null
-      if (m && typeof m.nr === 'number') { scheinSpeicher.nrMerken(k, tok, m.nr); liste.push({ ...m, token: tok }) }
-      else if (aufraeumen && d?.ok) scheinSpeicher.vergessen(k, tok)
+    let r = zuordnen(gesendet, scheinSpeicher.eigene(k), s.meine)
+    if (r.ungeprueft.length) {
+      const nur = scheinSpeicher.eigene(k)
+      const { d } = await post('status', { personTokens: nur })
+      if (d?.ok && Array.isArray(d.meine)) r = zuordnen(nur, nur, d.meine as MeinTreffer[])
     }
-    const reihe = scheinSpeicher.eigene(k).map((g) => g.t)
-    return liste.sort((x, y) => reihe.indexOf(x.token) - reihe.indexOf(y.token))
+    if (aufraeumen) for (const tok of r.unbekannt) if (tok !== aktivRef.current.token) scheinSpeicher.vergessen(k, tok)
+    return r.eigene
   }, [post])
 
   /** Neues Schein-Token anlegen und VOR dem ersten Schreiben merken (idempotent bei Doppeltipp). */
@@ -346,25 +347,26 @@ export default function MeldescheinWidget() {
     aktivSetzen({ token: null, nr: 1 })
   }
 
-  /** Antwort eines Schreibschritts: beim weiteren Schein die nr merken, beim ersten den Vermerk. */
+  /** Antwort eines Schreibschritts: beim ersten Schein den Vermerk; beim weiteren das Token
+   *  noch einmal merken (ein anderer Tab kann es vergessen haben, solange es keinen Schein hatte). */
   const geschrieben = (d: { ich?: { nr?: unknown } | null }) => {
     const tok = aktivRef.current.token
     if (!tok) { hauptMerken(); return }
-    const nr = d.ich && typeof d.ich.nr === 'number' ? d.ich.nr : null
     const k = schluessel(daten)
-    if (nr === null) return
-    if (k) scheinSpeicher.nrMerken(k, tok, nr)
-    aktivSetzen({ token: tok, nr })
+    if (k && daten) scheinSpeicher.merken(k, daten.departure || daten.arrival || heuteIso(), tok)
+    const nr = d.ich && typeof d.ich.nr === 'number' ? d.ich.nr : null
+    if (nr !== null) aktivSetzen({ token: tok, nr })
   }
 
   /** Zahlen und eigene Liste im Hintergrund auffrischen; Phase und Stand bleiben. */
   const nachladen = useCallback(async () => {
     try {
-      const { d } = await post('status', { personTokens: scheinSpeicher.alle() })
+      const gesendet = scheinSpeicher.alle()
+      const { d } = await post('status', { personTokens: gesendet })
       if (!d.ok) return
       const s = d as StatusData
       const tok = aktivRef.current.token
-      const liste = await eigeneErmitteln(s, tok ? [tok] : [], false)
+      const liste = await eigeneErmitteln(s, gesendet, false)
       setDaten(s)
       setEigene(liste)
       const ich = liste.find((e) => e.token === tok)
@@ -381,16 +383,16 @@ export default function MeldescheinWidget() {
     // Nicht ersetzte Smoobu-Platzhalter ([bookingID] …) gar nicht erst schicken
     if (token.u && /[[\]{}]/.test(token.u)) { setFehlerText(t.fehler.vorlageUnvollstaendig); setPhase('fehler'); return }
     try {
-      const { status, d } = await post('status', { personTokens: scheinSpeicher.alle() })
+      const gesendet = scheinSpeicher.alle()
+      const { status, d } = await post('status', { personTokens: gesendet })
       if (!d.ok) { setFehlerText(fehlerFuer(status, d)); setPhase('fehler'); return }
       const s = d as StatusData
-      const liste = await eigeneErmitteln(s, 'alle', true)
+      const liste = await eigeneErmitteln(s, gesendet, true)
       const k = schluessel(s)
       const hier = hauptRef.current || Boolean(k && scheinSpeicher.hatHaupt(k))
       hauptSetzen(hier)
       setDaten(s)
       setEigene(liste)
-      setOhneSpeicher(speicherArt() === null)
       const namen = () => { if (s.gast) setF((x) => ({ ...x, familienname: x.familienname || s.gast!.familienname, vorname: x.vorname || s.gast!.vorname })) }
       const ersterZeigen = () => {
         aktivSetzen({ token: null, nr: 1 })
@@ -405,15 +407,9 @@ export default function MeldescheinWidget() {
         setPhase(e.status === 'offen' ? 'scan' : 'fertig')
       }
       if (!s.weitere) { aktivSetzen({ token: null, nr: null }); setStand(hauptStand(s)); namen(); setPhase(s.status === 'offen' ? 'frage' : 'fertig'); return } // älteres Dashboard
-      const vorher = aktivRef.current
-      const braucht = (st: ScheinStatus) => st === 'offen' || st === 'eingereicht'
-      const offenerEigener = [...liste].reverse().find((e) => braucht(e.status))
-      const gerade = liste.find((e) => e.token === vorher.token)
-      if (gerade) return eigenenZeigen(gerade)
-      if ((vorher.nr === 1 && hier) || (erinnerung && s.status === 'eingereicht')) return ersterZeigen()
-      if (offenerEigener) return eigenenZeigen(offenerEigener)
-      if (hier) return ersterZeigen()
-      if (liste.length) return eigenenZeigen(liste[liste.length - 1])
+      const wahl = startWahl({ liste, vorher: aktivRef.current, hier, erinnerung, hauptStatus: s.status })
+      if (wahl.art === 'eigener') return eigenenZeigen(wahl.e)
+      if (wahl.art === 'erster') return ersterZeigen()
       // Kein eigener Schein auf diesem Gerät. Den Namen aus dem Buchungslink nur
       // für den ersten Schein vorausfüllen: Wer danach kommt, ist meist nicht die buchende Person.
       aktivSetzen({ token: null, nr: null })
@@ -812,7 +808,11 @@ export default function MeldescheinWidget() {
       onNeu={weitereStarten}
     />
   ) : null
-  const speicherHinweis = daten.weitere && ohneSpeicher ? <p className="font-body text-sm text-amber-700 mt-3">{t.person.ohneSpeicher}</p> : null
+  // Liegt nichts dauerhaft (nur dieser Tab oder nur bis zum Neuladen): sagen, dass die Seite offen bleiben muss.
+  const ablage = speicherHinweis(speicherArt(), istWeiterer)
+  const speicherZeile = daten.weitere && ablage !== 'keiner'
+    ? <p className="font-body text-sm text-amber-700 mt-3">{ablage === 'sitzung' ? t.person.nurSitzung : t.person.ohneSpeicher}</p>
+    : null
   const dochDeutsch = daten.weitere ? (
     <p className="mt-4 text-center">
       <button type="button" className={textLink} disabled={sendet} onClick={zurueckDeutsch}>{t.scan.dochDeutsch}</button>
@@ -829,8 +829,8 @@ export default function MeldescheinWidget() {
     if (eingereicht) {
       const ab = schoenesDatum(stand.bestaetigungAb || daten.arrival)
       text = !daten.stripe ? t.karte.ohneStripe
-        // Weitere Personen bekommen keine Erinnerung: kein Kanal zu ihnen
-        : !stand.bestaetigungErlaubt ? (istWeiterer ? t.person.zuFrueh(ab) : t.karte.zuFrueh(ab))
+        // Weitere Personen bekommen keine Erinnerung: kein Kanal zu ihnen. Ohne dauerhafte Ablage hilft „später wieder öffnen“ nicht.
+        : !stand.bestaetigungErlaubt ? (istWeiterer ? (ablage === 'keiner' ? t.person.zuFrueh(ab) : t.person.zuFruehOhneSpeicher(ab)) : t.karte.zuFrueh(ab))
           : eigeneKarteFehlt ? t.karte.eigeneKarte
             : papierNoetig ? t.karte.papierNoetig
               : t.fertig.eingereichtText
@@ -851,7 +851,8 @@ export default function MeldescheinWidget() {
             </button>
           )}
           {karteFehler && <p className="font-body text-sm text-red-600 mt-3">{karteFehler}</p>}
-          {eingereicht && speicherHinweis}
+          {/* Vor dem Anreisetag sagt es beim weiteren Schein schon der Text (zuFruehOhneSpeicher) */}
+          {eingereicht && (stand.bestaetigungErlaubt || !istWeiterer) && speicherZeile}
           {weitereBlock}
         </div>
         {fuss}
@@ -990,7 +991,7 @@ export default function MeldescheinWidget() {
           <h2 className="font-display text-2xl text-forest-900 mb-3">{t.scan.titel}</h2>
           <p className="font-body text-sm text-forest-600 leading-relaxed">{t.scan.text}</p>
           <p className={`${klein} mt-2`}>{t.scan.tipp}</p>
-          {speicherHinweis}
+          {speicherZeile}
           {scanLaeuft ? (
             <>{spinner}<p className="font-body text-sm text-forest-600">{t.scan.liest}</p></>
           ) : (

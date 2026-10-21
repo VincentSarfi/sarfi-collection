@@ -104,7 +104,11 @@ const meldeschein = {
   person: {
     zuFrueh: (datum: string) =>
       `Deine Angaben sind gespeichert. Bestätigen kannst du sie erst am Anreisetag (${datum}). Öffne dann diesen Link wieder hier in diesem Browser – nur hier ist dein Meldeschein hinterlegt.`,
-    ohneSpeicher: "Dein Browser speichert nichts. Bitte schließe die Seite erst, wenn dein Meldeschein bestätigt ist.",
+    // Ohne dauerhafte Ablage (lib/meldeschein-scheine.ts, speicherHinweis): Das Token hängt an diesem Tab bzw. dieser Seite.
+    ohneSpeicher: "Dein Browser speichert deinen Meldeschein nicht. Lass diese Seite bis zur Bestätigung offen und lade sie nicht neu.",
+    nurSitzung: "Dein Browser hält deinen Meldeschein nur, solange dieser Tab offen ist. Lass ihn bis zur Bestätigung offen.",
+    zuFruehOhneSpeicher: (datum: string) =>
+      `Deine Angaben sind gespeichert. Bestätigen kannst du sie erst am Anreisetag (${datum}). Dein Browser behält deinen Meldeschein aber nicht, wenn du diesen Tab schließt: Lass ihn bis dahin offen und bestätige dann hier – sonst unterschreib in der Unterkunft das Papierformular.`,
     abgelaufen: "Dein Aufenthalt ist vorbei – dieser Meldeschein lässt sich nicht mehr ändern.",
   },
 
