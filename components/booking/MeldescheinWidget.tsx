@@ -379,6 +379,9 @@ export default function MeldescheinWidget() {
       // Dashboard/Stripe gerade nicht erreichbar: derselbe SetupIntent lässt sich
       // gleich noch einmal prüfen, der Gast bleibt in der Kartenphase.
       if (status >= 500 || status === 429) { setKarteFehler(t.karte.fehlgeschlagen); return }
+      // Schon bestätigt (andere Sitzung oder verlorene Antwort): den echten Stand
+      // laden statt einen Fehler zu zeigen, „erhalten“ erscheint dann als fertig.
+      if (d.code === 'nicht_eingereicht') { setClientSecret(null); setSetupIntentId(null); await laden(); return }
       // Abgelehnt: dieser SetupIntent ist verbraucht. Status bleibt „eingereicht",
       // ein neuer Versuch startet über „Jetzt bestätigen" mit frischem SetupIntent.
       setClientSecret(null); setSetupIntentId(null)
