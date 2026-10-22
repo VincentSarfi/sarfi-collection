@@ -35,8 +35,13 @@ export async function GET(request: NextRequest) {
   const today = new Date()
   const windowEnd = bookingWindowEnd()
 
-  const startDate =
+  // Nie in die Vergangenheit antworten – sonst verrät die Route die Belegung
+  // früherer Monate. Ein Tag Puffer, weil der Kalender das UTC-Datum des
+  // Browsers schickt und das kurz nach Mitternacht noch „gestern“ ist.
+  const earliest = new Date(today.getTime() - 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  const requestedStart =
     searchParams.get('startDate') ?? today.toISOString().split('T')[0]
+  const startDate = requestedStart < earliest ? earliest : requestedStart
   // Nie über das Buchungsfenster hinaus antworten – sonst zeigt der Kalender
   // freie Tage, die die Buchungsstrecke später ohnehin ablehnt.
   const requestedEnd = searchParams.get('endDate') ?? windowEnd

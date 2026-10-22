@@ -26,8 +26,13 @@ import { sendRemainingPaymentReminderEmail } from '@/lib/notify'
  *
  * Manuelle / Test-Aufrufe (zusätzlich zum Bearer-Header):
  *   ?only=<pi_id>         → nur die Buchung dieses Payment Intents, ignoriert das Zeitfenster
- *   ?to=<email>           → Empfänger überschreiben (Test); markiert NICHT als gesendet
  *   ?dry=1                → nichts senden, nur auflisten was passieren würde
+ *
+ * Ein Parameter, der den Empfänger überschreibt (früher ?to=), ist bewusst
+ * entfernt (22.10.2026): Mit dem Secret hätte er sonst alle offenen
+ * Erinnerungen samt Namen und Zahlungslinks an eine beliebige Adresse geschickt.
+ * Die Antwort nennt deshalb auch keine Mailadressen; der Dashboard-Cron loggt
+ * sie vollständig.
  */
 
 export const dynamic = 'force-dynamic'
@@ -93,13 +98,12 @@ export async function GET(request: NextRequest) {
 
   const { searchParams } = new URL(request.url)
   const only    = searchParams.get('only')          // pi_... → nur diese Buchung
-  const toOverride = searchParams.get('to')          // Empfänger überschreiben (Test)
   const dryRun  = searchParams.get('dry') === '1'
-  const isManual = Boolean(only || toOverride)
+  const isManual = Boolean(only)
 
   const summary = {
     scanned: 0,
-    sent: [] as Array<{ pi: string; to: string; property: string; checkIn: string; amount: number }>,
+    sent: [] as Array<{ pi: string; property: string; checkIn: string; amount: number }>,
     skipped: [] as Array<{ pi?: string; link: string; reason: string }>,
     errors: [] as Array<{ pi?: string; link: string; reason: string }>,
     dryRun,
@@ -116,12 +120,12 @@ export async function GET(request: NextRequest) {
 
       summary.scanned++
 
-      // Schon bezahlt oder erinnert? (im Test-/only-Modus mit to-Override erneut erlauben)
+      // Schon bezahlt oder erinnert?
       if (md.paid_at) {
         summary.skipped.push({ pi: piId, link: link.id, reason: `bereits bezahlt am ${md.paid_at}` })
         continue
       }
-      if (md.reminder_sent_at && !toOverride) {
+      if (md.reminder_sent_at) {
         summary.skipped.push({ pi: piId, link: link.id, reason: `bereits erinnert am ${md.reminder_sent_at}` })
         continue
       }
@@ -185,10 +189,9 @@ export async function GET(request: NextRequest) {
       const totalPrice   = parseFloat(pm.totalPrice ?? '0')
       const depositAmount = parseFloat(pm.depositAmount ?? '0')
       const remaining    = Math.round(totalPrice - depositAmount)
-      const recipient    = toOverride || email
 
       if (dryRun) {
-        summary.sent.push({ pi: piId, to: recipient, property: pm.propertyName ?? '?', checkIn, amount: remaining })
+        summary.sent.push({ pi: piId, property: pm.propertyName ?? '?', checkIn, amount: remaining })
         continue
       }
 
@@ -201,10 +204,9 @@ export async function GET(request: NextRequest) {
         checkOut:            checkOut ?? checkIn,
         firstName:           pm.firstName ?? '',
         lastName:            pm.lastName ?? '',
-        email:               recipient,
+        email,
         remainingAmount:     remaining,
         remainingPaymentUrl: link.url,
-        subjectPrefix:       toOverride ? '[TEST] ' : '',
         locale:              guestLocale,
       })
 
@@ -213,14 +215,11 @@ export async function GET(request: NextRequest) {
         continue
       }
 
-      summary.sent.push({ pi: piId, to: recipient, property: pm.propertyName ?? '?', checkIn, amount: remaining })
+      summary.sent.push({ pi: piId, property: pm.propertyName ?? '?', checkIn, amount: remaining })
 
-      // Nur im echten Versand (nicht bei to-Override-Test) als gesendet markieren
-      if (!toOverride) {
-        const marked = await updateLinkMetadata(link.id, { ...md, reminder_sent_at: new Date().toISOString() })
-        if (!marked) {
-          summary.errors.push({ pi: piId, link: link.id, reason: 'reminder_sent_at konnte nicht gesetzt werden – Gefahr doppelter Erinnerung' })
-        }
+      const marked = await updateLinkMetadata(link.id, { ...md, reminder_sent_at: new Date().toISOString() })
+      if (!marked) {
+        summary.errors.push({ pi: piId, link: link.id, reason: 'reminder_sent_at konnte nicht gesetzt werden – Gefahr doppelter Erinnerung' })
       }
     }
 

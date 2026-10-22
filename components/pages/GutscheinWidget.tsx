@@ -41,13 +41,14 @@ export default function GutscheinWidget() {
   const [submitting, setSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
-  const [stripePromise] = useState(() =>
-    typeof window === "undefined"
-      ? null
-      : loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""),
-  )
+  // Stripe.js erst mit dem Zahlungsschritt laden, nicht schon beim Seitenaufruf
+  // (DSGVO, so steht es auch in der Datenschutzerklärung).
+  const [stripePromise, setStripePromise] = useState<ReturnType<typeof loadStripe> | null>(null)
   const turnstileToken = useRef("")
   const [turnstileReady, setTurnstileReady] = useState(false)
+  // Turnstile erst, wenn jemand das Formular benutzt – vorher geht nichts an Cloudflare.
+  const [formUsed, setFormUsed] = useState(false)
+  const markFormUsed = () => { if (!formUsed) setFormUsed(true) }
   const widgetRef = useRef<HTMLDivElement>(null)
 
   const effectiveAmount = customAmount !== "" ? parseInt(customAmount, 10) : amount
@@ -117,6 +118,7 @@ export default function GutscheinWidget() {
         setErrorMsg(data.error ?? "Zahlung konnte nicht vorbereitet werden.")
         return
       }
+      setStripePromise((p) => p ?? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""))
       setClientSecret(data.clientSecret)
       setStep("payment")
       widgetRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
@@ -172,7 +174,7 @@ export default function GutscheinWidget() {
           )}
         </>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} onFocusCapture={markFormUsed} onPointerDownCapture={markFormUsed} className="space-y-6">
           <div>
             <p className={labelCls}>Gutscheinwert</p>
             <div className="flex flex-wrap gap-2 mb-3">
@@ -253,12 +255,14 @@ export default function GutscheinWidget() {
             <p className="font-body text-sm text-red-600" role="alert">{errorMsg}</p>
           )}
 
-          <Turnstile
-            siteKey={TURNSTILE_SITE_KEY}
-            options={{ size: "flexible" }}
-            onSuccess={(token) => { turnstileToken.current = token; setTurnstileReady(true) }}
-            onExpire={() => { turnstileToken.current = ""; setTurnstileReady(false) }}
-          />
+          {formUsed && (
+            <Turnstile
+              siteKey={TURNSTILE_SITE_KEY}
+              options={{ size: "flexible" }}
+              onSuccess={(token) => { turnstileToken.current = token; setTurnstileReady(true) }}
+              onExpire={() => { turnstileToken.current = ""; setTurnstileReady(false) }}
+            />
+          )}
 
           <button
             type="submit"
@@ -270,7 +274,7 @@ export default function GutscheinWidget() {
                 <span className="w-4 h-4 border-2 border-forest-900/30 border-t-forest-900 rounded-full animate-spin" />
                 Wird vorbereitet …
               </>
-            ) : !turnstileReady ? (
+            ) : formUsed && !turnstileReady ? (
               "Sicherheitsprüfung läuft …"
             ) : (
               `Gutschein über ${amountValid ? effectiveAmount : "–"} € kaufen →`

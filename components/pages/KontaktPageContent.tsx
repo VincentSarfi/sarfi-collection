@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { IconMail, IconMapPin, IconPhone, IconChevronDown } from "@/components/ui/Icons";
@@ -47,13 +47,19 @@ export default function KontaktPageContent() {
   const [error, setError] = useState<string | null>(null);
   const turnstileToken = useRef<string>("");
 
-  useEffect(() => {
+  // Turnstile erst laden, wenn jemand das Formular benutzt (wie im Newsletter-
+  // Formular): Beim bloßen Besuch der Seite geht nichts an Cloudflare.
+  const turnstileLoaded = useRef(false);
+  const ensureTurnstile = useCallback(() => {
+    if (turnstileLoaded.current) return;
+    turnstileLoaded.current = true;
     const SITE_KEY = "0x4AAAAAADCAIuxW7h0ePfOM";
     const CONTAINER_ID = "turnstile-container";
 
     const renderWidget = () => {
       const el = document.getElementById(CONTAINER_ID);
       if (!el || el.childElementCount > 0) return; // already rendered
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).turnstile?.render(`#${CONTAINER_ID}`, {
         sitekey: SITE_KEY,
         theme: "light",
@@ -62,6 +68,7 @@ export default function KontaktPageContent() {
       });
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((window as any).turnstile) {
       // Script already loaded (e.g. back-navigation)
       renderWidget();
@@ -73,12 +80,10 @@ export default function KontaktPageContent() {
       script.onload = renderWidget;
       document.head.appendChild(script);
     }
-
-    return () => {
-      // Reset token on unmount so stale tokens aren't reused
-      turnstileToken.current = "";
-    };
   }, [locale]);
+
+  // Reset token on unmount so stale tokens aren't reused
+  useEffect(() => () => { turnstileToken.current = ""; }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -148,7 +153,7 @@ export default function KontaktPageContent() {
                 </p>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+              <form onSubmit={handleSubmit} onFocusCapture={ensureTurnstile} onPointerDownCapture={ensureTurnstile} className="space-y-4" noValidate>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="font-body text-sm font-medium text-forest-700 mb-1.5 block" htmlFor="name">

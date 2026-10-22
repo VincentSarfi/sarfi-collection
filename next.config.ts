@@ -41,8 +41,9 @@ const securityHeaders = [
       "img-src 'self' data: blob: https://*.stripe.com",
       // Fonts: own origin
       "font-src 'self'",
-      // Connect: own API + Stripe + Smoobu + PriceLabs + Kartendaten (OpenFreeMap)
-      "connect-src 'self' https://api.stripe.com https://login.smoobu.com https://api.pricelabs.co https://tiles.openfreemap.org",
+      // Connect: own API + Stripe + Kartendaten (OpenFreeMap). Smoobu und
+      // PriceLabs spricht nur der Server an, der Browser braucht sie nicht.
+      "connect-src 'self' https://api.stripe.com https://tiles.openfreemap.org",
       // MapLibre rechnet die Kacheln in einem Web Worker aus blob:-URL
       "worker-src 'self' blob:",
       // Stripe payment UI + Cloudflare Turnstile run in iframes
@@ -61,6 +62,8 @@ const nextConfig: NextConfig = {
   // Schlanker, selbst-hostbarer Server-Output (server.js + minimales node_modules)
   // für den Docker/Sliplane-Betrieb.
   output: "standalone",
+  // Kein „X-Powered-By: Next.js“ – verrät nur das Framework.
+  poweredByHeader: false,
   // Root für das File-Tracing FEST auf diesen App-Ordner. Sonst rät Next wegen
   // mehrerer package-lock.json in übergeordneten Verzeichnissen die Workspace-
   // Wurzel falsch und verschachtelt den standalone-Output (…/standalone/Desktop/…)

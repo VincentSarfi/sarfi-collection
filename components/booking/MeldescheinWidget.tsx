@@ -246,6 +246,8 @@ export default function MeldescheinWidget() {
   const [konflikt, setKonflikt] = useState<Konflikt | null>(null)
   const [nameEingabe, setNameEingabe] = useState('')
   const [nameFehler, setNameFehler] = useState('')
+  // Wohin „Zurück“ aus der Namensabfrage führt: Liste oder Bestätigungsschritt.
+  const [nameZurueck, setNameZurueck] = useState<Phase>('schonDa')
 
   // Aktiver Schein als Ref, damit ein Klick, der das Token gerade erst anlegt,
   // es im selben Aufruf schon mitschickt; dazu der Stand des Scheins und die
@@ -665,6 +667,11 @@ export default function MeldescheinWidget() {
         setClientSecret(d.clientSecret); setSetupIntentId(d.setupIntentId); setKarteFehler(''); setPapierNoetig(false); setEigeneKarteFehlt(false); setPhase('karte')
       } else if (d.code === 'name_falsch') {
         setNameFehler(t.name.falsch)
+      } else if (d.code === 'name_fehlt') {
+        // Über den QR-Code bestätigt, der erste Schein kam aber über einen
+        // Link: Das Dashboard verlangt dann dessen Familiennamen (der Aushang
+        // kann von einem früheren Gast fotografiert sein).
+        aktivSetzen({ token: null, nr: 1 }); setNameEingabe(''); setNameFehler(''); setNameZurueck('fertig'); setPhase('nameFrage')
       } else if (d.code === 'zu_frueh') {
         setStand((x) => ({ ...x, bestaetigungErlaubt: false, bestaetigungAb: d.ab || x.bestaetigungAb }))
       } else if (d.code === 'nicht_eingereicht') {
@@ -922,7 +929,7 @@ export default function MeldescheinWidget() {
           </div>
           <div className="mt-6 flex flex-col items-center gap-3">
             {ersterOffen && (
-              <button className={textLink} disabled={sendet} onClick={() => { setNameEingabe(''); setNameFehler(''); setKarteFehler(''); setPhase('nameFrage') }}>
+              <button className={textLink} disabled={sendet} onClick={() => { setNameEingabe(''); setNameFehler(''); setKarteFehler(''); setNameZurueck('schonDa'); setPhase('nameFrage') }}>
                 {t.schonDa.ersterBestaetigen}
               </button>
             )}
@@ -951,8 +958,8 @@ export default function MeldescheinWidget() {
           </div>
           {nameFehler && <p className="font-body text-sm text-red-600">{nameFehler}</p>}
           {karteFehler && <p className="font-body text-sm text-red-600">{karteFehler}</p>}
-          <button type="submit" className={cta} disabled={sendet || nameEingabe.trim().length < 2}>{t.name.weiter}</button>
-          <button type="button" className={sekundaer} disabled={sendet} onClick={() => setPhase('schonDa')}>{t.name.zurueck}</button>
+          <button type="submit" className={cta} disabled={sendet || !nameEingabe.trim()}>{t.name.weiter}</button>
+          <button type="button" className={sekundaer} disabled={sendet} onClick={() => setPhase(nameZurueck)}>{t.name.zurueck}</button>
         </form>
         {fuss}
       </>

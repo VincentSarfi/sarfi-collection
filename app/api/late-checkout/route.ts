@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { dashboardHeaders } from '@/lib/dashboard-proxy'
 
 // Proxy zum Late-Checkout-Widget im Dashboard (gleiche Bauart wie
 // app/api/rechnung: serverseitig, kein CORS, Rate-Limit hier). Der Gast
@@ -32,7 +33,10 @@ export async function GET(request: NextRequest) {
   if (limited) return limited
   const u = request.nextUrl.searchParams.get('u') ?? ''
   try {
-    const r = await fetch(`${BASE}/status?u=${encodeURIComponent(u)}`, { cache: 'no-store' })
+    const r = await fetch(`${BASE}/status?u=${encodeURIComponent(u)}`, {
+      cache: 'no-store',
+      headers: dashboardHeaders(request),
+    })
     const data = await r.json()
     return NextResponse.json(data, { status: r.status })
   } catch {
@@ -63,7 +67,7 @@ export async function POST(request: NextRequest) {
 
     const r = await fetch(`${BASE}/${action}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: dashboardHeaders(request, true),
       body: JSON.stringify(body),
     })
     const data = await r.json()

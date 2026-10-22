@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { dashboardHeaders } from '@/lib/dashboard-proxy'
 
 // Proxy zum digitalen Meldeschein im Dashboard (gleiche Bauart wie
 // app/api/late-checkout: serverseitig, kein CORS, Rate-Limit hier). Der Gast
@@ -51,16 +52,19 @@ const MAX_SCHEIN_TOKENS = 25
 // ersten Seiten-URL und nicht zusätzlich in Proxy- und Ingress-Logs.
 // Übergang: Kennt das Dashboard POST /status noch nicht (dessen Sammel-404 hat
 // kein `ok`), einmal wie bisher per GET fragen. Entfällt, sobald es live ist.
-async function statusAbfragen(t: Record<string, string>, personTokens: string[]) {
+async function statusAbfragen(request: NextRequest, t: Record<string, string>, personTokens: string[]) {
   let r = await fetch(`${BASE}/status`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: dashboardHeaders(request, true),
     body: JSON.stringify(personTokens.length ? { ...t, personTokens } : t),
     cache: 'no-store',
   })
   let data = await r.json()
   if (r.status === 404 && data && data.ok === undefined) {
-    r = await fetch(`${BASE}/status?${new URLSearchParams(t).toString()}`, { cache: 'no-store' })
+    r = await fetch(`${BASE}/status?${new URLSearchParams(t).toString()}`, {
+      cache: 'no-store',
+      headers: dashboardHeaders(request),
+    })
     data = await r.json()
   }
   return NextResponse.json(data, { status: r.status })
@@ -74,7 +78,7 @@ export async function GET(request: NextRequest) {
   if (!t) return NextResponse.json({ ok: false, error: 'Unbekannter Link.' }, { status: 404 })
   const qs = new URLSearchParams(t).toString()
   try {
-    const r = await fetch(`${BASE}/status?${qs}`, { cache: 'no-store' })
+    const r = await fetch(`${BASE}/status?${qs}`, { cache: 'no-store', headers: dashboardHeaders(request) })
     const data = await r.json()
     return NextResponse.json(data, { status: r.status })
   } catch {
@@ -120,7 +124,7 @@ export async function POST(request: NextRequest) {
       const tokens = Array.isArray(raw.personTokens)
         ? (raw.personTokens as unknown[]).slice(0, MAX_SCHEIN_TOKENS).map((x) => str(x, 64)).filter(Boolean)
         : []
-      return await statusAbfragen(t, tokens)
+      return await statusAbfragen(request, t, tokens)
     }
 
     // Nur erwartete Felder mit Längenlimits durchreichen (kein Roh-Body)
@@ -152,7 +156,7 @@ export async function POST(request: NextRequest) {
 
     const r = await fetch(`${BASE}/${action}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: dashboardHeaders(request, true),
       body: JSON.stringify(body),
     })
     const data = await r.json()

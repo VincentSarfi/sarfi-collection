@@ -6,9 +6,9 @@ import { sendBookingNotification, sendGuestConfirmationEmail, sendVoucherEmail, 
 import { voucherCardUrl, voucherValidUntil } from '@/lib/voucher'
 
 /**
- * Stripe webhook – backup handler.
- * If the client fails to call /api/smoobu/booking after payment,
- * this webhook creates the Smoobu booking automatically.
+ * Stripe webhook – legt nach payment_intent.succeeded die Smoobu-Buchung an.
+ * Das ist der einzige Weg zur Buchung: Die frühere Client-Route
+ * /api/smoobu/booking ist seit 22.10.2026 entfernt (ungenutzt, Angriffsfläche).
  *
  * Setup in Stripe Dashboard:
  *   URL: https://www.sarfi-collection.de/api/stripe/webhook
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
             },
           })
           remainingPaymentUrl = paymentLink.url
-          console.log(`[webhook] Restbetrag-Link erstellt: ${remainingPaymentUrl}`)
+          console.log(`[webhook] Restbetrag-Link ${paymentLink.id} erstellt (PI ${pi.id})`)
         } catch (linkErr) {
           console.error('[webhook] Fehler beim Erstellen des Restbetrag-Links:', linkErr)
         }
@@ -302,7 +302,8 @@ async function handleVoucher(piId: string, m: Record<string, string>) {
     message: `Geschenkgutschein über ${value} € verkauft.${m.recipient ? ` Für: ${m.recipient}.` : ''} Einlösung: Code in Stripe suchen (metadata.voucher_code), nach Verrechnung redeemed=ja setzen.`,
   }).catch((err) => console.error('[webhook] Gutschein-Notification fehlgeschlagen:', err))
 
-  console.log(`[webhook] Gutschein ${m.voucher_code} (${value} €) für PI ${piId} verschickt`)
+  // Den Code selbst nicht loggen: Er ist bares Geld.
+  console.log(`[webhook] Gutschein (${value} €) für PI ${piId} verschickt`)
   return NextResponse.json({ received: true })
 }
 

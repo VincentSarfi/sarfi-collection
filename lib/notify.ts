@@ -300,7 +300,8 @@ export async function sendCheckoutStartedNotification(data: BookingNotificationD
       subject: `⏳ Checkout gestartet (noch nicht bezahlt): ${data.propertyName} · ${formatDate(data.checkIn)}–${formatDate(data.checkOut)} · ${data.firstName} ${data.lastName}`,
       html,
     })
-    console.log(`[notify] Checkout-Benachrichtigung gesendet für ${data.firstName} ${data.lastName}`)
+    // Keine Gastnamen ins Log, die Payment-Intent-ID reicht zum Nachschlagen.
+    console.log(`[notify] Checkout-Benachrichtigung gesendet (PI ${data.paymentIntentId})`)
   } catch (err) {
     console.error('[notify] Checkout-Benachrichtigung Fehler:', err)
   }
@@ -490,7 +491,7 @@ Stripe PI: ${data.paymentIntentId}
     if (error) {
       console.error('[notify] Resend Fehler:', error)
     } else {
-      console.log(`[notify] Benachrichtigung gesendet für ${data.firstName} ${data.lastName}`)
+      console.log(`[notify] Benachrichtigung gesendet (PI ${data.paymentIntentId ?? '–'})`)
     }
   } catch (err) {
     console.error('[notify] Unerwarteter Fehler:', err)
@@ -504,13 +505,10 @@ export interface RemainingReminderData {
   nights?: number
   firstName: string
   lastName: string
-  /** Tatsächlicher Empfänger (für Tests ggf. überschrieben) */
   email: string
   remainingAmount: number
   remainingPaymentUrl: string
   heroImageUrl?: string
-  /** Optionaler Präfix im Betreff, z. B. "[TEST] " */
-  subjectPrefix?: string
   locale?: MailLocale
 }
 
@@ -725,8 +723,8 @@ SARFI Collection · sarfi-collection.de`
       from: 'Sarfi Collection <buchung@sarfi-collection.de>',
       to:   [data.email],
       subject: en
-        ? `${data.subjectPrefix ?? ''}Payment reminder: balance for ${data.propertyName} · arrival ${formatDate(data.checkIn, 'en')}`
-        : `${data.subjectPrefix ?? ''}Zahlungserinnerung: Restbetrag für ${data.propertyName} · Anreise ${formatDate(data.checkIn)}`,
+        ? `Payment reminder: balance for ${data.propertyName} · arrival ${formatDate(data.checkIn, 'en')}`
+        : `Zahlungserinnerung: Restbetrag für ${data.propertyName} · Anreise ${formatDate(data.checkIn)}`,
       html,
       text,
     })
@@ -734,7 +732,7 @@ SARFI Collection · sarfi-collection.de`
       console.error('[notify] Restbetrag-Erinnerung Fehler:', error)
       return false
     }
-    console.log(`[notify] Restbetrag-Erinnerung gesendet an ${data.email}`)
+    console.log(`[notify] Restbetrag-Erinnerung gesendet (${data.propertyName}, Anreise ${data.checkIn})`)
     return true
   } catch (err) {
     console.error('[notify] Restbetrag-Erinnerung Fehler:', err)
@@ -767,7 +765,7 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
   const guestsLabel = (en
     ? (data.guests === 1 ? '1 guest' : `${data.guests} guests`)
     : (data.guests === 1 ? '1 Gast' : `${data.guests} Gäste`)) + petsLabel
-  const invoiceUrl  = data.smoobuBookingId ? invoiceLink(data.smoobuBookingId) : null
+  const invoiceUrl  = data.smoobuBookingId ? invoiceLink(data.smoobuBookingId, data.checkOut) : null
 
   // Escape user-controlled fields before HTML interpolation
   const safeProperty = escapeHtml(data.propertyName)
@@ -1091,7 +1089,7 @@ export async function sendGuestConfirmationEmail(data: GuestConfirmationData) {
         : `Buchungsbestätigung: ${data.propertyName} · ${formatDate(data.checkIn)}–${formatDate(data.checkOut)}`,
       html,
     })
-    console.log(`[notify] Gastbestätigung gesendet an ${data.email}`)
+    console.log(`[notify] Gastbestätigung gesendet (Smoobu #${data.smoobuBookingId})`)
   } catch (err) {
     console.error('[notify] Gastbestätigung Fehler:', err)
   }

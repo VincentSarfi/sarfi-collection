@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { EMAIL_RE } from '@/lib/validate'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { dashboardHeaders } from '@/lib/dashboard-proxy'
 
-// Proxy zur Rechnungs-Engine im Dashboard (Railway). Hält die Dashboard-URL
+// Proxy zur Rechnungs-Engine im Dashboard (Sliplane). Hält die Dashboard-URL
 // serverseitig (kein CORS, Dashboard-Adresse nicht im Client sichtbar).
 // INVOICE_API_URL = https://<dashboard>/api/public/invoice-request
 const BASE = process.env.INVOICE_API_URL
@@ -33,7 +34,10 @@ export async function GET(request: NextRequest) {
   const res = request.nextUrl.searchParams.get('res') ?? ''
   const t = request.nextUrl.searchParams.get('t') ?? ''
   try {
-    const r = await fetch(`${BASE}?res=${encodeURIComponent(res)}&t=${encodeURIComponent(t)}`, { cache: 'no-store' })
+    const r = await fetch(`${BASE}?res=${encodeURIComponent(res)}&t=${encodeURIComponent(t)}`, {
+      cache: 'no-store',
+      headers: dashboardHeaders(request),
+    })
     const data = await r.json()
     return NextResponse.json(data, { status: r.status })
   } catch {
@@ -69,7 +73,7 @@ export async function POST(request: NextRequest) {
 
     const r = await fetch(BASE, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: dashboardHeaders(request, true),
       body: JSON.stringify(body),
     })
     const data = await r.json()
