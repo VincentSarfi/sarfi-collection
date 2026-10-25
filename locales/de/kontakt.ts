@@ -45,7 +45,7 @@ const kontakt = {
     locationsLabel: "Standorte",
     locations: "Grattersdorf · Schöfweg",
     region: "Bayerischer Wald, Deutschland",
-    responseTitle: "⚡ Schnelle Antwortzeit",
+    responseTitle: "Schnelle Antwortzeit",
     responseText:
       "Wir antworten in der Regel innerhalb von wenigen Stunden – spätestens innerhalb von 24 Stunden.",
   },

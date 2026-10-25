@@ -1,8 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { IconStar, IconArrowRight } from "@/components/ui/Icons";
+import Zeichen from "@/components/ui/Zeichen";
 import { getAggregateReviewStats } from "@/data/properties";
 import { getDict, localizeHref, type Locale } from "@/lib/i18n";
+
+// Zeichen pro Wert (Naturnähe, Qualität, Persönlichkeit, Nachhaltigkeit); Texte aus dem Dictionary
+const VALUE_ICONS = ["tannen", "zirkel", "nachricht", "zweig"] as const;
 
 export default function UeberUnsPageContent({ locale }: { locale: Locale }) {
   const t = getDict(locale).about;
@@ -83,9 +87,9 @@ export default function UeberUnsPageContent({ locale }: { locale: Locale }) {
         <div className="mt-16">
           <h2 className="font-display text-2xl text-forest-900 mb-4 text-center">{t.values.heading}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {t.values.items.map((value) => (
+            {t.values.items.map((value, i) => (
               <div key={value.title} className="flex gap-4 p-4 rounded-xl bg-white border border-cream-200 shadow-card">
-                <span className="text-2xl shrink-0">{value.icon}</span>
+                <Zeichen name={VALUE_ICONS[i]} size={30} className="shrink-0 text-forest-700" />
                 <div>
                   <p className="font-body text-sm font-semibold text-forest-800 mb-1">{value.title}</p>
                   <p className="font-body text-sm text-forest-500 leading-relaxed">{value.text}</p>

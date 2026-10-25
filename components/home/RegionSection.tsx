@@ -5,15 +5,16 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { getDict } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import Zeichen from "@/components/ui/Zeichen";
 
-// Emojis pro Regions-Highlight; Label & Text kommen aus dem Dictionary.
-const regionEmojis = {
-  hiking: "🥾",
-  winter: "⛷️",
-  wildlife: "🦌",
-  culture: "🏘️",
-  lakes: "🌊",
-  wellness: "🧖",
+// Zeichen pro Regions-Highlight; Label & Text kommen aus dem Dictionary.
+const regionIcons = {
+  hiking: "wegweiser",
+  winter: "schneeflocke",
+  wildlife: "hirsch",
+  culture: "kirche",
+  lakes: "see",
+  wellness: "hottub",
 } as const;
 
 export default function RegionSection() {
@@ -24,7 +25,7 @@ export default function RegionSection() {
 
   const highlights = (
     ["hiking", "winter", "wildlife", "culture", "lakes", "wellness"] as const
-  ).map((key) => ({ emoji: regionEmojis[key], ...t.items[key] }));
+  ).map((key) => ({ icon: regionIcons[key], ...t.items[key] }));
 
   return (
     <section className="section-pad bg-cream-100 overflow-hidden" aria-labelledby="region-heading">
@@ -69,7 +70,7 @@ export default function RegionSection() {
                   key={item.label}
                   className="flex flex-col gap-1.5 p-3.5 rounded-xl bg-white border border-cream-200 shadow-card"
                 >
-                  <span className="text-xl" aria-hidden="true">{item.emoji}</span>
+                  <Zeichen name={item.icon} size={32} className="text-forest-700" />
                   <p className="font-body text-sm font-medium text-forest-800">{item.label}</p>
                   <p className="font-body text-xs text-forest-500 leading-snug">{item.text}</p>
                 </div>

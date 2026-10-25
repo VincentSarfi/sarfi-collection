@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import GutscheinWidget from "@/components/pages/GutscheinWidget";
+import Zeichen from "@/components/ui/Zeichen";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -67,13 +68,13 @@ export default function GutscheinPage() {
         </p>
 
         <div className="grid sm:grid-cols-3 gap-4 mb-10">
-          {[
-            { icon: "⚡", title: "Sofort per E-Mail", text: "Direkt nach der Zahlung, druckfertig als Karte." },
-            { icon: "🎁", title: "Frei wählbarer Wert", text: "50 € bis 2.500 € – du bestimmst den Betrag." },
-            { icon: "🏡", title: "Für alle Unterkünfte", text: "HAUS28 & Haus Schönblick, 3 Jahre gültig." },
-          ].map((f) => (
+          {([
+            { icon: "brief", title: "Sofort per E-Mail", text: "Direkt nach der Zahlung, druckfertig als Karte." },
+            { icon: "geschenk", title: "Frei wählbarer Wert", text: "50 € bis 2.500 € – du bestimmst den Betrag." },
+            { icon: "haeuser", title: "Für alle Unterkünfte", text: "HAUS28 & Haus Schönblick, 3 Jahre gültig." },
+          ] as const).map((f) => (
             <div key={f.title} className="rounded-2xl bg-white border border-cream-200 shadow-card p-5">
-              <span className="text-2xl">{f.icon}</span>
+              <Zeichen name={f.icon} size={30} className="block text-forest-700" />
               <p className="font-body text-sm font-semibold text-forest-800 mt-2">{f.title}</p>
               <p className="font-body text-xs text-forest-500 mt-0.5">{f.text}</p>
             </div>

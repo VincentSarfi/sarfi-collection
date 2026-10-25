@@ -4,9 +4,10 @@ import { localizeProperty } from "@/data/properties.i18n";
 import { PROPERTY_CONFIGS, resolveSmoobuId } from "@/config/properties.config";
 import ApartmentSelector from "@/components/booking/ApartmentSelector";
 import { IconStar, IconArrowRight } from "@/components/ui/Icons";
+import Zeichen from "@/components/ui/Zeichen";
 import { getDict, localizeHref, type Locale } from "@/lib/i18n";
 
-const TRUST_ICONS = ["🔒", "👪", "💰"] as const;
+const TRUST_ICONS = ["schloss", "familie", "preisschild"] as const;
 
 export default function SchoenblickBuchenContent({ locale }: { locale: Locale }) {
   const t = getDict(locale).booking.pages;
@@ -74,7 +75,7 @@ export default function SchoenblickBuchenContent({ locale }: { locale: Locale })
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
           {t.schoenblick.trust.map((item, i) => (
             <div key={item.title} className="flex items-center gap-3 p-4 rounded-xl bg-white border border-cream-200 shadow-card">
-              <span className="text-2xl">{TRUST_ICONS[i]}</span>
+              <Zeichen name={TRUST_ICONS[i]} size={28} className="flex-none text-forest-700" />
               <div>
                 <p className="font-body text-sm font-medium text-forest-800">{item.title}</p>
                 <p className="font-body text-xs text-forest-500">{item.text}</p>

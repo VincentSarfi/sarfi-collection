@@ -19,7 +19,7 @@ const property = {
   hero: {
     breadcrumbHome: "Home",
     reviewsOnAirbnbPost: " reviews on Airbnb",
-    guestFavoriteBadge: "🏅 Guest favourite",
+    guestFavoriteBadge: "Guest favourite",
     pricePre: "from",
     priceUnit: "/ night",
     bookNow: "Book now",

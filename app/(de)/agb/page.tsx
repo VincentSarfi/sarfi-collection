@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { pageMetadata } from "@/lib/seo"
+import Zeichen from "@/components/ui/Zeichen"
 
 export const metadata: Metadata = pageMetadata({
   path: "/agb",
@@ -280,15 +281,15 @@ export default function AgbPage() {
           </h2>
           <div className="rounded-2xl border border-cream-200 bg-white p-6">
             <ul className="space-y-3 font-body text-sm text-forest-700 leading-relaxed list-none">
-              {[
-                { icon: "🕓", text: "Check-in ab 16:00 Uhr, Check-out bis 10:00 Uhr" },
-                { icon: "🚭", text: "Rauchen innerhalb der Unterkunft ist nicht gestattet" },
-                { icon: "🐾", text: "Haustiere nur nach vorheriger Absprache mit dem Vermieter erlaubt" },
-                { icon: "🔇", text: "Die Hausordnung sowie die Ruhezeiten der jeweiligen Unterkunft sind einzuhalten" },
-                { icon: "🧹", text: "Die Unterkunft ist in ordentlichem Zustand zu hinterlassen" },
-              ].map(({ icon, text }) => (
+              {([
+                { icon: "uhr", text: "Check-in ab 16:00 Uhr, Check-out bis 10:00 Uhr" },
+                { icon: "rauchverbot", text: "Rauchen innerhalb der Unterkunft ist nicht gestattet" },
+                { icon: "pfote", text: "Haustiere nur nach vorheriger Absprache mit dem Vermieter erlaubt" },
+                { icon: "mond", text: "Die Hausordnung sowie die Ruhezeiten der jeweiligen Unterkunft sind einzuhalten" },
+                { icon: "besen", text: "Die Unterkunft ist in ordentlichem Zustand zu hinterlassen" },
+              ] as const).map(({ icon, text }) => (
                 <li key={text} className="flex gap-3">
-                  <span className="shrink-0">{icon}</span>
+                  <Zeichen name={icon} size={22} className="shrink-0 text-forest-700" />
                   <span>{text}</span>
                 </li>
               ))}

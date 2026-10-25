@@ -56,22 +56,18 @@ const about = {
     heading: "Our values",
     items: [
       {
-        icon: "🌲",
         title: "Close to nature",
         text: "Our homes are designed so that nature is always present – not in spite of it, but in harmony with it.",
       },
       {
-        icon: "✦",
         title: "Quality",
         text: "High-quality furnishings, loving details and meticulous care – that's our standard.",
       },
       {
-        icon: "💬",
         title: "A personal touch",
         text: "We're always there for our guests: direct communication, quick replies and personal tips.",
       },
       {
-        icon: "🌿",
         title: "Sustainability",
         text: "We take great care to be gentle on the nature and the region we love so much.",
       },

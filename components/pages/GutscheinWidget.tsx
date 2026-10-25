@@ -18,6 +18,7 @@ import {
 // "/pure": js.stripe.com erst beim Betreten des Zahlungsschritts laden (DSGVO)
 import { loadStripe } from "@stripe/stripe-js/pure"
 import { STRIPE_APPEARANCE } from "@/components/booking/PaymentStep"
+import Zeichen from "@/components/ui/Zeichen"
 
 const TURNSTILE_SITE_KEY =
   process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAADCAIuxW7h0ePfOM"
@@ -138,7 +139,7 @@ export default function GutscheinWidget() {
     <div ref={widgetRef} className="rounded-3xl bg-white border border-cream-200 shadow-card p-6 sm:p-8">
       {step === "confirmed" ? (
         <div className="text-center py-8">
-          <span className="inline-flex w-14 h-14 rounded-full bg-forest-100 items-center justify-center text-2xl mb-4">✓</span>
+          <Zeichen name="haken" size={56} className="block mx-auto mb-4 text-forest-700" />
           <h2 className="font-display text-2xl text-forest-900 mb-2">Danke für deinen Kauf!</h2>
           <p className="font-body text-sm text-forest-600 max-w-md mx-auto leading-relaxed">
             Dein Gutschein ist unterwegs: Du bekommst ihn in wenigen Minuten per
@@ -361,8 +362,9 @@ function VoucherCheckout({
         >
           Zurück
         </button>
-        <p className="font-body text-xs text-forest-400 text-center">
-          🔒 Sichere Zahlung über Stripe · Der Gutschein kommt direkt nach der Zahlung per E-Mail
+        <p className="flex items-center justify-center gap-1.5 font-body text-xs text-forest-400 text-center">
+          <Zeichen name="schloss" size={16} className="flex-none text-forest-500" />
+          Sichere Zahlung über Stripe · Der Gutschein kommt direkt nach der Zahlung per E-Mail
         </p>
       </div>
     </form>

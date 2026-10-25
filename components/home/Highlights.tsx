@@ -4,13 +4,14 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { getDict } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import Zeichen from "@/components/ui/Zeichen";
 
 // Icons pro Highlight; Titel & Beschreibung kommen aus dem Dictionary.
 const highlightIcons = {
-  nature: "🌲",
-  design: "✦",
-  view: "🌄",
-  direct: "💫",
+  nature: "tannen",
+  design: "zirkel",
+  view: "aussicht",
+  direct: "schluessel",
 } as const;
 
 export default function Highlights() {
@@ -59,7 +60,7 @@ export default function Highlights() {
               transition={{ duration: 0.6, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
               className="group relative flex flex-col gap-4 p-6 rounded-2xl border border-cream-50/10 bg-cream-50/5 hover:bg-cream-50/10 hover:border-gold-500/30 transition-all duration-300"
             >
-              <span className="text-3xl" aria-hidden="true">{item.icon}</span>
+              <Zeichen name={item.icon} size={48} className="text-cream-50 [--zeichen-akzent:theme(colors.gold.400)]" />
               <h3 className="font-display text-xl font-semibold text-cream-50 group-hover:text-gold-300 transition-colors">
                 {item.title}
               </h3>

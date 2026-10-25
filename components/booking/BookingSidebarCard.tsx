@@ -1,10 +1,11 @@
 "use client"
 
 import { IconStar } from "@/components/ui/Icons"
+import Zeichen from "@/components/ui/Zeichen"
 import { getDict, localizeHref } from "@/lib/i18n"
 import { useLocale } from "@/lib/i18n/LocaleProvider"
 
-const SIDEBAR_TRUST_ICONS = ["🔒", "💬", "💰"] as const
+const SIDEBAR_TRUST_ICONS = ["schloss", "nachricht", "preisschild"] as const
 
 interface BookingSidebarCardProps {
   priceFrom: number
@@ -99,7 +100,7 @@ export default function BookingSidebarCard({
       <div className="mt-4 pt-4 border-t border-cream-200 flex flex-col gap-2">
         {t.sidebarCard.trust.map((text, i) => (
           <div key={SIDEBAR_TRUST_ICONS[i]} className="flex items-center gap-2.5">
-            <span className="text-base">{SIDEBAR_TRUST_ICONS[i]}</span>
+            <Zeichen name={SIDEBAR_TRUST_ICONS[i]} size={18} className="flex-none text-forest-600" />
             <span className="font-body text-xs text-forest-500">{text}</span>
           </div>
         ))}

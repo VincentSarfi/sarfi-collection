@@ -2,6 +2,8 @@ import { Fragment, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { IconArrowRight, IconMapPin } from "@/components/ui/Icons";
+import Zeichen from "@/components/ui/Zeichen";
+import type { ZeichenName } from "@/components/ui/zeichen-daten";
 import { ausflugszieleMaterial, gasthausMaterial, wanderungBilder, type AusflugszielMaterial, type BildFreigabe } from "@/data/ausflugsziele-bildmaterial";
 import SteinbergliftWebcam from "@/components/pages/SteinbergliftWebcam";
 import DetailsHashOpener from "@/components/pages/DetailsHashOpener";
@@ -15,18 +17,18 @@ const SITE = "https://www.sarfi-collection.de";
 
 // Symbol je Ausflugsziel, wenn kein freigegebenes Foto da ist
 // (Texte: locales/*/ausflugsziele.ts, Websites/Fotos: data/ausflugsziele-bildmaterial.ts).
-const ATTRACTION_EMOJI: Record<string, string> = {
-  "pullman-city": "🤠",
-  baumwipfelpfad: "🌲",
-  nationalpark: "🦌",
-  "skigebiet-sonnenwald": "⛷️",
-  "indoor-golf": "⛳",
-  elypso: "🏊",
-  joska: "💎",
-  arber: "🏔️",
-  passau: "⛪",
-  museumsdorf: "🏡",
-  "glasmuseum-frauenau": "🏛️",
+const ATTRACTION_ICON: Record<string, ZeichenName> = {
+  "pullman-city": "cowboyhut",
+  baumwipfelpfad: "baumturm",
+  nationalpark: "luchs",
+  "skigebiet-sonnenwald": "skilift",
+  "indoor-golf": "golf",
+  elypso: "rutsche",
+  joska: "glas",
+  arber: "arber",
+  passau: "dom",
+  museumsdorf: "bauernhaus",
+  "glasmuseum-frauenau": "vase",
 };
 
 // schema.org-Typ und Ort je Ausflugsziel
@@ -87,7 +89,7 @@ export function ausflugszieleJsonLd(locale: Locale) {
   };
 }
 
-const SEASON_EMOJI = ["🌸", "☀️", "🍂", "❄️"];
+const SEASON_ICONS = ["bluete", "sonne", "blatt", "schneeflocke"] as const;
 
 // Großer Büchelstein – in der Wegpunkt-Liste hervorgehoben (Reihenfolge wie hike.waypoints)
 const WAYPOINT_HIGHLIGHT = 1;
@@ -250,15 +252,19 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
   };
 
   /** Kopfzeile eines Eintrags (summary): Bild oder Symbol, Name, Untertitel, Tags */
-  const kopf = (opts: { name: string; untertitel: string; tags: string[]; emoji: string; dunkel?: boolean; foto?: { src: string; alt: string; credit: string; lizenz?: { name: string; url: string } } }) => (
+  const kopf = (opts: { name: string; untertitel: string; tags: string[]; icon: ZeichenName; dunkel?: boolean; foto?: { src: string; alt: string; credit: string; lizenz?: { name: string; url: string } } }) => (
     <summary className="flex items-center gap-2.5 sm:gap-4 p-2.5 sm:p-4 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden rounded-2xl">
       <div
-        className={`relative flex-none w-14 h-14 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex items-center justify-center text-2xl sm:text-4xl ${opts.dunkel ? "bg-forest-900" : "bg-cream-100"}`}
+        className={`relative flex-none w-14 h-14 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex items-center justify-center ${opts.dunkel ? "bg-forest-900" : "bg-cream-100"}`}
       >
         {opts.foto ? (
           <Image src={opts.foto.src} alt={opts.foto.alt} fill className="object-cover" sizes="80px" />
         ) : (
-          <span aria-hidden="true">{opts.emoji}</span>
+          <Zeichen
+            name={opts.icon}
+            size={44}
+            className={`w-8 h-8 sm:w-11 sm:h-11 ${opts.dunkel ? "text-cream-50 [--zeichen-akzent:theme(colors.gold.400)]" : "text-forest-800"}`}
+          />
         )}
       </div>
       <div className="flex-1 min-w-0">
@@ -347,7 +353,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
           name: attr.name,
           untertitel: attr.subtitle,
           tags: attr.cardTags,
-          emoji: ATTRACTION_EMOJI[id],
+          icon: ATTRACTION_ICON[id],
           foto: thumb ? { src: thumb.src, alt: thumb.alt[locale], credit: thumb.credit } : undefined,
         })}
         <div className={koerper}>
@@ -427,7 +433,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
   const wanderung = (
     id: string,
     w: WanderungTexte,
-    opts: { emoji: string; bilder: BildFreigabe[]; ctaHref: string; highlight?: number },
+    opts: { icon: ZeichenName; bilder: BildFreigabe[]; ctaHref: string; highlight?: number },
   ) =>
     zeile(
       id,
@@ -437,7 +443,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
           name: w.heading,
           untertitel: w.cardNote,
           tags: w.cardTags,
-          emoji: opts.emoji,
+          icon: opts.icon,
           dunkel: true,
           foto: opts.bilder[0]
             ? { src: opts.bilder[0].src, alt: opts.bilder[0].alt[locale], credit: opts.bilder[0].credit, lizenz: opts.bilder[0].lizenz }
@@ -548,7 +554,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
           name: t.restaurants.heading,
           untertitel: restaurants.map((r) => r.name.replace(/ \(.*\)$/, "")).join(" · "),
           tags: [],
-          emoji: "🍽️",
+          icon: "besteck",
           foto: titelbild ? { src: titelbild.src, alt: titelbild.alt[locale], credit: titelbild.credit } : undefined,
         })}
         <div className={koerper}>
@@ -682,9 +688,9 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                       <ol>
                         {g.ids.map((id) =>
                           id === HIKE_ID
-                            ? wanderung(HIKE_ID, t.hike, { emoji: "🥾", bilder: wanderungBilder, ctaHref: "/haus28", highlight: WAYPOINT_HIGHLIGHT })
+                            ? wanderung(HIKE_ID, t.hike, { icon: "wegweiser", bilder: wanderungBilder, ctaHref: "/haus28", highlight: WAYPOINT_HIGHLIGHT })
                             : id === BROTJACKL_ID
-                              ? wanderung(BROTJACKL_ID, t.brotjacklriegel, { emoji: "⛰️", bilder: ausflugszieleMaterial[BROTJACKL_ID]?.bilder ?? [], ctaHref: "/schoenblick" })
+                              ? wanderung(BROTJACKL_ID, t.brotjacklriegel, { icon: "turm", bilder: ausflugszieleMaterial[BROTJACKL_ID]?.bilder ?? [], ctaHref: "/schoenblick" })
                               : id === EINKEHR_ID
                                 ? einkehr()
                                 : ziel(id),
@@ -719,7 +725,7 @@ export default function AusflugszielePageContent({ locale }: { locale: Locale })
                 <ul className="px-4 pb-4 space-y-2.5">
                   {t.seasons.items.map((s, i) => (
                     <li key={s.season} className="font-body text-sm text-forest-700 leading-relaxed">
-                      <span aria-hidden="true">{SEASON_EMOJI[i]} </span>
+                      <Zeichen name={SEASON_ICONS[i]} size={18} className="inline-block align-[-0.25em] mr-1.5 text-forest-700" />
                       <strong className="font-semibold text-forest-900">{s.season}</strong>{" "}
                       <span className="text-forest-500">({s.months})</span>: {s.activities.join(" · ")}
                     </li>

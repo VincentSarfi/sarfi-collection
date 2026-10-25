@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { IconStar, IconMapPin, IconArrowRight } from "@/components/ui/Icons";
 import Button from "@/components/ui/Button";
+import Zeichen from "@/components/ui/Zeichen";
 import { getDict, localizeHref } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 
@@ -111,6 +112,7 @@ export default function PropertyHero({
             </span>
             {guestFavorite && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gold-300/20 border border-gold-300/40 font-body text-xs text-gold-300">
+                <Zeichen name="lorbeer" size={16} className="[--zeichen-akzent:theme(colors.gold.300)]" />
                 {t.guestFavoriteBadge}
               </span>
             )}

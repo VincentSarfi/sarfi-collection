@@ -2,7 +2,7 @@
 //
 // Regel: Ein Bild kommt nur auf die Seite, wenn der Betreiber es schriftlich
 // freigegeben hat, und der Bildnachweis steht genau so daneben, wie er ihn
-// verlangt. Ohne Bild bleibt die Kachel im bisherigen Stil (Emoji, Farbe).
+// verlangt. Ohne Bild bleibt die Kachel im bisherigen Stil (Zeichen, Farbe).
 // Angefragt am 11.10.2026 per Mail an alle Betreiber, Skigebiet am 12.10.
 // per WhatsApp. Stand der Antworten: Cockpit, Karte „Werbematerial“.
 //

@@ -19,6 +19,7 @@ import { PROPERTY_CONFIGS, resolveSmoobuId } from "@/config/properties.config"
 import { getDict, localizeHref } from "@/lib/i18n"
 import { useLocale } from "@/lib/i18n/LocaleProvider"
 import { useLineClamp } from "@/lib/useLineClamp"
+import Zeichen from "@/components/ui/Zeichen"
 import {
   IconStar,
   IconMapPin,
@@ -223,7 +224,7 @@ export default function Haus28ClientPage({ hostingYears }: { hostingYears: numbe
                   {haus.guestFavorite && (
                     <>
                       <span className="flex items-center gap-1.5">
-                        <span className="text-base leading-none">🏆</span>
+                        <Zeichen name="lorbeer" size={18} className="text-forest-800" />
                         <span className="font-semibold">{t.haus28.guestFavorite}</span>
                       </span>
                       <span className="text-forest-300">·</span>

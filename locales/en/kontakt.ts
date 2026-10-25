@@ -44,7 +44,7 @@ const kontakt = {
     locationsLabel: "Locations",
     locations: "Grattersdorf · Schöfweg",
     region: "Bavarian Forest, Germany",
-    responseTitle: "⚡ Fast response times",
+    responseTitle: "Fast response times",
     responseText:
       "We usually reply within a few hours – and always within 24 hours.",
   },

@@ -14,6 +14,7 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { getDict } from '@/lib/i18n'
 import { useLocale } from '@/lib/i18n/LocaleProvider'
+import Zeichen from '@/components/ui/Zeichen'
 
 type Verlaengerung = {
   status: string
@@ -236,7 +237,7 @@ export default function LateCheckoutWidget() {
       return (
         <div className={karte}>
           <Einheit name={daten.einheit} />
-          <span className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-forest-100 text-2xl">✓</span>
+          <Zeichen name="haken" size={56} className="block mx-auto mb-4 text-forest-700" />
           <h2 className="font-display text-2xl text-forest-900 mb-2">{t.lc.gebuchtTitel}</h2>
           <div className={preisbox}>
             <p className={label}>{t.lc.gebuchtLabel}</p>
@@ -301,7 +302,7 @@ export default function LateCheckoutWidget() {
       return (
         <div className={karte}>
           <Einheit name={daten.einheit} />
-          <span className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-forest-100 text-2xl">✓</span>
+          <Zeichen name="haken" size={56} className="block mx-auto mb-4 text-forest-700" />
           <h2 className="font-display text-2xl text-forest-900 mb-2">{t.vl.gebuchtTitel}</h2>
           <div className={preisbox}>
             <p className={label}>{t.vl.gebuchtLabel}</p>

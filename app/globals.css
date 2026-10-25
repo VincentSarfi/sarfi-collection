@@ -223,3 +223,12 @@
 .placemap .maplibregl-ctrl-attrib {
   @apply bg-cream-50/80 text-[10px];
 }
+
+/* ─────────────────────────────────────────
+   Eigene Strichzeichen (components/ui/Zeichen.tsx):
+   Linien in currentColor, Akzent Gold 600;
+   auf dunklem Grund --zeichen-akzent setzen
+   ───────────────────────────────────────── */
+.zeichen .ak { stroke: var(--zeichen-akzent, theme("colors.gold.600")); }
+.zeichen .akf { fill: var(--zeichen-akzent, theme("colors.gold.600")); stroke: none; }
+.zeichen .f { fill: currentColor; stroke: none; }

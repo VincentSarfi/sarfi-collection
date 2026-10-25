@@ -56,22 +56,18 @@ const about = {
     heading: "Unsere Werte",
     items: [
       {
-        icon: "🌲",
         title: "Naturnähe",
         text: "Unsere Unterkünfte sind so gestaltet, dass die Natur immer präsent ist – nicht trotz ihr, sondern mit ihr.",
       },
       {
-        icon: "✦",
         title: "Qualität",
         text: "Hochwertige Ausstattung, liebevolle Details und sorgfältige Pflege – das ist unser Standard.",
       },
       {
-        icon: "💬",
         title: "Persönlichkeit",
         text: "Wir sind immer für unsere Gäste da. Direkte Kommunikation, schnelle Antworten, persönliche Tipps.",
       },
       {
-        icon: "🌿",
         title: "Nachhaltigkeit",
         text: "Wir achten auf einen schonenden Umgang mit der Natur und der Region, die wir so lieben.",
       },

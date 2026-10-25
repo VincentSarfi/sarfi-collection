@@ -39,6 +39,7 @@ import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-
 import { getDict } from '@/lib/i18n'
 import { useLocale } from '@/lib/i18n/LocaleProvider'
 import { STRIPE_APPEARANCE } from './PaymentStep'
+import Zeichen from '@/components/ui/Zeichen'
 import { WeiterePersonen, type ListenEintrag, type WeitereInfo } from './MeldescheinPersonen'
 import {
   heuteIso, neuesToken, scheinSchluessel, scheinSpeicher, speicherArt, speicherHinweis, startWahl, vortag, zuordnen,
@@ -867,7 +868,7 @@ export default function MeldescheinWidget() {
       <>
         {kopf}
         <div className={`${karte} mx-auto max-w-xl text-center`}>
-          <span className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-forest-100 text-2xl">✓</span>
+          <Zeichen name="haken" size={56} className="block mx-auto mb-4 text-forest-700" />
           <h2 className="font-display text-2xl text-forest-900 mb-2">{titel}</h2>
           {/* Mehrere Scheine auf einem Handy: sagen, wessen Schein hier steht */}
           {eintraege.length > 1 && eigenerVorname && <p className="font-body text-sm text-forest-800 mb-2">{t.weitere.von(eigenerVorname)}</p>}
@@ -893,7 +894,7 @@ export default function MeldescheinWidget() {
       <>
         {kopf}
         <div className={`${karte} mx-auto max-w-xl text-center`}>
-          <span className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-forest-100 text-2xl">✓</span>
+          <Zeichen name="haken" size={56} className="block mx-auto mb-4 text-forest-700" />
           <h2 className="font-display text-2xl text-forest-900 mb-2">{t.schonDa.fertigTitel}</h2>
           <p className="font-body text-sm text-forest-600 leading-relaxed">{t.schonDa.fertigText}</p>
           {weitereBlock}

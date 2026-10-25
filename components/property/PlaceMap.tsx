@@ -13,6 +13,7 @@ import maplibregl, {
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { mapPlaces, type HouseKey, type MapPlace } from "@/data/map-places";
+import { zeichenSvg, type ZeichenName } from "@/components/ui/zeichen-daten";
 import { buildMapStyle, DEM_BOUNDS, MAP_FONT, MAP_FONT_BOLD } from "@/components/property/mapStyle";
 import { getDict, localizeHref } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
@@ -46,8 +47,8 @@ const LABEL_SIDE_SCHOENBLICK: typeof LABEL_SIDE = {
 
 const ICON_SIZE: Record<MapPlace["kind"], number> = { ausflug: 30, nah: 28, einkehr: 24 };
 
-/** Rundes Symbol mit Emoji (Canvas → MapLibre-Bild), doppelt aufgelöst für Retina */
-function emojiIcon(emoji: string, size: number): ImageData {
+/** Rundes Symbol mit eigenem Zeichen (SVG → Canvas → MapLibre-Bild), doppelt aufgelöst für Retina */
+async function zeichenIcon(name: ZeichenName, size: number): Promise<ImageData> {
   const ratio = 2;
   const px = (size + 6) * ratio;
   const ctx = document.createElement("canvas").getContext("2d", { willReadFrequently: true });
@@ -64,10 +65,11 @@ function emojiIcon(emoji: string, size: number): ImageData {
   ctx.lineWidth = 1.5 * ratio;
   ctx.strokeStyle = "#c9a84c";
   ctx.stroke();
-  ctx.font = `${size * 0.52 * ratio}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(emoji, px / 2, px / 2 + ratio);
+  const inner = Math.round(size * 0.62);
+  const img = new Image();
+  img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(zeichenSvg(name, inner, "#1e3d27", "#a8883c"))}`;
+  await img.decode();
+  ctx.drawImage(img, (px - inner * ratio) / 2, (px - inner * ratio) / 2, inner * ratio, inner * ratio);
   return ctx.getImageData(0, 0, px, px);
 }
 
@@ -98,6 +100,8 @@ export default function PlaceMap({ house, houseName, coordinates, fallbackUrl }:
     const ausflug = mapPlaces.filter((p) => p.kind === "ausflug");
     const bounds = { region: boundsOf(ausflug), nearby: boundsOf(mapPlaces.filter((p) => p.kind !== "ausflug")) };
     boundsRef.current = bounds;
+    // Symbole schon vor dem Kartenstil rendern; dauert nur Millisekunden
+    const icons = Promise.all(mapPlaces.map((p) => zeichenIcon(p.icon, ICON_SIZE[p.kind])));
 
     let map: MapLibreMap;
     try {
@@ -149,7 +153,10 @@ export default function PlaceMap({ house, houseName, coordinates, fallbackUrl }:
     pin.append(tag, stem, dot);
     new maplibregl.Marker({ element: pin, anchor: "bottom", offset: [0, 7] }).setLngLat(center).addTo(map);
 
-    map.on("load", () => {
+    map.on("load", async () => {
+      const iconData = await icons.catch(() => null);
+      // Karte inzwischen abgebaut (Haus/Sprache gewechselt)?
+      if (mapRef.current !== map) return;
       const features = mapPlaces.map((p) => {
         const min = p.minutes[house];
         return {
@@ -167,7 +174,7 @@ export default function PlaceMap({ house, houseName, coordinates, fallbackUrl }:
           },
         };
       });
-      for (const p of mapPlaces) map.addImage(`place-${p.id}`, emojiIcon(p.emoji, ICON_SIZE[p.kind]), { pixelRatio: 2 });
+      mapPlaces.forEach((p, i) => iconData && map.addImage(`place-${p.id}`, iconData[i], { pixelRatio: 2 }));
 
       // Unsichtbare Fläche unter dem Haus-Schild: hält Beschriftungen davon fern
       const w = Math.ceil(pin.offsetWidth) + 8;

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { IconMail, IconMapPin, IconPhone, IconChevronDown } from "@/components/ui/Icons";
+import Zeichen from "@/components/ui/Zeichen";
 import { getDict, localizeHref, type Locale } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 
@@ -144,7 +145,7 @@ export default function KontaktPageContent() {
                 animate={{ opacity: 1, y: 0 }}
                 className="p-6 rounded-2xl bg-forest-700/10 border border-forest-200 text-center"
               >
-                <p className="text-2xl mb-2">✓</p>
+                <Zeichen name="haken" size={36} className="block mx-auto mb-2 text-forest-700" />
                 <p className="font-body text-base font-medium text-forest-800 mb-1">
                   {t.form.successTitle}
                 </p>
@@ -337,7 +338,8 @@ export default function KontaktPageContent() {
 
             {/* Response time */}
             <div className="p-5 rounded-2xl bg-gold-300/15 border border-gold-300/30">
-              <p className="font-body text-sm font-semibold text-forest-800 mb-1">
+              <p className="flex items-center gap-2 font-body text-sm font-semibold text-forest-800 mb-1">
+                <Zeichen name="brief" size={20} className="flex-none text-forest-700" />
                 {t.info.responseTitle}
               </p>
               <p className="font-body text-sm text-forest-600">

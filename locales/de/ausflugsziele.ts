@@ -1,5 +1,5 @@
 // Ausflugsziele-Seite (components/pages/AusflugszielePageContent.tsx).
-// Nur Texte – Farben, Emojis und Bildmaterial liegen in der Komponente bzw.
+// Nur Texte – Farben, Zeichen und Bildmaterial liegen in der Komponente bzw.
 // in data/ausflugsziele-bildmaterial.ts (Websites, Zusatzlinks, Fotos).
 // Fakten geprüft am 06.10.2026 (Betreiber-Websites, Nationalpark-Steckbrief,
 // Tourenportal Landkreis Deggendorf); elypso & JOSKA ergänzt am 12.10.2026

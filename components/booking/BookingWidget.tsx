@@ -7,6 +7,7 @@ import { Turnstile } from "@marsidev/react-turnstile"
 import BookingCalendar, { toDateKey, fmtShort, fmtLong, type SelectionStep } from "./BookingCalendar"
 import { BOOKING_WINDOW_DAYS, bookingWindowEndDate, depositAllowed, DEPOSIT_MIN_LEAD_DAYS } from "@/lib/booking-window"
 import PaymentStep from "./PaymentStep"
+import Zeichen from "@/components/ui/Zeichen"
 import type { AvailabilityMap } from "@/lib/smoobu"
 import type { NightRate } from "@/lib/pricelabs"
 import { getDict, localizeHref, type Locale } from "@/lib/i18n"
@@ -173,7 +174,7 @@ function validateForm(data: FormData, v: BookingDict["validation"]): FormErrors 
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-const TRUST_BADGE_EMOJIS = ["🔒", "💬", "💰"] as const
+const TRUST_BADGE_ICONS = ["schloss", "nachricht", "preisschild"] as const
 
 function TrustBadges() {
   const locale = useLocale()
@@ -185,7 +186,7 @@ function TrustBadges() {
           key={b.title}
           className="flex items-center gap-3 p-3 rounded-xl bg-cream-50 border border-cream-200"
         >
-          <span className="text-xl">{TRUST_BADGE_EMOJIS[i]}</span>
+          <Zeichen name={TRUST_BADGE_ICONS[i]} size={22} className="flex-none text-forest-700" />
           <div>
             <p className="font-body text-xs font-semibold text-forest-800">{b.title}</p>
             <p className="font-body text-xs text-forest-400">{b.text}</p>
@@ -1147,7 +1148,7 @@ export default function BookingWidget({
           <div className="px-5 pb-5 pt-1 border-t border-cream-100 space-y-2">
             {t.sidebarTrust.map((b, i) => (
               <div key={b.title} className="flex items-center gap-2.5">
-                <span className="text-base">{["🔒", "💰"][i]}</span>
+                <Zeichen name={(["schloss", "preisschild"] as const)[i]} size={18} className="flex-none text-forest-600" />
                 <div>
                   <span className="font-body text-xs font-semibold text-forest-800">{b.title} · </span>
                   <span className="font-body text-xs text-forest-400">{b.text}</span>

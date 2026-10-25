@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Turnstile } from "@marsidev/react-turnstile"
 import BookingCalendar, { toDateKey, fmtLong, type SelectionStep } from "./BookingCalendar"
 import PaymentStep from "./PaymentStep"
+import Zeichen from "@/components/ui/Zeichen"
 import { BOOKING_WINDOW_DAYS, bookingWindowEndDate } from "@/lib/booking-window"
 import {
   GROUP_APARTMENT_IDS,
@@ -344,7 +345,7 @@ export default function GroupBookingWidget() {
         {/* ── Schritt: Bestätigt ── */}
         {step === "confirmed" && (
           <motion.div key="confirmed" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="rounded-2xl border border-forest-200 bg-forest-50 p-8 text-center">
-            <div className="text-4xl mb-3">✅</div>
+            <Zeichen name="haken" size={48} className="block mx-auto mb-3 text-forest-700" />
             <h2 className="font-display text-2xl text-forest-900 mb-2">{t.confirmedHeading}</h2>
             <p className="font-body text-sm text-forest-600 max-w-md mx-auto">
               {t.confirmedText}
