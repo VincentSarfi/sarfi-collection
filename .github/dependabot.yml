@@ -1,9 +1,9 @@
 # Dependabot hält die npm-Pakete, die Node-Version im Dockerfile und die
 # GitHub-Actions aktuell. Eingerichtet am 26.10.2026 nach PHP2Shell.
 #
-# Zusammenspiel mit .github/workflows/pruefung.yml: Patch-Updates werden nach
-# grünem Docker-Build automatisch gemergt und damit über Sliplane deployt.
-# Minor- und Major-Updates bleiben Handarbeit (PR ansehen, mergen).
+# Zusammenspiel mit .github/workflows/pruefung.yml: Patch- und Minor-Updates
+# werden nach grünem Docker-Build und Rauchtest automatisch gemergt und damit
+# über Sliplane deployt. Major-Updates bleiben Handarbeit (PR ansehen, mergen).
 #
 # Sicherheitsupdates laufen unabhängig von diesem Zeitplan: sobald GitHub eine
 # Warnung zu einem Paket kennt, öffnet Dependabot sofort einen PR dafür.
@@ -17,8 +17,9 @@ updates:
       day: monday
       time: "06:00"
       timezone: Europe/Berlin
-    # Ein Sammel-PR für alle Patches (automatisch gemergt), einer für alle
-    # Minors (Handarbeit). Majors kommen einzeln.
+    # Ein Sammel-PR für alle Patches, einer für alle Minors, beide werden
+    # automatisch gemergt. Getrennt, damit ein hakender Minor die Patches
+    # nicht aufhält. Majors kommen einzeln.
     groups:
       patches:
         patterns: ["*"]

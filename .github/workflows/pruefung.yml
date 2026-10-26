@@ -1,13 +1,18 @@
 # Prüfung bei jedem Pull Request und jedem Push auf main.
 #
-# Der Docker-Build ist dieselbe Prüfung, die Sliplane beim Deploy macht:
-# npm ci, Bildoptimierung, next build mit Typprüfung, alles auf der
-# Node-Version aus dem Dockerfile. Die NEXT_PUBLIC_*-Build-Args fehlen hier
-# bewusst, der Code hat dafür Rückfallwerte, und das Image wird verworfen.
+# 1. Docker-Build: dieselbe Prüfung, die Sliplane beim Deploy macht (npm ci,
+#    Bildoptimierung, next build mit Typprüfung, Node-Version aus dem
+#    Dockerfile). Die NEXT_PUBLIC_*-Build-Args fehlen hier bewusst, der Code
+#    hat Rückfallwerte, und das Image wird verworfen.
+# 2. Rauchtest: das gebaute Image starten und die wichtigsten Seiten abrufen.
+#    Fängt, was der Build nicht sieht: ein Server, der nicht hochkommt, oder
+#    eine Seite, die beim Rendern stirbt.
 #
-# Patch-Updates von Dependabot werden nach grünem Build automatisch gemergt.
-# Der Merge mit dem GITHUB_TOKEN löst keinen weiteren Workflow aus, Sliplane
-# bekommt den Push aber wie jeden anderen und deployt.
+# Patch- und Minor-Updates von Dependabot werden nach grünem Lauf automatisch
+# gemergt (Vincents Vorgabe vom 26.10.2026: Website und Dashboard sollen ohne
+# sein Zutun aktuell bleiben). Major-Updates bleiben Handarbeit. Der Merge mit
+# dem GITHUB_TOKEN löst keinen weiteren Workflow aus, Sliplane bekommt den
+# Push aber wie jeden anderen und deployt.
 name: Prüfung
 
 on:
@@ -24,16 +29,36 @@ concurrency:
 
 jobs:
   build:
-    name: Docker-Build wie auf Sliplane
+    name: Docker-Build und Rauchtest
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
-      - name: Image bauen
+      - name: Image bauen wie auf Sliplane
         run: docker build --pull --tag sarfi-collection:pruefung .
+      - name: Container starten und Seiten abrufen
+        run: |
+          docker run -d --rm --name pruefung -p 3000:3000 sarfi-collection:pruefung
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:3000/robots.txt && break
+            sleep 1
+          done
+          fehler=0
+          for pfad in / /haus28 /haus28/buchen /schoenblick /schoenblick/buchen /schoenblick/gruppen /gutschein /blog /ausflugsziele /late-checkout /meldeschein /en /en/haus28 /sitemap.xml /robots.txt /opengraph-image; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:3000$pfad")
+            echo "$code $pfad"
+            [ "$code" = "200" ] || fehler=1
+          done
+          if [ "$fehler" != 0 ]; then
+            echo "::group::Container-Log"
+            docker logs pruefung 2>&1 | tail -50
+            echo "::endgroup::"
+          fi
+          docker stop pruefung >/dev/null
+          exit $fehler
 
   auto-merge:
-    name: Patch-Update von Dependabot mergen
+    name: Patch- oder Minor-Update von Dependabot mergen
     needs: build
     if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
@@ -44,12 +69,12 @@ jobs:
       - name: Art des Updates ermitteln
         id: meta
         uses: dependabot/fetch-metadata@v2
-      - name: Mergen, wenn es ein Patch ist
-        if: steps.meta.outputs.update-type == 'version-update:semver-patch'
+      - name: Mergen, wenn es ein Patch oder Minor ist
+        if: contains(fromJSON('["version-update:semver-patch","version-update:semver-minor"]'), steps.meta.outputs.update-type)
         run: gh pr merge --squash --delete-branch "$PR_URL"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}
-      - name: Hinweis bei Minor oder Major
-        if: steps.meta.outputs.update-type != 'version-update:semver-patch'
-        run: echo "Kein Patch (${{ steps.meta.outputs.update-type }}), bleibt Handarbeit."
+      - name: Hinweis bei Major
+        if: "!contains(fromJSON('[\"version-update:semver-patch\",\"version-update:semver-minor\"]'), steps.meta.outputs.update-type)"
+        run: echo "Major-Update (${{ steps.meta.outputs.update-type }}), bleibt Handarbeit."
