@@ -28,3 +28,5 @@ yarn-error.log*
 .vercel
 # Beim Build generierte Bild-Varianten (scripts/optimize-images.mjs)
 public/img-opt/
+# Beim Build kopierter MapLibre-Worker (scripts/copy-maplibre-worker.mjs)
+public/maplibre/

@@ -5,12 +5,8 @@
 // landet so nicht im Seiten-Bundle.
 
 import { useEffect, useRef, useState } from "react";
-import maplibregl, {
-  type ExpressionSpecification,
-  type LngLatBounds,
-  type Map as MapLibreMap,
-  type PaddingOptions,
-} from "maplibre-gl";
+import * as maplibregl from "maplibre-gl";
+import type { ExpressionSpecification, LngLatBounds, Map as MapLibreMap, PaddingOptions } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { mapPlaces, type HouseKey, type MapPlace } from "@/data/map-places";
 import { zeichenSvg, type ZeichenName } from "@/components/ui/zeichen-daten";
@@ -44,6 +40,10 @@ const LABEL_SIDE: Record<string, "left" | "above" | "below"> = {
 const LABEL_SIDE_SCHOENBLICK: typeof LABEL_SIDE = {
   "einkehr-panorama-landgasthof-ranzinger": "below",
 };
+
+// MapLibre 6 lädt seinen Worker als eigene Datei; Turbopack liefert ihn nicht
+// vollständig aus, darum aus public/ (scripts/copy-maplibre-worker.mjs)
+maplibregl.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
 
 const ICON_SIZE: Record<MapPlace["kind"], number> = { ausflug: 30, nah: 28, einkehr: 24 };
 
