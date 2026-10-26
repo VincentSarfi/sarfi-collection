@@ -10,7 +10,10 @@
 #
 # Patch- und Minor-Updates von Dependabot werden nach grünem Lauf automatisch
 # gemergt (Vincents Vorgabe vom 26.10.2026: Website und Dashboard sollen ohne
-# sein Zutun aktuell bleiben). Major-Updates bleiben Handarbeit. Der Merge mit
+# sein Zutun aktuell bleiben). Major-Updates bearbeitet eine wöchentliche Claude-Routine
+# (claude.ai/code/routines): sie migriert auf dem Dependabot-Branch, prüft
+# lokal und setzt im letzten Commit die Zeile „Routine-Freigabe: mergen“.
+# Erst mit dieser Zeile mergt der Workflow auch ein Major. Der Merge mit
 # dem GITHUB_TOKEN löst keinen weiteren Workflow aus, Sliplane bekommt den
 # Push aber wie jeden anderen und deployt.
 name: Prüfung
@@ -58,9 +61,9 @@ jobs:
           exit $fehler
 
   auto-merge:
-    name: Patch- oder Minor-Update von Dependabot mergen
+    name: Dependabot-Update mergen
     needs: build
-    if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
+    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -69,12 +72,25 @@ jobs:
       - name: Art des Updates ermitteln
         id: meta
         uses: dependabot/fetch-metadata@v2
-      - name: Mergen, wenn es ein Patch oder Minor ist
-        if: contains(fromJSON('["version-update:semver-patch","version-update:semver-minor"]'), steps.meta.outputs.update-type)
+        continue-on-error: true
+      - name: Freigabe der Major-Routine lesen
+        id: routine
+        run: |
+          nachricht=$(gh api "repos/$GITHUB_REPOSITORY/commits/$HEAD_SHA" --jq .commit.message)
+          if printf '%s' "$nachricht" | grep -q "Routine-Freigabe: mergen"; then
+            echo "freigabe=ja" >> "$GITHUB_OUTPUT"
+          else
+            echo "freigabe=nein" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      - name: Mergen, wenn Patch, Minor oder von der Routine freigegebenes Major
+        if: contains(fromJSON('["version-update:semver-patch","version-update:semver-minor"]'), steps.meta.outputs.update-type) || steps.routine.outputs.freigabe == 'ja'
         run: gh pr merge --squash --delete-branch "$PR_URL"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}
-      - name: Hinweis bei Major
-        if: "!contains(fromJSON('[\"version-update:semver-patch\",\"version-update:semver-minor\"]'), steps.meta.outputs.update-type)"
-        run: echo "Major-Update (${{ steps.meta.outputs.update-type }}), bleibt Handarbeit."
+      - name: Hinweis
+        if: "!(contains(fromJSON('[\"version-update:semver-patch\",\"version-update:semver-minor\"]'), steps.meta.outputs.update-type) || steps.routine.outputs.freigabe == 'ja')"
+        run: echo "Major-Update ohne Freigabe der Routine (${{ steps.meta.outputs.update-type }}), bleibt offen."
