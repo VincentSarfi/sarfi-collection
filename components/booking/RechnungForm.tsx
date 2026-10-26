@@ -78,7 +78,11 @@ export default function RechnungForm() {
       const d = await r.json()
       if (d.ok) {
         setStatus('done')
-        setMessage(d.invoiceNumber ? `Rechnung ${d.invoiceNumber} wurde an ${form.email} gesendet.` : 'Ihre Rechnung wurde versendet.')
+        // Mehrere Wohnungen einer Booking.com-Buchung: jede hat ihre eigene Rechnung (weitere).
+        const nummern = [d.invoiceNumber, ...(Array.isArray(d.weitere) ? d.weitere : [])].filter(Boolean)
+        setMessage(nummern.length > 1
+          ? `Rechnungen ${nummern.join(' und ')} wurden an ${form.email} gesendet.`
+          : d.invoiceNumber ? `Rechnung ${d.invoiceNumber} wurde an ${form.email} gesendet.` : 'Ihre Rechnung wurde versendet.')
       } else if (d.korrekturAngefragt) {
         // Kein Fehler: der Beleg existiert schon, die Umstellung übernehmen wir.
         setStatus('done'); setMessage(d.error)
