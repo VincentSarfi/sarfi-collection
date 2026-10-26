@@ -8,7 +8,7 @@
     "prebuild": "node scripts/optimize-images.mjs && node scripts/copy-maplibre-worker.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@marsidev/react-turnstile": "^1.6.3",
@@ -30,8 +30,8 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "autoprefixer": "^10.6.1",
-    "eslint": "^8",
-    "eslint-config-next": "^15.3.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.3",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
