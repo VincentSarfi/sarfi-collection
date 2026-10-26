@@ -1,0 +1,55 @@
+# Prüfung bei jedem Pull Request und jedem Push auf main.
+#
+# Der Docker-Build ist dieselbe Prüfung, die Sliplane beim Deploy macht:
+# npm ci, Bildoptimierung, next build mit Typprüfung, alles auf der
+# Node-Version aus dem Dockerfile. Die NEXT_PUBLIC_*-Build-Args fehlen hier
+# bewusst, der Code hat dafür Rückfallwerte, und das Image wird verworfen.
+#
+# Patch-Updates von Dependabot werden nach grünem Build automatisch gemergt.
+# Der Merge mit dem GITHUB_TOKEN löst keinen weiteren Workflow aus, Sliplane
+# bekommt den Push aber wie jeden anderen und deployt.
+name: Prüfung
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pruefung-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Docker-Build wie auf Sliplane
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - name: Image bauen
+        run: docker build --pull --tag sarfi-collection:pruefung .
+
+  auto-merge:
+    name: Patch-Update von Dependabot mergen
+    needs: build
+    if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Art des Updates ermitteln
+        id: meta
+        uses: dependabot/fetch-metadata@v2
+      - name: Mergen, wenn es ein Patch ist
+        if: steps.meta.outputs.update-type == 'version-update:semver-patch'
+        run: gh pr merge --squash --delete-branch "$PR_URL"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+      - name: Hinweis bei Minor oder Major
+        if: steps.meta.outputs.update-type != 'version-update:semver-patch'
+        run: echo "Kein Patch (${{ steps.meta.outputs.update-type }}), bleibt Handarbeit."

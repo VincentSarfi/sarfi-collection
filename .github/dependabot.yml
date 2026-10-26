@@ -1,0 +1,52 @@
+# Dependabot hält die npm-Pakete, die Node-Version im Dockerfile und die
+# GitHub-Actions aktuell. Eingerichtet am 26.10.2026 nach PHP2Shell.
+#
+# Zusammenspiel mit .github/workflows/pruefung.yml: Patch-Updates werden nach
+# grünem Docker-Build automatisch gemergt und damit über Sliplane deployt.
+# Minor- und Major-Updates bleiben Handarbeit (PR ansehen, mergen).
+#
+# Sicherheitsupdates laufen unabhängig von diesem Zeitplan: sobald GitHub eine
+# Warnung zu einem Paket kennt, öffnet Dependabot sofort einen PR dafür.
+version: 2
+updates:
+  # npm-Pakete (package.json und package-lock.json)
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Berlin
+    # Ein Sammel-PR für alle Patches (automatisch gemergt), einer für alle
+    # Minors (Handarbeit). Majors kommen einzeln.
+    groups:
+      patches:
+        patterns: ["*"]
+        update-types: [patch]
+      minors:
+        patterns: ["*"]
+        update-types: [minor]
+    open-pull-requests-limit: 10
+
+  # Node-Basisimage im Dockerfile (alle drei FROM-Zeilen). Täglich, weil
+  # Node-Sicherheitsreleases nicht über Dependabot-Warnungen kommen.
+  # Kein Sprung auf eine neue Major-Version (22 auf 24 oder höher): das ist
+  # eine bewusste Entscheidung, siehe Kommentar im Dockerfile.
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: Europe/Berlin
+    ignore:
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
+
+  # Die Actions in den Workflows selbst (actions/checkout usw.)
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Berlin
