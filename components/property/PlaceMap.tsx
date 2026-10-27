@@ -73,6 +73,13 @@ async function zeichenIcon(name: ZeichenName, size: number): Promise<ImageData> 
   return ctx.getImageData(0, 0, px, px);
 }
 
+/** Kann der Browser WebGL2? Der Testkontext wird gleich wieder freigegeben. */
+function webgl2Verfuegbar(): boolean {
+  const gl = document.createElement("canvas").getContext("webgl2");
+  gl?.getExtension("WEBGL_lose_context")?.loseContext();
+  return gl !== null;
+}
+
 /** Abstand zum Kartenrand: oben Platz für die Umschalter, rechts für Beschriftungen */
 function fitPadding(width: number): PaddingOptions {
   return width < 500
@@ -103,6 +110,14 @@ export default function PlaceMap({ house, houseName, coordinates, fallbackUrl }:
     // Symbole schon vor dem Kartenstil rendern; dauert nur Millisekunden
     const icons = Promise.all(mapPlaces.map((p) => zeichenIcon(p.icon, ICON_SIZE[p.kind])));
 
+    // MapLibre 5 braucht WebGL2. Fehlt es, wirft der Konstruktor nicht, sondern
+    // meldet den Fehler nur und liefert eine halb gebaute Karte; der erste Zugriff
+    // (touchZoomRotate) riss dann die ganze Hausseite in die Fehlerseite.
+    if (!webgl2Verfuegbar()) {
+      setFailed(true);
+      return;
+    }
+
     let map: MapLibreMap;
     try {
       map = new maplibregl.Map({
@@ -122,6 +137,11 @@ export default function PlaceMap({ house, houseName, coordinates, fallbackUrl }:
         locale: t.ui,
       });
     } catch {
+      setFailed(true);
+      return;
+    }
+    // Zweite Sicherung: Start trotz WebGL2 gescheitert (Karte ohne Bedienelemente)
+    if (!map.touchZoomRotate) {
       setFailed(true);
       return;
     }
