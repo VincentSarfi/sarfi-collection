@@ -347,7 +347,7 @@ const schoenblickFaqs = [
   {
     question: "Welche Kosten kommen zum Übernachtungspreis dazu?",
     answer:
-      `Dazu kommen die Endreinigung von ${kostenSchoenblick.cleaningFee} € je Wohnung und Aufenthalt, ab dem ${kostenSchoenblick.baseOccupancy + 1}. Gast ${kostenSchoenblick.extraPersonFee} € pro Person und Nacht und in den Apartments A2, B7 und B8 ${PET_FEE_PER_NIGHT} € pro Hund und Nacht. Alles ist im Preis enthalten, den du bei der Buchung siehst. Den Übernachtungspreis für deinen Reisezeitraum zeigt dir der Buchungskalender.`,
+      `Dazu kommen die Endreinigung von ${kostenSchoenblick.cleaningFee} € je Wohnung und Aufenthalt, ab dem ${kostenSchoenblick.baseOccupancy + 1}. Gast ${kostenSchoenblick.extraPersonFee} € pro Person und Nacht sowie für Hunde ${PET_FEE_PER_NIGHT} € pro Hund und Nacht (nur A2, B7 und B8). Alles ist im Preis enthalten, den du bei der Buchung siehst. Den Übernachtungspreis für deinen Reisezeitraum zeigt dir der Buchungskalender.`,
   },
   {
     question: "Wie weit ist es zur Pullman City?",

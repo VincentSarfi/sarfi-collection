@@ -7,7 +7,7 @@ export const metadata: Metadata = pageMetadata({
   locale: "de",
   title: "Unterkunft wählen – Bayerischer Wald",
   description:
-    "Wähle deine Unterkunft: HAUS28 A-Frame oder eines der Panorama-Apartments im Haus Schönblick. Direkt bei den Gastgebern buchen, zahlen mit Karte, Apple Pay, Google Pay, PayPal oder Klarna.",
+    "Wähle deine Unterkunft: HAUS28 A-Frame oder eines der Panorama-Apartments im Haus Schönblick. Direkt bei den Gastgebern buchen.",
   // Dünne Auswahlseite, konkurriert mit der Startseite → nicht in den Suchindex
   noindex: true,
 });

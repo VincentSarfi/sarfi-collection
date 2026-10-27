@@ -36,7 +36,7 @@ const common = {
     headingInfo: "Information",
     headingBook: "Book direct",
     headingNewsletter: "Newsletter",
-    bookText: "Book directly with us, personally looked after by Vincent and Elena.",
+    bookText: "Book direct with Vincent and Elena.",
     bookCta: "Book now",
     newsletterText: "Offers & news from the Bavarian Forest (in German) – no spam.",
     links: {

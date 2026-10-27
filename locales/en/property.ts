@@ -221,7 +221,7 @@ const property = {
       },
       {
         title: "Book direct with Vincent and Elena",
-        text: "Personal contact with us, your hosts. Pay by card, Apple Pay, Google Pay, PayPal or Klarna – or a 50% deposit now and the rest up to 14 days before arrival.",
+        text: "Personal contact with us, your hosts, and flexible payment options.",
       },
     ],
     amenitiesHeading: "What this place offers",
@@ -289,7 +289,7 @@ const property = {
       },
       {
         title: "Book direct with Vincent and Elena",
-        text: "Personal contact with us, your hosts. Pay by card, Apple Pay, Google Pay, PayPal or Klarna – or a 50% deposit now and the rest up to 14 days before arrival.",
+        text: "Personal contact with us, your hosts, and flexible payment options.",
       },
     ],
     aboutHeading: "About this place",

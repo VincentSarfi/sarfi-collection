@@ -5,7 +5,7 @@ import { alternatesFor } from "@/lib/i18n";
 export const metadata: Metadata = {
   title: "Book Haus Schönblick – apartments in the Bavarian Forest",
   description:
-    "Book one of the five panorama apartments at Haus Schönblick directly. From 59€ / night. Direct with your hosts.",
+    "Book one of the five panorama apartments at Haus Schönblick directly with your hosts. From €59 / night.",
   robots: { index: false },
   alternates: alternatesFor("/schoenblick/buchen", "en"),
 };

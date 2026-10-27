@@ -48,14 +48,14 @@ const home = {
       direct: {
         title: "Direkt bei den Gastgebern",
         description:
-          "Du buchst direkt bei Vincent und Elena: einfacher Buchungsvorgang, Zahlung mit Karte, Apple Pay, Google Pay, PayPal oder Klarna und persönliche Betreuung.",
+          "Du buchst direkt bei Vincent und Elena. Einfacher Buchungsvorgang, persönliche Betreuung.",
       },
     },
   },
   reviews: {
     eyebrow: "Gästebewertungen",
     heading: "Was unsere Gäste sagen",
-    aggregateSuffix: "Gästebewertungen",
+    aggregateSuffix: "Bewertungen",
     badgeHaus28: "HAUS28",
     badgeSchoenblick: "Schönblick",
   },
@@ -87,7 +87,7 @@ const home = {
   cta: {
     eyebrow: "Jetzt buchen",
     heading: "Finde deine perfekte Unterkunft",
-    intro: "Direkt bei Vincent und Elena buchen, mit persönlichem Kontakt von Anfang an.",
+    intro: "Direkt bei Vincent und Elena buchen.",
     tagHaus28: "A-Frame · Grattersdorf",
     tagSchoenblick: "5 Apartments · Schöfweg",
     priceFrom: "ab ",

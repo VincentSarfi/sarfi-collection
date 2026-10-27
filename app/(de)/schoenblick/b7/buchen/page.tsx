@@ -4,7 +4,7 @@ import ApartmentBuchenContent from "@/components/pages/ApartmentBuchenContent"
 export const metadata: Metadata = {
   title: "Apartment B7 buchen – Haus Schönblick",
   description:
-    "Buche Apartment B7 im Haus Schönblick direkt. Premium-Apartment im Bayerischen Wald. Direkt bei den Gastgebern.",
+    "Buche Apartment B7 im Haus Schönblick direkt bei den Gastgebern. Premium-Apartment im Bayerischen Wald.",
   robots: { index: false },
 }
 

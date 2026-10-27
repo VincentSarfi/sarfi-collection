@@ -345,7 +345,7 @@ const booking = {
     payHeading: "4. Zahlung",
     summaryApartments: "Apartments",
     benefit1: "Ein Ansprechpartner, eine Rechnung",
-    benefit2: "Direkt beim Gastgeber gebucht",
+    benefit2: "Direkt bei den Gastgebern gebucht",
     benefit3: "Alle Apartments im selben Haus",
     confirmedHeading: "Gruppenbuchung bestätigt!",
     confirmedText: "Alle Apartments sind für euch reserviert. Du erhältst in Kürze eine Bestätigung per E-Mail.",

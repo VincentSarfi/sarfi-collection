@@ -64,7 +64,7 @@ function specificFaqs(apt: ApartmentData, locale: Locale): Faq[] {
     },
     {
       question: `Wie groß ist ${apt.name} und was kostet eine Nacht?`,
-      answer: `${apt.name} hat ${apt.sqm} m² Wohnfläche mit ${apt.bedrooms} Schlafzimmern und ${apt.bathrooms} Badezimmer. Direkt bei uns gebucht kostet eine Nacht ab ${apt.priceFrom} €; der genaue Preis hängt vom Reisezeitraum ab. Dazu kommen die Endreinigung von ${kosten.cleaningFee} € und ab dem ${kosten.baseOccupancy + 1}. Gast ${kosten.extraPersonFee} € pro Person und Nacht${kosten.petsAllowed ? `, für Hunde ${PET_FEE_PER_NIGHT} € pro Hund und Nacht` : ""}. Den Gesamtpreis siehst du bei der Buchung.`,
+      answer: `${apt.name} hat ${apt.sqm} m² Wohnfläche mit ${apt.bedrooms} Schlafzimmern und ${apt.bathrooms} Badezimmer. Direkt bei uns gebucht kostet eine Nacht ab ${apt.priceFrom} €; der genaue Preis hängt vom Reisezeitraum ab. Dazu kommen die Endreinigung von ${kosten.cleaningFee} € und ab dem ${kosten.baseOccupancy + 1}. Gast ${kosten.extraPersonFee} € pro Person und Nacht${kosten.petsAllowed ? `, dazu ${PET_FEE_PER_NIGHT} € pro Hund und Nacht` : ""}. Den Gesamtpreis siehst du bei der Buchung.`,
     },
     {
       question: `Kann ich ${apt.name} mit anderen Apartments kombinieren?`,

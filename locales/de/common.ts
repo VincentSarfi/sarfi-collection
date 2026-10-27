@@ -36,7 +36,7 @@ const common = {
     headingInfo: "Informationen",
     headingBook: "Direkt buchen",
     headingNewsletter: "Newsletter",
-    bookText: "Buche direkt bei uns, persönlich betreut von Vincent und Elena.",
+    bookText: "Buche direkt bei Vincent und Elena.",
     bookCta: "Jetzt buchen",
     newsletterText: "Angebote & Neuigkeiten aus dem Bayerischen Wald – kein Spam.",
     links: {

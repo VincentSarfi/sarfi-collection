@@ -14,7 +14,7 @@ const minuten = (n: number) => (n === 0 ? "zu Fuß" : `ca. ${n} min`);
 
 function rating(p: PropertyData): string {
   const { ratingValue, reviewCount } = getAggregateReviewStats([p]);
-  return `${decimal(ratingValue)} von 5 aus ${reviewCount} Gästebewertungen (${reviewPlatforms(p).join(", ")})`;
+  return `${decimal(ratingValue)} von 5 aus ${reviewCount} Bewertungen (${reviewPlatforms(p).join(", ")})`;
 }
 
 // Endreinigung und Aufpreis pro Person wie im Buchungsweg (Schönblick: B5 steht für alle Wohnungen)

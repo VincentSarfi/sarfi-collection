@@ -46,16 +46,16 @@ const home = {
           "Panoramic views across the rolling hills of the Bavarian Forest – over your morning coffee or as the sun goes down.",
       },
       direct: {
-        title: "Book direct with your hosts",
+        title: "Book with your hosts",
         description:
-          "You book directly with Vincent and Elena: a simple booking process, payment by card, Apple Pay, Google Pay, PayPal or Klarna, and personal service throughout.",
+          "You book directly with Vincent and Elena. A simple booking process and personal service throughout.",
       },
     },
   },
   reviews: {
     eyebrow: "Guest reviews",
     heading: "What our guests say",
-    aggregateSuffix: "guest reviews",
+    aggregateSuffix: "reviews",
     badgeHaus28: "HAUS28",
     badgeSchoenblick: "Schönblick",
   },
@@ -87,7 +87,7 @@ const home = {
   cta: {
     eyebrow: "Book now",
     heading: "Find your perfect place to stay",
-    intro: "Book direct with Vincent and Elena, with personal contact from the start.",
+    intro: "Book direct with Vincent and Elena.",
     tagHaus28: "A-frame · Grattersdorf",
     tagSchoenblick: "5 apartments · Schöfweg",
     priceFrom: "from ",

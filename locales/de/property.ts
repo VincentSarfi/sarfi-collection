@@ -222,7 +222,7 @@ const property = {
       },
       {
         title: "Direkt bei Vincent und Elena buchen",
-        text: "Persönlicher Kontakt zu uns Gastgebern. Zahlung mit Karte, Apple Pay, Google Pay, PayPal oder Klarna – wahlweise 50 % Anzahlung, Rest bis 14 Tage vor Anreise.",
+        text: "Persönlicher Kontakt zu uns als Gastgebern und flexible Zahlarten.",
       },
     ],
     amenitiesHeading: "Das bietet dir diese Unterkunft",
@@ -290,7 +290,7 @@ const property = {
       },
       {
         title: "Direkt bei Vincent und Elena buchen",
-        text: "Persönlicher Kontakt zu uns Gastgebern. Zahlung mit Karte, Apple Pay, Google Pay, PayPal oder Klarna – wahlweise 50 % Anzahlung, Rest bis 14 Tage vor Anreise.",
+        text: "Persönlicher Kontakt zu uns als Gastgebern und flexible Zahlarten.",
       },
     ],
     aboutHeading: "Über diese Unterkunft",

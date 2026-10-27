@@ -169,11 +169,11 @@ const ausflugsziele = {
       name: "Steinberglift Langfurth",
       schemaName: "Steinberglift Langfurth (Schöfweg)",
       subtitle: "Familien-Skilift ca. 600 m vom Haus Schönblick",
-      distance: `ca. 600 m von Haus Schönblick in Langfurth · ${ca(m.steinberglift.haus28)} von HAUS28`,
+      distance: `ca. 600 m vom Haus Schönblick in Langfurth · ${ca(m.steinberglift.haus28)} von HAUS28`,
       fromHaus28: ca(m.steinberglift.haus28),
       fromSchoenblick: "zu Fuß (ca. 600 m)",
       description:
-        "Der Steinberglift in Langfurth bei Schöfweg liegt nur ca. 600 m von Haus Schönblick entfernt: eine 400 m lange Hauptpiste, dazu ein Kinderland mit Anfängerlift, Förderband und Übungshang sowie ein Rodelhang. Weitere Lifte gibt es am nahen Brotjacklriegel (1.011 m) – in Schöfweg sind es insgesamt sieben Liftanlagen – und rund 23 km gespurte Loipen in Schöfweg und Umgebung. Die Live-Webcam zeigt den aktuellen Schneezustand – ideal zur Planung direkt aus der Unterkunft.",
+        "Der Steinberglift in Langfurth bei Schöfweg liegt nur ca. 600 m vom Haus Schönblick entfernt: eine 400 m lange Hauptpiste, dazu ein Kinderland mit Anfängerlift, Förderband und Übungshang sowie ein Rodelhang. Weitere Lifte gibt es am nahen Brotjacklriegel (1.011 m) – in Schöfweg sind es insgesamt sieben Liftanlagen – und rund 23 km gespurte Loipen in Schöfweg und Umgebung. Die Live-Webcam zeigt den aktuellen Schneezustand – ideal zur Planung direkt aus der Unterkunft.",
       schemaDescription:
         "Familienfreundlicher Skilift in Langfurth bei Schöfweg mit 400-m-Piste, Kinderland, Rodelhang und Live-Webcam.",
       highlights: [

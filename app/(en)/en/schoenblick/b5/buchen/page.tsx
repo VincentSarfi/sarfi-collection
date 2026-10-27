@@ -5,7 +5,7 @@ import { alternatesFor } from "@/lib/i18n"
 export const metadata: Metadata = {
   title: "Book Apartment B5 – Haus Schönblick",
   description:
-    "Book Apartment B5 at Haus Schönblick directly. Panorama apartment in the Bavarian Forest. Direct with your hosts.",
+    "Book Apartment B5 at Haus Schönblick directly with your hosts. Panorama apartment in the Bavarian Forest.",
   robots: { index: false },
   alternates: alternatesFor("/schoenblick/b5/buchen", "en"),
 }
