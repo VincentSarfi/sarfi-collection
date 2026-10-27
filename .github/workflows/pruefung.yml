@@ -105,7 +105,7 @@ jobs:
     steps:
       - name: Art des Updates ermitteln
         id: meta
-        uses: dependabot/fetch-metadata@v2
+        uses: dependabot/fetch-metadata@v3
         continue-on-error: true
       - name: Freigabe der Major-Routine lesen
         id: routine
