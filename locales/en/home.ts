@@ -46,9 +46,9 @@ const home = {
           "Panoramic views across the rolling hills of the Bavarian Forest – over your morning coffee or as the sun goes down.",
       },
       direct: {
-        title: "Book direct & save",
+        title: "Book direct with your hosts",
         description:
-          "Book directly with us and skip the platform fees. A simple booking process and personal service throughout.",
+          "You book directly with Vincent and Elena: a simple booking process, payment by card, Apple Pay, Google Pay, PayPal or Klarna, and personal service throughout.",
       },
     },
   },
@@ -56,6 +56,7 @@ const home = {
     eyebrow: "Guest reviews",
     heading: "What our guests say",
     reviewsSuffix: "reviews",
+    aggregateSuffix: "guest reviews",
     badgeHaus28: "HAUS28",
     badgeSchoenblick: "Schönblick",
   },

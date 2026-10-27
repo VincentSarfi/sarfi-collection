@@ -197,7 +197,6 @@ export default function PropertyReviews({
                 </span>
               ) : null}
             </div>
-            <ReviewSourceNote platforms={platforms} className="mt-2 max-w-2xl" />
           </div>
 
           {/* Desktop navigation arrows + Airbnb link */}
@@ -272,6 +271,8 @@ export default function PropertyReviews({
         <p className="md:hidden text-center font-body text-xs text-forest-500 mt-3">
           {t.swipeHint}
         </p>
+
+        <ReviewSourceNote platforms={platforms} className="mt-4 md:mt-6 text-center md:text-left max-w-xl md:max-w-2xl mx-auto md:mx-0" />
       </div>
     </section>
   );

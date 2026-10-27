@@ -46,9 +46,9 @@ const home = {
           "Panoramablick über die sanften Hügel des Bayerischen Waldes – morgens beim Kaffee, abends beim Sonnenuntergang.",
       },
       direct: {
-        title: "Direkt buchen & sparen",
+        title: "Direkt bei den Gastgebern",
         description:
-          "Buche direkt bei uns und spare die Plattformgebühren. Einfacher Buchungsvorgang, persönliche Betreuung.",
+          "Du buchst direkt bei Vincent und Elena: einfacher Buchungsvorgang, Zahlung mit Karte, Apple Pay, Google Pay, PayPal oder Klarna und persönliche Betreuung.",
       },
     },
   },
@@ -56,6 +56,7 @@ const home = {
     eyebrow: "Gästebewertungen",
     heading: "Was unsere Gäste sagen",
     reviewsSuffix: "Bewertungen",
+    aggregateSuffix: "Gästebewertungen",
     badgeHaus28: "HAUS28",
     badgeSchoenblick: "Schönblick",
   },

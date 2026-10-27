@@ -136,9 +136,9 @@ const property = {
     // Source and authenticity notice (§ 5b(3) UWG, ReviewSourceNote).
     sourceNote: {
       and: "and",
-      shown: (platforms: string) => `Reviews from ${platforms}, as the platforms show them.`,
-      guestsOnly: (platforms: string) => `On ${platforms}, only guests can leave a review after their stay`,
-      notGoogle: "; this does not apply to Google",
+      from: "Reviews from",
+      guestsOnlyPre: "On",
+      guestsOnlyPost: ", only guests can review after their stay.",
     },
   },
   // components/property/RelatedProperties.tsx
@@ -150,13 +150,13 @@ const property = {
   },
   // components/property/SmoobuBookingWidget.tsx
   smoobu: {
-    eyebrow: "Book direct & save",
+    eyebrow: "Book direct with your hosts",
     bookPre: "Book ",
     bookPost: "",
     bookNow: "Book now",
     notConfigured: "Smoobu property ID not configured yet.",
     bookOnSmoobu: "Book directly on Smoobu →",
-    trustLine: "Secure direct booking · No platform fees · Personal service",
+    trustLine: "Secure direct booking · Flexible payment options · Personal service",
   },
   // Shared copy for the Airbnb-style detail pages (Haus28ClientPage + ApartmentPage)
   listing: {

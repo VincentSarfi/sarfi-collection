@@ -137,9 +137,9 @@ const property = {
     // Bewertungen stammen und wo nur Gäste nach dem Aufenthalt bewerten können.
     sourceNote: {
       and: "und",
-      shown: (platforms: string) => `Bewertungen von ${platforms}, so wie die Plattformen sie zeigen.`,
-      guestsOnly: (platforms: string) => `Bei ${platforms} können nur Gäste nach ihrem Aufenthalt bewerten`,
-      notGoogle: ", bei Google nicht",
+      from: "Bewertungen von",
+      guestsOnlyPre: "Bei",
+      guestsOnlyPost: " bewerten nur Gäste nach ihrem Aufenthalt.",
     },
   },
   // components/property/RelatedProperties.tsx
@@ -151,13 +151,13 @@ const property = {
   },
   // components/property/SmoobuBookingWidget.tsx
   smoobu: {
-    eyebrow: "Direkt buchen & sparen",
+    eyebrow: "Direkt bei den Gastgebern",
     bookPre: "",
     bookPost: " buchen",
     bookNow: "Jetzt buchen",
     notConfigured: "Smoobu Property-ID noch nicht konfiguriert.",
     bookOnSmoobu: "Direkt auf Smoobu buchen →",
-    trustLine: "Sichere Direktbuchung · Keine Plattformgebühren · Persönliche Betreuung",
+    trustLine: "Sichere Direktbuchung · Flexible Zahlarten · Persönliche Betreuung",
   },
   // Gemeinsame Strings der Airbnb-Style-Detailseiten (Haus28ClientPage + ApartmentPage)
   listing: {
