@@ -7,12 +7,18 @@
 # 2. Rauchtest: das gebaute Image starten und die wichtigsten Seiten abrufen.
 #    Fängt, was der Build nicht sieht: ein Server, der nicht hochkommt, oder
 #    eine Seite, die beim Rendern stirbt.
+# 3. E2E-Rauchtest des Buchungswegs (M45): Playwright bucht mit Chromium
+#    HAUS28 und zwei Schönblick-Apartments bis zum Zahlungsschritt und prüft
+#    Preis und payment-intent-Daten. Alle API-Aufrufe und externen Dienste
+#    sind Attrappen (e2e/attrappen.ts). Muss vor jeder Änderung am
+#    Buchungsweg grün sein.
 #
-# Patch- und Minor-Updates von Dependabot werden nach grünem Lauf automatisch
-# gemergt (Vincents Vorgabe vom 26.10.2026: Website und Dashboard sollen ohne
-# sein Zutun aktuell bleiben). Major-Updates bearbeitet eine wöchentliche Claude-Routine
-# (claude.ai/code/routines): sie migriert auf dem Dependabot-Branch, prüft
-# lokal und setzt im letzten Commit die Zeile „Routine-Freigabe: mergen“.
+# Patch- und Minor-Updates von Dependabot werden nach grünem Build und
+# E2E-Rauchtest automatisch gemergt (Vincents Vorgabe vom 26.10.2026: Website
+# und Dashboard sollen ohne sein Zutun aktuell bleiben). Major-Updates
+# bearbeitet eine wöchentliche Claude-Routine (claude.ai/code/routines): sie
+# migriert auf dem Dependabot-Branch, prüft lokal und setzt im letzten Commit
+# die Zeile „Routine-Freigabe: mergen“.
 # Erst mit dieser Zeile mergt der Workflow auch ein Major. Der Merge mit
 # dem GITHUB_TOKEN löst keinen weiteren Workflow aus, Sliplane bekommt den
 # Push aber wie jeden anderen und deployt.
@@ -60,9 +66,37 @@ jobs:
           docker stop pruefung >/dev/null
           exit $fehler
 
+  e2e:
+    name: E2E-Rauchtest des Buchungswegs
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          # Hauptversion wie im Dockerfile
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Chromium für Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Build
+        run: npm run build
+      - name: Buchungsweg durchklicken
+        run: npm run e2e
+      - name: Spuren der fehlgeschlagenen Tests sichern
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-spuren
+          path: test-results/
+          retention-days: 7
+
   auto-merge:
     name: Dependabot-Update mergen
-    needs: build
+    needs: [build, e2e]
     if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:

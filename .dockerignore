@@ -28,3 +28,9 @@ tsconfig.tsbuildinfo
 # Docker
 Dockerfile
 .dockerignore
+
+# E2E-Rauchtest (läuft in CI, gehört nicht ins Image)
+e2e
+playwright.config.ts
+test-results
+playwright-report
