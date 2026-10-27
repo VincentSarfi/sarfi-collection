@@ -701,8 +701,8 @@ function collectPlatformReviews(p: PropertyData): { rating: number; count: numbe
 
 /**
  * Plattformen, deren Bewertungen für die Häuser vorliegen – für den
- * Echtheitshinweis am Bewertungsblock und llms.txt. Google steht zuletzt,
- * weil der Hinweis danach sagt, dass dort nicht nur Gäste bewerten können.
+ * Echtheitshinweis am Bewertungsblock (ReviewSourceNote) und llms.txt.
+ * Welche davon nur Gäste bewerten lassen, legt ReviewSourceNote fest.
  */
 export function reviewPlatforms(...properties: PropertyData[]): string[] {
   const hat = (count: (p: PropertyData) => number | undefined) => properties.some((p) => (count(p) ?? 0) > 0);

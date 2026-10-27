@@ -55,7 +55,6 @@ const home = {
   reviews: {
     eyebrow: "Gästebewertungen",
     heading: "Was unsere Gäste sagen",
-    reviewsSuffix: "Bewertungen",
     aggregateSuffix: "Gästebewertungen",
     badgeHaus28: "HAUS28",
     badgeSchoenblick: "Schönblick",
