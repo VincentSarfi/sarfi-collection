@@ -129,11 +129,12 @@ export const haus28: PropertyData = {
   googleMapsUrl: "https://www.google.com/maps?cid=18249145745632813741",
   // Stand 06.10.2026, abgelesen auf den Plattformen und 1:1 so übernommen,
   // ohne herausgerechnete Bewertungen. FeWo-direkt zeigt 9,4/10 aus 18
-  // (darin eine irrtümliche 4/10, die FeWo nicht löscht).
+  // (darin eine irrtümliche 4/10, die FeWo nicht löscht). Booking.com am
+  // 27.10.2026: 9,8 aus 16.
   airbnbRating: 5.0,
   airbnbReviewCount: 25,
-  bookingRating: 9.7,
-  bookingReviewCount: 15,
+  bookingRating: 9.8,
+  bookingReviewCount: 16,
   // Traveller Review Award 2026 wurde für 9,9 vergeben – nur dieser Wert steht
   // unter dem Award-Badge, nicht die aktuelle Bewertung.
   bookingAwardScore: 9.9,
@@ -380,15 +381,15 @@ export const schoenblick: PropertyData = {
   // Bewertungen.
   // Airbnb: Summe der Wohnungs-Inserate (B5, B6, B8 je 5,0 aus 3; B7 5,0 aus 5;
   // A2 4,5 aus 2) = 79 Sterne aus 16 = 4,94.
-  // Booking: das aktuelle, gemeinsame Inserat zeigt 8,8 aus 8. Die alten
-  // Booking-Inserate sind geschlossen und gehören nicht dazu.
+  // Booking: das aktuelle, gemeinsame Inserat zeigt am 27.10.2026 9,1 aus 10.
+  // Die alten Booking-Inserate sind geschlossen und gehören nicht dazu.
   // Google: 18 Rezensionen, 17 × 5 Sterne und 1 × 1 Stern (Vorbesitzer, vor
   // 7 Jahren). Google zeigt den Schnitt mit einer Nachkommastelle:
   // 86 / 18 = 4,78 → 4,8.
   airbnbRating: 4.94,
   airbnbReviewCount: 16,
-  bookingRating: 8.8,
-  bookingReviewCount: 8,
+  bookingRating: 9.1,
+  bookingReviewCount: 10,
   googleRating: 4.8,
   googleReviewCount: 18,
   smoobuPropertyId: "2934161",
