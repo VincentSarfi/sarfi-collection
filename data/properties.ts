@@ -32,7 +32,9 @@ export type ApartmentData = {
   airbnbUrl: string;
   airbnbRating: number;
   airbnbReviewCount: number;
-  /** Booking.com, 10er-Skala; ein gemeinsames Inserat, Zuordnung über Smoobu */
+  /** Booking.com, 10er-Skala – nur setzen, wenn Booking den Wert für genau diese
+   *  Wohnung zeigt. Das gemeinsame Schönblick-Inserat hat nur einen Wert für
+   *  alle Wohnungen (schoenblick.bookingRating). */
   bookingRating?: number;
   bookingReviewCount?: number;
   smoobuPropertyId: string;
@@ -75,6 +77,7 @@ export type PropertyData = {
   bookingReviewCount?: number;
   /** Wert, mit dem Booking.com den Traveller Review Award vergeben hat. */
   bookingAwardScore?: number;
+  /** FeWo-direkt, 10er-Skala wie auf der Plattform */
   fewoRating?: number;
   fewoReviewCount?: number;
   googleRating?: number;
@@ -124,9 +127,9 @@ export const haus28: PropertyData = {
   guestFavorite: true,
   airbnbUrl: "https://www.airbnb.de/rooms/1375439439358638425",
   googleMapsUrl: "https://www.google.com/maps?cid=18249145745632813741",
-  // Stand 06.10.2026, abgelesen auf den Plattformen. FeWo-direkt zeigt 9,4/10
-  // aus 18 – eine irrtümliche 4/10, die FeWo nicht löscht, zählt hier nicht
-  // mit (laut Vincent); ohne sie ≈ 9,7/10 = 4,85/5 aus 17.
+  // Stand 06.10.2026, abgelesen auf den Plattformen und 1:1 so übernommen,
+  // ohne herausgerechnete Bewertungen. FeWo-direkt zeigt 9,4/10 aus 18
+  // (darin eine irrtümliche 4/10, die FeWo nicht löscht).
   airbnbRating: 5.0,
   airbnbReviewCount: 25,
   bookingRating: 9.7,
@@ -134,8 +137,8 @@ export const haus28: PropertyData = {
   // Traveller Review Award 2026 wurde für 9,9 vergeben – nur dieser Wert steht
   // unter dem Award-Badge, nicht die aktuelle Bewertung.
   bookingAwardScore: 9.9,
-  fewoRating: 4.85,
-  fewoReviewCount: 17,
+  fewoRating: 9.4,
+  fewoReviewCount: 18,
   googleRating: 4.8,
   googleReviewCount: 11,
   hometogoRating: 5.0,
@@ -373,20 +376,21 @@ export const schoenblick: PropertyData = {
   },
   priceFrom: 59,
   googleMapsUrl: "https://www.google.com/maps?cid=18059770108920997880",
-  // Stand 12.10.2026, nur Bewertungen seit der Übernahme im September 2025.
+  // Stand 12.10.2026, Werte 1:1 wie auf den Plattformen, ohne herausgerechnete
+  // Bewertungen.
   // Airbnb: Summe der Wohnungs-Inserate (B5, B6, B8 je 5,0 aus 3; B7 5,0 aus 5;
   // A2 4,5 aus 2) = 79 Sterne aus 16 = 4,94.
-  // Booking: aktuelles Inserat 8,8 aus 8; eine 3/10 zählt laut Vincent nicht
-  // mit, ohne sie 9,6 aus 7. Die alten Booking-Inserate sind geschlossen; dort
-  // liegen noch 6 Bewertungen eigener Gäste (Nov. 2025 – März 2026, 7–9/10),
-  // die laut Vincent nur zählen, wenn sie nichts verschlechtern – also keine. Google: 17 × 5 Sterne; eine 1-Stern-Rezension von vor 7 Jahren
-  // (Vorbesitzer) zählt nicht mit.
+  // Booking: das aktuelle, gemeinsame Inserat zeigt 8,8 aus 8. Die alten
+  // Booking-Inserate sind geschlossen und gehören nicht dazu.
+  // Google: 18 Rezensionen, 17 × 5 Sterne und 1 × 1 Stern (Vorbesitzer, vor
+  // 7 Jahren). Google zeigt den Schnitt mit einer Nachkommastelle:
+  // 86 / 18 = 4,78 → 4,8.
   airbnbRating: 4.94,
   airbnbReviewCount: 16,
-  bookingRating: 9.6,
-  bookingReviewCount: 7,
-  googleRating: 5.0,
-  googleReviewCount: 17,
+  bookingRating: 8.8,
+  bookingReviewCount: 8,
+  googleRating: 4.8,
+  googleReviewCount: 18,
   smoobuPropertyId: "2934161",
   shortDescription:
     "Fünf geschmackvolle Ferienwohnungen mit Panoramablick über den Bayerischen Wald – ideal für Paare, Familien und Gruppen.",
@@ -421,9 +425,6 @@ export const schoenblick: PropertyData = {
       airbnbUrl: "https://www.airbnb.de/rooms/1542179745378169386",
       airbnbRating: 5.0,
       airbnbReviewCount: 3,
-      // Booking: Iaroslav 10, Susanne 9 (Gruppe B5 + B8)
-      bookingRating: 9.5,
-      bookingReviewCount: 2,
       smoobuPropertyId: "3025621",
       maxGuests: 4,
       bedrooms: 2,
@@ -476,9 +477,6 @@ export const schoenblick: PropertyData = {
       airbnbUrl: "https://www.airbnb.de/rooms/1511581373647900244",
       airbnbRating: 5.0,
       airbnbReviewCount: 3,
-      // Booking: Dalibor 10, Linda 9
-      bookingRating: 9.5,
-      bookingReviewCount: 2,
       smoobuPropertyId: "2934141",
       maxGuests: 4,
       bedrooms: 2,
@@ -528,9 +526,6 @@ export const schoenblick: PropertyData = {
       airbnbUrl: "https://www.airbnb.de/rooms/1525349872389165473",
       airbnbRating: 5.0,
       airbnbReviewCount: 3,
-      // Booking: Natalie 9, zweimal 10 ohne Text, Susanne 9 (Gruppe B5 + B8)
-      bookingRating: 9.5,
-      bookingReviewCount: 4,
       smoobuPropertyId: "3025606",
       maxGuests: 4,
       bedrooms: 2,
@@ -676,7 +671,7 @@ export const schoenblick: PropertyData = {
 
 // ---------------------------------------------------------------------------
 // Aggregierte Bewertungs-Statistik über alle Plattformen
-// (Booking bewertet auf 10er-Skala → auf 5er-Skala umgerechnet)
+// (Booking.com und FeWo-direkt bewerten auf der 10er-Skala → auf 5er-Skala umgerechnet)
 // ---------------------------------------------------------------------------
 export type AggregateReviewStats = {
   ratingValue: number;
@@ -692,7 +687,7 @@ function collectPlatformReviews(p: PropertyData): { rating: number; count: numbe
     entries.push({ rating: p.bookingRating / 2, count: p.bookingReviewCount });
   }
   if (p.fewoRating && p.fewoReviewCount) {
-    entries.push({ rating: p.fewoRating, count: p.fewoReviewCount });
+    entries.push({ rating: p.fewoRating / 2, count: p.fewoReviewCount });
   }
   if (p.googleRating && p.googleReviewCount) {
     entries.push({ rating: p.googleRating, count: p.googleReviewCount });
