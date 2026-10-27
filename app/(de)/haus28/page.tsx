@@ -8,9 +8,9 @@ export const metadata: Metadata = pageMetadata({
   locale: "de",
   title: { absolute: "HAUS28 – A-Frame mit Whirlpool im Bayerischen Wald" },
   description:
-    "Privater Outdoor-Whirlpool, 4 Schlafzimmer, 8 Gäste – modernes A-Frame in Grattersdorf. Direkt beim Gastgeber buchen, ohne Portalgebühren.",
+    "Privater Outdoor-Whirlpool, 4 Schlafzimmer, 8 Gäste – modernes A-Frame in Grattersdorf. Direkt bei den Gastgebern buchen.",
   ogDescription:
-    "Privater Outdoor-Whirlpool, ganzjährig nutzbar, 4 Schlafzimmer, Platz für 8 Gäste: modernes A-Frame am Büchelstein im Bayerischen Wald. Direkt buchen & sparen.",
+    "Privater Outdoor-Whirlpool, ganzjährig nutzbar, 4 Schlafzimmer, Platz für 8 Gäste: modernes A-Frame am Büchelstein im Bayerischen Wald. Direkt bei den Gastgebern buchen.",
   image: { url: haus28.images.hero, alt: "HAUS28 – A-Frame Ferienhaus mit Whirlpool am Büchelstein, Grattersdorf" },
 });
 

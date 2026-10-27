@@ -273,7 +273,7 @@ export default function AusflugszielSeite({ seite }: { seite: ZielSeite }) {
         {/* ── Übernachten in der Nähe ── */}
         <section className="mt-14" aria-labelledby="uebernachten-heading">
           <h2 id="uebernachten-heading" className="font-display text-2xl text-forest-900 mb-1">Übernachten in der Nähe</h2>
-          <p className="font-body text-sm text-forest-600 mb-5">Direkt bei uns buchen – ohne Plattformgebühren.</p>
+          <p className="font-body text-sm text-forest-600 mb-5">Direkt bei Vincent und Elena buchen.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {haeuser.map((key) => {
               const h = HAEUSER[key];

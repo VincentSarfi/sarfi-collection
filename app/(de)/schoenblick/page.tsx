@@ -10,7 +10,7 @@ export const metadata: Metadata = pageMetadata({
   description: `5 Ferienwohnungen mit Panoramablick im Bayerischen Wald. Ideal für Familien und Gruppen. Ab ${schoenblick.priceFrom} € / Nacht. Jetzt direkt buchen!`,
   ogTitle: "Haus Schönblick – Panorama-Apartments im Bayerischen Wald",
   ogDescription:
-    "5 Ferienwohnungen mit Panoramablick in Schöfweg. Für Paare, Familien und Gruppen. Direkt buchen und sparen.",
+    "5 Ferienwohnungen mit Panoramablick in Schöfweg. Für Paare, Familien und Gruppen. Direkt bei den Gastgebern buchen.",
   image: { url: schoenblick.images.hero, alt: "Haus Schönblick" },
 });
 

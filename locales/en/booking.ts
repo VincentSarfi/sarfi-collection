@@ -352,7 +352,7 @@ const booking = {
     payHeading: "4. Payment",
     summaryApartments: "Apartments",
     benefit1: "One host, one invoice",
-    benefit2: "No platform fees – book direct",
+    benefit2: "Booked directly with your hosts",
     benefit3: "All apartments in the same house",
     confirmedHeading: "Group booking confirmed!",
     confirmedText: "All apartments are reserved for you. A confirmation email is on its way.",

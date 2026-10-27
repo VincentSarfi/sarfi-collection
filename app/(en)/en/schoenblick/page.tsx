@@ -13,7 +13,7 @@ export const metadata: Metadata = pageMetadata({
   description: `5 holiday apartments with panoramic views in the Bavarian Forest. Ideal for families and groups. From ${schoenblick.priceFrom} € / night. Book direct now!`,
   ogTitle: "Haus Schönblick – Panorama Apartments in the Bavarian Forest",
   ogDescription:
-    "5 holiday apartments with panoramic views in Schöfweg. For couples, families and groups. Book direct and save.",
+    "5 holiday apartments with panoramic views in Schöfweg. For couples, families and groups. Book direct with your hosts.",
   image: { url: schoenblick.images.hero, alt: "Haus Schönblick" },
 });
 

@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     images: defaultOgImages,
     title: "SARFI Collection – Exclusive Holiday Homes in the Bavarian Forest",
     description:
-      "Two unique holiday homes in the heart of the Bavarian Forest. Book direct and save.",
+      "Two unique holiday homes in the heart of the Bavarian Forest. Book direct with your hosts.",
   },
   twitter: {
     card: "summary_large_image",

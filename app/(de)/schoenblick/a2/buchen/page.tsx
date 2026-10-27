@@ -4,7 +4,7 @@ import ApartmentBuchenContent from "@/components/pages/ApartmentBuchenContent"
 export const metadata: Metadata = {
   title: "Apartment A2 buchen – Haus Schönblick",
   description:
-    "Buche Apartment A2 im Haus Schönblick direkt. Panorama-Apartment im Bayerischen Wald. Ohne Plattformgebühren.",
+    "Buche Apartment A2 im Haus Schönblick direkt. Panorama-Apartment im Bayerischen Wald. Direkt bei den Gastgebern.",
   robots: { index: false },
 }
 

@@ -11,9 +11,9 @@ export const metadata: Metadata = pageMetadata({
   locale: "en",
   title: { absolute: "HAUS28 – A-Frame with Hot Tub in the Bavarian Forest" },
   description:
-    "Private outdoor hot tub, 4 bedrooms, sleeps 8 – a modern A-frame in Grattersdorf. Book direct with your host, without platform fees.",
+    "Private outdoor hot tub, 4 bedrooms, sleeps 8 – a modern A-frame in Grattersdorf. Book direct with your hosts.",
   ogDescription:
-    "Private outdoor hot tub, open all year, 4 bedrooms, room for 8 guests: a modern A-frame at the Büchelstein in the Bavarian Forest. Book direct & save.",
+    "Private outdoor hot tub, open all year, 4 bedrooms, room for 8 guests: a modern A-frame at the Büchelstein in the Bavarian Forest. Book direct with your hosts.",
   image: { url: haus28.images.hero, alt: "HAUS28 – A-frame holiday home with hot tub at the Büchelstein, Grattersdorf" },
 });
 

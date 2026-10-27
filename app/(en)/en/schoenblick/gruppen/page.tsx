@@ -7,7 +7,7 @@ export const metadata: Metadata = pageMetadata({
   locale: "en",
   title: { absolute: "Group Accommodation for 20 Guests – Haus Schönblick" },
   description:
-    "Several apartments, one booking: Haus Schönblick in Schöfweg sleeps up to 20 guests in 5 holiday apartments under one roof. Book direct, no platform fees.",
+    "Several apartments, one booking: Haus Schönblick in Schöfweg sleeps up to 20 guests in 5 holiday apartments under one roof. Book direct with your hosts.",
   ogDescription:
     "5 apartments under one roof, one date range, one payment. Ideal for family celebrations, club trips and company retreats in the Bavarian Forest.",
   image: { url: "/images/schoenblick/aussen/hero.webp", alt: "Haus Schönblick – group accommodation in the Bavarian Forest" },

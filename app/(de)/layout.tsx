@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     images: defaultOgImages,
     title: "SARFI Collection – Exklusive Ferienunterkünfte im Bayerischen Wald",
     description:
-      "Zwei einzigartige Ferienunterkünfte mitten im Bayerischen Wald. Buche direkt und spare.",
+      "Zwei einzigartige Ferienunterkünfte mitten im Bayerischen Wald. Direkt bei den Gastgebern buchen.",
   },
   twitter: {
     card: "summary_large_image",
