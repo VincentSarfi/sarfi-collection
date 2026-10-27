@@ -314,7 +314,6 @@ const booking = {
       trust: [
         { title: "Sichere Zahlung", text: "SSL-verschlüsselt" },
         { title: "Gruppenfreundlich", text: "Mehrere Apartments kombinierbar" },
-        { title: "Keine Gebühren", text: "Günstiger als Plattformen" },
       ],
     },
   },

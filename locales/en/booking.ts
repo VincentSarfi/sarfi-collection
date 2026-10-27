@@ -321,7 +321,6 @@ const booking = {
       trust: [
         { title: "Secure payment", text: "SSL-encrypted" },
         { title: "Group-friendly", text: "Combine several apartments" },
-        { title: "No fees", text: "Cheaper than platforms" },
       ],
     },
   },
