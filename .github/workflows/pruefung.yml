@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Image bauen wie auf Sliplane
         run: docker build --pull --tag sarfi-collection:pruefung .
       - name: Container starten und Seiten abrufen
@@ -73,7 +73,7 @@ jobs:
     env:
       NEXT_TELEMETRY_DISABLED: 1
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v5
         with:
           # Hauptversion wie im Dockerfile
