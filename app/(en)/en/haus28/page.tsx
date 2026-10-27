@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { haus28, getAggregateReviewStats } from "@/data/properties";
+import { haus28 } from "@/data/properties";
 import { localizeProperty } from "@/data/properties.i18n";
 import Haus28ClientPage from "@/components/property/Haus28ClientPage";
 import { absoluteUrl, hostingYears, pageMetadata } from "@/lib/seo";
@@ -109,13 +109,6 @@ const jsonLd = {
     "https://www.buechelstein.com",
     "https://www.haus28.com",
   ],
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: String(getAggregateReviewStats([haus28]).ratingValue),
-    reviewCount: getAggregateReviewStats([haus28]).reviewCount,
-    bestRating: "5",
-    worstRating: "1",
-  },
 };
 
 export default function EnglishHaus28Page() {

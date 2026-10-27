@@ -63,12 +63,6 @@ const jsonLd = {
     schoenblick.googleMapsUrl,
   ],
   priceRange: `from ${schoenblick.priceFrom}€ / night`,
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: schoenblick.airbnbRating,
-    reviewCount: schoenblick.airbnbReviewCount,
-    bestRating: "5",
-  },
 };
 
 export default function EnglishSchoenblickPage() {

@@ -71,12 +71,7 @@ const jsonLd = {
   checkinTime: "T16:00",
   checkoutTime: "T10:00",
   priceRange: `ab ${apt.priceFrom}€ / Nacht`,
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: apt.airbnbRating,
-    reviewCount: apt.airbnbReviewCount,
-    bestRating: "5",
-  },
+  sameAs: [apt.airbnbUrl].filter(Boolean),
 };
 
 const faqSchema = {
