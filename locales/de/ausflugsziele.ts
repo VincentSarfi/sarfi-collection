@@ -168,12 +168,12 @@ const ausflugsziele = {
       cardTags: ["Winter", "Kinder"],
       name: "Steinberglift Langfurth",
       schemaName: "Steinberglift Langfurth (Schöfweg)",
-      subtitle: "Familien-Skilift direkt am Haus Schönblick",
-      distance: `direkt bei Haus Schönblick in Langfurth · ${ca(m.steinberglift.haus28)} von HAUS28`,
+      subtitle: "Familien-Skilift ca. 600 m vom Haus Schönblick",
+      distance: `ca. 600 m von Haus Schönblick in Langfurth · ${ca(m.steinberglift.haus28)} von HAUS28`,
       fromHaus28: ca(m.steinberglift.haus28),
       fromSchoenblick: "zu Fuß (ca. 600 m)",
       description:
-        "Der Steinberglift in Langfurth bei Schöfweg liegt buchstäblich vor der Haustür von Haus Schönblick: eine 400 m lange Hauptpiste, dazu ein Kinderland mit Anfängerlift, Förderband und Übungshang sowie ein Rodelhang. Weitere Lifte gibt es am nahen Brotjacklriegel (1.011 m) – in Schöfweg sind es insgesamt sieben Liftanlagen – und rund 23 km gespurte Loipen in Schöfweg und Umgebung. Die Live-Webcam zeigt den aktuellen Schneezustand – ideal zur Planung direkt aus der Unterkunft.",
+        "Der Steinberglift in Langfurth bei Schöfweg liegt nur ca. 600 m von Haus Schönblick entfernt: eine 400 m lange Hauptpiste, dazu ein Kinderland mit Anfängerlift, Förderband und Übungshang sowie ein Rodelhang. Weitere Lifte gibt es am nahen Brotjacklriegel (1.011 m) – in Schöfweg sind es insgesamt sieben Liftanlagen – und rund 23 km gespurte Loipen in Schöfweg und Umgebung. Die Live-Webcam zeigt den aktuellen Schneezustand – ideal zur Planung direkt aus der Unterkunft.",
       schemaDescription:
         "Familienfreundlicher Skilift in Langfurth bei Schöfweg mit 400-m-Piste, Kinderland, Rodelhang und Live-Webcam.",
       highlights: [
@@ -483,7 +483,7 @@ const ausflugsziele = {
     eyebrow: "Dein Ausgangspunkt",
     heading: "Alle Ausflugsziele direkt vor der Tür",
     text:
-      "HAUS28 am Büchelstein und Haus Schönblick in Schöfweg liegen ideal im Herzen des Bayerischen Waldes – perfekt als Ausgangspunkt für alle Ausflüge auf dieser Seite. Buche direkt und spare bis zu 20 % gegenüber Buchungsplattformen.",
+      "HAUS28 am Büchelstein und Haus Schönblick in Schöfweg liegen ideal im Herzen des Bayerischen Waldes – perfekt als Ausgangspunkt für alle Ausflüge auf dieser Seite. Du buchst direkt bei uns, Vincent und Elena, und hast von Anfang an persönlichen Kontakt.",
     haus28: "HAUS28 entdecken",
     schoenblick: "Haus Schönblick entdecken",
   },

@@ -174,13 +174,13 @@ function validateForm(data: FormData, v: BookingDict["validation"]): FormErrors 
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-const TRUST_BADGE_ICONS = ["schloss", "nachricht", "preisschild"] as const
+const TRUST_BADGE_ICONS = ["schloss", "nachricht"] as const
 
 function TrustBadges() {
   const locale = useLocale()
   const t = getDict(locale).booking
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
       {t.trustBadges.map((b, i) => (
         <div
           key={b.title}
@@ -1148,7 +1148,7 @@ export default function BookingWidget({
           <div className="px-5 pb-5 pt-1 border-t border-cream-100 space-y-2">
             {t.sidebarTrust.map((b, i) => (
               <div key={b.title} className="flex items-center gap-2.5">
-                <Zeichen name={(["schloss", "preisschild"] as const)[i]} size={18} className="flex-none text-forest-600" />
+                <Zeichen name={(["schloss"] as const)[i]} size={18} className="flex-none text-forest-600" />
                 <div>
                   <span className="font-body text-xs font-semibold text-forest-800">{b.title} · </span>
                   <span className="font-body text-xs text-forest-400">{b.text}</span>

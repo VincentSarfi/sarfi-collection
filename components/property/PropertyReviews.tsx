@@ -9,6 +9,7 @@ import { formatScore } from "@/data/properties";
 import { getDict } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useLineClamp } from "@/lib/useLineClamp";
+import ReviewSourceNote from "@/components/property/ReviewSourceNote";
 
 interface PropertyReviewsProps {
   reviews: Review[];
@@ -19,6 +20,8 @@ interface PropertyReviewsProps {
   /** Booking.com (10er-Skala), nur bei Apartments mit zugeordneten Bewertungen */
   bookingRating?: number;
   bookingCount?: number;
+  /** Plattformen für den Echtheitshinweis (reviewPlatforms des Hauses) */
+  platforms: string[];
 }
 
 // Ab dieser Länge erscheint „Mehr anzeigen“ schon im Server-HTML (gemessen wird danach).
@@ -117,6 +120,7 @@ export default function PropertyReviews({
   airbnbUrl,
   bookingRating,
   bookingCount,
+  platforms,
 }: PropertyReviewsProps) {
   const locale = useLocale();
   const t = getDict(locale).property.reviews;
@@ -193,6 +197,7 @@ export default function PropertyReviews({
                 </span>
               ) : null}
             </div>
+            <ReviewSourceNote platforms={platforms} className="mt-2 max-w-2xl" />
           </div>
 
           {/* Desktop navigation arrows + Airbnb link */}

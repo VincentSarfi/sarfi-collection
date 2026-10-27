@@ -4,7 +4,9 @@
 // fünf Apartment-Seiten.
 
 import type { Locale } from "@/lib/i18n";
+import { PROPERTY_CONFIGS } from "@/config/properties.config";
 import { schoenblick, type ApartmentData } from "./properties";
+import { PET_FEE_PER_NIGHT } from "./surroundings";
 
 type Faq = { question: string; answer: string };
 
@@ -27,6 +29,8 @@ function specificFaqs(apt: ApartmentData, locale: Locale): Faq[] {
     .filter((a) => a.id !== apt.id)
     .map((a) => a.name);
   const rooms = (apt.bedroomImages ?? []).map((b) => `${b.name}: ${b.bed}`).join("; ");
+  // Endreinigung, Personen- und Hundeaufpreis wie im Buchungsweg
+  const kosten = PROPERTY_CONFIGS[apt.id];
 
   if (locale === "en") {
     return [
@@ -40,7 +44,7 @@ function specificFaqs(apt: ApartmentData, locale: Locale): Faq[] {
       },
       {
         question: `How big is ${apt.name} and how much does a night cost?`,
-        answer: `${apt.name} has ${apt.sqm} m² of living space with ${apt.bedrooms} bedrooms and ${apt.bathrooms} bathroom${apt.bathrooms > 1 ? "s" : ""}. Booked direct with us, a night costs from €${apt.priceFrom}; the exact price depends on your travel dates and is shown during booking, together with the one-off final cleaning fee. There is no tourist tax.`,
+        answer: `${apt.name} has ${apt.sqm} m² of living space with ${apt.bedrooms} bedrooms and ${apt.bathrooms} bathroom${apt.bathrooms > 1 ? "s" : ""}. Booked direct with us, a night costs from €${apt.priceFrom}; the exact price depends on your travel dates. On top of that come the final cleaning fee of €${kosten.cleaningFee} and €${kosten.extraPersonFee} per person per night for every guest beyond ${kosten.baseOccupancy}${kosten.petsAllowed ? `, plus €${PET_FEE_PER_NIGHT} per dog per night` : ""}. You'll see the total when booking.`,
       },
       {
         question: `Can I combine ${apt.name} with other apartments?`,
@@ -60,7 +64,7 @@ function specificFaqs(apt: ApartmentData, locale: Locale): Faq[] {
     },
     {
       question: `Wie groß ist ${apt.name} und was kostet eine Nacht?`,
-      answer: `${apt.name} hat ${apt.sqm} m² Wohnfläche mit ${apt.bedrooms} Schlafzimmern und ${apt.bathrooms} Badezimmer. Direkt bei uns gebucht kostet eine Nacht ab ${apt.priceFrom} €; der genaue Preis hängt vom Reisezeitraum ab und wird dir bei der Buchung zusammen mit der einmaligen Endreinigung angezeigt. Eine Kurtaxe gibt es nicht.`,
+      answer: `${apt.name} hat ${apt.sqm} m² Wohnfläche mit ${apt.bedrooms} Schlafzimmern und ${apt.bathrooms} Badezimmer. Direkt bei uns gebucht kostet eine Nacht ab ${apt.priceFrom} €; der genaue Preis hängt vom Reisezeitraum ab. Dazu kommen die Endreinigung von ${kosten.cleaningFee} € und ab dem ${kosten.baseOccupancy + 1}. Gast ${kosten.extraPersonFee} € pro Person und Nacht${kosten.petsAllowed ? `, für Hunde ${PET_FEE_PER_NIGHT} € pro Hund und Nacht` : ""}. Den Gesamtpreis siehst du bei der Buchung.`,
     },
     {
       question: `Kann ich ${apt.name} mit anderen Apartments kombinieren?`,

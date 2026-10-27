@@ -161,12 +161,12 @@ const ausflugsziele: typeof de = {
       cardTags: ["Winter", "Kids"],
       name: "Steinberglift Langfurth",
       schemaName: "Steinberglift Langfurth (Schöfweg)",
-      subtitle: "Family ski lift right by Haus Schönblick",
-      distance: `right at Haus Schönblick in Langfurth · ${ca(m.steinberglift.haus28)} from HAUS28`,
+      subtitle: "Family ski lift about 600 m from Haus Schönblick",
+      distance: `about 600 m from Haus Schönblick in Langfurth · ${ca(m.steinberglift.haus28)} from HAUS28`,
       fromHaus28: ca(m.steinberglift.haus28),
       fromSchoenblick: "on foot (approx. 600 m)",
       description:
-        "The Steinberglift in Langfurth near Schöfweg is literally on Haus Schönblick's doorstep: a 400 m main slope plus a kids' area with a beginner lift, a magic carpet and a practice slope, and a toboggan hill. There are more lifts on the nearby Brotjacklriegel (1,011 m) – seven lift facilities in Schöfweg altogether – and around 23 km of groomed cross-country trails in and around Schöfweg. The live webcam shows the current snow conditions – perfect for planning your day from the apartment.",
+        "The Steinberglift in Langfurth near Schöfweg is only about 600 m from Haus Schönblick: a 400 m main slope plus a kids' area with a beginner lift, a magic carpet and a practice slope, and a toboggan hill. There are more lifts on the nearby Brotjacklriegel (1,011 m) – seven lift facilities in Schöfweg altogether – and around 23 km of groomed cross-country trails in and around Schöfweg. The live webcam shows the current snow conditions – perfect for planning your day from the apartment.",
       schemaDescription:
         "Family-friendly ski lift in Langfurth near Schöfweg with a 400 m slope, kids' area, toboggan hill and live webcam.",
       highlights: [
@@ -475,7 +475,7 @@ const ausflugsziele: typeof de = {
     eyebrow: "Your base",
     heading: "Every destination right on your doorstep",
     text:
-      "HAUS28 at the Büchelstein and Haus Schönblick in Schöfweg sit in the heart of the Bavarian Forest – the perfect base for every trip on this page. Book direct and save up to 20% compared with booking platforms.",
+      "HAUS28 at the Büchelstein and Haus Schönblick in Schöfweg sit in the heart of the Bavarian Forest – the perfect base for every trip on this page. You book direct with us, Vincent and Elena, and have personal contact from the start.",
     haus28: "Discover HAUS28",
     schoenblick: "Discover Haus Schönblick",
   },

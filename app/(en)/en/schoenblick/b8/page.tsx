@@ -14,7 +14,7 @@ export const metadata: Metadata = pageMetadata({
   path: "/schoenblick/b8",
   locale: "en",
   title: `${apt.name} – Haus Schönblick, Schöfweg`,
-  description: descriptionMitZusatz(`${aptEn.shortDescription} From ${apt.priceFrom} € / night.`, " In Schöfweg, right by the Steinberg ski lift."),
+  description: descriptionMitZusatz(`${aptEn.shortDescription} From ${apt.priceFrom} € / night.`, " In Schöfweg, about 600 m from the Steinberg ski lift."),
   ogTitle: `${apt.name} – Haus Schönblick in the Bavarian Forest`,
   ogDescription: aptEn.shortDescription,
   image: { url: apt.images.hero, alt: apt.name },

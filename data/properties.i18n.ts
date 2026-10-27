@@ -14,6 +14,11 @@
 import type { Locale } from "@/lib/i18n";
 import { arrival, driveMinutes as m, PET_FEE_PER_NIGHT, PET_MAX, restaurantsAnswer } from "./surroundings";
 import type { ApartmentData, PropertyData } from "./properties";
+import { PROPERTY_CONFIGS } from "@/config/properties.config";
+
+// Wie in properties.ts: Kosten aus der Buchungskonfiguration, B5 steht für alle Schönblick-Wohnungen.
+const kostenHaus28 = PROPERTY_CONFIGS.haus28;
+const kostenSchoenblick = PROPERTY_CONFIGS.b5;
 
 // ---------------------------------------------------------------------------
 // Overlay types
@@ -271,7 +276,7 @@ const schoenblickFaqsEn: FaqTranslation[] = [
     de: "Welche Kosten kommen zum Übernachtungspreis dazu?",
     question: "Are there any costs on top of the nightly rate?",
     answer:
-      "Only a one-off final cleaning fee per stay, which is shown directly when you book. There is no tourist tax. You'll see the nightly rate for your dates in the booking calendar.",
+      `On top of that come the final cleaning fee of €${kostenSchoenblick.cleaningFee} per apartment and stay, €${kostenSchoenblick.extraPersonFee} per person per night for every guest beyond ${kostenSchoenblick.baseOccupancy}, and €${PET_FEE_PER_NIGHT} per dog per night in apartments A2, B7 and B8. All of this is included in the price you see when booking. The booking calendar shows the nightly rate for your dates.`,
   },
   {
     de: "Wie weit ist es zur Pullman City?",
@@ -283,7 +288,7 @@ const schoenblickFaqsEn: FaqTranslation[] = [
     de: "Welche Ausflugsziele gibt es in der Nähe?",
     question: "What is there to see and do nearby?",
     answer:
-      `There's plenty waiting for you around Schöfweg in the Bavarian Forest – the Steinberg ski lift is right by the house, plus (driving time): Grafenau (~${m.grafenau.schoenblick} min), Pullman City (~${m.pullmanCity.schoenblick} min), the elypso leisure pool in Deggendorf (~${m.elypso.schoenblick} min), the national park with the treetop walk in Neuschönau (~${m.nationalparkLusen.schoenblick} min) and the Großer Arber ski area (~${m.arber.schoenblick} min).`,
+      `There's plenty waiting for you around Schöfweg in the Bavarian Forest – the Steinberg ski lift is about 600 m from the house, plus (driving time): Grafenau (~${m.grafenau.schoenblick} min), Pullman City (~${m.pullmanCity.schoenblick} min), the elypso leisure pool in Deggendorf (~${m.elypso.schoenblick} min), the national park with the treetop walk in Neuschönau (~${m.nationalparkLusen.schoenblick} min) and the Großer Arber ski area (~${m.arber.schoenblick} min).`,
   },
   {
     de: "Wie sind die Stornierungsbedingungen?",
@@ -354,7 +359,7 @@ const propertyOverlaysEn: Record<string, TextOverlay> = {
         de: "Welche Kosten kommen zum Übernachtungspreis dazu?",
         question: "Are there any costs on top of the nightly rate?",
         answer:
-          "Only a one-off final cleaning fee per stay, which is shown directly when you book. There is no tourist tax. You'll see the nightly rate for your dates in the booking calendar.",
+          `On top of that come the final cleaning fee of €${kostenHaus28.cleaningFee} per stay and €${kostenHaus28.extraPersonFee} per person per night for every guest beyond ${kostenHaus28.baseOccupancy}. Both are included in the price you see when booking. The booking calendar shows the nightly rate for your dates.`,
       },
       {
         de: "Sind Haustiere im HAUS28 erlaubt?",

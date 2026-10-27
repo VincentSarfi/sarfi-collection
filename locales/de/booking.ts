@@ -69,11 +69,9 @@ const booking = {
   trustBadges: [
     { title: "Sichere Buchung", text: "SSL-verschlüsselt" },
     { title: "Persönliche Betreuung", text: "Direkt vom Gastgeber" },
-    { title: "Bis zu 20 % günstiger", text: "Als auf Buchungsportalen" },
   ],
   sidebarTrust: [
     { title: "Sichere Zahlung", text: "SSL-verschlüsselt" },
-    { title: "Bis zu 20 % günstiger", text: "Als auf Buchungsportalen" },
   ],
 
   // ── Bestätigungs-Screen ───────────────────────────────────────────────────
@@ -278,7 +276,6 @@ const booking = {
     trust: [
       "Sichere, SSL-verschlüsselte Zahlung",
       "Persönliche Betreuung direkt vom Gastgeber",
-      "Bis zu 20 % günstiger als auf gängigen Buchungsportalen",
     ],
   },
 
@@ -296,7 +293,7 @@ const booking = {
     overview: {
       crumb: "Unterkunft wählen",
       h1: { plain: "Unterkunft ", gold: "wählen" },
-      sub: "Direkt buchen · bis zu 20 % günstiger als auf Buchungsportalen",
+      sub: "Direkt bei den Gastgebern Vincent und Elena buchen",
       haus28SectionTitle: "HAUS28 · A-Frame Ferienhaus",
       haus28Alt: "HAUS28 A-Frame Ferienhaus",
       haus28Sub: "A-Frame Ferienhaus · Büchelstein 28, Grattersdorf · Bayerischer Wald",
@@ -310,7 +307,6 @@ const booking = {
       bookNow: "Jetzt buchen",
       trust: [
         { title: "Sichere Zahlung", text: "SSL-verschlüsselt" },
-        { title: "Bis zu 20 % günstiger", text: "Als auf Buchungsportalen" },
         { title: "Persönliche Betreuung", text: "Direkt vom Gastgeber" },
       ],
     },
@@ -384,7 +380,7 @@ const booking = {
       },
       {
         title: "Für jeden Anlass",
-        text: "Familienfeiern, runde Geburtstage, Vereinsausflüge, Firmen-Retreats oder Skigruppen – der Skilift Steinberg liegt direkt am Haus.",
+        text: "Familienfeiern, runde Geburtstage, Vereinsausflüge, Firmen-Retreats oder Skigruppen – zum Skilift Steinberg sind es ca. 600 m.",
       },
       {
         title: "Selbstversorgung",

@@ -358,7 +358,7 @@ export const zielSeiten: ZielSeite[] = [
     verwandt: [
       { href: "/ausflugsziele/brotjacklriegel", text: "Brotjacklriegel – Wanderung zum Aussichtsturm" },
       { href: "/schoenblick/gruppen", text: "Gruppenunterkunft bis 20 Personen im Haus Schönblick" },
-      { href: "/schoenblick", text: "Haus Schönblick – Ferienwohnungen am Steinberglift" },
+      { href: "/schoenblick", text: "Haus Schönblick – Ferienwohnungen ca. 600 m vom Steinberglift" },
     ],
   },
 

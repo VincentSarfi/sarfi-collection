@@ -133,6 +133,13 @@ const property = {
     swipeHint: "Swipe for more reviews →",
     showMore: "Show more",
     showLess: "Show less",
+    // Source and authenticity notice (§ 5b(3) UWG, ReviewSourceNote).
+    sourceNote: {
+      and: "and",
+      shown: (platforms: string) => `Reviews from ${platforms}, as the platforms show them.`,
+      guestsOnly: (platforms: string) => `On ${platforms}, only guests can leave a review after their stay`,
+      notGoogle: "; this does not apply to Google",
+    },
   },
   // components/property/RelatedProperties.tsx
   related: {
@@ -213,8 +220,8 @@ const property = {
         text: "Flexible arrival – check in whenever suits you from 4 p.m. using the key box.",
       },
       {
-        title: "Book direct – up to 20% cheaper",
-        text: "Book directly with us and save compared to the usual booking platforms.",
+        title: "Book direct with Vincent and Elena",
+        text: "Personal contact with us, your hosts. Pay by card, Apple Pay, Google Pay, PayPal or Klarna – or a 50% deposit now and the rest up to 14 days before arrival.",
       },
     ],
     amenitiesHeading: "What this place offers",
@@ -246,7 +253,7 @@ const property = {
       statReviews: "Reviews",
       statRating: "Star rating",
       statYears: (n: number): string => (n === 1 ? "Year hosting" : "Years hosting"),
-      bio: "We're Vincent and Elena – we live surrounded by nature with our two children and love welcoming guests. We've shaped our holiday homes with plenty of heart and handiwork – one a modern A-frame in the woods, the other cosy and right by the ski lift. We're happy to share our favourite tips for hikes, ski days and day trips, and we're always there for you whenever you need anything.",
+      bio: "We're Vincent and Elena – we live surrounded by nature with our two children and love welcoming guests. We've shaped our holiday homes with plenty of heart and handiwork – one a modern A-frame in the woods, the other cosy and about 600 m from the Steinberg ski lift. We're happy to share our favourite tips for hikes, ski days and day trips, and we're always there for you whenever you need anything.",
       superhostTitle: "Superhost",
       superhostText:
         "Superhosts are experienced, exceptionally well-rated hosts who go out of their way to give guests a great stay.",
@@ -278,22 +285,22 @@ const property = {
       },
       {
         title: "A dream setting in the Bavarian Forest",
-        text: "Hiking trails start right outside the front door. Surrounded by nature, right by the Steinberg ski lift.",
+        text: "Hiking trails start right outside the front door. Surrounded by nature, about 600 m from the Steinberg ski lift.",
       },
       {
-        title: "Book direct – up to 20% cheaper",
-        text: "Book directly with us and save compared to the usual booking platforms.",
+        title: "Book direct with Vincent and Elena",
+        text: "Personal contact with us, your hosts. Pay by card, Apple Pay, Google Pay, PayPal or Klarna – or a 50% deposit now and the rest up to 14 days before arrival.",
       },
     ],
     aboutHeading: "About this place",
     amenitiesHeading: "What this place offers",
     locationDescription:
-      `Haus Schönblick sits in Langfurth near Schöfweg, right by the Steinberg ski lift in the Bavarian Forest. Hiking trails start right outside the house, and two inns are just a few minutes away. Grafenau is about ${m.grafenau.schoenblick} minutes and the national park about ${m.nationalparkLusen.schoenblick} minutes by car.`,
+      `Haus Schönblick sits in Langfurth near Schöfweg in the Bavarian Forest, about 600 m from the Steinberg ski lift. Hiking trails start right outside the house, and two inns are just a few minutes away. Grafenau is about ${m.grafenau.schoenblick} minutes and the national park about ${m.nationalparkLusen.schoenblick} minutes by car.`,
     attractions: schoenblickAttractions,
     rulePets: `Dogs welcome, bookable directly (€${PET_FEE_PER_NIGHT} per dog per night, max. ${PET_MAX})`,
     ruleNoPets: "No pets",
     cancellationTitle: "Cancellation & access",
-    cancellationTextPre: "Free cancellation up to 30 days before arrival. After that, our ",
+    cancellationTextPre: "Free cancellation up to 14 days before arrival. After that, our ",
     cancellationLink: "cancellation policy",
     cancellationTextPost: " applies.",
     accessibilityPre: "Accessibility: please ",
@@ -308,7 +315,7 @@ const property = {
     aboutHeading: "About Haus Schönblick",
     vorDerTuer: "Right on the doorstep (in German):",
     aboutLocation:
-      `Haus Schönblick sits in Langfurth near Schöfweg, right by the Steinberg ski lift. The five holiday apartments are spread across house numbers 18 and 20: B5 and B6 on the ground floor with a terrace, B7 and B8 on the first floor with a panoramic balcony, plus the cabin-style apartment A2 in house no. 20. All guests share a large panoramic terrace with seating and a small garden; parking is free right in front of the building. The Pullman City Western town is about ${m.pullmanCity.schoenblick} minutes away by car.`,
+      `Haus Schönblick sits in Langfurth near Schöfweg, about 600 m from the Steinberg ski lift. The five holiday apartments are spread across house numbers 18 and 20: B5 and B6 on the ground floor with a terrace, B7 and B8 on the first floor with a panoramic balcony, plus the cabin-style apartment A2 in house no. 20. All guests share a large panoramic terrace with seating and a small garden; parking is free right in front of the building. The Pullman City Western town is about ${m.pullmanCity.schoenblick} minutes away by car.`,
     apartmentsEyebrow: "5 holiday apartments",
     apartmentsHeading: "Choose your apartment",
     apartmentsIntro:

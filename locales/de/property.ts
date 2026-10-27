@@ -133,6 +133,14 @@ const property = {
     swipeHint: "Wische für mehr Bewertungen →",
     showMore: "Mehr anzeigen",
     showLess: "Weniger anzeigen",
+    // Echtheitshinweis nach § 5b Abs. 3 UWG (ReviewSourceNote): woher die
+    // Bewertungen stammen und wo nur Gäste nach dem Aufenthalt bewerten können.
+    sourceNote: {
+      and: "und",
+      shown: (platforms: string) => `Bewertungen von ${platforms}, so wie die Plattformen sie zeigen.`,
+      guestsOnly: (platforms: string) => `Bei ${platforms} können nur Gäste nach ihrem Aufenthalt bewerten`,
+      notGoogle: ", bei Google nicht",
+    },
   },
   // components/property/RelatedProperties.tsx
   related: {
@@ -213,8 +221,8 @@ const property = {
         text: "Flexible Anreise – checke jederzeit ab 16:00 Uhr bequem per Schlüsselbox ein.",
       },
       {
-        title: "Direktbuchung – bis zu 20 % günstiger",
-        text: "Buche direkt bei uns und spare gegenüber den gängigen Buchungsportalen.",
+        title: "Direkt bei Vincent und Elena buchen",
+        text: "Persönlicher Kontakt zu uns Gastgebern. Zahlung mit Karte, Apple Pay, Google Pay, PayPal oder Klarna – wahlweise 50 % Anzahlung, Rest bis 14 Tage vor Anreise.",
       },
     ],
     amenitiesHeading: "Das bietet dir diese Unterkunft",
@@ -246,7 +254,7 @@ const property = {
       statReviews: "Bewertungen",
       statRating: "Sternebewertung",
       statYears: (n: number): string => (n === 1 ? "Jahr Gastgeber" : "Jahre Gastgeber"),
-      bio: "Wir sind Vincent und Elena – mit unseren zwei Kindern leben wir mitten in der Natur und lieben es, Gäste willkommen zu heißen. Unsere Ferienhäuser haben wir mit viel Herz und Handarbeit gestaltet – mal modern im A-Frame, mal gemütlich direkt am Skilift. Wir teilen gern unsere liebsten Tipps für Wanderungen, Skitage oder Ausflüge und sind jederzeit für dich da, wenn du etwas brauchst.",
+      bio: "Wir sind Vincent und Elena – mit unseren zwei Kindern leben wir mitten in der Natur und lieben es, Gäste willkommen zu heißen. Unsere Ferienhäuser haben wir mit viel Herz und Handarbeit gestaltet – mal modern im A-Frame, mal gemütlich ca. 600 m vom Skilift Steinberg. Wir teilen gern unsere liebsten Tipps für Wanderungen, Skitage oder Ausflüge und sind jederzeit für dich da, wenn du etwas brauchst.",
       superhostTitle: "Superhost",
       superhostText:
         "Superhosts sind erfahrene, herausragend bewertete Gastgeber:innen, die ihren Gästen großartige Aufenthalte bieten.",
@@ -278,22 +286,22 @@ const property = {
       },
       {
         title: "Traumhafte Lage im Bayerischen Wald",
-        text: "Wanderwege beginnen direkt vor der Haustür. Mitten in der Natur, direkt am Skilift Steinberg.",
+        text: "Wanderwege beginnen direkt vor der Haustür. Mitten in der Natur, ca. 600 m zum Skilift Steinberg.",
       },
       {
-        title: "Direktbuchung – bis zu 20 % günstiger",
-        text: "Buche direkt bei uns und spare gegenüber den gängigen Buchungsportalen.",
+        title: "Direkt bei Vincent und Elena buchen",
+        text: "Persönlicher Kontakt zu uns Gastgebern. Zahlung mit Karte, Apple Pay, Google Pay, PayPal oder Klarna – wahlweise 50 % Anzahlung, Rest bis 14 Tage vor Anreise.",
       },
     ],
     aboutHeading: "Über diese Unterkunft",
     amenitiesHeading: "Was diese Unterkunft bietet",
     locationDescription:
-      `Haus Schönblick liegt in Langfurth bei Schöfweg, direkt am Skilift Steinberg im Bayerischen Wald. Wanderwege starten direkt vor dem Haus, zwei Gasthäuser erreichst du in wenigen Minuten. Nach Grafenau sind es rund ${m.grafenau.schoenblick}, zum Nationalpark rund ${m.nationalparkLusen.schoenblick} Minuten.`,
+      `Haus Schönblick liegt in Langfurth bei Schöfweg im Bayerischen Wald, ca. 600 m vom Skilift Steinberg entfernt. Wanderwege starten direkt vor dem Haus, zwei Gasthäuser erreichst du in wenigen Minuten. Nach Grafenau sind es rund ${m.grafenau.schoenblick}, zum Nationalpark rund ${m.nationalparkLusen.schoenblick} Minuten.`,
     attractions: schoenblickAttractions,
     rulePets: `Hunde erlaubt, direkt buchbar (${PET_FEE_PER_NIGHT} € pro Hund und Nacht, max. ${PET_MAX})`,
     ruleNoPets: "Keine Haustiere",
     cancellationTitle: "Stornierung & Zugang",
-    cancellationTextPre: "Kostenlose Stornierung bis 30 Tage vor Anreise. Danach gelten unsere ",
+    cancellationTextPre: "Kostenlose Stornierung bis 14 Tage vor Anreise. Danach gelten unsere ",
     cancellationLink: "Stornobedingungen",
     cancellationTextPost: ".",
     accessibilityPre: "Barrierefreiheit: Bitte ",
@@ -308,7 +316,7 @@ const property = {
     aboutHeading: "Über Haus Schönblick",
     vorDerTuer: "Direkt vor der Tür:",
     aboutLocation:
-      `Haus Schönblick liegt im Ortsteil Langfurth bei Schöfweg, direkt am Skilift Steinberg. Die fünf Ferienwohnungen verteilen sich auf die Hausnummern 18 und 20: B5 und B6 im Erdgeschoss mit Terrasse, B7 und B8 im ersten Stock mit Panoramabalkon, dazu die Hüttenwohnung A2 in Hausnummer 20. Alle Gäste teilen sich eine große Panoramaterrasse mit Sitzplätzen und einen kleinen Garten; geparkt wird kostenlos direkt vor dem Gebäude. Bis zur Westernstadt Pullman City sind es rund ${m.pullmanCity.schoenblick} Minuten mit dem Auto.`,
+      `Haus Schönblick liegt im Ortsteil Langfurth bei Schöfweg, ca. 600 m vom Skilift Steinberg entfernt. Die fünf Ferienwohnungen verteilen sich auf die Hausnummern 18 und 20: B5 und B6 im Erdgeschoss mit Terrasse, B7 und B8 im ersten Stock mit Panoramabalkon, dazu die Hüttenwohnung A2 in Hausnummer 20. Alle Gäste teilen sich eine große Panoramaterrasse mit Sitzplätzen und einen kleinen Garten; geparkt wird kostenlos direkt vor dem Gebäude. Bis zur Westernstadt Pullman City sind es rund ${m.pullmanCity.schoenblick} Minuten mit dem Auto.`,
     apartmentsEyebrow: "5 Ferienwohnungen",
     apartmentsHeading: "Wähle dein Apartment",
     apartmentsIntro:

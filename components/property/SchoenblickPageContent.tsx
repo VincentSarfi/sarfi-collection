@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { formatScore, getAggregateReviewStats, schoenblick } from "@/data/properties";
+import { formatScore, getAggregateReviewStats, reviewPlatforms, schoenblick } from "@/data/properties";
 import { localizeProperty } from "@/data/properties.i18n";
 import { schoenblickReviews } from "@/data/reviews";
 import PropertyHero from "@/components/property/PropertyHero";
@@ -263,6 +263,7 @@ export default function SchoenblickPageContent({ locale }: { locale: Locale }) {
         reviews={schoenblickReviews}
         averageRating={haus.airbnbRating}
         totalCount={haus.airbnbReviewCount}
+        platforms={reviewPlatforms(schoenblick)}
       />
 
       {/* FAQ */}

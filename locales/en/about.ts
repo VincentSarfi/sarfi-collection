@@ -29,7 +29,7 @@ const about = {
       {
         heading: "Haus Schönblick: five apartments, five characters",
         paragraphs: [
-          "In September 2025, Haus Schönblick in Schöfweg-Langfurth followed, right by the Steinberg ski lift. Each of the five apartments has its own style: from a modern apartment with herringbone parquet and a panoramic balcony to a cosy cabin-style apartment with old farmhouse furniture. Groups can share a large panoramic terrace and a small garden.",
+          "In September 2025, Haus Schönblick in Schöfweg-Langfurth followed, about 600 m from the Steinberg ski lift. Each of the five apartments has its own style: from a modern apartment with herringbone parquet and a panoramic balcony to a cosy cabin-style apartment with old farmhouse furniture. Groups can share a large panoramic terrace and a small garden.",
         ],
       },
       {

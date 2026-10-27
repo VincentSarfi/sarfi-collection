@@ -6,7 +6,7 @@ import { IconStar, IconArrowRight, IconUsers } from "@/components/ui/Icons";
 import Zeichen from "@/components/ui/Zeichen";
 import { getDict, localizeHref, type Locale } from "@/lib/i18n";
 
-const TRUST_ICONS = ["schloss", "preisschild", "nachricht"] as const;
+const TRUST_ICONS = ["schloss", "nachricht"] as const;
 
 export default function BuchenOverviewContent({ locale }: { locale: Locale }) {
   const tb = getDict(locale).booking;
@@ -179,7 +179,7 @@ export default function BuchenOverviewContent({ locale }: { locale: Locale }) {
 
         {/* Trust */}
         <div className="pb-8">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
             {t.overview.trust.map((item, i) => (
               <div key={item.title} className="flex items-center gap-3 p-4 rounded-xl bg-white border border-cream-200 shadow-card">
                 <Zeichen name={TRUST_ICONS[i]} size={28} className="flex-none text-forest-700" />

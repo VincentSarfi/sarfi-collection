@@ -55,7 +55,7 @@ const home = {
   reviews: {
     eyebrow: "Guest reviews",
     heading: "What our guests say",
-    aggregateSuffix: "verified guest reviews",
+    reviewsSuffix: "reviews",
     badgeHaus28: "HAUS28",
     badgeSchoenblick: "Schönblick",
   },
@@ -87,7 +87,7 @@ const home = {
   cta: {
     eyebrow: "Book now",
     heading: "Find your perfect place to stay",
-    intro: "Book direct and save up to 20% compared to booking platforms.",
+    intro: "Book direct with Vincent and Elena, with personal contact from the start.",
     tagHaus28: "A-frame · Grattersdorf",
     tagSchoenblick: "5 apartments · Schöfweg",
     priceFrom: "from ",

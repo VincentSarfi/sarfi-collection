@@ -4,15 +4,17 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { IconStar } from "@/components/ui/Icons";
 import { reviews } from "@/data/reviews";
-import { getAggregateReviewStats } from "@/data/properties";
+import { getAggregateReviewStats, haus28, reviewPlatforms, schoenblick } from "@/data/properties";
+import ReviewSourceNote from "@/components/property/ReviewSourceNote";
 import { getDict } from "@/lib/i18n";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // Show best 6 reviews on homepage
 const featuredReviews = reviews.slice(0, 6);
 
-// Aggregierte Bewertungsstatistik – konsistent mit dem JSON-LD der Startseite
-const aggregate = getAggregateReviewStats();
+// Bewertung je Haus (wie auf den Unterkunftskarten), keine gemeinsame Note beider Häuser
+const houseStats = [haus28, schoenblick].map((p) => ({ name: p.name, ...getAggregateReviewStats([p]) }));
+const platforms = reviewPlatforms(haus28, schoenblick);
 
 function ReviewCard({ review, index }: { review: (typeof reviews)[number]; index: number }) {
   const locale = useLocale();
@@ -86,14 +88,19 @@ export default function ReviewsSection() {
           >
             {t.heading}
           </h2>
-          {/* Aggregate rating */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gold-300/20 rounded-full">
-            <div className="flex gap-0.5 text-gold-500">
-              {[1,2,3,4,5].map(i => <IconStar key={i} size={14} filled />)}
-            </div>
-            <span className="font-body text-sm font-semibold text-forest-800">{aggregate.ratingValue.toLocaleString(locale === "de" ? "de-DE" : "en-GB")}</span>
-            <span className="font-body text-sm text-forest-600">· {aggregate.reviewCount} {t.aggregateSuffix}</span>
+          {/* Bewertung je Haus */}
+          <div className="flex flex-wrap justify-center gap-2">
+            {houseStats.map((h) => (
+              <div key={h.name} className="inline-flex items-center gap-2 px-4 py-2 bg-gold-300/20 rounded-full">
+                <IconStar size={14} filled className="text-gold-500" />
+                <span className="font-body text-sm font-semibold text-forest-800">
+                  {h.name} {h.ratingValue.toLocaleString(locale === "de" ? "de-DE" : "en-GB", { minimumFractionDigits: 2 })}
+                </span>
+                <span className="font-body text-sm text-forest-600">· {h.reviewCount} {t.reviewsSuffix}</span>
+              </div>
+            ))}
           </div>
+          <ReviewSourceNote platforms={platforms} className="mt-4 max-w-2xl mx-auto" />
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">

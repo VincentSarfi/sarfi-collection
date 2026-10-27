@@ -12,7 +12,7 @@ import PropertyReviews from "@/components/property/PropertyReviews"
 import BookingWidget from "@/components/booking/BookingWidget"
 import FaqAccordion from "@/components/property/FaqAccordion"
 import RelatedProperties from "@/components/property/RelatedProperties"
-import { haus28, schoenblick, getAggregateReviewStats, formatScore } from "@/data/properties"
+import { haus28, schoenblick, getAggregateReviewStats, formatScore, reviewPlatforms } from "@/data/properties"
 import { localizeProperty } from "@/data/properties.i18n"
 import { haus28Reviews } from "@/data/reviews"
 import { PROPERTY_CONFIGS, resolveSmoobuId } from "@/config/properties.config"
@@ -528,6 +528,7 @@ export default function Haus28ClientPage({ hostingYears }: { hostingYears: numbe
             averageRating={haus.airbnbRating}
             totalCount={haus.airbnbReviewCount}
             airbnbUrl={haus.airbnbUrl}
+            platforms={reviewPlatforms(haus28)}
           />
         </div>
 

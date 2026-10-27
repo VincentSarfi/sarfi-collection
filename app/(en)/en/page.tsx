@@ -17,7 +17,7 @@ export const metadata: Metadata = pageMetadata({
     "HAUS28 – an A-frame with hot tub at the Büchelstein. Haus Schönblick – panorama apartments in Schöfweg. Holiday homes in the Bavarian Forest, book direct.",
   ogTitle: "SARFI Collection – Your Retreat in the Bavarian Forest",
   ogDescription:
-    "Two exclusive holiday homes in the heart of the Bavarian Forest. Book direct and save up to 20%.",
+    "Two exclusive holiday homes in the heart of the Bavarian Forest. Book direct with your hosts Vincent and Elena.",
 });
 
 // Die Startseite stellt zwei Häuser an zwei Orten vor: ausgezeichnet als Liste

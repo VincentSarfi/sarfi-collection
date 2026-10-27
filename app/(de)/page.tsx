@@ -17,7 +17,7 @@ export const metadata: Metadata = pageMetadata({
     "HAUS28 – A-Frame mit Whirlpool am Büchelstein. Haus Schönblick – Panorama-Apartments in Schöfweg. Ferienunterkünfte im Bayerischen Wald, direkt buchen.",
   ogTitle: "SARFI Collection – Dein Rückzugsort im Bayerischen Wald",
   ogDescription:
-    "Zwei exklusive Ferienunterkünfte mitten im Bayerischen Wald. Direkt buchen und bis zu 20 % sparen.",
+    "Zwei exklusive Ferienunterkünfte mitten im Bayerischen Wald. Direkt bei den Gastgebern Vincent und Elena buchen.",
 });
 
 // Die Startseite stellt zwei Häuser an zwei Orten vor: ausgezeichnet als Liste

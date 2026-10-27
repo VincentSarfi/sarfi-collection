@@ -5,7 +5,7 @@ import Zeichen from "@/components/ui/Zeichen"
 import { getDict, localizeHref } from "@/lib/i18n"
 import { useLocale } from "@/lib/i18n/LocaleProvider"
 
-const SIDEBAR_TRUST_ICONS = ["schloss", "nachricht", "preisschild"] as const
+const SIDEBAR_TRUST_ICONS = ["schloss", "nachricht"] as const
 
 interface BookingSidebarCardProps {
   priceFrom: number

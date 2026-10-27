@@ -29,7 +29,7 @@ const about = {
       {
         heading: "Haus Schönblick: fünf Apartments, fünf Charaktere",
         paragraphs: [
-          "Im September 2025 kam Haus Schönblick in Schöfweg-Langfurth dazu, direkt am Skilift Steinberg. Jedes der fünf Apartments hat seinen eigenen Stil: von der modernen Wohnung mit Fischgrätparkett und Panoramabalkon bis zur gemütlichen Hüttenwohnung mit alten Bauernmöbeln. Für Gruppen gibt es eine große Panoramaterrasse und einen kleinen Garten, die alle Gäste gemeinsam nutzen.",
+          "Im September 2025 kam Haus Schönblick in Schöfweg-Langfurth dazu, ca. 600 m vom Skilift Steinberg entfernt. Jedes der fünf Apartments hat seinen eigenen Stil: von der modernen Wohnung mit Fischgrätparkett und Panoramabalkon bis zur gemütlichen Hüttenwohnung mit alten Bauernmöbeln. Für Gruppen gibt es eine große Panoramaterrasse und einen kleinen Garten, die alle Gäste gemeinsam nutzen.",
         ],
       },
       {

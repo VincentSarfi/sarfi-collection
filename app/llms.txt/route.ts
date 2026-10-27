@@ -1,4 +1,5 @@
-import { getAggregateReviewStats, haus28, schoenblick, type PropertyData } from "@/data/properties";
+import { getAggregateReviewStats, haus28, reviewPlatforms, schoenblick, type PropertyData } from "@/data/properties";
+import { PROPERTY_CONFIGS } from "@/config/properties.config";
 import { arrival, driveMinutes, PET_FEE_PER_NIGHT, PET_MAX, restaurants } from "@/data/surroundings";
 import { getAllPosts } from "@/lib/blog";
 import { zielSeiten } from "@/data/ausflugsziel-seiten";
@@ -11,22 +12,14 @@ export const dynamic = "force-static";
 const decimal = (n: number) => n.toFixed(2).replace(".", ",");
 const minuten = (n: number) => (n === 0 ? "zu Fuß" : `ca. ${n} min`);
 
-function platforms(p: PropertyData): string {
-  return [
-    p.airbnbReviewCount > 0 && "Airbnb",
-    p.bookingReviewCount && "Booking.com",
-    p.fewoReviewCount && "FeWo-direkt",
-    p.googleReviewCount && "Google",
-    p.hometogoReviewCount && "HomeToGo",
-  ]
-    .filter(Boolean)
-    .join(", ");
-}
-
 function rating(p: PropertyData): string {
   const { ratingValue, reviewCount } = getAggregateReviewStats([p]);
-  return `${decimal(ratingValue)} von 5 aus ${reviewCount} Gästebewertungen (${platforms(p)})`;
+  return `${decimal(ratingValue)} von 5 aus ${reviewCount} Gästebewertungen (${reviewPlatforms(p).join(", ")})`;
 }
+
+// Endreinigung und Aufpreis pro Person wie im Buchungsweg (Schönblick: B5 steht für alle Wohnungen)
+const kostenHaus28 = PROPERTY_CONFIGS.haus28;
+const kostenSchoenblick = PROPERTY_CONFIGS.b5;
 
 export function GET() {
   const apartments = Object.values(schoenblick.apartments ?? {});
@@ -54,9 +47,10 @@ SARFI Collection vermietet zwei Ferienunterkünfte im Bayerischen Wald (Niederba
    Check-in ab 16:00 Uhr, Check-out bis 10:00 Uhr.
    Bewertung: ${rating(schoenblick)}.
 
-Kosten und Regeln (beide Häuser): Zum Übernachtungspreis kommt nur eine einmalige Endreinigung pro
-Aufenthalt, die bei der Buchung angezeigt wird. Keine Kurtaxe. Kostenlose Parkplätze. Haustiere im
-HAUS28 nicht erlaubt. Im Haus Schönblick in den Apartments A2, B7 und B8 direkt mitbuchbar (bis ${PET_MAX} Hunde,
+Kosten und Regeln: Zum Übernachtungspreis kommen die Endreinigung (HAUS28 ${kostenHaus28.cleaningFee} € pro Aufenthalt,
+Haus Schönblick ${kostenSchoenblick.cleaningFee} € je Wohnung) und ein Aufpreis pro Person und Nacht: im HAUS28 ab dem
+${kostenHaus28.baseOccupancy + 1}. Gast ${kostenHaus28.extraPersonFee} €, im Haus Schönblick ab dem ${kostenSchoenblick.baseOccupancy + 1}. Gast ${kostenSchoenblick.extraPersonFee} €. Alles wird bei der Buchung
+angezeigt. Kostenlose Parkplätze. Haustiere im HAUS28 nicht erlaubt. Im Haus Schönblick in den Apartments A2, B7 und B8 direkt mitbuchbar (bis ${PET_MAX} Hunde,
 ${PET_FEE_PER_NIGHT} € pro Hund und Nacht), in B5 und B6 nicht (Echtholzparkett).
 Mindestaufenthalt im HAUS28: 2 Nächte (in der Hauptsaison ggf. mehr).
 

@@ -7,7 +7,7 @@ export const metadata: Metadata = pageMetadata({
   locale: "en",
   title: "Choose your accommodation – Bavarian Forest",
   description:
-    "Choose your stay: the HAUS28 A-frame or one of the panorama apartments at Haus Schönblick. Book direct and save up to 20%.",
+    "Choose your stay: the HAUS28 A-frame or one of the panorama apartments at Haus Schönblick. Book direct with your hosts and pay by card, Apple Pay, Google Pay, PayPal or Klarna.",
   noindex: true,
 });
 

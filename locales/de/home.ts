@@ -55,7 +55,7 @@ const home = {
   reviews: {
     eyebrow: "Gästebewertungen",
     heading: "Was unsere Gäste sagen",
-    aggregateSuffix: "verifizierte Gästebewertungen",
+    reviewsSuffix: "Bewertungen",
     badgeHaus28: "HAUS28",
     badgeSchoenblick: "Schönblick",
   },
@@ -87,7 +87,7 @@ const home = {
   cta: {
     eyebrow: "Jetzt buchen",
     heading: "Finde deine perfekte Unterkunft",
-    intro: "Direkt buchen und bis zu 20 % gegenüber Buchungsplattformen sparen.",
+    intro: "Direkt bei Vincent und Elena buchen, mit persönlichem Kontakt von Anfang an.",
     tagHaus28: "A-Frame · Grattersdorf",
     tagSchoenblick: "5 Apartments · Schöfweg",
     priceFrom: "ab ",

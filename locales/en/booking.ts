@@ -76,11 +76,9 @@ const booking = {
   trustBadges: [
     { title: "Secure booking", text: "SSL-encrypted" },
     { title: "Personal service", text: "Directly from your host" },
-    { title: "Up to 20% cheaper", text: "Than on booking platforms" },
   ],
   sidebarTrust: [
     { title: "Secure payment", text: "SSL-encrypted" },
-    { title: "Up to 20% cheaper", text: "Than on booking platforms" },
   ],
 
   // ── Confirmation screen ───────────────────────────────────────────────────
@@ -285,7 +283,6 @@ const booking = {
     trust: [
       "Secure, SSL-encrypted payment",
       "Personal service directly from your host",
-      "Up to 20% cheaper than on the usual booking platforms",
     ],
   },
 
@@ -303,7 +300,7 @@ const booking = {
     overview: {
       crumb: "Choose accommodation",
       h1: { plain: "Choose your ", gold: "stay" },
-      sub: "Book direct · up to 20% cheaper than on booking platforms",
+      sub: "Book direct with your hosts Vincent and Elena",
       haus28SectionTitle: "HAUS28 · A-frame holiday home",
       haus28Alt: "HAUS28 A-frame holiday home",
       haus28Sub: "A-frame holiday home · Büchelstein 28, Grattersdorf · Bavarian Forest",
@@ -317,7 +314,6 @@ const booking = {
       bookNow: "Book now",
       trust: [
         { title: "Secure payment", text: "SSL-encrypted" },
-        { title: "Up to 20% cheaper", text: "Than on booking platforms" },
         { title: "Personal service", text: "Directly from your host" },
       ],
     },
@@ -391,7 +387,7 @@ const booking = {
       },
       {
         title: "For every occasion",
-        text: "Family celebrations, milestone birthdays, club trips, company retreats or ski groups – the Steinberg ski lift is right by the house.",
+        text: "Family celebrations, milestone birthdays, club trips, company retreats or ski groups – the Steinberg ski lift is about 600 m away.",
       },
       {
         title: "Self-catering",

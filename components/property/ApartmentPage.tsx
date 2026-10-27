@@ -17,7 +17,7 @@ import PropertyReviews from "@/components/property/PropertyReviews"
 import BookingWidget from "@/components/booking/BookingWidget"
 import FaqAccordion from "@/components/property/FaqAccordion"
 import RelatedProperties from "@/components/property/RelatedProperties"
-import { formatScore, schoenblick } from "@/data/properties"
+import { formatScore, reviewPlatforms, schoenblick } from "@/data/properties"
 import { localizeProperty } from "@/data/properties.i18n"
 import { schoenblickReviews } from "@/data/reviews"
 import type { ApartmentData } from "@/data/properties"
@@ -403,6 +403,7 @@ export default function ApartmentPage({ apartment, config }: ApartmentPageProps)
             airbnbUrl={apartment.airbnbUrl}
             bookingRating={apartment.bookingRating}
             bookingCount={apartment.bookingReviewCount}
+            platforms={reviewPlatforms(schoenblick)}
           />
         </div>
 

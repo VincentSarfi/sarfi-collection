@@ -2,6 +2,13 @@
 // Edit values here – all pages pull from this file.
 
 import { arrival, driveMinutes as m, PET_FEE_PER_NIGHT, PET_MAX, restaurantsAnswer } from "./surroundings";
+import { PROPERTY_CONFIGS } from "@/config/properties.config";
+
+// Endreinigung und Aufpreis pro Person kommen aus der Buchungskonfiguration,
+// damit die Kosten-FAQ nie vom Preis im Buchungsweg abweicht. Im Haus
+// Schönblick sind beide in allen Wohnungen gleich, B5 steht für alle.
+const kostenHaus28 = PROPERTY_CONFIGS.haus28;
+const kostenSchoenblick = PROPERTY_CONFIGS.b5;
 
 export type Amenity = {
   icon: string;
@@ -234,7 +241,7 @@ export const haus28: PropertyData = {
     {
       question: "Welche Kosten kommen zum Übernachtungspreis dazu?",
       answer:
-        "Nur eine einmalige Endreinigung pro Aufenthalt – sie wird dir bei der Buchung direkt mit angezeigt. Eine Kurtaxe gibt es nicht. Den Übernachtungspreis für deinen Reisezeitraum siehst du im Buchungskalender.",
+        `Dazu kommen die Endreinigung von ${kostenHaus28.cleaningFee} € pro Aufenthalt und ab dem ${kostenHaus28.baseOccupancy + 1}. Gast ${kostenHaus28.extraPersonFee} € pro Person und Nacht. Beides ist im Preis enthalten, den du bei der Buchung siehst. Den Übernachtungspreis für deinen Reisezeitraum zeigt dir der Buchungskalender.`,
     },
     {
       question: "Sind Haustiere im HAUS28 erlaubt?",
@@ -336,7 +343,7 @@ const schoenblickFaqs = [
   {
     question: "Welche Kosten kommen zum Übernachtungspreis dazu?",
     answer:
-      "Nur eine einmalige Endreinigung pro Aufenthalt – sie wird dir bei der Buchung direkt mit angezeigt. Eine Kurtaxe gibt es nicht. Den Übernachtungspreis für deinen Reisezeitraum siehst du im Buchungskalender.",
+      `Dazu kommen die Endreinigung von ${kostenSchoenblick.cleaningFee} € je Wohnung und Aufenthalt, ab dem ${kostenSchoenblick.baseOccupancy + 1}. Gast ${kostenSchoenblick.extraPersonFee} € pro Person und Nacht und in den Apartments A2, B7 und B8 ${PET_FEE_PER_NIGHT} € pro Hund und Nacht. Alles ist im Preis enthalten, den du bei der Buchung siehst. Den Übernachtungspreis für deinen Reisezeitraum zeigt dir der Buchungskalender.`,
   },
   {
     question: "Wie weit ist es zur Pullman City?",
@@ -346,7 +353,7 @@ const schoenblickFaqs = [
   {
     question: "Welche Ausflugsziele gibt es in der Nähe?",
     answer:
-      `Rund um Schöfweg im Bayerischen Wald erwartet dich viel – der Skilift Steinberg liegt direkt am Haus, dazu (Fahrzeit mit dem Auto): Grafenau (~${m.grafenau.schoenblick} min), Pullman City (~${m.pullmanCity.schoenblick} min), Erlebnisbad elypso in Deggendorf (~${m.elypso.schoenblick} min), Nationalpark mit Baumwipfelpfad in Neuschönau (~${m.nationalparkLusen.schoenblick} min) und das Skigebiet am Großen Arber (~${m.arber.schoenblick} min).`,
+      `Rund um Schöfweg im Bayerischen Wald erwartet dich viel – der Skilift Steinberg liegt ca. 600 m vom Haus entfernt, dazu (Fahrzeit mit dem Auto): Grafenau (~${m.grafenau.schoenblick} min), Pullman City (~${m.pullmanCity.schoenblick} min), Erlebnisbad elypso in Deggendorf (~${m.elypso.schoenblick} min), Nationalpark mit Baumwipfelpfad in Neuschönau (~${m.nationalparkLusen.schoenblick} min) und das Skigebiet am Großen Arber (~${m.arber.schoenblick} min).`,
   },
   {
     question: "Wie sind die Stornierungsbedingungen?",
@@ -694,6 +701,22 @@ function collectPlatformReviews(p: PropertyData): { rating: number; count: numbe
     entries.push({ rating: p.hometogoRating, count: p.hometogoReviewCount });
   }
   return entries;
+}
+
+/**
+ * Plattformen, deren Bewertungen für die Häuser vorliegen – für den
+ * Echtheitshinweis am Bewertungsblock und llms.txt. Google steht zuletzt,
+ * weil der Hinweis danach sagt, dass dort nicht nur Gäste bewerten können.
+ */
+export function reviewPlatforms(...properties: PropertyData[]): string[] {
+  const hat = (count: (p: PropertyData) => number | undefined) => properties.some((p) => (count(p) ?? 0) > 0);
+  return [
+    hat((p) => p.airbnbReviewCount) && "Airbnb",
+    hat((p) => p.bookingReviewCount) && "Booking.com",
+    hat((p) => p.fewoReviewCount) && "FeWo-direkt",
+    hat((p) => p.hometogoReviewCount) && "HomeToGo",
+    hat((p) => p.googleReviewCount) && "Google",
+  ].filter((name): name is string => Boolean(name));
 }
 
 /** Note mit einer Nachkommastelle in der Schreibweise der Sprache: 9,7 / 9.7 */
