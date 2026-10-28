@@ -130,9 +130,9 @@ export const haus28: PropertyData = {
   // Stand 06.10.2026, abgelesen auf den Plattformen und 1:1 so übernommen,
   // ohne herausgerechnete Bewertungen. FeWo-direkt zeigt 9,4/10 aus 18
   // (darin eine irrtümliche 4/10, die FeWo nicht löscht). Booking.com am
-  // 27.10.2026: 9,8 aus 16.
-  airbnbRating: 5.0,
-  airbnbReviewCount: 25,
+  // 27.10.2026: 9,8 aus 16. Am 28.10.2026: Airbnb 4,96 aus 27, Google 4,8 aus 13.
+  airbnbRating: 4.96,
+  airbnbReviewCount: 27,
   bookingRating: 9.8,
   bookingReviewCount: 16,
   // Traveller Review Award 2026 wurde für 9,9 vergeben – nur dieser Wert steht
@@ -141,7 +141,7 @@ export const haus28: PropertyData = {
   fewoRating: 9.4,
   fewoReviewCount: 18,
   googleRating: 4.8,
-  googleReviewCount: 11,
+  googleReviewCount: 13,
   hometogoRating: 5.0,
   hometogoReviewCount: 1,
   smoobuPropertyId: "2610828",
@@ -379,15 +379,15 @@ export const schoenblick: PropertyData = {
   googleMapsUrl: "https://www.google.com/maps?cid=18059770108920997880",
   // Stand 12.10.2026, Werte 1:1 wie auf den Plattformen, ohne herausgerechnete
   // Bewertungen.
-  // Airbnb: Summe der Wohnungs-Inserate (B5, B6, B8 je 5,0 aus 3; B7 5,0 aus 5;
-  // A2 4,5 aus 2) = 79 Sterne aus 16 = 4,94.
+  // Airbnb: Summe der Wohnungs-Inserate (B5, B6 je 5,0 aus 3; B8 5,0 aus 4
+  // seit 28.10.2026; B7 5,0 aus 5; A2 4,5 aus 2) = 84 Sterne aus 17 = 4,94.
   // Booking: das aktuelle, gemeinsame Inserat zeigt am 27.10.2026 9,1 aus 10.
   // Die alten Booking-Inserate sind geschlossen und gehören nicht dazu.
   // Google: 18 Rezensionen, 17 × 5 Sterne und 1 × 1 Stern (Vorbesitzer, vor
   // 7 Jahren). Google zeigt den Schnitt mit einer Nachkommastelle:
   // 86 / 18 = 4,78 → 4,8.
   airbnbRating: 4.94,
-  airbnbReviewCount: 16,
+  airbnbReviewCount: 17,
   bookingRating: 9.1,
   bookingReviewCount: 10,
   googleRating: 4.8,
@@ -526,7 +526,7 @@ export const schoenblick: PropertyData = {
       subtitle: "Großzügige Ferienwohnung für Familien",
       airbnbUrl: "https://www.airbnb.de/rooms/1525349872389165473",
       airbnbRating: 5.0,
-      airbnbReviewCount: 3,
+      airbnbReviewCount: 4,
       smoobuPropertyId: "3025606",
       maxGuests: 4,
       bedrooms: 2,

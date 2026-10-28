@@ -17,6 +17,16 @@ export type Review = {
 export const reviews: Review[] = [
   // ─── HAUS28 Reviews (echte Airbnb-Bewertungen) ───────────────────────────
   {
+    id: "h28-26",
+    propertyId: "haus28",
+    author: "Tom",
+    location: "Airbnb",
+    date: "Oktober 2026",
+    rating: 5,
+    text: "Herzlichen Dank für die schöne Zeit. Wir haben uns sofort sehr wohl gefühlt und unseren Urlaub genossen. Die Unterkunft ist sauber, gut ausgestattet und super gemütlich.",
+    avatarInitials: "TO",
+  },
+  {
     id: "h28-23",
     propertyId: "haus28",
     author: "Ines",
@@ -592,6 +602,17 @@ export const reviews: Review[] = [
   },
   // B8
   {
+    id: "sb-b8-4",
+    propertyId: "schoenblick",
+    apartmentId: "b8",
+    author: "Gvido",
+    location: "Airbnb",
+    date: "Oktober 2026",
+    rating: 5,
+    text: "Ein sehr toller und freundlicher Gastgeber.",
+    avatarInitials: "GV",
+  },
+  {
     id: "sb-b8-3",
     propertyId: "schoenblick",
     apartmentId: "b8",
@@ -705,6 +726,16 @@ export const reviews: Review[] = [
   },
   // ─── Schönblick Reviews (Booking.com, Inserat seit der Übernahme) ───────
   // Wohnung laut Buchungsnummer in Smoobu (Stand 12.10.2026).
+  {
+    id: "sb-bk-5",
+    propertyId: "schoenblick",
+    author: "Aura",
+    location: "Booking.com",
+    date: "Oktober 2026",
+    rating: 5,
+    text: "Die Wohnung war sehr sauber und wir haben uns sehr wohl gefühlt. Wir waren schon zwei mal dort.",
+    avatarInitials: "AU",
+  },
   {
     id: "sb-bk-1",
     propertyId: "schoenblick",
