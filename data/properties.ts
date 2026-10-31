@@ -177,6 +177,7 @@ export const haus28: PropertyData = {
     thumbnail: "/images/haus28/hero-thumb.webp",
     gallery: [
       { src: "/images/haus28/gallery/haus_28_250523_160.webp", alt: "HAUS28 – A-Frame Frontansicht im Abendlicht" },
+      { src: "/images/haus28/gallery/hottub_abend.webp", alt: "HAUS28 – Holzbefeuerter HotTub mit Unterwasserlicht am Abend" },
       { src: "/images/haus28/gallery/hottub_garten.webp", alt: "HAUS28 – Privater HotTub mit Holzofen im Garten" },
       { src: "/images/haus28/gallery/haus_28_250523_455.webp", alt: "HAUS28 – Wohnbereich mit Panoramafenster zum Wald" },
       { src: "/images/haus28/gallery/haus_28_250523_380.webp", alt: "HAUS28 – Schlafzimmer 3 im Obergeschoss mit Dreiecksfenster" },

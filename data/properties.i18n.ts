@@ -97,6 +97,7 @@ const galleryAltEn: Record<string, string> = {
   "HAUS28 – Außenansicht durch den Wald": "HAUS28 – Exterior view through the forest",
   "HAUS28 – Terrasse von oben": "HAUS28 – Terrace seen from above",
   "HAUS28 – Eingang Hausfront": "HAUS28 – Entrance and house front",
+  "HAUS28 – Holzbefeuerter HotTub mit Unterwasserlicht am Abend": "HAUS28 – Wood-fired hot tub with underwater lights at dusk",
   "HAUS28 – Privater HotTub mit Holzofen im Garten": "HAUS28 – Private wood-fired hot tub in the garden",
   "HAUS28 – Schlafzimmer 3 im Obergeschoss mit Dreiecksfenster": "HAUS28 – Bedroom 3 upstairs with triangular window",
   "HAUS28 – Küche mit grünen Schränken": "HAUS28 – Kitchen with green cabinets",
